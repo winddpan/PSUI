@@ -1,0 +1,10 @@
+﻿## Interface: 60000
+## Version: 2.0
+## Author: Winddpan
+## Title: |cff3399FFPSDKHelper|r
+## Notes: A simple addon for DK that helps notice important buffs and debuffs
+## Notes-zhCN: 监视DK的血盾、血之气息、活力分流层数，灵魂收割提示。
+
+cfg.lua
+lib.lua
+DKHelper.lua

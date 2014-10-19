@@ -1,0 +1,30 @@
+## Interface: 60000
+## Version: 2.0
+## Title: oUF |cffffffffmono|r
+## Notes: oUF layout
+## Dependencies: oUF
+## OptionalDeps: oUF_Smooth, oUF_HealComm, oUF_Swing
+## X-Credits: zork for his oUF_Simple and Freebaser for oUF_Freebgrid
+## X-Category: UnitFrame
+
+embeds\Smooth.lua
+embeds\AuraTracker.lua
+embeds\Trinkets.lua
+embeds\CombatFeedback.lua
+embeds\PartyPets.xml
+
+embeds\WarlockSpecBars.lua
+embeds\MonkHarmonyBar.lua
+embeds\TotemBar.lua
+
+cfg.lua
+..\!mCFG\mCFG_layer.lua
+
+tags.lua
+embeds\Castbar.lua
+lib.lua
+core.lua
+
+raid_tags.lua
+raid_debuffs.lua
+raid\raid.xml

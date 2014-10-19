@@ -1,0 +1,9 @@
+﻿## Interface: 60000
+## Title: |cff3399FFPSRune|r
+## Notes: DK符文插件
+## Author: Winddpan
+## Version: 1.1
+
+cfg.lua
+lib.lua
+core.lua

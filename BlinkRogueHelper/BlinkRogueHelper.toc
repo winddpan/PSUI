@@ -1,0 +1,7 @@
+## Interface: 60000
+## Version: r4
+## Title: Blink's RogueHelper
+## Author: Blink / Darthn
+## Notes: Rogue's or Cat druid's combo point.
+## SavedVariables: BlinkRogueHelper_Enabled,BlinkRogueHelper_Type
+BlinkRogueHelper.xml

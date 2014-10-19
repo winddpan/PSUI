@@ -1,0 +1,13 @@
+## Interface: 60000
+## Title: ShestakUI Filger
+## Notes: Class timers
+## Author: Nils Ruesch
+## Version: 5.1
+## Credits: Affli, Ildyria, SinaC, Winddpan
+## Thanks: Erratic, Wetxius
+## OptionalDeps:OmniCC
+
+Settings.lua
+Spells.lua
+ShestakUI_Filger.lua
+Cooldowns.lua

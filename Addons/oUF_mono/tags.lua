@@ -2,7 +2,7 @@ local addon, ns = ...
 local cfg = ns.cfg
 local oUF = ns.oUF or oUF
 -- shorten value
---[[
+
 local SVal = function(val)
 	if val then
 		if (val >= 1e6) then
@@ -13,7 +13,9 @@ local SVal = function(val)
 			return ("%d"):format(val)
 		end
 	end
-end]]
+end
+
+--[[
 local SVal = function(val)
 	if val then
 		if (val >= 1e8) then
@@ -24,7 +26,8 @@ local SVal = function(val)
 			return ("%d"):format(val)
 		end
 	end
-end
+end]]
+
 -- calculating the ammount of latters
 local function utf8sub(string, i, dots)
 	if string then

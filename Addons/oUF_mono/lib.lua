@@ -834,9 +834,11 @@
   -- need to update the bar width depending on current max value of class specific power
   local PostUpdateClassPowerIcons = function(element, power, maxPower, maxPowerChanged)
 	local f = element:GetParent()
-    for i = 1, maxPower do
-        element[i]:SetSize((f.width*0.7 - 2 * (maxPower - 1)) / maxPower, f.height/3)
-    end
+	if maxPower then
+		for i = 1, maxPower do
+			element[i]:SetSize((f.width*0.7 - 2 * (maxPower - 1)) / maxPower, f.height/3)
+		end
+	end
   end 
   lib.gen_ClassIcons = function(f)
  	if not (class == "PRIEST" or class == "MONK" or class == "PALADIN") then return end

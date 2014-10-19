@@ -129,7 +129,7 @@ f:SetScript("OnEvent", function() login() end)
 ----------------------------------------------------------------------------------------------------------------------------
 local function CheckWhisperWindows(self, event)
 		local chat = self:GetName()
-		if chat == "ChatFrame1" and not isFrameInScreen(ChatPanel) then 
+		if chat == "ChatFrame1" and not lib.isFrameInScreen(ChatPanel) then 
 			if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_BN_WHISPER" then
 				L1:SetBackdropBorderColor(1,1,1)
 			end

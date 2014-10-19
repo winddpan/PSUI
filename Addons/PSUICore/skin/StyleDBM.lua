@@ -334,7 +334,7 @@ DBMSkin:SetScript("OnEvent", function()
 	end
 end)
 	
---[[
+--[[	
 local ForceOptions = function()
 	DBM_SavedOptions.Enabled=true
 

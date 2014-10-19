@@ -334,17 +334,18 @@ DBMSkin:SetScript("OnEvent", function()
 	end
 end)
 	
-	
+--[[
 local ForceOptions = function()
 	DBM_SavedOptions.Enabled=true
-	--[[
+
 	DBT_SavedOptions["DBM"].Scale = 1
 	DBT_SavedOptions["DBM"].HugeScale = 1
-	DBT_SavedOptions["DBM"].BarXOffset = 0]]
+	DBT_SavedOptions["DBM"].BarXOffset = 0
 end
 
 local loadOptions = CreateFrame("Frame")
 loadOptions:RegisterEvent("PLAYER_LOGIN")
 loadOptions:SetScript("OnEvent", ForceOptions)
+]]
 
 end

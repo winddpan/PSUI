@@ -38,8 +38,8 @@
       end
       alpha = 1.0;
     end
+	
     frame:SetAlpha(fadeInfo.startAlpha);
-
     frame.fadeInfo = fadeInfo;
 
     local index = 1;
@@ -74,6 +74,12 @@
     UIFrameFade(frame, fadeInfo);
   end
 
+	local function buttonCooldownSetAlpha(button, alpha)
+		if button.cooldown then
+			button.cooldown:SetSwipeColor(0, 0, 0, 0.8 * alpha)
+			button.cooldown:SetDrawBling(alpha == 1)
+		end
+	end
 
   --rButtonBarFader func
   function rButtonBarFader(frame,buttonList,fadeIn,fadeOut)
@@ -81,13 +87,30 @@
     if not fadeIn then fadeIn = defaultFadeIn end
     if not fadeOut then fadeOut = defaultFadeOut end
     frame:EnableMouse(true)
-    frame:SetScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
-    frame:SetScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
+    frame:HookScript("OnEnter", function()
+		--UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
+	end)
+    frame:HookScript("OnLeave", function() 
+		--UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) 
+	end)
+	
     UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
     for _, button in pairs(buttonList) do
       if button then
-        button:HookScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
-        button:HookScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
+        button:HookScript("OnEnter", function() 
+			UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
+			for _, button in pairs(buttonList) do
+				buttonCooldownSetAlpha(button, 1)
+			end
+		UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
+		end)
+        button:HookScript("OnLeave", function() 
+			UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) 
+			for _, button in pairs(buttonList) do
+				buttonCooldownSetAlpha(button, 0)
+			end
+		end)
+		buttonCooldownSetAlpha(button, 0)
       end
     end
   end

@@ -5,7 +5,6 @@
 ## RequiredDeps: rLib
 
 config.lua
-charspecific.lua
 core\hide_blizzart.lua
 core\slashcmd.lua
 core\micromenu.lua

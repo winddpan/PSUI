@@ -100,14 +100,13 @@
         button:HookScript("OnEnter", function() 
 			UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
 			for _, button in pairs(buttonList) do
-				buttonCooldownSetAlpha(button, 1)
+				buttonCooldownSetAlpha(button, fadeIn.alpha)
 			end
-		UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
 		end)
         button:HookScript("OnLeave", function() 
 			UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) 
 			for _, button in pairs(buttonList) do
-				buttonCooldownSetAlpha(button, 0)
+				buttonCooldownSetAlpha(button, fadeOut.alpha)
 			end
 		end)
 		buttonCooldownSetAlpha(button, 0)

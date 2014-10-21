@@ -54,12 +54,14 @@ if cfg.Spec == true then
 					end
 				end
 				local majorTree2 = GetSpecialization(false,false,2)
-				local spec2 = { }
-				for i = 1, 7 do 
-					for j =1, 3 do
-						local id, name, texture, selected, available = GetTalentInfo(i,j,2)
-						if selected then
-							table.insert(spec2,name)
+					if majorTree2 then 
+					local spec2 = { }
+					for i = 1, 7 do 
+						for j =1, 3 do
+							local id, name, texture, selected, available = GetTalentInfo(i,j,2)
+							if selected then
+								table.insert(spec2,name)
+							end
 						end
 					end
 				end

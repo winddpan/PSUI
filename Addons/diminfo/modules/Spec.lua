@@ -53,9 +53,9 @@ if cfg.Spec == true then
 						end
 					end
 				end
+				local spec2 = { }
 				local majorTree2 = GetSpecialization(false,false,2)
 					if majorTree2 then 
-					local spec2 = { }
 					for i = 1, 7 do 
 						for j =1, 3 do
 							local id, name, texture, selected, available = GetTalentInfo(i,j,2)

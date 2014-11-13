@@ -19,12 +19,14 @@ modules\blizzardfix.lua
 modules\JPack.lua
 modules\bags.lua
 modules\HoverBind.lua
+modules\xp_bar.lua
 
 automation\buystack.lua
 automation\durability.lua
 automation\error_frame.lua
 automation\mail_get.lua
 automation\toggle_cloak_helm.lua
+automation\AutoRepair&Sell.lua
 
 skin\StyleSkada.lua
 skin\StyleDBM.lua

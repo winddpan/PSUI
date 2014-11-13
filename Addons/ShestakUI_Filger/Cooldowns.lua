@@ -47,7 +47,7 @@ local function Timer_OnSizeChanged(self, width, height)
 		self:Hide()
 	else
 		self.text:SetFont(Misc.font, Misc.cdsize, "OUTLINE")
-		self.text:SetShadowOffset(0, 0)
+		self.text:SetShadowOffset(-1, 1)
 		self.text:SetPoint("CENTER", 0, 0)
 		if self.enabled then
 			Timer_ForceUpdate(self)

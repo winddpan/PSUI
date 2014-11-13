@@ -157,7 +157,7 @@
     button:ClearAllPoints()
     if index == 1 then
       if cfg.combineBuffsAndDebuffs then
-        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
+        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight -20)
       else
         --debuffs and buffs are not combined anchor the debuffs to its own frame
         button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)      

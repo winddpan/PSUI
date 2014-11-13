@@ -24,7 +24,7 @@
   
   --combine buff and debuff frame - should buffs and debuffs be displayed in one single frame?
   --if you disable this it is intended that you unlock the buff and debuffs and move them apart!
-  cfg.combineBuffsAndDebuffs = false
+  cfg.combineBuffsAndDebuffs = true
 
   --buff frame settings
   cfg.buffFrame = {
@@ -91,7 +91,7 @@
     },
     duration = {
       font              = font,
-      size              = 14,
+      size              = 15,
       pos               = { a1 = "BOTTOM", x = 0, y = -4 },
     },
     count = {

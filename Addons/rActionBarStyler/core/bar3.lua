@@ -21,24 +21,11 @@
 
   --create the frame to hold the buttons
   local frame = CreateFrame("Frame", "rABS_MultiBarBottomRight", UIParent, "SecureHandlerStateTemplate")
-  --frame:SetWidth(num*cfg.buttons.size + (num-1)*cfg.buttons.margin + 2*cfg.padding)
-  --frame:SetHeight(cfg.buttons.size + 2*cfg.padding)
-  --frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
+  frame:SetWidth(num*cfg.buttons.size + (num-1)*cfg.buttons.margin + 2*cfg.padding)
+  frame:SetHeight(cfg.buttons.size + 2*cfg.padding)
+  frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
   frame:SetScale(cfg.scale)
 
-  if cfg.uselayout2x6 then
-    frame:SetWidth(cfg.buttons.size*num/2 + (num/2-1)*cfg.buttons.margin + 2*cfg.padding)
-    frame:SetHeight(cfg.buttons.size*num/6 + (num/6-1)*cfg.buttons.margin + 2*cfg.padding)
-  else
-    frame:SetWidth(num*cfg.buttons.size + (num-1)*cfg.buttons.margin + 2*cfg.padding)
-    frame:SetHeight(cfg.buttons.size + 2*cfg.padding)
-  end
-  if cfg.uselayout2x6 then
-    frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x+((cfg.buttons.size*num/2+cfg.buttons.margin*num/2)/2),cfg.pos.y)
-  else
-    frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
-  end
-  
   --move the buttons into position and reparent them
   MultiBarBottomRight:SetParent(frame)
   MultiBarBottomRight:EnableMouse(false)

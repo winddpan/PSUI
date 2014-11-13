@@ -14,7 +14,7 @@ Misc.namesize = 14					-- 法术名称字体大小
 Misc.maxTestIcon = 8				-- 测试模式下,每项显示最大图标数量
 
 -- Cooldowns.lua
-Misc.cdsize = 16					-- 图标中间的 CD 数字大小
+Misc.cdsize = 18					-- 图标中间的 CD 数字大小
 
 -- config.lua
 Misc.Tbar = "OFF"					-- 开(ON)\关(OFF) target_bar 目标计时条

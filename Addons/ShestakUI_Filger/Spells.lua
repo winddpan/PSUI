@@ -411,133 +411,133 @@ Filger_Spells = {
 			Mode = "ICON", IconSize = 40,
 			Position = {"LEFT","UIParent","CENTER", 222, 196},	
 			-- Death Knight
-			{spellID =  108194, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Asphyxiate
-			{spellID =  115000, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
-			{spellID =  115001, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
-			{spellID =  47476, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Strangulate
-			{spellID =  96294, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Chains of Ice (Chilblains)
+			{spellID =  108194, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Asphyxiate
+			{spellID =  115000, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
+			{spellID =  115001, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
+			{spellID =  47476, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Strangulate
+			{spellID =  96294, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Chains of Ice (Chilblains)
 			-- Death Knight Ghoul
-			{spellID =  91800, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Gnaw
-			{spellID =  91797, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Monstrous Blow (Dark Transformation)
-			{spellID =  91807, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Shambling Rush (Dark Transformation)
+			{spellID =  91800, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Gnaw
+			{spellID =  91797, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Monstrous Blow (Dark Transformation)
+			{spellID =  91807, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Shambling Rush (Dark Transformation)
 			-- Druid
-			{spellID =  33786, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Cyclone
-			{spellID =  99, unitID = "target", caster = "all", filter = "DEBUFF"},       -- "CC",		-- Disorienting Roar
-			{spellID =  22570, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Maim
-			{spellID =  5211, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mighty Bash
-			{spellID =  114238, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Fae Silence (Glyph of Fae Silence)
-			{spellID =  81261, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Solar Beam
-			{spellID =  339, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Entangling Roots
-			{spellID =  45334, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Immobilized (Wild Charge - Bear)
-			{spellID =  102359, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Mass Entanglement
+			{spellID =  33786, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Cyclone
+			{spellID =  99, unitID = "focus", caster = "all", filter = "DEBUFF"},       -- "CC",		-- Disorienting Roar
+			{spellID =  22570, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Maim
+			{spellID =  5211, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mighty Bash
+			{spellID =  114238, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Fae Silence (Glyph of Fae Silence)
+			{spellID =  81261, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Solar Beam
+			{spellID =  339, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Entangling Roots
+			{spellID =  45334, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Immobilized (Wild Charge - Bear)
+			{spellID =  102359, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Mass Entanglement
 			-- Hunter
-			{spellID =  117526, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Binding Shot
-			{spellID =  3355, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Freezing Trap
-			{spellID =  19386, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Wyvern Sting
-			{spellID =  128405, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Narrow Escape
+			{spellID =  117526, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Binding Shot
+			{spellID =  3355, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Freezing Trap
+			{spellID =  19386, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Wyvern Sting
+			{spellID =  128405, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Narrow Escape
 
 			-- Hunter Pets
-			{spellID =  24394, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Intimidation
-			{spellID =  50519, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sonic Blast (Bat)
+			{spellID =  24394, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Intimidation
+			{spellID =  50519, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sonic Blast (Bat)
 
 			-- Mage
-			{spellID =  44572, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Deep Freeze
-			{spellID =  31661, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Dragon's Breath
-			{spellID =  118, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Polymorph
-			{spellID =  61305, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Black Cat
-			{spellID =  28272, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Pig
-			{spellID =  61721, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Rabbit
-			{spellID =  61780, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turkey
-			{spellID =  28271, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turtle
-			{spellID =  82691, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Ring of Frost
-			{spellID =  102051, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Frostjaw (also a root)
-			{spellID =  122, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Frost Nova
-			{spellID =  111340, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Ice Ward
+			{spellID =  44572, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Deep Freeze
+			{spellID =  31661, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Dragon's Breath
+			{spellID =  118, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Polymorph
+			{spellID =  61305, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Black Cat
+			{spellID =  28272, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Pig
+			{spellID =  61721, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Rabbit
+			{spellID =  61780, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turkey
+			{spellID =  28271, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turtle
+			{spellID =  82691, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Ring of Frost
+			{spellID =  102051, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Frostjaw (also a root)
+			{spellID =  122, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Frost Nova
+			{spellID =  111340, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Ice Ward
 
 			-- Mage Water Elemental
-			{spellID =  33395, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze
+			{spellID =  33395, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze
 			-- Monk
-			{spellID =  123393, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Breath of Fire (Glyph of Breath of Fire)
-			{spellID =  119392, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Charging Ox Wave
-			{spellID =  119381, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Leg Sweep
-			{spellID =  115078, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Paralysis
-			{spellID =  116706, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Disable
+			{spellID =  123393, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Breath of Fire (Glyph of Breath of Fire)
+			{spellID =  119392, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Charging Ox Wave
+			{spellID =  119381, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Leg Sweep
+			{spellID =  115078, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Paralysis
+			{spellID =  116706, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Disable
 
 			-- Paladin
-			{spellID =  105421, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Blinding Light
-			{spellID =  105593, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fist of Justice
-			{spellID =  853, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Hammer of Justice
-			{spellID =  119072, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Holy Wrath
-			{spellID =  20066, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Repentance
-			{spellID =  10326, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Turn Evil
-			{spellID =  31935, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Avenger's Shield
+			{spellID =  105421, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Blinding Light
+			{spellID =  105593, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fist of Justice
+			{spellID =  853, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Hammer of Justice
+			{spellID =  119072, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Holy Wrath
+			{spellID =  20066, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Repentance
+			{spellID =  10326, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Turn Evil
+			{spellID =  31935, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Avenger's Shield
 
 			-- Priest
-			{spellID =  605, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Dominate Mind
-			{spellID =  88625, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Holy Word: Chastise
-			{spellID =  64044, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Psychic Horror
-			{spellID =  8122, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Psychic Scream
-			{spellID =  9484, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Shackle Undead
-			{spellID =  87204, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sin and Punishment
-			{spellID =  15487, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silence
-			{spellID =  87194, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Glyph of Mind Blast
-			{spellID =  114404, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Void Tendril's Grasp
+			{spellID =  605, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Dominate Mind
+			{spellID =  88625, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Holy Word: Chastise
+			{spellID =  64044, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Psychic Horror
+			{spellID =  8122, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Psychic Scream
+			{spellID =  9484, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Shackle Undead
+			{spellID =  87204, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sin and Punishment
+			{spellID =  15487, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silence
+			{spellID =  87194, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Glyph of Mind Blast
+			{spellID =  114404, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Void Tendril's Grasp
 
 			-- Rogue
-			{spellID =  2094, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Blind
-			{spellID =  1833, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Cheap Shot
-			{spellID =  1776, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Gouge
-			{spellID =  408, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Kidney Shot
-			{spellID =  6770, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Sap
-			{spellID =  1330, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "Silence",		-- Garrote - Silence
+			{spellID =  2094, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Blind
+			{spellID =  1833, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Cheap Shot
+			{spellID =  1776, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Gouge
+			{spellID =  408, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Kidney Shot
+			{spellID =  6770, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Sap
+			{spellID =  1330, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "Silence",		-- Garrote - Silence
 
 			-- Shaman
-			{spellID =  77505, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Earthquake
-			{spellID =  51514, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Hex
-			{spellID =  118905, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Static Charge (Capacitor Totem)
-			{spellID =  64695, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Earthgrab (Earthgrab Totem)
-			{spellID =  63685, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze (Frozen Power)
+			{spellID =  77505, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Earthquake
+			{spellID =  51514, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Hex
+			{spellID =  118905, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Static Charge (Capacitor Totem)
+			{spellID =  64695, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Earthgrab (Earthgrab Totem)
+			{spellID =  63685, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze (Frozen Power)
 
 			-- Shaman Primal Earth Elemental
-			{spellID =  118345, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Pulverize
+			{spellID =  118345, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Pulverize
 			-- Warlock
-			{spellID =  710, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Banish
-			{spellID =  5782, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Fear
-			{spellID =  118699, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fear
-			{spellID =  5484, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Howl of Terror
-			{spellID =  6789, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mortal Coil
-			{spellID =  30283, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Shadowfury
-			{spellID =  31117, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Unstable Affliction
+			{spellID =  710, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Banish
+			{spellID =  5782, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Fear
+			{spellID =  118699, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fear
+			{spellID =  5484, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Howl of Terror
+			{spellID =  6789, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mortal Coil
+			{spellID =  30283, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Shadowfury
+			{spellID =  31117, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Unstable Affliction
 
 			-- Warlock Pets
-			{spellID =  89766, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Axe Toss (Felguard/Wrathguard)
-			{spellID =  115268, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Mesmerize (Shivarra)
-			{spellID =  6358, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Seduction (Succubus)
+			{spellID =  89766, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Axe Toss (Felguard/Wrathguard)
+			{spellID =  115268, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Mesmerize (Shivarra)
+			{spellID =  6358, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Seduction (Succubus)
 			-- Warrior
-			{spellID =  7922, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Charge Stun
-			{spellID =  118895, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Dragon Roar
-			{spellID =  5246, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Intimidating Shout (aoe)
-			{spellID =  132168, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Shockwave
-			{spellID =  105771, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Warbringer
-			{spellID =  18498, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silenced - Gag Order
-			{spellID =  107566, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Staggering Shout
+			{spellID =  7922, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Charge Stun
+			{spellID =  118895, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Dragon Roar
+			{spellID =  5246, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Intimidating Shout (aoe)
+			{spellID =  132168, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Shockwave
+			{spellID =  105771, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Warbringer
+			{spellID =  18498, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silenced - Gag Order
+			{spellID =  107566, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Staggering Shout
 
 			-- Other
-			{spellID =  30217, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Adamantite Grenade
-			{spellID =  67769, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Cobalt Frag Bomb
-			{spellID =  30216, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Fel Iron Bomb
-			{spellID =  107079, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Quaking Palm
-			{spellID =  13327, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Reckless Charge
-			{spellID =  20549, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- War Stomp
-			{spellID =  25046, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Energy)
-			{spellID =  28730, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Mana)
-			{spellID =  50613, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Runic Power)
-			{spellID =  69179, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Rage)
-			{spellID =  80483, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Focus)
-			{spellID =  129597, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Arcane Torrent (Chi)
-			{spellID =  39965, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Frost Grenade
-			{spellID =  55536, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Frostweave Net
-			{spellID =  13099, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Net-o-Matic
+			{spellID =  30217, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Adamantite Grenade
+			{spellID =  67769, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Cobalt Frag Bomb
+			{spellID =  30216, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Fel Iron Bomb
+			{spellID =  107079, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Quaking Palm
+			{spellID =  13327, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Reckless Charge
+			{spellID =  20549, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- War Stomp
+			{spellID =  25046, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Energy)
+			{spellID =  28730, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Mana)
+			{spellID =  50613, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Runic Power)
+			{spellID =  69179, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Rage)
+			{spellID =  80483, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Arcane Torrent (Focus)
+			{spellID =  129597, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Arcane Torrent (Chi)
+			{spellID =  39965, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Frost Grenade
+			{spellID =  55536, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Frostweave Net
+			{spellID =  13099, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Net-o-Matic
 		},
 		{
 			Name = "Tar_Buff",

@@ -45,18 +45,30 @@
   
   --gametooltip statusbar
   GameTooltipStatusBar:ClearAllPoints()
-  GameTooltipStatusBar:SetPoint("LEFT",8,0)
-  GameTooltipStatusBar:SetPoint("RIGHT",-8,0)
-  GameTooltipStatusBar:SetPoint("BOTTOM",GameTooltipStatusBar:GetParent(),"BOTTOM",0, 8)  
-  GameTooltipStatusBar:SetHeight(8)
-  GameTooltipStatusBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
-  --gametooltip statusbar bg
+  GameTooltipStatusBar:SetPoint("LEFT",3,0)
+  GameTooltipStatusBar:SetPoint("RIGHT",-3,0)
+  GameTooltipStatusBar:SetPoint("TOP",GameTooltipStatusBar:GetParent(),"BOTTOM",0, -2)  
+  GameTooltipStatusBar:SetHeight(6)
+  GameTooltipStatusBar:SetStatusBarTexture("Interface\\Addons\\PSUICore\\media\\statusbar2")
 
+  
+  local shadow = CreateFrame("Frame", nil, GameTooltipStatusBar)
+  shadow:SetFrameLevel(0)
+  shadow:SetFrameStrata(GameTooltipStatusBar:GetFrameStrata())
+  shadow:SetPoint("TOPLEFT", -3, 3)
+  shadow:SetPoint("BOTTOMRIGHT", 3, -3)
+  shadow:SetBackdrop(cfg.backdrop)
+  shadow:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+  shadow:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
+  GameTooltipStatusBar.shadow = shadow
+  
+  --gametooltip statusbar bg
+--[[
   GameTooltipStatusBar.bg = GameTooltipStatusBar:CreateTexture(nil,"BACKGROUND",nil, -8)
   GameTooltipStatusBar.bg:SetPoint("TOPLEFT",-1,1)
   GameTooltipStatusBar.bg:SetPoint("BOTTOMRIGHT",1,-1)
   GameTooltipStatusBar.bg:SetTexture(1,1,1)
-  GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
+  GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)]]
   
   --HookScript GameTooltip OnTooltipCleared
   GameTooltip:HookScript("OnTooltipCleared", function(self)
@@ -227,7 +239,6 @@
       GameTooltip:AddDoubleLine("|cffff9999目标|r",GetTarget(unit.."target") or "未知")
       GameTooltip:Show()
     end
-	GameTooltip:AddDoubleLine(" ")
 	GameTooltip:Show();
   end)
   

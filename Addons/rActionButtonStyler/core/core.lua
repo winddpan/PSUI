@@ -87,7 +87,9 @@
     end)
     --icon
     bu.icon:SetTexCoord(0.1,0.9,0.1,0.9)
-    bu.icon:SetAllPoints(bu)
+    --bu.icon:SetAllPoints(bu)
+	bu.icon:SetPoint("TOPLEFT", bu, "TOPLEFT", 3, -3)
+    bu.icon:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -3, 3)
     --cooldown
     bu.cooldown:SetAllPoints(bu.icon)
     --hotkey

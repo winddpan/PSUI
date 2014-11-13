@@ -30,7 +30,7 @@
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 60 },
       userplaced      = {
-        enable          = false,
+        enable          = true,
       },
       mouseover       = {
         enable          = false,
@@ -79,7 +79,7 @@
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 100 },
       userplaced      = {
-        enable          = false,
+        enable          = true,
       },
       mouseover       = {
         enable          = false,
@@ -102,9 +102,9 @@
         size            = 34,
         margin          = 0,
       },
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 380, y = -8 },
+      pos             = { a1 = "BOTTOMLEFT", a2 = "BOTTOM", af = "UIParent", x = 380, y = 8 },
       userplaced      = {
-        enable          = false,
+        enable          = true,
       },
       mouseover       = {
         enable          = true,
@@ -178,7 +178,7 @@
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 10 },
       userplaced      = {
-        enable          = false,
+        enable          = true,
       },
       mouseover       = {
         enable          = true,
@@ -203,12 +203,12 @@
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 380, y = 10 },
       userplaced      = {
-        enable          = false,
+        enable          = true,
       },
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.1, alpha = 1},
-        fadeOut         = {time = 0.1, alpha = 0.3},
+        fadeOut         = {time = 0.1, alpha = 0.0},
       },
       combat          = { --fade the bar in/out in combat/out of combat
         enable          = false,
@@ -225,7 +225,7 @@
         size            = 36,
         margin          = 0,
       },
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -222, y = 136 },
       userplaced      = {
         enable          = true,
       },
@@ -241,10 +241,10 @@
       scale           = 1.0,
       padding         = 10, --frame padding
       buttons         = {
-        size            = 40,
+        size            = 30,
         margin          = 0,
       },
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 210, y = 135 },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 222, y = 136 },
       userplaced      = {
         enable          = true,
       },
@@ -258,7 +258,7 @@
     micromenu = {
       enable          = true, --enable module
       show            = true, --true/false
-      scale           = 1.0,
+      scale           = .9,
       padding         = 10, --frame padding
       pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = 25 },
       userplaced      = {

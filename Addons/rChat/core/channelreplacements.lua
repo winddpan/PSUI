@@ -54,8 +54,8 @@ CHAT_YELL_GET = "%s:\32"
 CHAT_FLAG_AFK = "|cffE7E716".."[AFK]".."|r "
 CHAT_FLAG_DND = "|cffFF0000".."[DND]".."|r "
 CHAT_FLAG_GM = "|cff4154F5".."[GM]".."|r "
-ERR_FRIEND_ONLINE_SS = "|Hplayer:%s|h[%s]|h ".."has come |cff298F00online|r."
-ERR_FRIEND_OFFLINE_S = "[%s] ".."has gone |cffff0000offline|r."
+--ERR_FRIEND_ONLINE_SS = "|Hplayer:%s|h[%s]|h ".."has come |cff298F00online|r."
+--ERR_FRIEND_OFFLINE_S = "[%s] ".."has gone |cffff0000offline|r."
 
 --[[
 _G.TIMESTAMP_FORMAT_HHMM = "|cff64C2F5[%I:%M]|r "

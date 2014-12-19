@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Title: |cff3399FFPSPanel|r
+## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
@@ -20,6 +20,9 @@ modules\JPack.lua
 modules\bags.lua
 modules\HoverBind.lua
 modules\xp_bar.lua
+modules\ObjectiveTrackerMover.lua
+modules\!QuestItemButtonFix.lua
+modules\SimpleChannel.lua
 
 automation\buystack.lua
 automation\durability.lua

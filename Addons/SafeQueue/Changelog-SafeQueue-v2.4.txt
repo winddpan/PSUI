@@ -1,0 +1,12 @@
+tag v2.4
+2e5b5be04d129e31b33d402e6f7bb4633f600ff5
+Jordon <jordon@localhost>
+2014-10-14 11:55:56 -0700
+
+Tagging as v2.4
+
+
+--------------------
+
+Jordon:
+	- update for 6.0.2

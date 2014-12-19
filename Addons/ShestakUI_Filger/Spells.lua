@@ -76,6 +76,8 @@ Filger_Spells = {
 				{spellID = 114866, unitID = "target", caster = "player", filter = "DEBUFF"},
 				{spellID = 130735, unitID = "target", caster = "player", filter = "DEBUFF"},
 				{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
+				--死咀
+				{spellID = 155159, unitID = "target", caster = "player", filter = "DEBUFF"},
 				-- 血之疫病
 				{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
 				-- 冰霜疫病
@@ -169,6 +171,7 @@ Filger_Spells = {
 			{spellID = 2983, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Feint
 			{spellID = 1966, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 137573, unitID = "player", caster = "player", filter = "BUFF"},
 
 		},
 		{
@@ -221,6 +224,7 @@ Filger_Spells = {
 			{spellID = 118334, unitID = "player", caster = "player", filter = "BUFF"},
 			--预感
 			{spellID = 115189, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 170879, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 影踪突袭邪恶护符
 			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
 			--雪怒圣物
@@ -235,6 +239,8 @@ Filger_Spells = {
 			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
 			--522 娃娃
 			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
+			--重生
+			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",

@@ -20,13 +20,12 @@ f:SetScript("OnEnter", function(s)
 f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
 f:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
 	
-text = f:CreateFontString(nil, 'OVERLAY')
-text:SetFont(STANDARD_TEXT_FONT, 18, "OUTLINE")
+local text = f:CreateFontString(nil, 'OVERLAY')
 text:SetAllPoints(f)
+text:SetFont(STANDARD_TEXT_FONT, 18, "OUTLINE")
 text:SetJustifyH('RIGHT')
 
 local function updateStatue()
-	local prefix
 	local buffed = 0
 	local based = 0
 	local effective = 0
@@ -36,23 +35,20 @@ local function updateStatue()
 	local sp = GetSpellBonusDamage(7)
 
 	if rangedAp > sp then --hunter
-		prefix = ""
 		local base, posBuff, negBuff = UnitRangedAttackPower("player")
 		effective = base + posBuff + negBuff;
-	elseif ap > sp then	--近战
-		prefix = ""
+	elseif ap >= sp then	--近战
 		local base, posBuff, negBuff = UnitAttackPower("player")
 		effective = base + posBuff + negBuff;
 	elseif sp > ap then --法系
-		prefix = ""
 		effective = sp
 	end
-	
+
 	if buffed > based *0.3 then
-		text:SetText("|cffff3333"..prefix..lib.formatNumber(effective))     
+		text:SetText("|cffff3333"..("%d"):format(effective))     
 	else
-		text:SetText(prefix..("%d"):format(effective))        		
-	end			
+		text:SetText(""..("%d"):format(effective))     
+	end
 end
 
 local TimeSinceLastUpdate = 0

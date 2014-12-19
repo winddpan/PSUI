@@ -176,8 +176,7 @@ if cfg.combattext.show_damage then
 				local spellId,_,spellSchool,amount,_,_,_,_,_,critical=select(12,...)
 				if(amount>=cfg.combattext.threshold.damage)then
 					local color={}
-					amount = SVal(amount)
-					local rawamount=amount
+					local rawamount=SVal(amount)
 					if (critical) then
 						amount="|cffFF0000*|r|cffFAD8AC"..amount.."|r|cffFF0000*|r"
 					end
@@ -194,7 +193,7 @@ if cfg.combattext.show_damage then
  					if cfg.combattext.merge_aoe_spam and aoe.spell[spellId] then
 						local spellId = type(aoe.spell[spellId])=="number" and aoe.spell[spellId] or spellId
 						aoe.SQ[spellId]["locked"]=true
-						aoe.SQ[spellId]["queue"]=SpamQueue(spellId, rawamount)
+						aoe.SQ[spellId]["queue"]=SpamQueue(spellId, amount)
 						if (critical and (aoe.SQ[spellId]["count"]==0 or aoe.SQ[spellId]["queueFormatted"])) then
 							aoe.SQ[spellId]["queueFormatted"] = "|cffFF0000*|r|cffFAD8AC"..aoe.SQ[spellId]["queue"].."|r|cffFF0000*|r"
 						else

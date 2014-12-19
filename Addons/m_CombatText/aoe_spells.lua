@@ -162,7 +162,11 @@ elseif player_class=="ROGUE"then
 	if(cfg.combattext.merge_aoe_spam)then
 		aoe.spell[51723]=true		-- Fan of Knives
 		aoe.spell[2818]=true		-- Deadly Poison
+		aoe.spell[113780]=true		-- 致命膏药立即触发
 		aoe.spell[8680]=true		-- Instant Poison
+		aoe.spell[121411]=true		-- 猩红风暴
+		aoe.spell[122233]=true		-- 猩红风暴dot
+		aoe.spell[159238]=true		-- 破碎之血附魔
 	end
 end
 

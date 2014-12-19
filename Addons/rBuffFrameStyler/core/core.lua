@@ -94,7 +94,8 @@
 
     --button
     b:SetSize(cfg.button.size, cfg.button.size)
-     b:SetFrameLevel(b:GetFrameLevel()+10)
+    b:SetFrameLevel(b:GetFrameLevel() +1)
+	b:SetFrameStrata("HIGH")
 
     --icon
     local icon = _G[name.."Icon"]

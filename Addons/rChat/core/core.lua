@@ -42,6 +42,8 @@
   --hide the menu button
   ChatFrameMenuButton:HookScript("OnShow", ChatFrameMenuButton.Hide)
   ChatFrameMenuButton:Hide()
+  
+
 
   --hide the friend micro button
   FriendsMicroButton:HookScript("OnShow", FriendsMicroButton.Hide)
@@ -146,9 +148,9 @@
       local tab = _G[name.."Tab"]
       tab:SetAlpha(cfg.selectedTabAlpha)
     end
-    CombatLogQuickButtonFrame_Custom:HookScript("OnShow", CombatLogQuickButtonFrame_Custom.Hide)
-    CombatLogQuickButtonFrame_Custom:Hide()
-    CombatLogQuickButtonFrame_Custom:SetHeight(0)
+    --CombatLogQuickButtonFrame_Custom:HookScript("OnShow", CombatLogQuickButtonFrame_Custom.Hide)
+    --CombatLogQuickButtonFrame_Custom:Hide()
+    --CombatLogQuickButtonFrame_Custom:SetHeight(0)
   end
 
   local a = CreateFrame("Frame")

@@ -29,8 +29,8 @@ cfg.combattext = {
 		damage_maxlvl = 0,		-- different damage threshold for players @ max lvl
 	},
 	
-	merge_aoe_spam = false,			-- merge multiple damage/healing events happening simultaniously in a single message
-	merge_aoe_time = 0,				-- set the delay in seconds for calculating merged values 
+	merge_aoe_spam = true,			-- merge multiple damage/healing events happening simultaniously in a single message
+	merge_aoe_time = 2,				-- set the delay in seconds for calculating merged values 
 									-- (0 means that only events that happened at exactly the same time will be merged)
 }
 

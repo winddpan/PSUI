@@ -1,7 +1,7 @@
 ## Interface: 60000
 ## Title: Cloudy Unit Info
 ## Notes: Adds gear info and specialization of inspected player to unit tooltips.
-## Version: 1.4
+## Version: 1.5
 ## Author: Cloudyfa
 
 CloudyUnitInfo.lua

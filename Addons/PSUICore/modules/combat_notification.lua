@@ -2,7 +2,7 @@
 local enable = true
 if not enable then return end
 
-local wgtimenoti = true
+local wgtimenoti = false
 local combatnoti = true
 
 local GetNextChar = function(word,num)

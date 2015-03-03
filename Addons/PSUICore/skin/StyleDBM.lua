@@ -245,6 +245,7 @@ DBMSkin:SetScript("OnEvent", function()
 					background:SetNormalTexture(nil)
 					bar.styled=true
 				end	
+				bar:SetHeight(barHeight)
 		
 				if not progress.styled then
 					progress:SetStatusBarTexture("Interface\\AddOns\\PSUICore\\media\\statusbar")

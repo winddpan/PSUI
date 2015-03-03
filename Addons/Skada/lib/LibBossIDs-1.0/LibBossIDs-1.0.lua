@@ -1,6 +1,6 @@
 --[[
 Name: LibBossIDs-1.0
-Revision: $Revision: 88 $
+Revision: $Revision: 91 $
 Author: Elsia
 Website: http://www.wowace.com/addons/libbossids-1-0/
 Documentation:
@@ -10,7 +10,7 @@ Dependencies: LibStub
 License: Public Domain, Absolutely no Warranty.
 ]]
 
-local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 88 $"
+local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 91 $"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then return end
@@ -18,7 +18,7 @@ if not lib then return end
 -- LibBossIDs-1.0 provides a table that flags mobIDs true if the mob linked to the ID is a boss.
 -- Example: if LibStub("LibBossIDs-1.0").BossIDs[mobID] then print("Found a boss!") end
 -- How to get mobID from GUID:
--- localmobID = tonumber(GUID:sub(-13, -9), 16)
+-- localmobID = tonumber(GUID:sub(-16, -12))
 
 -- Explanation of comments. First quoted string is English locale string of mob.
 -- The first list was derived from LibBabble-Boss-3.0.
@@ -47,6 +47,14 @@ local BossIDs = {
 	[29310]	= true,	-- Jedoga Shadowseeker
 	[29311]	= true,	-- Herald Volazj
 	[30258]	= true,	-- Amanitar (Heroic)
+
+	-------------------------------------------------------------------------------
+	-- Auchindoun
+	-------------------------------------------------------------------------------
+	[75839]	= true,	-- Vigilant Kaathar
+	[76177]	= true,	-- Soulbinder Nyami
+	[75927]	= true,	-- Azzakel
+	[77734]	= true,	-- Teron'gor
 
 	-------------------------------------------------------------------------------
 	-- Auchindoun: Auchenai Crypts
@@ -192,6 +200,23 @@ local BossIDs = {
 	[16059]	= true,	-- Theldren
 
 	-------------------------------------------------------------------------------
+	-- Blackrock Foundry
+	-------------------------------------------------------------------------------
+	[87420]	= true,	-- Blackhand
+	[76865]	= true,	-- Beastlord Darmac
+	[76814]	= true,	-- Flamebender Ka'graz
+	[76906]	= true,	-- Operator Thogar
+	[76809]	= true,	-- Foreman Feldspar
+	[76973]	= true,	-- Hans'gar
+	[76974]	= true,	-- Franzok
+	[76877]	= true,	-- Gruul
+	[77692]	= true,	-- Kromog
+	[77182]	= true,	-- Oregorger
+	[77557]	= true,	-- Admiral Gar'an
+	[77477]	= true,	-- Marak the Blooded
+	[77231]	= true,	-- Enforcer Sorka
+
+	-------------------------------------------------------------------------------
 	-- Blackrock Mountain: Blackrock Caverns
 	-------------------------------------------------------------------------------
 	[39665]	= true,	-- Rom'ogg Bonecrusher
@@ -226,6 +251,14 @@ local BossIDs = {
 	[11583]	= true,	-- Nefarian
 	[12557]	= true,	-- Grethok the Controller
 	[10162]	= true,	-- Lord Victor Nefarius <Lord of Blackrock> (Also found in Blackrock Spire)
+
+	-------------------------------------------------------------------------------
+	-- Bloodmaul Slag Mines
+	-------------------------------------------------------------------------------
+	[75786]	= true,	-- Roltall
+	[74787]	= true,	-- Slave Watcher Crushto
+	[74790]	= true,	-- Gug'rokk
+	[74366]	= true,	-- Forgemaster Gog'duh
 
 	-------------------------------------------------------------------------------
 	-- Caverns of Time: Battle for Mount Hyjal
@@ -392,12 +425,26 @@ local BossIDs = {
 	[6231]	= true,	-- Techbot, outside
 
 	-------------------------------------------------------------------------------
+	-- Gorgrond
+	-------------------------------------------------------------------------------
+	[87437]	= true,	-- Drov the Ruiner
+	[81535]	= true,	-- Tarlna the Ageless
+
+	-------------------------------------------------------------------------------
 	-- Grim Batol
 	-------------------------------------------------------------------------------
 	[39625]	= true,	-- General Umbriss
 	[40177]	= true,	-- Forgemaster Throngus
 	[40319]	= true,	-- Drahga Shadowburner
 	[40484]	= true,	-- Erudax
+
+	-------------------------------------------------------------------------------
+	-- Grimrail Depot
+	-------------------------------------------------------------------------------
+	[80005]	= true,	-- Skylord Tovra
+	[77803]	= true,	-- Railmaster Rocketspark
+	[77816]	= true,	-- Borka the Brute
+	[79545]	= true,	-- Nitrogg Thundertower
 
 	-------------------------------------------------------------------------------
 	-- Gruul's Lair
@@ -459,11 +506,11 @@ local BossIDs = {
 	-- Heart of Fear (MoP-Raid 5.0.1)
 	-------------------------------------------------------------------------------
 	[62837] = true,	-- Grand Empress Shek'zeer
-	[63664] = true,	-- Blade Lord Ta'yak
-	[63666] = true,	-- Amber-Shaper Un'sok
-	[63667] = true,	-- Garalon
-	[65501] = true,	-- Wind Lord Mel'jarak
-	[66791]	= true,	-- Zorlok
+	[62543]	= true,	-- Blade Lord Ta'yak
+	[62511]	= true,	-- Amber-Shaper Un'sok
+	[63191]	= true,	-- Garalon
+	[62397]	= true,	-- Wind Lord Mel'jarak
+	[62980]	= true,	-- Zorlok
 
 	-------------------------------------------------------------------------------
 	-- Hellfire Citadel: Hellfire Ramparts
@@ -501,6 +548,18 @@ local BossIDs = {
 	[12397]	= true,	-- Lord Kazzak
 
 	-------------------------------------------------------------------------------
+	-- Highmaul
+	-------------------------------------------------------------------------------
+	[87447]	= true,	-- The Butcher
+	[87444]	= true,	-- Kargath Bladefist
+	[87449]	= true,	-- Pol
+	[78237]	= true,	-- Phemos
+	[87445]	= true,	-- Ko'ragh
+	[87446]	= true,	-- Tectus
+	[87441]	= true,	-- Brackenspore
+	[87818]	= true,	-- Imperator Mar'gok
+
+	-------------------------------------------------------------------------------
 	-- Hour of Twilight 4.3
 	-------------------------------------------------------------------------------
 	[54590]	= true,	-- Arcurion
@@ -534,6 +593,18 @@ local BossIDs = {
 	[37217]	= true,	-- Precious
 	[37025]	= true,	-- Stinki
 	[36661]	= true,	-- Rimefang <Drake of Tyrannus>
+
+	-------------------------------------------------------------------------------
+	-- Iron Docks
+	-------------------------------------------------------------------------------
+	[81305]	= true,	-- Fleshrender Nok'gar
+	[81297]	= true,	-- Dreadfang
+	[80816]	= true,	-- Ahri'ok Dugru
+	[80805]	= true,	-- Makogg Emberblade
+	[80808]	= true,	-- Neesa Nox
+	[79852]	= true,	-- Oshir
+	[83612]	= true,	-- Skulloc
+	[83613]	= true,	-- Captain Koramar
 
 	-------------------------------------------------------------------------------
 	-- Isle of Giants
@@ -666,10 +737,10 @@ local BossIDs = {
 	[60399] = true,	-- Qin-xi
 	[60400] = true,	-- Jan-xi
 	[60410] = true,	-- Elegon
-	[61421] = true,	-- Zian of the Endless Shadow -- 60701?
-	[61423] = true,	-- Qiang the Merciless -- 60709?
-	[61427] = true,	-- Subetai the Swift -- 60710?
-	[61429] = true,	-- Meng the Demented
+	[60701]	= true,	-- Zian of the Endless Shadow
+	[60709]	= true,	-- Qiang the Merciless
+	[60710]	= true,	-- Subetai the Swift
+	[60708]	= true,	-- Meng the Demented
 
 	-------------------------------------------------------------------------------
 	-- Molten Core
@@ -922,6 +993,14 @@ local BossIDs = {
 	[46964]	= true,	-- Lord Godfrey
 
 	-------------------------------------------------------------------------------
+	-- Shadowmoon Burial Grounds
+	-------------------------------------------------------------------------------
+	[75509]	= true,	-- Sadana Bloodfury
+	[75452]	= true,	-- Bonemaw
+	[76407]	= true,	-- Ner'zhul
+	[75829]	= true,	-- Nhallish
+
+	-------------------------------------------------------------------------------
 	-- Shadowmoon Valley
 	-------------------------------------------------------------------------------
 	[17711]	= true,	-- Doomwalker
@@ -965,7 +1044,7 @@ local BossIDs = {
 	[71160]	= true,	-- Iyyokuk the Lucid, <Paragon of the Klaxxi> (71159 is Ghazrooki, weird isn't it?)
 	[71161]	= true,	-- Kil'ruk the Wind-Reaver, <Paragon of the Klaxxi>
 	[71865]	= true,	-- Garrosh Starscream, That's right. He was a Decepticon all this time
-	
+
 	-------------------------------------------------------------------------------
 	-- Silithus
 	-------------------------------------------------------------------------------
@@ -974,6 +1053,19 @@ local BossIDs = {
 	[15305]	= true,	-- Lord Skwol <Abyssal High Council>
 	[15203]	= true,	-- Prince Skaldrenox <Abyssal High Council>
 	[14454]	= true,	-- The Windreaver
+
+	-------------------------------------------------------------------------------
+	-- Skyreach
+	-------------------------------------------------------------------------------
+	[75964]	= true,	-- Ranjit
+	[76141]	= true,	-- Araknath
+	[76143]	= true,	-- Rukhran
+	[76266]	= true,	-- High Sage Viryx
+
+	-------------------------------------------------------------------------------
+	-- Spires of Arak
+	-------------------------------------------------------------------------------
+	[87493]	= true,	-- Rukhmar
 
 	-------------------------------------------------------------------------------
 	-- Stormstout Brewery (MoP Dungeon)
@@ -1207,6 +1299,17 @@ local BossIDs = {
 	[56173]	= true,	-- Madness Deathwing
 
 	-------------------------------------------------------------------------------
+	-- The Everbloom
+	-------------------------------------------------------------------------------
+	[83894]	= true,	-- Dulhu
+	[83892]	= true,	-- Life Warden Gola
+	[83893]	= true,	-- Earthshaper Telu
+	[82682]	= true,	-- Archmage Sol
+	[84550]	= true,	-- Xeri'tac
+	[83846]	= true,	-- Yalnu
+	[81522]	= true,	-- Witherbark
+
+	-------------------------------------------------------------------------------
 	-- The Eye of Eternity
 	-------------------------------------------------------------------------------
 	[28859]	= true,	-- Malygos
@@ -1278,9 +1381,9 @@ local BossIDs = {
 
 	-- Forgotten Depths
 	[67977]	= true,	-- Tortos
-	[70229]	= true,	-- Flaming Head <Head of Megaera>
-	[70250]	= true,	-- Frozen Head <Head of Megaera>
-	[70251]	= true,	-- Venomous Head <Head of Megaera>
+	[70212]	= true,	-- Flaming Head <Head of Megaera>
+	[70235]	= true,	-- Frozen Head <Head of Megaera>
+	[70247]	= true,	-- Venomous Head <Head of Megaera>
 	[69712]	= true,	-- Ji-Kun
 
 	-- Halls of Flesh-Shaping
@@ -1437,15 +1540,11 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Upper Blackrock Spire
 	-------------------------------------------------------------------------------
-	[9816]	= true,	-- Pyroguard Emberseer
-	[10264]	= true,	-- Solakar Flamewreath
-	[10509]	= true,	-- Jed Runewatcher
-	[10899]	= true,	-- Goraluk Anvilcrack
-	[10339]	= true,	-- Gyth
-	[10429]	= true,	-- Warchief Rend Blackhand
-	[10430]	= true,	-- The Beast
-	[16042]	= true,	-- Lord Valthalak
-	[10363]	= true,	-- General Drakkisath
+	[76413]	= true,	-- Orebender Gor'ashan
+	[76021]	= true,	-- Kyrak
+	[79912]	= true,	-- Commander Tharbek
+	[76585]	= true,	-- Ragewing the Untamed
+	[77120]	= true,	-- Warlord Zaela
 
 	-------------------------------------------------------------------------------
 	-- Utgarde Keep: Main Bosses

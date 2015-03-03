@@ -121,6 +121,7 @@ function bf_OnEvent(this, event, arg1, arg2, arg3, arg4, ...)
 			bf_ShowXP(rxp, xp, mxp)
 		end
 	elseif event == "PLAYER_XP_UPDATE" and arg1 == "player" then
+		bf_ShowXP(rxp, xp, mxp)
 		xbar:SetValue(xp)
 		rbar_ReSetValue(rxp, xp, mxp)
 	elseif event == "PLAYER_LEVEL_UP" then

@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Version: r4
 ## Title: Blink's RogueHelper
 ## Author: Blink / Darthn

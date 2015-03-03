@@ -167,6 +167,8 @@ elseif player_class=="ROGUE"then
 		aoe.spell[121411]=true		-- 猩红风暴
 		aoe.spell[122233]=true		-- 猩红风暴dot
 		aoe.spell[159238]=true		-- 破碎之血附魔
+		aoe.spell[22482]=true		-- 剑刃乱舞
+		aoe.spell[157607]=true		-- 速效毒药
 	end
 end
 

@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60100
 ## Title: SmartTabTarget
 ## Author: smcn
 ## Notes: Switches tab-target based on PvP status

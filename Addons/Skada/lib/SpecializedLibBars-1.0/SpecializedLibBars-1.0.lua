@@ -305,7 +305,7 @@ function lib:ReleaseBar(name)
 end
 
 ---[[ Bar Groups ]]---
-function barListPrototype:AddButton(title, normaltex, highlighttex, clickfunc)
+function barListPrototype:AddButton(title, description, normaltex, highlighttex, clickfunc)
 	-- Create button frame.
 	local btn = CreateFrame("Button", nil, self.button)
 	btn.title = title
@@ -322,6 +322,7 @@ function barListPrototype:AddButton(title, normaltex, highlighttex, clickfunc)
 		function(this)
 			GameTooltip_SetDefaultAnchor(GameTooltip, this)
 			GameTooltip:SetText(title)
+            GameTooltip:AddLine(description, 1, 1, 1, true)
 			GameTooltip:Show()
 		end)
 	btn:SetScript("OnLeave", function() GameTooltip:Hide() end)

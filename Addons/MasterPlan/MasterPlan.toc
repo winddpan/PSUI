@@ -1,14 +1,19 @@
-## Interface: 60000
-## Title: 追随者任务大师
-## Notes: 修改要塞追随者任务界面，让其更加易用.
+## Interface: 60100
+## Title: Master Plan
+## Notes: Garrision missions UI tweaks.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
-## Version: 0.15
+## RequiredDeps: Blizzard_GarrisonUI
+## Version: 0.31
 ## Author: foxlit
-## SavedVariables: MasterPlanConfig, MasterPlanData
+## X-Website: http://www.townlong-yak.com/master-plan/
+## SavedVariablesPerCharacter: MasterPlanPC
 Libs/Evie.lua
 Locale.lua
+Mark-23.lua
+GarrisonAPI-Data.lua
 GarrisonAPI.lua
 MasterPlan.lua
+MissionsUI.lua
 GarrisonMissions.lua
 GarrisonFollowers.lua

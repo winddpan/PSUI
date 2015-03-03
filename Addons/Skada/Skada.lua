@@ -1,4 +1,3 @@
-
 local Skada = LibStub("AceAddon-3.0"):NewAddon("Skada", "AceTimer-3.0")
 _G.Skada = Skada
 
@@ -71,6 +70,7 @@ BINDING_HEADER_Skada = "Skada"
 BINDING_NAME_SKADA_TOGGLE = L["Toggle window"]
 BINDING_NAME_SKADA_RESET = L["Reset"]
 BINDING_NAME_SKADA_NEWSEGMENT = L["Start new segment"]
+BINDING_NAME_SKADA_STOP = L["Stop"]
 
 -- The current set
 Skada.current = nil
@@ -178,13 +178,13 @@ function Window:AddOptions()
 					name=L["Rename window"],
 					desc=L["Enter the name for the window."],
 					get=function() return db.name end,
-					set=function(win, val) 
-						if val ~= db.name and val ~= "" then 
+					set=function(win, val)
+						if val ~= db.name and val ~= "" then
 							local oldname = db.name
-							db.name = val 
+							db.name = val
 							Skada.options.args.windows.args[val] = Skada.options.args.windows.args[oldname]
 							Skada.options.args.windows.args[oldname] = nil
-						end 
+						end
 					    end,
 					order=1,
 				},
@@ -322,7 +322,7 @@ end
 function Window:UpdateInProgress()
 	for i, data in ipairs(self.dataset) do
 		if data.ignore then -- ensure total bar icon is cleared before bar is recycled
-			data.icon = nil 
+			data.icon = nil
 		end
 		data.id = nil
 		data.ignore = nil
@@ -452,7 +452,7 @@ function Window:set_mode_title()
 	local name = self.selectedmode.title or self.selectedmode:GetName()
 
 	-- save window settings for RestoreView after reload
-	self.db.set = self.selectedset 
+	self.db.set = self.selectedset
 	local savemode = name
 	if self.history[1] then -- can't currently preserve a nested mode, use topmost one
 		savemode = self.history[1].title or self.history[1]:GetName()
@@ -475,7 +475,7 @@ function Window:set_mode_title()
 			name = name..": "..setname
 		end
 	end
-	if disabled and (self.selectedset == "current" or self.selectedset == "total") then 
+	if disabled and (self.selectedset == "current" or self.selectedset == "total") then
 		-- indicate when data collection is disabled
 		name = name.."  |cFFFF0000"..L["DISABLED"].."|r"
 	end
@@ -613,11 +613,17 @@ function Skada:CreateWindow(name, db, display)
 		db.barbgcolor = {r = 0.3, g = 0.3, b = 0.3, a = 0.6}
 	end
 	if not db.buttons then
-		db.buttons = {menu = true, reset = true, report = true, mode = true, segment = true}
+		db.buttons = {menu = true, reset = true, report = true, mode = true, segment = true, stop = true}
 	end
 	if not db.scale then
 		db.scale = 1
 	end
+
+    if not db.version then
+        -- On changes that needs updates to window data structure, increment version in defaults and handle it after this bit.
+        db.version = 1
+        db.buttons.stop = true
+    end
 
 	local window = Window:new()
 	window.db = db
@@ -706,19 +712,19 @@ local function slashHandler(param)
 		local set = "current"
 		local report_mode_name = L["Damage"]
 		local w1, w2, w3, w4 = param:match("^%s*(%w*)%s*(%w*)%s*([^%d]-)%s*(%d*)%s*$",7)
-		if w1 and #w1 > 0 then 
+		if w1 and #w1 > 0 then
 			chan = string.lower(w1)
 		end
 		if w2 and #w2 > 0 then
 			w2 = tonumber(w2) or w2:lower()
-			if Skada:find_set(w2) then 
+			if Skada:find_set(w2) then
 				set = w2
 			end
 		end
 		if w3 and #w3 > 0 then
 			w3 = strtrim(w3)
 			w3 = strtrim(w3,"'\"[]()") -- strip optional quoting
-			if find_mode(w3) then 
+			if find_mode(w3) then
 				report_mode_name = w3
 			end
 		end
@@ -973,7 +979,7 @@ end
 function Skada:PLAYER_ENTERING_WORLD()
 
 	Skada:ZoneCheck() -- catch reloadui within a zone, which does not fire ZONE_CHANGED_NEW_AREA
-	-- If this event fired in response to a login or teleport, zone info is usually not yet available 
+	-- If this event fired in response to a login or teleport, zone info is usually not yet available
 	-- and will be caught by a sunsequent ZONE_CHANGED_NEW_AREA
 
 	-- make sure we update once on reload
@@ -1104,7 +1110,9 @@ function Skada:Reset()
 
 	self:UpdateDisplay(true)
 	self:Print(L["All data has been reset."])
-	collectgarbage("collect")
+	if not InCombatLockdown() then -- ticket 377: avoid timeout errors in combat because GC can run too long
+		collectgarbage("collect")
+	end
 end
 
 -- Delete a set.
@@ -1253,15 +1261,38 @@ function Skada:Tick()
 	end
 end
 
+-- Stops the current segment immediately.
+-- To not complicate things, this only stops processing of CLEU events and sets the segment end time.
+-- A stopped segment can be resumed.
+function Skada:StopSegment()
+    if self.current then
+        self.current.stopped = true
+		self.current.endtime = time()
+		self.current.time = self.current.endtime - self.current.starttime
+    end
+end
+
+-- Resumes a stopped segment.
+function Skada:ResumeSegment()
+    if self.current and self.current.stopped then
+       self.current.stopped = nil
+	   self.current.endtime = nil
+        self.current.time = nil
+    end
+end
+
 function Skada:EndSegment()
 	-- Save current set unless this a trivial set, or if we have the Only keep boss fights options on, and no boss in fight.
 	-- A set is trivial if we have no mob name saved, or if total time for set is not more than 5 seconds.
 	if not self.db.profile.onlykeepbosses or self.current.gotboss then
 		if self.current.mobname ~= nil and time() - self.current.starttime > 5 then
 			-- End current set.
-			self.current.endtime = time()
+            if not self.current.endtime then
+                self.current.endtime = time()
+            end
 			self.current.time = self.current.endtime - self.current.starttime
 			setPlayerActiveTimes(self.current)
+            self.current.stopped = nil
 
 			-- compute a count suffix for the set name
 			local setname = self.current.mobname
@@ -1391,7 +1422,7 @@ function Skada:StartCombat()
 		self.current = createSet(L["Current"])
 	end
 
-	if self.encounterName and 
+	if self.encounterName and
 	   GetTime() < (self.encounterTime or 0) + 15 then -- a recent ENCOUNTER_START named our segment
 		self:Debug("StartCombat setting encounterName from ENCOUNTER_START",self.encounterName)
 		self.current.mobname = self.encounterName
@@ -1547,7 +1578,8 @@ function Skada:get_player(set, playerid, playername)
 		end
 
 		local _, playerClass = UnitClass(playername)
-		player = {id = playerid, class = playerClass, name = playername, first = time(), ["time"] = 0}
+        local playerRole = UnitGroupRolesAssigned(playername)
+		player = {id = playerid, class = playerClass, role = playerRole, name = playername, first = time(), ["time"] = 0}
 
 		-- Tell each mode to apply its needed attributes.
 		for i, mode in ipairs(modes) do
@@ -1568,7 +1600,9 @@ function Skada:get_player(set, playerid, playername)
 		local player_name, realm = string.split("-", playername, 2)
 		player.name = player_name or playername
 		local _, playerClass = UnitClass(playername)
+        local playerRole = UnitGroupRolesAssigned(playername)
 		player.class = playerClass
+        player.role = playerRole
 	end
 
 
@@ -1603,7 +1637,7 @@ cleuFrame = CreateFrame("Frame") -- Dedicated event handler for a small performa
 cleuFrame:SetScript("OnEvent", function(frame, event, timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	local src_is_interesting = nil
 	local dst_is_interesting = nil
-
+        
 	-- Optional tentative combat detection.
 	-- Instead of simply checking when we enter combat, combat start is also detected based on needing a certain
 	-- amount of interesting (as defined by our modules) CL events.
@@ -1638,6 +1672,11 @@ cleuFrame:SetScript("OnEvent", function(frame, event, timestamp, eventtype, hide
 	end
 
 	if Skada.current and combatlogevents[eventtype] then
+        -- If segment is stopped, stop processing here.
+        if Skada.current.stopped then
+            return
+        end
+            
 		for i, mod in ipairs(combatlogevents[eventtype]) do
 			local fail = false
 
@@ -1707,7 +1746,7 @@ cleuFrame:SetScript("OnEvent", function(frame, event, timestamp, eventtype, hide
 	if Skada.current and src_is_interesting and not Skada.current.gotboss then
 		-- Store mob name for set name. For now, just save first unfriendly name available, or first boss available.
 		if bit.band(dstFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0 then
-			if not Skada.current.gotboss and boss.BossIDs[tonumber(dstGUID:sub(6, 10), 16)] then
+			if not Skada.current.gotboss and boss.BossIDs[tonumber(dstGUID:sub(-16, -12))] then
 				Skada.current.mobname = dstName
 				Skada.current.gotboss = true
 			elseif not Skada.current.mobname then
@@ -2080,7 +2119,7 @@ function Skada:GetSetTime(set)
 	if set.time then
 		return set.time
 	else
-		return (time() - set.starttime)
+        return (time() - set.starttime)
 	end
 end
 
@@ -2094,7 +2133,7 @@ function Skada:PlayerActiveTime(set, player)
 	end
 
 	-- Add in-progress time if set is not ended.
-	if not set.endtime and player.first then
+	if (not set.endtime or set.stopped) and player.first then
 		maxtime = maxtime + player.last - player.first
 	end
 	return maxtime

@@ -51,18 +51,23 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 			-- Get the spell from player.
 			local spell = player.damagespells[dmg.spellname]
 
-			spell.totalhits = spell.totalhits + 1
+			if not dmg.multistrike then
+				spell.totalhits = spell.totalhits + 1
 
-			if spell.max == nil or amount > spell.max then
-				spell.max = amount
-			end
+				if spell.max == nil or amount > spell.max then
+					spell.max = amount
+				end
 
-			if (spell.min == nil or amount < spell.min) and not dmg.missed then
-				spell.min = amount
+				if (spell.min == nil or amount < spell.min) and not dmg.missed then
+					spell.min = amount
+				end
 			end
 
 			spell.damage = spell.damage + amount
-			if dmg.critical then
+
+			if dmg.multistrike then
+				spell.multistrike = (spell.multistrike or 0) + 1
+			elseif dmg.critical then
 				spell.critical = (spell.critical or 0) + 1
 			elseif dmg.missed ~= nil then
 				spell[dmg.missed] = (spell[dmg.missed] or 0) + 1
@@ -70,8 +75,6 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 				spell.glancing = (spell.glancing or 0) + 1
 			elseif dmg.crushing then
 				spell.crushing = (spell.crushing or 0) + 1
-			elseif dmg.multistrike then
-				spell.multistrike = (spell.multistrike or 0) + 1
 			else
 				spell.hit = (spell.hit or 0) + 1
 			end
@@ -99,7 +102,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 		if srcGUID ~= dstGUID then
 			-- XXX WoD quick fix for Mage's Prismatic Crystal talent
 			-- All damage done to the crystal is transferred, so ignore it
-			if dstGUID:match("^Creature:0:%d+:%d+:%d+:76933:%w+$") then 
+			if dstGUID:match("^Creature%-0%-%d+%-%d+%-%d+%-76933%-%w+$") then
 				return
 			end
 
@@ -154,6 +157,27 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 		end
 	end
 
+	local function SpellAbsorbed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+        local chk = ...
+        local spellId, spellName, spellSchool, aGUID, aName, aFlags, aRaidFlags, aspellId, aspellName, aspellSchool, aAmount
+
+        if type(chk) == "number" then
+            -- Spell event
+            spellId, spellName, spellSchool, aGUID, aName, aFlags, aRaidFlags, aspellId, aspellName, aspellSchool, aAmount = ...
+            
+            if aAmount then
+                SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, aAmount)
+            end
+        else
+            -- Swing event
+            aGUID, aName, aFlags, aRaidFlags, aspellId, aspellName, aspellSchool, aAmount = ...
+
+            if aAmount then
+                SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, aAmount)   
+            end
+        end
+    end
+        
 	local function SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missed)
 		if srcGUID ~= dstGUID then
 			-- Melee misses
@@ -232,6 +256,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 				d.value = player.damage
 				d.id = player.id
 				d.class = player.class
+				d.role = player.role
 				if player.damage > max then
 					max = player.damage
 				end
@@ -371,7 +396,9 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 		win.metadata.maxvalue = max
 	end
 
-	local function add_detail_bar(win, nr, title, value)
+	local function add_detail_bar(win, title, value)
+		local nr = spellmod.nr + 1
+		spellmod.nr = nr
 		local d = win.dataset[nr] or {}
 		win.dataset[nr] = d
 
@@ -400,52 +427,53 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 
 			if spell then
 				spellmod.totalhits = spell.totalhits
+				spellmod.nr = 0
 				win.metadata.maxvalue = 0
 
 				if spell.hit and spell.hit > 0 then
-					add_detail_bar(win, 1, L["Hit"], spell.hit)
+					add_detail_bar(win, L["Hit"], spell.hit)
 				end
 				if spell.critical and spell.critical > 0 then
-					add_detail_bar(win, 2, L["Critical"], spell.critical)
+					add_detail_bar(win, L["Critical"], spell.critical)
 				end
 				if spell.multistrike and spell.multistrike > 0 then
-					add_detail_bar(win, 4, L["Multistrike"], spell.multistrike)
+					add_detail_bar(win, L["Multistrike"], spell.multistrike)
 				end
 				if spell.glancing and spell.glancing > 0 then
-					add_detail_bar(win, 3, L["Glancing"], spell.glancing)
+					add_detail_bar(win, L["Glancing"], spell.glancing)
 				end
 				if spell.crushing and spell.crushing > 0 then
-					add_detail_bar(win, 4, L["Crushing"], spell.crushing)
+					add_detail_bar(win, L["Crushing"], spell.crushing)
 				end
 				if spell.ABSORB and spell.ABSORB > 0 then
-					add_detail_bar(win, 5, L["Absorb"], spell.ABSORB)
+					add_detail_bar(win, L["Absorb"], spell.ABSORB)
 				end
 				if spell.BLOCK and spell.BLOCK > 0 then
-					add_detail_bar(win, 6, L["Block"], spell.BLOCK)
+					add_detail_bar(win, L["Block"], spell.BLOCK)
 				end
 				if spell.DEFLECT and spell.DEFLECT > 0 then
-					add_detail_bar(win, 7, L["Deflect"], spell.DEFLECT)
+					add_detail_bar(win, L["Deflect"], spell.DEFLECT)
 				end
 				if spell.DODGE and spell.DODGE > 0 then
-					add_detail_bar(win, 8, L["Dodge"], spell.DODGE)
+					add_detail_bar(win, L["Dodge"], spell.DODGE)
 				end
 				if spell.EVADE and spell.EVADE > 0 then
-					add_detail_bar(win, 9, L["Evade"], spell.EVADE)
+					add_detail_bar(win, L["Evade"], spell.EVADE)
 				end
 				if spell.IMMUNE and spell.IMMUNE > 0 then
-					add_detail_bar(win, 10, L["Immune"], spell.IMMUNE)
+					add_detail_bar(win, L["Immune"], spell.IMMUNE)
 				end
 				if spell.MISS and spell.MISS > 0 then
-					add_detail_bar(win, 11, L["Missed"], spell.MISS)
+					add_detail_bar(win, L["Missed"], spell.MISS)
 				end
 				if spell.PARRY and spell.PARRY > 0 then
-					add_detail_bar(win, 12, L["Parry"], spell.PARRY)
+					add_detail_bar(win, L["Parry"], spell.PARRY)
 				end
 				if spell.REFLECT and spell.REFLECT > 0 then
-					add_detail_bar(win, 13, L["Reflect"], spell.REFLECT)
+					add_detail_bar(win, L["Reflect"], spell.REFLECT)
 				end
 				if spell.RESIST and spell.RESIST > 0 then
-					add_detail_bar(win, 14, L["Resist"], spell.RESIST)
+					add_detail_bar(win, L["Resist"], spell.RESIST)
 				end
 
 			end
@@ -472,6 +500,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 				d.id = player.id
 				d.value = dps
 				d.class = player.class
+				d.role = player.role
 				d.valuetext = Skada:FormatNumber(dps)
 				if dps > max then
 					max = dps
@@ -493,6 +522,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 
 		Skada:RegisterForCL(SpellDamage, 'DAMAGE_SHIELD', {src_is_interesting = true, dst_is_not_interesting = true})
 		Skada:RegisterForCL(SpellDamage, 'SPELL_DAMAGE', {src_is_interesting = true, dst_is_not_interesting = true})
+		Skada:RegisterForCL(SpellAbsorbed, 'SPELL_ABSORBED', {src_is_interesting = true, dst_is_not_interesting = true})
 		Skada:RegisterForCL(SpellDamage, 'SPELL_PERIODIC_DAMAGE', {src_is_interesting = true, dst_is_not_interesting = true})
 		Skada:RegisterForCL(SpellDamage, 'SPELL_BUILDING_DAMAGE', {src_is_interesting = true, dst_is_not_interesting = true})
 		Skada:RegisterForCL(SpellDamage, 'RANGE_DAMAGE', {src_is_interesting = true, dst_is_not_interesting = true})

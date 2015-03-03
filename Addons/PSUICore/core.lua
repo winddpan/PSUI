@@ -8,10 +8,10 @@ local bordercolor = {0,0,0,95}
 local mainfont = "Fonts\\ARIALN.TTF"
 ----------------------------------------------------------------------------------------------------------------------------
 ------	create panels
-----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------	(UIParent:GetWidth()/UIParent:GetScale())
 
 ------- Bottompanel
-lib.Createpanel("Bottompanel",screenwidth+6,22,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.67}) 
+lib.Createpanel("Bottompanel",UIParent:GetWidth()+6,22,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.67}) 
 Bottompanel:SetFrameLevel(10)
 Bottompanel:SetPoint("BOTTOM",UIParent,"BOTTOM", 0, -3)
 
@@ -93,6 +93,7 @@ local function EditBoxConfig()
 			end
 		end 
 	end)
+	
 end
 
 local f = CreateFrame("Frame")
@@ -120,6 +121,7 @@ local login = function()
 	
 	EditBoxConfig()
 	ShowHelp()
+	Bottompanel:SetWidth(UIParent:GetWidth()+6)
 end
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function() login() end)

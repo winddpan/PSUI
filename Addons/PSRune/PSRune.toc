@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+## Interface: 60100
 ## Title: |cff3399FFPSRune|r
 ## Notes: DK符文插件
 ## Author: Winddpan

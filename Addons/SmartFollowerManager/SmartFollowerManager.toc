@@ -1,0 +1,16 @@
+## Author: Razor_Storm@NGACN
+## Interface: 60100
+## Title: SmartFollowerManager
+## Version: 1.3.0.4
+## Notes: Show abilities a follower can get|nShow the races and specs on the recruitment window
+## Notes-zhCN: 显示追随者专精能获得的技能|n在旅店招募追随者选择界面显示种族职业专精
+## Notes-zhTW: 顯示追隨者專精能獲得的技能|n在旅店招募追隨者選擇介面顯示種族職業專精
+## Notes-koKR: Show abilities a follower can get|nshow the races and specs on the recruitment window.|n|n|cFFFFFF00Localized by IrisNib|r
+
+Misc\Data.lua
+Misc\Localization.lua
+Misc\DataAPI.lua
+Misc\LoadWithGarrisonUI.lua
+
+SmartRecruiter.lua
+FollowerTooltip.lua

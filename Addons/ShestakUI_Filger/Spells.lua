@@ -33,7 +33,7 @@ Filger_Spells = {
 				--符文劍舞
 				{ spellID = 49028, unitID = "player", caster = "player", filter = "BUFF" },
 				--冰霜之柱
-				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
+				--{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
 				--拖把SP
 				{ spellID = 92222, unitID = "player", caster = "player", filter = "BUFF"},
 				--反魔法护罩
@@ -51,19 +51,35 @@ Filger_Spells = {
 				-- 白骨之盾
 				{spellID = 49222, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 杀戮机器
-				{spellID = 51124, unitID = "player",caster = "all", filter = "BUFF"},
+				--{spellID = 51124, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 吸血鬼之血
 				{spellID = 55233, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 冰冻之雾
-				{spellID = 59052, unitID = "player",caster = "all", filter = "BUFF"},
+				--{spellID = 59052, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 赤色天灾
 				{spellID = 81141, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 符文刃舞
 				{spellID = 81256, unitID = "player",caster = "all", filter = "BUFF"},
 				--黑暗突变
+				--{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
+		},
+		{
+			Name = "boom",
+			Direction = "LEFT",
+			Interval = 2,
+			Mode = "ICON",
+			IconSize = 37,
+			Position = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 46},
+				--十字军附魔
+				{spellID = 53365, unitID = "player",caster = "all", filter = "BUFF"},
+				--冰霜之柱
+				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
+				--黑暗突变
 				{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
-				--血之气息
-				--{spellID = 50421, unitID = "player",caster = "all", filter = "BUFF"}, 
+				--被动PVP饰品
+				{spellID = 126700, unitID = "player",caster = "all", filter = "BUFF"},
+				--主动PVP饰品
+				{spellID = 170397, unitID = "player",caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "Disease",
@@ -104,10 +120,10 @@ Filger_Spells = {
 		},
 		{
 			Name = "innerCooldown",
-			Direction = "LEFT",
+			Direction = "RIGHT",
 			Interval = 0,
 			Mode = "ICON",
-			IconSize = 40,
+			IconSize = 35,
 			Position = {unpack(Filger_Settings.innner_cooldown)},
 				{spellID = 128986, filter = "ICD", trigger = "BUFF", duration = 45},
 				{spellID = 138702,  filter = "ICD", trigger = "BUFF", duration = 85 },
@@ -241,6 +257,11 @@ Filger_Spells = {
 			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
 			--重生
 			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 177038, unitID = "player", caster = "all", filter = "BUFF"},
+			{spellID = 162915, unitID = "player", caster = "all", filter = "BUFF"},
+			--战歌之印
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
+			{spellID = 117732, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -576,7 +597,7 @@ Filger_Spells = {
 			{ spellID = 74001,  unitID = "target", caster = "all" , filter = "BUFF"},		
 			--盾墙
 			{ spellID = 871,  unitID = "target", caster = "all" , filter = "BUFF"},	
-			
+			{ spellID = 586,  unitID = "target", caster = "all" , filter = "BUFF"},	
 			--猎人技能
 			--主人的召唤
 			{ spellID = 53271,  unitID = "target", caster = "all" , filter = "BUFF"},	

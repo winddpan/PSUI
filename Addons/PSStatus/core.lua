@@ -1,4 +1,5 @@
-﻿local f = CreateFrame("frame","PSStatus", UIParent); 
+﻿local font = "Interface\\addons\\PSStatus\\font.ttf"
+local f = CreateFrame("frame","PSStatus", UIParent); 
 f:SetSize(100, 40)
 f:SetMovable(true)
 f:EnableMouse(true)
@@ -20,12 +21,20 @@ f:SetScript("OnEnter", function(s)
 f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
 f:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
 	
+
+	
 local text = f:CreateFontString(nil, 'OVERLAY')
 text:SetAllPoints(f)
-text:SetFont(STANDARD_TEXT_FONT, 18, "OUTLINE")
+text:SetFont(font, 22, "THINOUTLINE")
 text:SetJustifyH('RIGHT')
 
+local Class = select(2, UnitClass("player"))
+local color = RAID_CLASS_COLORS[Class]
+--text:SetTextColor(color.r, color.g, color.b)
+
 local function updateStatue()
+
+
 	local buffed = 0
 	local based = 0
 	local effective = 0
@@ -45,7 +54,8 @@ local function updateStatue()
 	end
 
 	if buffed > based *0.3 then
-		text:SetText("|cffff3333"..("%d"):format(effective))     
+		--text:SetText("|cffff3333"..("%d"):format(effective))     
+		text:SetText("! "..("%d"):format(effective))     
 	else
 		text:SetText(""..("%d"):format(effective))     
 	end

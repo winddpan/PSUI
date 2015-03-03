@@ -189,8 +189,8 @@ local menuList = {
 	{text = DUNGEONS_BUTTON, notCheckable = 1, func = function()
 			PVEFrame_ToggleFrame()
 	end},
-	{text = MOUNTS_AND_PETS, notCheckable = 1, func = function()
-		TogglePetJournal()
+	{text = COLLECTIONS, notCheckable = 1, func = function()
+		ToggleCollectionsJournal()
 	end},
 	{text = ENCOUNTER_JOURNAL, notCheckable = 1, func = function()
 		if not IsAddOnLoaded("Blizzard_EncounterJournal") then

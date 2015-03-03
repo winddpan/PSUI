@@ -69,7 +69,8 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 		if player then
 			-- Add a death along with it's timestamp.
 			player.deaths = player.deaths or {}
-			table.insert(player.deaths, 1, {["ts"] = deathts, ["log"] = deathlog, ["maxhp"] = maxhp}) 
+			
+			table.insert(player.deaths, 1, {["ts"] = deathts, ["log"] = deathlog, ["maxhp"] = maxhp})
 
 			-- Also add to set deaths.
 			set.deaths = set.deaths + 1
@@ -132,14 +133,14 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 		end
 	end
 
-        local function Missed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+    local function Missed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 		local spellId, misstype, _, samount
 		if eventtype == "SWING_MISSED" then
 			spellId = 88163
-			misstype, _, samount = ...
+			misstype, _, _, samount = ...
 		else
 			spellId = ...
-			misstype, _, samount = select(3,...)
+			misstype, _, _, samount = select(3,...)
 		end
 		if dstGUID and timestamp == SORtime[dstGUID] then -- this is actually the killing blow for the SOR we just recorded
 			Skada:Debug("SOR Miss killing blow: ",dstName, spellid, samount)
@@ -217,11 +218,13 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 				--   and this way "who died first" is clear in the order, despite brezzes
 				-- for total set: sort by number of deaths and omit timestamp in summary
 				--   because total often entails many unrelated combat segments with many deaths
+				local labeldeath
 				if set == Skada.total then
 					d.order = #player.deaths
 					d.valuetext = Skada:FormatValueText(
 						tostring(#player.deaths), self.metadata.columns.Deaths
 						)
+					labeldeath = player.deaths[1] -- last death in segment
 				else -- combat segment
 					local deathts
 					for j, death in ipairs(player.deaths) do
@@ -232,12 +235,32 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 						tostring(#player.deaths), self.metadata.columns.Deaths,
 						date("%H:%M:%S", deathts), self.metadata.columns.Timestamp
 						)
+					labeldeath = player.deaths[#player.deaths] -- first death in segment
 				end
 
+				local spellname = nil
+				local spellid = nil
+				if labeldeath and labeldeath.log and #labeldeath.log > 2 then
+					local kbts = 0
+					-- Find the killing blow
+					for j, v in ipairs(labeldeath.log) do
+						if v.amount and v.amount < 0 and v.ts > kbts then
+							spellid = v.spellid
+							spellname = v.spellname
+							kbts = v.ts
+						end
+					end
+				end
+				
 				d.id = player.id
 				d.value = #player.deaths
-				d.label = player.name
+				if spellid then
+					d.label = player.name .. ": " .. (spellname or GetSpellInfo(spellid))
+				else 
+					d.label = player.name
+				end
 				d.class = player.class
+				d.role = player.role
 				win.metadata.maxvalue = math.max(win.metadata.maxvalue, d.value)
 
 				nr = nr + 1
@@ -252,7 +275,7 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 
 	function deathlog:Enter(win, id, label)
 		deathlog.playerid = id
-		deathlog.title = label..L["'s Death"]
+		deathlog.title = label:gsub(": .*$","")..L["'s Death"]
 	end
 
 	local green = {r = 0, g = 255, b = 0, a = 1}

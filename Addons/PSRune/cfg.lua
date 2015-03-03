@@ -16,7 +16,7 @@
   --符文能量条设置
   cfg.powerbarEnable = true
   cfg.powerbarPos = {"BOTTOM", "PSRuneFrame", "BOTTOM", 0 , 8}
-  cfg.powerbarWdith = 80
+  cfg.powerbarWdith = 88
   cfg.powerbarHeight = 12
   
   --符文能量文字设置

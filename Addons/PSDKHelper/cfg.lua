@@ -1,5 +1,4 @@
 cfg = {
-	["SoulReaper_Percent"] = 0.35,
 	["iconsize"] = 40,
 	["spacing"] = 2,
 	["font"] = "Interface\\addons\\PSDKHelper\\media\\NumFont.ttf", --["font"] = DAMAGE_TEXT_FONT,

@@ -247,8 +247,17 @@ local function UpdateBuffs()
 
 end
 
+local SoulReaperPercent = .35
+local function updateSPPercent()
+	SoulReaperPercent = 0.35
+	if GetSpellInfo(157342) ~= nil then
+		SoulReaperPercent = 0.45
+	end
+end
+
 local function checkSoulReaper(SoulReaper_Frame)
-	if  UnitName("target") and UnitHealth("target")/UnitHealthMax("target") < cfg.SoulReaper_Percent then
+	updateSPPercent()
+	if  UnitName("target") and UnitHealth("target")/UnitHealthMax("target") < SoulReaperPercent then
 			 if ( UnitCanAttack("player", "target") and not UnitIsDead("target") ) then 
 				 SoulReaper_Frame:Show()
 				 SoulReaper_Update(SoulReaper_Frame)

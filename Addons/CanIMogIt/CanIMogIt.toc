@@ -1,0 +1,14 @@
+## Interface: 70000
+## Title: Can I Mog It?
+## Author: TorelTwiddler, Ami Yuy
+## Version: 7.0.3.12
+## Notes: Adds tooltips to items showing if you have learned a transmog appearance.
+## X-Category: Transmogrify
+## X-Website: http://mods.curse.com/addons/wow/can-i-mog-it
+## SavedVariables: CanIMogItOptions
+## X-Curse-Packaged-Version: 7.0.3.12
+## X-Curse-Project-Name: Can I Mog It?
+## X-Curse-Project-ID: can-i-mog-it
+## X-Curse-Repository-ID: wow/can-i-mog-it/mainline
+code.lua
+options.lua

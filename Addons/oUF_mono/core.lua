@@ -65,9 +65,9 @@
 	if cfg.oUF.settings.ClassBars.enable then
 		if class == "PRIEST" or class == "MONK" or class == "PALADIN" then lib.gen_ClassIcons(self)	end
 		lib.gen_WarlockSpecBar(self)
-		--lib.gen_Runes(self)
-		lib.gen_EclipseBar(self)
+		lib.gen_Runes(self)
 		lib.gen_TotemBar(self)
+	    lib.gen_cp(self)
 	end
 	if cfg.oUF.settings.ClassBars.position then
 		lib.gen_alt_powerbar(self)
@@ -98,7 +98,6 @@
     lib.gen_portrait(self)
     lib.createAuras(self)
     lib.gen_ppstrings(self)
-    lib.gen_cp(self)
 	lib.gen_combat_feedback(self)
     if cfg.oUF.settings.ghost_target then lib.gen_faketarget(self) end
 	self:SetSize(self.width,self.height)

@@ -123,8 +123,9 @@ local GetDisplayPower = function(unit)
 	end
 end
 
-local Update = function(self, event, unit)
+local Update = function(self, event, unit, t)
 	if(self.unit ~= unit) then return end
+
 	local power = self.Power
 
 	if(power.PreUpdate) then power:PreUpdate(unit) end
@@ -146,9 +147,7 @@ local Update = function(self, event, unit)
 	power.disconnected = disconnected
 
 	local r, g, b, t
-	if(power.colorTapping and not UnitPlayerControlled(unit) and
-		UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) and not
-		UnitIsTappedByAllThreatList(unit)) then
+	if power.colorTapping and not UnitPlayerControlled(unit) and UnitIsTapDenied(unit) then
 		t = self.colors.tapped
 	elseif(power.colorDisconnected and disconnected) then
 		t = self.colors.disconnected

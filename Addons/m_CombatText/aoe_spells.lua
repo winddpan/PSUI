@@ -2,6 +2,18 @@ local addon, ns = ...
 local cfg = ns.cfg
 local aoe = CreateFrame("Frame")  
 
+SVal = function(val)
+	if val then
+		if (val >= 1e8) then
+			return ("%.1fe"):format(val / 1e8)
+		elseif (val >= 1e4) then
+			return ("%.1fw"):format(val / 1e4)
+		else
+			return ("%d"):format(val)
+		end
+	end
+end
+
 if not cfg.combattext.merge_aoe_spam then return end
 aoe.spell = {}
 local player_class=select(2,UnitClass("player"))
@@ -140,10 +152,9 @@ elseif player_class=="DEATHKNIGHT"then
 	if(cfg.combattext.merge_aoe_spam)then
 		aoe.spell[55095]=true		-- Frost Fever
 		aoe.spell[55078]=true		-- Blood Plague
-		aoe.spell[55536]=true		-- Unholy Blight
-		aoe.spell[48721]=true		-- Blood Boil
-		aoe.spell[49184]=true		-- Howling Blast
-		aoe.spell[52212]=true		-- Death and Decay
+		aoe.spell[191587]=true
+		aoe.spell[191685]=true
+		aoe.spell[184899]=true
 		-- merging mh/oh strikes, creds to bozo
 		aoe.spell[49020]=true           -- Obliterate MH
 		aoe.spell[66198]=49020          -- Obliterate OH
@@ -164,11 +175,8 @@ elseif player_class=="ROGUE"then
 		aoe.spell[2818]=true		-- Deadly Poison
 		aoe.spell[113780]=true		-- 致命膏药立即触发
 		aoe.spell[8680]=true		-- Instant Poison
-		aoe.spell[121411]=true		-- 猩红风暴
-		aoe.spell[122233]=true		-- 猩红风暴dot
 		aoe.spell[159238]=true		-- 破碎之血附魔
 		aoe.spell[22482]=true		-- 剑刃乱舞
-		aoe.spell[157607]=true		-- 速效毒药
 	end
 end
 
@@ -202,7 +210,7 @@ if (cfg.combattext.show_damage or cfg.combattext.show_healing) then
 			for k,v in pairs(aoe.SQ) do
 				if not aoe.SQ[k]["locked"] and aoe.SQ[k]["queue"]>0 and aoe.SQ[k]["utime"]+cfg.combattext.merge_aoe_time<=utime then
 					count = aoe.SQ[k]["count"]>1 and "|cffFFAD29("..aoe.SQ[k]["count"]..") |r" or ""
-					local queue = aoe.SQ[k]["queueFormatted"] or aoe.SQ[k]["queue"]
+					local queue = aoe.SQ[k]["queueFormatted"] or SVal(aoe.SQ[k]["queue"])
 					mCT3:AddMessage(count..queue..aoe.SQ[k]["msg"], unpack(aoe.SQ[k]["color"]))
 					aoe.SQ[k]["queueFormatted"]=nil
 					aoe.SQ[k]["queue"]=0

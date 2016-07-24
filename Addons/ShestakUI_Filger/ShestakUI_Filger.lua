@@ -291,7 +291,7 @@ function Filger:DisplayActives()
 		end
 		if value.duration and value.duration > 0 then
 			if self.Mode == "ICON" then
-				CooldownFrame_SetTimer(bar.cooldown, value.start, value.duration, 1)
+				CooldownFrame_Set(bar.cooldown, value.start, value.duration, 1)
 				if value.data.filter == "CD" or value.data.filter == "ICD" then
 					bar.value = value
 					bar.activeIndex = activeIndex
@@ -350,28 +350,34 @@ function Filger:OnEvent(event, unit)
 			if data.filter == "BUFF" then
 				local caster, spn, expirationTime
 				spn, _, _ = GetSpellInfo(data.spellID)
-				name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitBuff(data.unitID, data.spellID, spn, data.absID)
-				if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
-					start = expirationTime - duration
-					found = true
+				if spn then
+					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitBuff(data.unitID, data.spellID, spn, data.absID)
+					if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
+						start = expirationTime - duration
+						found = true
+					end
 				end
 			elseif data.filter == "DEBUFF" then
 				local caster, spn, expirationTime
 				spn, _, _ = GetSpellInfo(data.spellID)
-				name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitDebuff(data.unitID, data.spellID, spn, data.absID)
-				if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
-					start = expirationTime - duration
-					found = true
+				if spn then
+					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitDebuff(data.unitID, data.spellID, spn, data.absID)
+					if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
+						start = expirationTime - duration
+						found = true
+					end
 				end
 			elseif data.filter == "CD" then
 				if data.spellID then
 					name, _, icon = GetSpellInfo(data.spellID)
-					if data.absID then
-						start, duration = GetSpellCooldown(data.spellID)
-					else
-						start, duration = GetSpellCooldown(name)
+					if name then
+						if data.absID then
+							start, duration = GetSpellCooldown(data.spellID)
+						else
+							start, duration = GetSpellCooldown(name)
+						end
+						spid = data.spellID
 					end
-					spid = data.spellID
 				elseif data.slotID then
 					spid = data.slotID
 					local slotLink = GetInventoryItemLink("player", data.slotID)
@@ -561,8 +567,8 @@ end
 
 SlashCmdList["FilgerTest"] = function(msg)
 	if msg:lower() == "" then
-		print("|c0000FF00/Filger test  锁定/解锁|r")
-		print("|c0000FF00/Filger reset   位置重置 |r")
+		print("|c0000FF00/sf test  锁定/解锁|r")
+		print("|c0000FF00/sf reset   位置重置 |r")
 	elseif msg:lower() == "test" then
 		if UnitAffectingCombat("player") then print("Filger正在战斗状态！") return end
 		testMode = not testMode
@@ -607,4 +613,3 @@ SlashCmdList["FilgerTest"] = function(msg)
 end
 SLASH_FilgerTest1 = "/sf"
 SLASH_FilgerTest2 = "/filger"
-SLASH_FilgerTest3 = "/ShestakUIFilger"

@@ -1,9 +1,8 @@
-## Interface: 60100
+## Interface: 70000 
 ## Author: zork
 ## Title: rBuffFrameStyler
 ## Notes: Simple mod to style the player aura icons
 ## RequiredDeps: rLib
 
 config.lua
-core\slashcmd.lua
 core\core.lua

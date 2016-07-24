@@ -4,309 +4,25 @@ local IconSize = 36
 local Filger_Settings = {
 	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- "P_BUFF_ICON"
 	player_proc_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, -40},	-- "P_PROC_ICON"
+	target_buff_icon = {"CENTER", UIParent, "CENTER", 171, 16},
+
+	lose_control_focus = {"LEFT","UIParent","CENTER", 222, 196},	
+	lose_control_target = {"CENTER", UIParent, "CENTER", 100, -110},
 	
 	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 150, 40},	-- "T_DEBUFF_ICON"
 	innner_cooldown = { "TOPRIGHT", UIParent, "CENTER", -310, -248 },   -- 内置CD
 }
 
 Filger_Spells = {
-	["DEATHKNIGHT"] = {
-		{
-			Name = "SP",
-			Direction = "LEFT",
-			Interval = 2,
-			Mode = "ICON",
-			IconSize = 37,
-			Position = {unpack(Filger_Settings.player_buff_icon)},
-			
-				--符能转换
-				{ spellID = 119975, unitID = "player", caster = "player", filter = "BUFF" },	
-				--死亡脚步
-				--{spellID = 96268, unitID = "player", caster = "player", filter = "BUFF"},
-				--符文腐化
-				--{spellID = 51460, unitID = "player", caster = "player", filter = "BUFF"},
-				--活力分流
-				--{ spellID = 114851, unitID = "player", caster = "player", filter = "BUFF"},
-				-- 暗影灌注
-				{spellID = 91342, unitID = "pet",caster = "all", filter = "BUFF"}, 
-				
-				--符文劍舞
-				{ spellID = 49028, unitID = "player", caster = "player", filter = "BUFF" },
-				--冰霜之柱
-				--{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
-				--拖把SP
-				{ spellID = 92222, unitID = "player", caster = "player", filter = "BUFF"},
-				--反魔法护罩
-				{ spellID = 48707, unitID = "player", caster = "player", filter = "BUFF"},
-				--冰封之韧
-				{ spellID = 48792, unitID = "player", caster = "player", filter = "BUFF"},
-				-- 嗜血
-				{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 英勇气概
-				{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 时间扭曲
-				{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 巫妖之躯
-				{spellID = 49039, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 白骨之盾
-				{spellID = 49222, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 杀戮机器
-				--{spellID = 51124, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 吸血鬼之血
-				{spellID = 55233, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 冰冻之雾
-				--{spellID = 59052, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 赤色天灾
-				{spellID = 81141, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 符文刃舞
-				{spellID = 81256, unitID = "player",caster = "all", filter = "BUFF"},
-				--黑暗突变
-				--{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
-		},
-		{
-			Name = "boom",
-			Direction = "LEFT",
-			Interval = 2,
-			Mode = "ICON",
-			IconSize = 37,
-			Position = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 46},
-				--十字军附魔
-				{spellID = 53365, unitID = "player",caster = "all", filter = "BUFF"},
-				--冰霜之柱
-				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
-				--黑暗突变
-				{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
-				--被动PVP饰品
-				{spellID = 126700, unitID = "player",caster = "all", filter = "BUFF"},
-				--主动PVP饰品
-				{spellID = 170397, unitID = "player",caster = "all", filter = "BUFF"},
-		},
-		{
-			Name = "Disease",
-			Direction = "RIGHT",
-			Interval = 0,
-			Mode = "ICON",
-			IconSize = 35,
-			Position = {unpack(Filger_Settings.target_debuff_icon)},
-				--灵魂收割
-				{spellID = 114866, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 130735, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
-				--死咀
-				{spellID = 155159, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 血之疫病
-				{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 冰霜疫病
-				{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 冰链
-				{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 冻疮
-				{spellID = 50435, unitID = "target", caster = "player", filter = "DEBUFF"},
-		},
-		{
-			Name = "Deathfoot",
-			Direction = "LEFT",
-			Interval = 0,
-			Mode = "ICON",
-			--BarWidth = 170,
-			IconSize = 32,
-			Position = {unpack(Filger_Settings.player_proc_icon)},
-				--死亡脚步
-				{spellID = 96268, unitID = "player", caster = "player", filter = "BUFF"},
-				--符文腐化
-				{spellID = 51460, unitID = "player", caster = "player", filter = "BUFF"},
-				--活力分流
-				{ spellID = 114851, unitID = "player", caster = "player", filter = "BUFF"},
-		},
-		{
-			Name = "innerCooldown",
-			Direction = "RIGHT",
-			Interval = 0,
-			Mode = "ICON",
-			IconSize = 35,
-			Position = {unpack(Filger_Settings.innner_cooldown)},
-				{spellID = 128986, filter = "ICD", trigger = "BUFF", duration = 45},
-				{spellID = 138702,  filter = "ICD", trigger = "BUFF", duration = 85 },
-				{spellID = 126700,  filter = "ICD", trigger = "BUFF", duration = 60 },
-
-		},
-	},
-	["ROGUE"] = {
-		{
-			Name = "P_BUFF_ICON",
-			Direction = "LEFT",
-			Mode = "ICON",
-			Interval = 2,
-			Alpha = 1,
-			IconSize = 37,
-			Position = {unpack(Filger_Settings.player_buff_icon)},
-			--速度爆发
-			{spellID = 108212, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 嗜血
-			{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
-			-- 英勇气概
-			{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
-			-- 时间扭曲
-			{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
-			
-			--潜行
-			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
-			--暗影集中
-			{spellID = 112942, unitID = "player", caster = "player", filter = "BUFF"},
-			--强化消失
-			{spellID = 115193, unitID = "player", caster = "player", filter = "BUFF"},
-			--诡诈
-			{spellID = 115192, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Envenom
-			{spellID = 32645, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Slice and Dicepoison
-			{spellID = 5171, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Recuperate
-			{spellID = 73651, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Adrenaline Rush
-			{spellID = 13750, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Evasion
-			{spellID = 5277, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Shadow Dance
-			{spellID = 51713, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Master of Subtlety
-			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cloak of Shadows
-			{spellID = 31224, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vanish
-			{spellID = 1856, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Combat Readiness
-			{spellID = 74001, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Combat Insight
-			{spellID = 74002, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cheating Death
-			{spellID = 45182, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Blade Flurry
-			{spellID = 13877, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sprint
-			{spellID = 2983, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Feint
-			{spellID = 1966, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 137573, unitID = "player", caster = "player", filter = "BUFF"},
-
-		},
-		{
-			Name = "innerCooldown",
-			Direction = "LEFT",
-			Interval = 0,
-			Mode = "ICON",
-			IconSize = 40,
-			Position = {unpack(Filger_Settings.innner_cooldown)},
-				{spellID = 138699, filter = "ICD", trigger = "BUFF", duration = 105},
-				--既定天命
-				{spellID = 146308, filter = "ICD", trigger = "BUFF", duration = 115},
-		},
-		{
-			Name = "P_PROC_ICON",
-			Direction = "LEFT",
-			Mode = "ICON",
-			Interval = 2,
-			Alpha = 1,
-			IconSize = 36,
-			Position = {unpack(Filger_Settings.player_proc_icon)},
-
-			-- Buffs
-			-- Shallow Insight
-			{spellID = 84745, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Moderate Insight
-			{spellID = 84746, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Deep Insight
-			{spellID = 84747, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Blindside
-			{spellID = 121153, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- Trinkets
-			-- General
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- Dancing Steel (Agility)
-			{spellID = 118334, unitID = "player", caster = "player", filter = "BUFF"},
-			--预感
-			{spellID = 115189, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 170879, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 影踪突袭邪恶护符
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			--雪怒圣物
-			{spellID = 128984, unitID = "player", caster = "player", filter = "BUFF"},
-			--舞钢
-			{spellID = 120032, unitID = "player", caster = "player", filter = "BUFF"},
-			--雷声老1SP
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 138737, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			--既定天命
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			--522 娃娃
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			--重生
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177038, unitID = "player", caster = "all", filter = "BUFF"},
-			{spellID = 162915, unitID = "player", caster = "all", filter = "BUFF"},
-			--战歌之印
-			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
-			{spellID = 117732, unitID = "player", caster = "all", filter = "BUFF"},
-		},
-		{
-			Name = "T_DEBUFF_ICON",
-			Direction = "RIGHT",
-			Mode = "ICON",
-			Interval = 2,
-			Alpha = 1,
-			IconSize = 37,
-			Position = {unpack(Filger_Settings.target_debuff_icon)},
-			--移动速度减70%
-			{spellID = 115196, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Find Weakness 洞悉弱点
-			{spellID = 91021, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Vendetta 仇杀
-			{spellID = 79140, unitID = "target", caster = "player", filter = "DEBUFF"},
-			--出血
-			{spellID = 89775, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Revealing Strike
-			{spellID = 84617, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Rupture
-			{spellID = 1943, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Garrote
-			{spellID = 703, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Gouge
-			{spellID = 1776, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Hemorrhage
-			{spellID = 16511, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Deadly Poison
-			{spellID = 2818, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Crippling Poison
-			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Wound Poison
-			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},
-		},
-	},
 	["ALL"] = {
 		{
 			Name = "LoseControl_Target",
 			Direction = "RIGHT", Interval = 0,
 			Mode = "ICON", IconSize = 46,
-			Position = {"CENTER", UIParent, "CENTER", 100, -110},
+			Position = {unpack(Filger_Settings.lose_control_target)},
+			
 			-- Death Knight
 			{spellID =  108194, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Asphyxiate
-			{spellID =  115000, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
-			{spellID =  115001, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
 			{spellID =  47476, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Strangulate
 			{spellID =  96294, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Chains of Ice (Chilblains)
 			-- Death Knight Ghoul
@@ -318,7 +34,6 @@ Filger_Spells = {
 			{spellID =  99, unitID = "target", caster = "all", filter = "DEBUFF"},       -- "CC",		-- Disorienting Roar
 			{spellID =  22570, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Maim
 			{spellID =  5211, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mighty Bash
-			{spellID =  114238, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Fae Silence (Glyph of Fae Silence)
 			{spellID =  81261, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Solar Beam
 			{spellID =  339, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Entangling Roots
 			{spellID =  45334, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Immobilized (Wild Charge - Bear)
@@ -331,10 +46,8 @@ Filger_Spells = {
 
 			-- Hunter Pets
 			{spellID =  24394, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Intimidation
-			{spellID =  50519, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sonic Blast (Bat)
 
 			-- Mage
-			{spellID =  44572, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Deep Freeze
 			{spellID =  31661, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Dragon's Breath
 			{spellID =  118, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Polymorph
 			{spellID =  61305, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Black Cat
@@ -343,26 +56,19 @@ Filger_Spells = {
 			{spellID =  61780, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turkey
 			{spellID =  28271, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turtle
 			{spellID =  82691, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Ring of Frost
-			{spellID =  102051, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Frostjaw (also a root)
 			{spellID =  122, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Frost Nova
-			{spellID =  111340, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Ice Ward
 
 			-- Mage Water Elemental
 			{spellID =  33395, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze
 			-- Monk
-			{spellID =  123393, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Breath of Fire (Glyph of Breath of Fire)
-			{spellID =  119392, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Charging Ox Wave
 			{spellID =  119381, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Leg Sweep
 			{spellID =  115078, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Paralysis
 			{spellID =  116706, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Disable
 
 			-- Paladin
 			{spellID =  105421, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Blinding Light
-			{spellID =  105593, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fist of Justice
 			{spellID =  853, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Hammer of Justice
-			{spellID =  119072, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Holy Wrath
 			{spellID =  20066, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Repentance
-			{spellID =  10326, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Turn Evil
 			{spellID =  31935, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Avenger's Shield
 
 			-- Priest
@@ -373,7 +79,6 @@ Filger_Spells = {
 			{spellID =  9484, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Shackle Undead
 			{spellID =  87204, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sin and Punishment
 			{spellID =  15487, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silence
-			{spellID =  87194, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Glyph of Mind Blast
 			{spellID =  114404, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Void Tendril's Grasp
 
 			-- Rogue
@@ -383,13 +88,14 @@ Filger_Spells = {
 			{spellID =  408, unitID = "target", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Kidney Shot
 			{spellID =  6770, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Sap
 			{spellID =  1330, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "Silence",		-- Garrote - Silence
+			{spellID =  199804, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "狂徒晕",		
+			{spellID =  196958, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "飞刀晕",
 
 			-- Shaman
 			{spellID =  77505, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Earthquake
 			{spellID =  51514, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Hex
 			{spellID =  118905, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Static Charge (Capacitor Totem)
 			{spellID =  64695, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Earthgrab (Earthgrab Totem)
-			{spellID =  63685, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze (Frozen Power)
 
 			-- Shaman Primal Earth Elemental
 			{spellID =  118345, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Pulverize
@@ -408,11 +114,9 @@ Filger_Spells = {
 			{spellID =  6358, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Seduction (Succubus)
 			-- Warrior
 			{spellID =  7922, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Charge Stun
-			{spellID =  118895, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Dragon Roar
 			{spellID =  5246, unitID = "target", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Intimidating Shout (aoe)
 			{spellID =  132168, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Shockwave
 			{spellID =  105771, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Warbringer
-			{spellID =  18498, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silenced - Gag Order
 			{spellID =  107566, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Staggering Shout
 
 			-- Other
@@ -436,11 +140,10 @@ Filger_Spells = {
 			Name = "LoseControl_Focus",
 			Direction = "RIGHT", Interval = 0,
 			Mode = "ICON", IconSize = 40,
-			Position = {"LEFT","UIParent","CENTER", 222, 196},	
+			Position = {unpack(Filger_Settings.lose_control_focus)},
+			
 			-- Death Knight
 			{spellID =  108194, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Asphyxiate
-			{spellID =  115000, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
-			{spellID =  115001, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Remorseless Winter
 			{spellID =  47476, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Strangulate
 			{spellID =  96294, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Chains of Ice (Chilblains)
 			-- Death Knight Ghoul
@@ -452,7 +155,6 @@ Filger_Spells = {
 			{spellID =  99, unitID = "focus", caster = "all", filter = "DEBUFF"},       -- "CC",		-- Disorienting Roar
 			{spellID =  22570, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Maim
 			{spellID =  5211, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Mighty Bash
-			{spellID =  114238, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Fae Silence (Glyph of Fae Silence)
 			{spellID =  81261, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Solar Beam
 			{spellID =  339, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Entangling Roots
 			{spellID =  45334, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Immobilized (Wild Charge - Bear)
@@ -465,10 +167,8 @@ Filger_Spells = {
 
 			-- Hunter Pets
 			{spellID =  24394, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Intimidation
-			{spellID =  50519, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sonic Blast (Bat)
 
 			-- Mage
-			{spellID =  44572, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Deep Freeze
 			{spellID =  31661, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Dragon's Breath
 			{spellID =  118, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Polymorph
 			{spellID =  61305, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Black Cat
@@ -477,26 +177,19 @@ Filger_Spells = {
 			{spellID =  61780, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turkey
 			{spellID =  28271, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Polymorph: Turtle
 			{spellID =  82691, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Ring of Frost
-			{spellID =  102051, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Silence",		-- Frostjaw (also a root)
 			{spellID =  122, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "Root",		-- Frost Nova
-			{spellID =  111340, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Ice Ward
 
 			-- Mage Water Elemental
 			{spellID =  33395, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze
 			-- Monk
-			{spellID =  123393, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Breath of Fire (Glyph of Breath of Fire)
-			{spellID =  119392, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Charging Ox Wave
 			{spellID =  119381, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Leg Sweep
 			{spellID =  115078, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Paralysis
 			{spellID =  116706, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Disable
 
 			-- Paladin
 			{spellID =  105421, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Blinding Light
-			{spellID =  105593, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Fist of Justice
 			{spellID =  853, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Hammer of Justice
-			{spellID =  119072, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Holy Wrath
 			{spellID =  20066, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Repentance
-			{spellID =  10326, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Turn Evil
 			{spellID =  31935, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Avenger's Shield
 
 			-- Priest
@@ -507,7 +200,6 @@ Filger_Spells = {
 			{spellID =  9484, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Shackle Undead
 			{spellID =  87204, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Sin and Punishment
 			{spellID =  15487, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silence
-			{spellID =  87194, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Glyph of Mind Blast
 			{spellID =  114404, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Void Tendril's Grasp
 
 			-- Rogue
@@ -517,13 +209,14 @@ Filger_Spells = {
 			{spellID =  408, unitID = "focus", caster = "all", filter = "DEBUFF"},      -- "CC",		-- Kidney Shot
 			{spellID =  6770, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Sap
 			{spellID =  1330, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "Silence",		-- Garrote - Silence
-
+			{spellID =  199804, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "狂徒晕",		
+			{spellID =  196958, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "飞刀晕",
+			
 			-- Shaman
 			{spellID =  77505, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Earthquake
 			{spellID =  51514, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Hex
 			{spellID =  118905, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Static Charge (Capacitor Totem)
 			{spellID =  64695, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Earthgrab (Earthgrab Totem)
-			{spellID =  63685, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Freeze (Frozen Power)
 
 			-- Shaman Primal Earth Elemental
 			{spellID =  118345, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Pulverize
@@ -542,11 +235,9 @@ Filger_Spells = {
 			{spellID =  6358, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Seduction (Succubus)
 			-- Warrior
 			{spellID =  7922, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Charge Stun
-			{spellID =  118895, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Dragon Roar
 			{spellID =  5246, unitID = "focus", caster = "all", filter = "DEBUFF"},     -- "CC",		-- Intimidating Shout (aoe)
 			{spellID =  132168, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Shockwave
 			{spellID =  105771, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Warbringer
-			{spellID =  18498, unitID = "focus", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Silenced - Gag Order
 			{spellID =  107566, unitID = "focus", caster = "all", filter = "DEBUFF"},  -- "Root",		-- Staggering Shout
 
 			-- Other
@@ -570,14 +261,15 @@ Filger_Spells = {
 			Name = "Tar_Buff",
 			Direction = "RIGHT", Interval = 2,
 			Mode = "ICON", IconSize = 42,
-			Position = {"CENTER", UIParent, "CENTER", 171, 16},
+			Position = {unpack(Filger_Settings.target_buff_icon)},
+
 			-----------------------------------------------------------------------
 			------------ PVP BUFF ----------------------------------------------
 			-----------------------------------------------------------------------
 			--业报之触
 			{ spellID = 124280, unitID = "player", caster = "all" , filter = "DEBUFF"}, 
 			--暗影之舞
-			{ spellID = 51713, unitID = "target", caster = "all" , filter = "BUFF"}, 
+			{ spellID = 185313, unitID = "target", caster = "all" , filter = "BUFF"}, 
 			--鲁莽
 			{ spellID = 1719, unitID = "target", caster = "all" , filter = "BUFF"}, 
 			--自由聖禦
@@ -624,7 +316,6 @@ Filger_Spells = {
 			{spellID =  54216, unitID = "target", caster = "all" , filter = "BUFF"},    -- "Other",		-- Master's Call (root and snare immune only)
 			--Mage
 			{spellID =  45438, unitID = "target", caster = "all" , filter = "BUFF"},    -- "Immune",		-- Ice Block
-			{spellID =  115760, unitID = "target", caster = "all" , filter = "BUFF"},  -- "ImmuneSpell",	-- Glyph of Ice Block
 			--Paladin
 			{spellID =  642, unitID = "target", caster = "all" , filter = "BUFF"},      -- "Immune",		-- Divine Shield
 			{spellID =  31821, unitID = "target", caster = "all" , filter = "BUFF"},    -- "Other",		-- Aura Mastery
@@ -639,7 +330,6 @@ Filger_Spells = {
 			--Shaman
 			{spellID =  8178, unitID = "target", caster = "all" , filter = "BUFF"},     -- "ImmuneSpell",	-- Grounding Totem Effect (Grounding Totem)
 			--Warlock
-			{spellID =  110913, unitID = "target", caster = "all" , filter = "BUFF"},  -- "Other",		-- Dark Bargain
 			{spellID =  104773, unitID = "target", caster = "all" , filter = "BUFF"},  -- "Other",		-- Unending Resolve
 			--Warrior
 			{spellID =  46924, unitID = "target", caster = "all" , filter = "BUFF"},    -- "Immune",		-- Bladestorm
@@ -657,6 +347,260 @@ Filger_Spells = {
 			{spellID =  126708 , unitID = "target", caster = "all" , filter = "BUFF"},	-- 被动 敏捷SP
 		},
 	},
+	["DEATHKNIGHT"] = {
+		{
+			Name = "SP",
+			Direction = "LEFT",
+			Interval = 2,
+			Mode = "ICON",
+			IconSize = 37,
+			Position = {unpack(Filger_Settings.player_buff_icon)},
+				{spellID = 207319, unitID = "player",caster = "all", filter = "BUFF"}, 
+
+				--符文劍舞
+				{ spellID = 49028, unitID = "player", caster = "player", filter = "BUFF" },
+				--冰霜之柱
+				--{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
+				--拖把SP
+				{ spellID = 92222, unitID = "player", caster = "player", filter = "BUFF"},
+				--反魔法护罩
+				{ spellID = 48707, unitID = "player", caster = "player", filter = "BUFF"},
+				--冰封之韧
+				{ spellID = 48792, unitID = "player", caster = "player", filter = "BUFF"},
+				-- 嗜血
+				{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 英勇气概
+				{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 时间扭曲
+				{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 巫妖之躯
+				{spellID = 49039, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 杀戮机器
+				--{spellID = 51124, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 吸血鬼之血
+				{spellID = 55233, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 冰冻之雾
+				--{spellID = 59052, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 赤色天灾
+				{spellID = 81141, unitID = "player",caster = "all", filter = "BUFF"},
+				-- 符文刃舞
+				{spellID = 81256, unitID = "player",caster = "all", filter = "BUFF"},
+								--黑暗突变
+				{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
+				--符能转换
+				{ spellID = 119975, unitID = "player", caster = "player", filter = "BUFF" },	
+				--死亡脚步
+				--{spellID = 96268, unitID = "player", caster = "player", filter = "BUFF"},
+				--符文腐化
+				{spellID = 51460, unitID = "player", caster = "player", filter = "BUFF"},
+		},
+		{
+			Name = "boom",
+			Direction = "LEFT",
+			Interval = 2,
+			Mode = "ICON",
+			IconSize = 37,
+			Position = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 46},
+				--被动PVP饰品
+				{spellID = 126700, unitID = "player",caster = "all", filter = "BUFF"},
+				--主动PVP饰品
+				{spellID = 170397, unitID = "player",caster = "all", filter = "BUFF"},
+				--十字军附魔
+				{spellID = 53365, unitID = "player",caster = "all", filter = "BUFF"},
+				--冰霜之柱
+				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
+				--WOD PVP 4件
+				{spellID = 166062, unitID = "player",caster = "all", filter = "BUFF"}, 
+		},
+		{
+			Name = "Disease",
+			Direction = "RIGHT",
+			Interval = 0,
+			Mode = "ICON",
+			IconSize = 35,
+			Position = {unpack(Filger_Settings.target_debuff_icon)},
+				{spellID = 196782, unitID = "target", caster = "player", filter = "DEBUFF"},
+				{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
+				{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
+
+				--灵魂收割
+				{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
+				-- 血之疫病
+				{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
+				-- 冰霜疫病
+				{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
+				-- 冰链
+				{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
+		},
+		{
+			Name = "innerCooldown",
+			Direction = "RIGHT",
+			Interval = 0,
+			Mode = "ICON",
+			IconSize = 35,
+			Position = {unpack(Filger_Settings.innner_cooldown)},
+				{spellID = 128986, filter = "ICD", trigger = "BUFF", duration = 45},
+				{spellID = 138702,  filter = "ICD", trigger = "BUFF", duration = 85 },
+				{spellID = 126700,  filter = "ICD", trigger = "BUFF", duration = 60 },
+
+		},
+	},
+	["ROGUE"] = {
+		{
+			Name = "P_BUFF_ICON",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 37,
+			Position = {unpack(Filger_Settings.player_buff_icon)},
+			-- 影舞
+			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 嗜血
+			{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
+			-- 英勇气概
+			{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
+			-- 时间扭曲
+			{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
+			-- 敏锐死亡标记
+			{spellID = 212283, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 227151, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 195627, unitID = "player", caster = "player", filter = "BUFF"},
+
+			--潜行
+			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
+			--暗影集中
+			{spellID = 112942, unitID = "player", caster = "player", filter = "BUFF"},
+			--强化消失
+			{spellID = 115193, unitID = "player", caster = "player", filter = "BUFF"},
+			--诡诈
+			{spellID = 115192, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Envenom
+			{spellID = 32645, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Slice and Dicepoison
+			{spellID = 5171, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Adrenaline Rush
+			{spellID = 13750, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evasion
+			{spellID = 5277, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shadow Dance
+			{spellID = 185313, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Master of Subtlety
+			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Cloak of Shadows
+			{spellID = 31224, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Vanish
+			{spellID = 1856, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Combat Readiness
+			{spellID = 74001, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Combat Insight
+			{spellID = 74002, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Cheating Death
+			{spellID = 45182, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blade Flurry
+			{spellID = 13877, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Sprint
+			{spellID = 2983, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Feint
+			{spellID = 1966, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 137573, unitID = "player", caster = "player", filter = "BUFF"},
+
+		},
+		{
+			Name = "innerCooldown",
+			Direction = "LEFT",
+			Interval = 0,
+			Mode = "ICON",
+			IconSize = 40,
+			Position = {unpack(Filger_Settings.innner_cooldown)},
+				{spellID = 138699, filter = "ICD", trigger = "BUFF", duration = 105},
+				--既定天命
+				{spellID = 146308, filter = "ICD", trigger = "BUFF", duration = 115},
+		},
+		{
+			Name = "P_PROC_ICON",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 36,
+			Position = {unpack(Filger_Settings.player_proc_icon)},
+
+			-- Trinkets
+			-- General
+			-- PvP Trinkets (Health, Use)
+			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Physical Agility DPS
+			-- Terror in the Mists (Crit, Proc)
+			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Jade Bandit Figurine (Haste, Use)
+			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Bottle of Infinite Stars (Agility, Proc)
+			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
+			-- PvP Trinkets (Agility, Use)
+			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
+			-- PvP Trinkets (Agility, Proc)
+			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
+
+			-- Dancing Steel (Agility)
+			{spellID = 118334, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 170879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 影踪突袭邪恶护符
+			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
+			--雪怒圣物
+			{spellID = 128984, unitID = "player", caster = "player", filter = "BUFF"},
+			--舞钢
+			{spellID = 120032, unitID = "player", caster = "player", filter = "BUFF"},
+			--雷声老1SP
+			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 138737, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
+			--既定天命
+			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
+			--522 娃娃
+			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
+			--重生
+			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 177038, unitID = "player", caster = "all", filter = "BUFF"},
+			{spellID = 162915, unitID = "player", caster = "all", filter = "BUFF"},
+			--战歌之印
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
+		},
+		{
+			Name = "T_DEBUFF_ICON",
+			Direction = "RIGHT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 37,
+			Position = {unpack(Filger_Settings.target_debuff_icon)},
+			--移动速度减70%
+			{spellID = 115196, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 185763, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Find Weakness 洞悉弱点
+			{spellID = 91021, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 195452, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 206760, unitID = "target", caster = "player", filter = "DEBUFF"},
+
+			-- Vendetta 仇杀
+			{spellID = 79140, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Rupture
+			{spellID = 1943, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Garrote
+			{spellID = 703, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Gouge
+			{spellID = 1776, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Hemorrhage
+			{spellID = 16511, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Deadly Poison
+			{spellID = 2818, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Crippling Poison
+			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Wound Poison
+			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},
+		},
+	},
+	
 	["DRUID"] = {			--[小德]
 		{
 			Name = "P_BUFF_ICON",
@@ -906,6 +850,10 @@ Filger_Spells = {
 			{spellID = 90361, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Posthaste
 			{spellID = 118922, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 177668, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 54216, unitID = "player", caster = "all", filter = "BUFF"},
+			{spellID = 53480, unitID = "player", caster = "all", filter = "BUFF"},
+
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -971,6 +919,7 @@ Filger_Spells = {
 			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Agility, Proc)
 			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 170397, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
 			-- General
@@ -996,6 +945,11 @@ Filger_Spells = {
 			{spellID = 53301, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Narrow Escape
 			{spellID = 136634, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 冰冻弹减速
+			{spellID = 162546, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 震荡
+			{spellID = 5116, unitID = "target", caster = "player", filter = "DEBUFF"},
+
 		},
 	},
 	["MAGE"] = {			--[法师]
@@ -1136,8 +1090,6 @@ Filger_Spells = {
 			{spellID = 33395, unitID = "target", caster = "all", filter = "DEBUFF"},
 			-- Frost Nova
 			{spellID = 122, unitID = "target", caster = "all", filter = "DEBUFF"},
-			-- Ice Ward
-			{spellID = 111340, unitID = "target", caster = "all", filter = "DEBUFF"},
 			-- Cone of Cold
 			{spellID = 120, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Frostfire Bolt
@@ -1644,7 +1596,6 @@ Filger_Spells = {
 			-- Void Tendril's Grasp
 			{spellID = 114404, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Glyph of Mind Blast
-			{spellID = 87194, unitID = "target", caster = "player", filter = "DEBUFF"},
 		},
 	},
 	["SHAMAN"] = {			--[萨满]
@@ -1838,8 +1789,6 @@ Filger_Spells = {
 			IconSize = IconSize,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 
-			-- Dark Bargain
-			{spellID = 110913, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Unending Resolve
 			{spellID = 104773, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Dark Soul: Knowledge

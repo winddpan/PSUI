@@ -73,6 +73,7 @@ Skada.defaults = {
 		mergepets=true,
 		feed = "",
 		showtotals = false,
+        autostop = false,
 
 		modules = {},
 		columns = {},

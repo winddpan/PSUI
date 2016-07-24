@@ -31,22 +31,14 @@ end
 _G[addonName] = addon
 addon.healthCheck = true
 
+
+-- Sound
+local media = LibStub("LibSharedMedia-3.0")
+media:Register("sound", "BugSack: Fatality", "Interface\\AddOns\\BugSack\\Media\\error.ogg")
+
 -----------------------------------------------------------------------
 -- Utility
 --
-
-do
-	-- bah this should be local but we need it in config.lua
-	local media = nil
-	function addon:EnsureLSM3()
-		if media then return media end
-		media = LibStub("LibSharedMedia-3.0", true)
-		if media then
-			media:Register("sound", "BugSack: Fatality", "Interface\\AddOns\\BugSack\\Media\\error.ogg")
-		end
-		return media
-	end
-end
 
 local onError
 do
@@ -54,13 +46,8 @@ do
 	function onError(event, errorObject)
 		if not lastError or GetTime() > (lastError + 2) then
 			if not addon.db.mute then
-				local media = addon:EnsureLSM3()
-				if media then
-					local sound = media:Fetch("sound", addon.db.soundMedia) or "Interface\\AddOns\\BugSack\\Media\\error.ogg"
-					PlaySoundFile(sound)
-				else
-					PlaySoundFile("Interface\\AddOns\\BugSack\\Media\\error.ogg")
-				end
+				local sound = media:Fetch("sound", addon.db.soundMedia)
+				PlaySoundFile(sound)
 			end
 			if addon.db.chatframe then
 				print(L["There's a bug in your soup!"])
@@ -79,10 +66,11 @@ end
 -- Event handling
 --
 
-local eventFrame = CreateFrame("Frame")
+local eventFrame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 eventFrame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
+addon.frame = eventFrame
 
 function eventFrame:ADDON_LOADED(loadedAddon)
 	if loadedAddon ~= addonName then return end
@@ -136,8 +124,6 @@ function eventFrame:ADDON_LOADED(loadedAddon)
 	if type(sv.fontSize) ~= "string" then sv.fontSize = "GameFontHighlight" end
 	addon.db = sv
 
-	addon:EnsureLSM3()
-
 	self.ADDON_LOADED = nil
 end
 
@@ -155,9 +141,14 @@ function eventFrame:PLAYER_LOGIN()
 	-- Set up our error event handler
 	BugGrabber.RegisterCallback(addon, "BugGrabber_BugGrabbed", onError)
 
-	SlashCmdList.BugSack = function()
-		InterfaceOptionsFrame_OpenToCategory(addonName)
-		InterfaceOptionsFrame_OpenToCategory(addonName)
+	SlashCmdList.BugSack = function(msg)
+		msg = msg:lower()
+		if msg == "show" then
+			addon:OpenSack()
+		else
+			InterfaceOptionsFrame_OpenToCategory(addonName)
+			InterfaceOptionsFrame_OpenToCategory(addonName)
+		end
 	end
 	SLASH_BugSack1 = "/bugsack"
 

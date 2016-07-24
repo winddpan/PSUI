@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2009-2014, Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
+Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
 All rights reserved.
 ]]
 
@@ -10,20 +10,12 @@ local optGetter, optSetter
 do
 	function optGetter(info)
 		local key = info[#info]
-		if key:sub(0,5) == "mini_" then
-			return Mapster.db.profile.mini[key:sub(6)]
-		else
-			return Mapster.db.profile[key]
-		end
+		return Mapster.db.profile[key]
 	end
 
 	function optSetter(info, value)
 		local key = info[#info]
-		if key:sub(0,5) == "mini_" then
-			Mapster.db.profile.mini[key:sub(6)] = value
-		else
-			Mapster.db.profile[key] = value
-		end
+		Mapster.db.profile[key] = value
 		Mapster:Refresh()
 	end
 end
@@ -58,21 +50,13 @@ local function getOptions()
 							name = MAP_FADE_TEXT,
 							desc = L["The map will fade out to the configured Fade Alpha level when you start moving."],
 							get = function() return GetCVarBool("mapFade") end,
-							set = function(_, v) v = v and 1 or 0; SetCVar("mapFade", v); InterfaceOptionsObjectivesPanelMapFade.value = v end,
+							set = function(_, v) v = v and 1 or 0; SetCVar("mapFade", v); end,
 							width = "full",
 						},
 						alpha = {
 							order = 3,
 							name = L["Alpha"],
 							desc = L["The transparency of the big map."],
-							type = "range",
-							min = 0, max = 1, bigStep = 0.01,
-							isPercent = true,
-						},
-						mini_alpha = {
-							order = 4,
-							name = L["Minimized Alpha"],
-							desc = L["The transparency of the minimized map."],
 							type = "range",
 							min = 0, max = 1, bigStep = 0.01,
 							isPercent = true,
@@ -101,26 +85,18 @@ local function getOptions()
 							min = 0.1, max = 2, bigStep = 0.01,
 							isPercent = true,
 						},
-						mini_scale = {
+						arrowScale = {
 							order = 7,
-							name = L["Minimized Scale"],
-							desc = L["Scale of the minimized map."],
+							name = L["PlayerArrow Scale"],
+							desc = L["Adjust the size of the Player Arrow on the Map for better visibility."],
 							type = "range",
-							min = 0.1, max = 2, bigStep = 0.01,
+							min = 0.5, max = 2, bigStep = 0.01,
 							isPercent = true,
 						},
 						nl = {
 							order = 10,
 							type = "description",
 							name = "",
-						},
-						arrowScale = {
-							order = 11,
-							name = L["PlayerArrow Scale"],
-							desc = L["Adjust the size of the Player Arrow on the Map for better visibility."],
-							type = "range",
-							min = 0.5, max = 2, bigStep = 0.01,
-							isPercent = true,
 						},
 						poiScale = {
 							order = 12,
@@ -148,35 +124,11 @@ local function getOptions()
 							type = "toggle",
 							name = L["Hide Map Button"],
 						},
-						nl3 = {
-							order = 30,
-							type = "description",
-							name = "",
-						},
-						hideBorder = {
-							order = 31,
-							type = "toggle",
-							name = L["Hide Border"],
-							desc = L["Hide the borders of the big map."],
-							disabled = true,
-						},
-						mini_hideBorder = {
-							order = 32,
-							type = "toggle",
-							name = L["(Mini) Hide Border"],
-							desc = L["Hide the borders of the minimized map."],
-						},
 						disableMouse = {
-							order = 33,
+							order = 22,
 							type = "toggle",
 							name = L["Disable Mouse"],
 							desc = L["Disable the mouse interactivity of the main map, eg. to change zones."],
-						},
-						mini_disableMouse = {
-							order = 34,
-							type = "toggle",
-							name = L["(Mini) Disable Mouse"],
-							desc = L["Disable the mouse interactivity of the main map when in minimized mode, eg. to change zones."],
 						},
 					},
 				},
@@ -216,12 +168,12 @@ end
 
 function Mapster:SetupMapButton()
 	-- create button on the worldmap to toggle the options
-	self.optionsButton = CreateFrame("Button", "MapsterOptionsButton", WorldMapFrame, "UIPanelButtonTemplate")
+	self.optionsButton = CreateFrame("Button", "MapsterOptionsButton", WorldMapTitleButton, "UIPanelButtonTemplate")
 	self.optionsButton:SetWidth(95)
 	self.optionsButton:SetHeight(18)
 	self.optionsButton:SetText("Mapster")
 	self.optionsButton:ClearAllPoints()
-	self.optionsButton:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", -45, -3)
+	self.optionsButton:SetPoint("TOPRIGHT", WorldMapTitleButton, "TOPRIGHT", 0, -3)
 
 	if self.db.profile.hideMapButton then
 		self.optionsButton:Hide()

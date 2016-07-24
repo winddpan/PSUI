@@ -405,9 +405,9 @@ L["All Skada functionality is now in 1 addon folder."] = true
 L["Skada will |cFFFF0000NOT|r function properly until you delete the following AddOns:"] = true
 L["Click below and configure your '|cFFFF0000Disabled Modules|r'."] = true
 
-L["Stop"] = true
+L["Stop"] = "Stop/Resume"
 L["Autostop"] = "Stop early on wipe"
-L["Autostop description"] = "Automatically stops the current segment after half of all raid members have died."
+L["Autostop description"] = "Automatically stops the current segment after a certain amount of raid members have died."
 
 L["Stop description"] = "Stops or resumes the current segment. Useful for discounting data after a wipe. Can also be set to automatically stop in the settings."
 L["Segment description"] = "Jump to a specific segment."
@@ -418,3 +418,7 @@ L["Configure description"] = "Lets you configure the active Skada window."
 
 L["Role icons"] = true
 L["Use role icons where applicable."] = true
+
+L["Overhealing spells"] = true
+
+L["Whisper Target"] = true

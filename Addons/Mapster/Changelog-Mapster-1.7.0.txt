@@ -1,0 +1,32 @@
+tag 1.7.0
+36b9181f5dbf2767a939769b004660a57785b5ca
+Hendrik Leppkes <h.leppkes@gmail.com>
+2016-07-19 09:26:10 +0200
+
+Tag as 1.7.0
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Fix the draw layer of mouseover world map overlays
+	- Update FogClear Map Info for 7.0.3.22133
+	- Remove remnant of old AceDB based map data
+	- Update POI hit translation usage for 7.0.3.21846
+	- Update FogClear data to build 7.0.3.21796
+	- Remove commented out Tanaan Jungle Into map info
+	- Remove remnants of the old POI handling
+	- Do not hook the POI SetPoints, its all handled by WorldMapPOIFrame_AnchorPOI now
+	- Reshuffle options to take less space
+	- Fix alpha value when fading out
+	- Map fading doesn't have a option in the UI panel anymore
+	- Update TOC to 7.0
+	- Rewrite core functionality, use more of Blizzards built-in functionality to avoid taint
+	Some functionality is lost due to this, like the secondary smaller map,
+	instead the fullscreen map is accessible if the user wants.
+	- Import FogClear data from 7.0.3.21737
+	- Only hook POI buttons once
+	- Fix POI hooks on Legion
+	- Fix the scale of the WorldMapTooltip when the map is rescaled
+	The tooltip inherits the scale of the map, which is not really intended.
+	- Remove disabled InstanceMaps module, it has not been missed

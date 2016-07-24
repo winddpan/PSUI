@@ -1,0 +1,48 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+
+<!-- Copyright 2015 Mike Battersby -->
+
+<Script file="UIOptions.lua" />
+
+<Frame name="LiteBagOptions" hidden="true" inherits="LiteBagOptionsPanelTemplate">
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString name="$parentTitle" inherits="GameFontNormalLarge" parentKey="title">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-16" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+
+    <Frames>
+        <CheckButton name="$parentConfirmSort" inherits="InterfaceOptionsCheckButtonTemplate">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-32" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsConfirmSort_OnLoad" />
+            </Scripts>
+        </CheckButton>
+        <Slider name="$parentInventoryColumns" minValue="8" maxValue="24" valueStep="2" obeyStepOnDrag="true" defaultValue="8" inherits="OptionsSliderTemplate">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentConfirmSort" relativePoint="BOTTOMLEFT" x="32" y="-32" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsInventoryColumns_OnLoad" />
+                <OnValueChanged function="LiteBagOptionsInventoryColumns_OnValueChanged" />
+            </Scripts>
+        </Slider>
+        <Slider name="$parentBankColumns" minValue="8" maxValue="24" valueStep="2" obeyStepOnDrag="true" defaultValue="14" inherits="OptionsSliderTemplate">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentInventoryColumns" relativePoint="BOTTOMLEFT" x="0" y="-32" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsBankColumns_OnLoad" />
+                <OnValueChanged function="LiteBagOptionsBankColumns_OnValueChanged" />
+            </Scripts>
+        </Slider>
+    </Frames>
+</Frame>
+
+</Ui>

@@ -27,21 +27,6 @@ if UnitLevel("player") == MAX_PLAYER_LEVEL then
 	cfg.combattext.threshold.damage = cfg.combattext.threshold.damage_maxlvl
 end
 -- Create scrolling frames
--- local t = CreateFrame"Frame"
--- t:RegisterEvent"VARIABLES_LOADED"
--- t:SetScript("OnEvent", function()
-
-local SVal = function(val)
-	if val then
-		if (val >= 1e8) then
-			return ("%.1fe"):format(val / 1e8)
-		elseif (val >= 1e4) then
-			return ("%.1fw"):format(val / 1e4)
-		else
-			return ("%d"):format(val)
-		end
-	end
-end
 
 local frames = {}
 for i = 1, 3 do
@@ -196,7 +181,7 @@ if cfg.combattext.show_damage then
 						aoe.SQ[spellId]["locked"]=true
 						aoe.SQ[spellId]["queue"]=SpamQueue(spellId, rawamount)
 						if (critical and (aoe.SQ[spellId]["count"]==0 or aoe.SQ[spellId]["queueFormatted"])) then
-							aoe.SQ[spellId]["queueFormatted"] = "|cffFF0000*|r|cffFAD8AC"..aoe.SQ[spellId]["queue"].."|r|cffFF0000*|r"
+							aoe.SQ[spellId]["queueFormatted"] = "|cffFF0000*|r|cffFAD8AC"..SVal(aoe.SQ[spellId]["queue"]).."|r|cffFF0000*|r"
 						else
 							aoe.SQ[spellId]["queueFormatted"] = nil
 						end
@@ -301,7 +286,7 @@ if cfg.combattext.show_healing then
 					else
 						msg=""
 					end
-              			if (icon) then 
+              		if (icon) then 
                			msg=" \124T"..icon..":"..cfg.combattext.iconsize..":"..cfg.combattext.iconsize..":0:0:64:64:5:59:5:59\124t"
 					elseif(cfg.combattext.show_icons)then
 						msg=" \124T"..cfg.blank..":"..cfg.combattext.iconsize..":"..cfg.combattext.iconsize..":0:0:64:64:5:59:5:59\124t"

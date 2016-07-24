@@ -5,10 +5,10 @@ local oUF = ns.oUF or oUF
 
 local SVal = function(val)
 	if val then
-		if (val >= 1e6) then
-			return ("%.1fm"):format(val / 1e6)
-		elseif (val >= 1e3) then
-			return ("%.1fk"):format(val / 1e3)
+		if (val >= 1e8) then
+			return ("%.1fe"):format(val / 1e8)
+		elseif (val >= 1e4) then
+			return ("%.1fw"):format(val / 1e4)
 		else
 			return ("%d"):format(val)
 		end
@@ -88,8 +88,7 @@ local pcolors = setmetatable({
 oUF.Tags.Methods['mono:color'] = function(u, r)
 	local _, class = UnitClass(u)
 	local reaction = UnitReaction(u, "player")
-	
-	if (UnitIsTapped(u) and not UnitIsTappedByPlayer(u)) then
+	if UnitIsTapDenied(u) then
 		return hex(oUF.colors.tapped)
 	elseif (UnitIsPlayer(u)) then
 		return hex(oUF.colors.class[class])
@@ -314,19 +313,37 @@ oUF.Tags.Methods['mono:altpower'] = function(unit)
 end
 oUF.Tags.Events['mono:altpower'] = 'UNIT_POWER'
 
+
 -------------[[ class specific tags ]]-------------
 -- combo points
 oUF.Tags.Methods['mono:cp'] = function(u)
-	local cp = UnitExists("vehicle") and GetComboPoints("vehicle", "target") or GetComboPoints("player", "target")
+	local MaxComboPoints = UnitPowerMax(u, SPELL_POWER_COMBO_POINTS)
+	local cp
+    if UnitHasVehicleUI('player') and UnitPower('vehicle', 4) >= 1 then
+        cp = UnitPower('vehicle', 4)
+    else
+        cp = UnitPower('player', 4)
+    end
 	cpcol = {"8AFF30","FFF130","FF6161"}
-	if cp == 1 then		return "|cff"..cpcol[1].."_|r" 
-	elseif cp == 2 then	return "|cff"..cpcol[1].."_ _|r"
-	elseif cp == 3 then	return "|cff"..cpcol[1].."_ _|r |cff"..cpcol[2].."_|r" 
-	elseif cp == 4 then	return "|cff"..cpcol[1].."_ _|r |cff"..cpcol[2].."_ _|r" 
-	elseif cp == 5 then	return "|cff"..cpcol[1].."_ _|r |cff"..cpcol[2].."_ _|r |cff"..cpcol[3].."_|r"
-	end
+	
+	local cpstr = ""
+	for i=1, cp do
+        if(i < MaxComboPoints) then
+			if i==1 then
+				cpstr = "|cff"..cpcol[1].."_|r" 
+			elseif i <= 2 then
+				cpstr = cpstr.." |cff"..cpcol[1].."_|r" 
+			else 
+				cpstr = cpstr.." |cff"..cpcol[2].."_|r" 
+			end
+        else
+			cpstr = cpstr.." |cff"..cpcol[3].."_|r" 
+        end
+    end
+	return cpstr
+
 end
-oUF.Tags.Events['mono:cp'] = 'UNIT_COMBO_POINTS'
+oUF.Tags.Events['mono:cp'] = 'UNIT_POWER_FREQUENT'
 -- special powers
 -- water shield
 oUF.Tags.Methods['mono:ws'] = function(u)

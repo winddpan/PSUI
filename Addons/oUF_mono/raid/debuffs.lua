@@ -17,7 +17,7 @@ local dispellPriority = {
       Curse = 2,
       Disease = 1,}
 local instDebuffs = {}
-local instances = raid_debuffs.instances
+local instances = raid_debuffs.instances or {}
 --local getzone = function(self, event)
 local getZone = CreateFrame"Frame"
 getZone:RegisterEvent"PLAYER_ENTERING_WORLD"

@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 70000 
 ## Author: zork
 ## Title: rActionBarStyler
 ## Notes: Simple actionbars
@@ -6,7 +6,6 @@
 
 config.lua
 core\hide_blizzart.lua
-core\slashcmd.lua
 core\micromenu.lua
 core\bags.lua
 core\bar1.lua

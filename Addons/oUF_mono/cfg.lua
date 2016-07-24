@@ -163,9 +163,6 @@
 		focus = {
 			["enable"] = true,
 			["undock"] = true,
-			--["position"] = {"CENTER",UIParent,"BOTTOM",10,470},
-			--["position"] = {"TOPLEFT","oUF_monoFocusFrame","BOTTOMLEFT",0,-2},
-			--["position"] = {"TOPRIGHT","oUF_monoFocusFrame","TOPLEFT",-3,-2},
 			["position"] = {"TOPRIGHT","oUF_monoFocusFrame","BOTTOMRIGHT",0,-2},
 
 			["width"] = 150,

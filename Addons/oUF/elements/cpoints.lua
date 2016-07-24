@@ -39,31 +39,62 @@ local oUF = ns.oUF
 local GetComboPoints = GetComboPoints
 local MAX_COMBO_POINTS = MAX_COMBO_POINTS
 
-local Update = function(self, event, unit)
-	if(unit == 'pet') then return end
-
-	local cpoints = self.CPoints
-	if(cpoints.PreUpdate) then
-		cpoints:PreUpdate()
+local Update = function(self, event, unit, type)
+	if event ~= "PLAYER_TARGET_CHANGED" and unit ~= 'player' then return end
+	
+	local element = self.CPoints
+	if(element.PreUpdate) then
+		element:PreUpdate()
 	end
-
-	local cp
+	
+	local cur, max, oldMax
 	if(UnitHasVehicleUI'player') then
-		cp = GetComboPoints('vehicle', 'target')
+		cur = GetComboPoints('vehicle', 'target')
+		max = UnitPowerMax('vehicle', SPELL_POWER_COMBO_POINTS)
 	else
-		cp = GetComboPoints('player', 'target')
+		cur = GetComboPoints('player', 'target')
+		max = UnitPowerMax('player', SPELL_POWER_COMBO_POINTS)
 	end
-
-	for i=1, MAX_COMBO_POINTS do
-		if(i <= cp) then
-			cpoints[i]:Show()
-		else
-			cpoints[i]:Hide()
+	
+	if max <= 6 then
+		for i = 1, max do
+			if(i <= cur) then
+				element[i]:Show()
+			else
+				element[i]:Hide()
+			end
+		end
+	else
+		for i = 1, 5 do
+			if cur <= 5 then
+				if(i <= cur) then
+					element[i]:Show()
+				else
+					element[i]:Hide()
+				end
+			else
+				element[i]:Show()
+			end
 		end
 	end
 
-	if(cpoints.PostUpdate) then
-		return cpoints:PostUpdate(cp)
+	oldMax = element.__max
+	if(max ~= oldMax) then
+		if max == 5 or max == 8 then
+			element[6]:Hide()
+		else
+			for i = 1, 6 do
+				if i > max then
+					element[i]:Hide()
+				end
+			end
+		end
+		
+		element.__max = max
+	end
+	
+	if(element.PostUpdate) then
+		return element:PostUpdate(cur, max, oldMax ~= max, event)
 	end
 end
 
@@ -81,7 +112,7 @@ local Enable = function(self)
 		cpoints.__owner = self
 		cpoints.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_COMBO_POINTS', Path, true)
+		self:RegisterEvent('UNIT_POWER_FREQUENT', Path, true)
 		self:RegisterEvent('PLAYER_TARGET_CHANGED', Path, true)
 
 		for index = 1, MAX_COMBO_POINTS do
@@ -102,7 +133,7 @@ local Disable = function(self)
 		for index = 1, MAX_COMBO_POINTS do
 			cpoints[index]:Hide()
 		end
-		self:UnregisterEvent('UNIT_COMBO_POINTS', Path)
+		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
 		self:UnregisterEvent('PLAYER_TARGET_CHANGED', Path)
 	end
 end

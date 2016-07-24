@@ -3,6 +3,7 @@ local oUF = ns.oUF or oUF
 if not oUF then return end
 
 local L = {
+--[[
 	--priest
   ["Prayer of Mending"] = GetSpellInfo(33076),
   ["Renew"] = GetSpellInfo(139),
@@ -46,7 +47,7 @@ local L = {
   ["Soulstone"] = GetSpellInfo(20707),
 	--mage
   ["Dalaran Brilliance"] = GetSpellInfo(61316),
-  ["Arcane Brilliance"] = GetSpellInfo(1459),
+  ["Arcane Brilliance"] = GetSpellInfo(1459),]]
 }
 local x = "M"
 
@@ -164,11 +165,11 @@ oUF.Tags.Methods['raid:SW'] = function(u) if UnitAura(u, L['Shield Wall']) then 
 oUF.Tags.Events['raid:SW'] = "UNIT_AURA"
 
 --rogue
-oUF.Tags.Methods['raid:tricks'] = function(u) if UnitAura(u, L["Tricks of the Trade"]) then return "|cff33FF33"..x.."|r" end end
+oUF.Tags.Methods['raid:tricks'] = function(u) end
 oUF.Tags.Events['raid:tricks'] = "UNIT_AURA"
 
 --deathknight
-oUF.Tags.Methods['raid:how'] = function(u) if UnitAura(u, L["Horn of Winter"]) or UnitAura(u, L["Battle Shout"]) then return "|cffffff10"..x.."|r" end end
+oUF.Tags.Methods['raid:how'] = function(u) end
 oUF.Tags.Events['raid:how'] = "UNIT_AURA"
 
 --paladin
@@ -246,6 +247,8 @@ oUF.Tags.Events['raid:ss'] = "UNIT_AURA"
 oUF.Tags.Methods['raid:brill'] = function(u) local c = UnitAura(u, L["Dalaran Brilliance"]) or UnitAura(u, L["Arcane Brilliance"]) if not c then return "|cff00A1DE"..x.."|r" end end
 oUF.Tags.Events['raid:brill'] = "UNIT_AURA"
 
+oUF.classIndicators={}
+--[[
 oUF.classIndicators={
 		["DRUID"] = {
 				["TL"] = "[raid:regrow][raid:wg]",
@@ -326,3 +329,4 @@ oUF.classIndicators={
 				["Cen"] = "[raid:rmTime]",
 		}
 }
+]]

@@ -2,7 +2,7 @@ local addon, ns = ...
 local cfg = CreateFrame("Frame")
 
 cfg.combattext = {
-	font = "Interface\\Addons\\m_CombatText\\media\\font.ttf",	-- font
+	font = DAMAGE_TEXT_FONT,	-- font
 	fontsize = 20,												-- font size
 	fontstyle = "OUTLINE",										-- font style
 	

@@ -1,9 +1,9 @@
-## Interface: 60100
+## Interface: 70000 
 ## Title: SmartTabTarget
 ## Author: smcn
 ## Notes: Switches tab-target based on PvP status
 ## SavedVariables: SmartTabTargetSavedVariables
-## X-Curse-Packaged-Version: v2.2.1
+## X-Curse-Packaged-Version: v2.2.3-60200
 ## X-Curse-Project-Name: SmartTabTarget
 ## X-Curse-Project-ID: smarttabtarget
 ## X-Curse-Repository-ID: wow/smarttabtarget/mainline

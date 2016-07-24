@@ -1,0 +1,12 @@
+tag 7.0.1
+0df8d7703b98cda4da4abaade6f96becbdc916a9
+Mike "Xodiv" Battersby <mib@post.com>
+2016-07-20 15:09:57 +1000
+
+Tagging 7.0.1
+
+
+--------------------
+
+Mike "Xodiv" Battersby:
+	- Fix not showing the quality color borders on itembuttons.

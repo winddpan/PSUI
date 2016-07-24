@@ -1,0 +1,16 @@
+------------------------------------------------------------------------
+r22 | smcn | 2015-06-30 22:38:44 +0000 (Tue, 30 Jun 2015) | 2 lines
+Changed paths:
+   A /tags/v2.2.3-60200 (from /trunk:21)
+
+updated to work with arena skirmishes
+toc bump
+------------------------------------------------------------------------
+r21 | smcn | 2015-06-30 22:38:07 +0000 (Tue, 30 Jun 2015) | 2 lines
+Changed paths:
+   M /trunk/SmartTabTarget.lua
+   M /trunk/SmartTabTarget.toc
+
+updated to work with arena skirmishes
+toc bump
+------------------------------------------------------------------------

@@ -25,7 +25,7 @@ f:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
 	
 local text = f:CreateFontString(nil, 'OVERLAY')
 text:SetAllPoints(f)
-text:SetFont(font, 22, "THINOUTLINE")
+text:SetFont(font, 21, "THINOUTLINE")
 text:SetJustifyH('RIGHT')
 
 local Class = select(2, UnitClass("player"))

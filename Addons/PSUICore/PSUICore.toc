@@ -1,34 +1,36 @@
-## Interface: 60100
+## Interface: 70000 
 ## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
-## Version: 2.0
+## Version: 2.1
 ## OptionalDeps:Skada, DBM-Core, Aurora
 
-slashcmd.lua
-lib.lua
+info/info.xml
+lib/libs.xml
+
 core.lua
+slashcmd.lua
+
+panel/lib.lua
+panel/core.lua
 
 modules\combat_notification.lua
 modules\minimap.lua
 modules\tooltip.lua
 modules\chatbar.lua
-modules\rogue_dispatch_alert.lua
 modules\blizzardfix.lua
 modules\JPack.lua
 modules\bags.lua
 modules\HoverBind.lua
 modules\xp_bar.lua
 modules\ObjectiveTrackerMover.lua
-modules\!QuestItemButtonFix.lua
 modules\SimpleChannel.lua
 
 automation\buystack.lua
 automation\durability.lua
 automation\error_frame.lua
 automation\mail_get.lua
-automation\toggle_cloak_helm.lua
 automation\AutoRepair&Sell.lua
 
 skin\StyleSkada.lua

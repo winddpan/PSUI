@@ -1,11 +1,10 @@
-## Interface: 60100
+## Interface: 70000 
 ## Notes: Scrolling combat text
 ## Title: mono|cffffffffCombatText|r
 ## Author: Monolit
-## Version: 2.2.0
-## Credits: Affli, Alza
+## Version: 7.0
+## Credits: Affli, Alza, WINDDPAN
 
 cfg.lua
-..\!mCFG\mCFG_layer.lua
 aoe_spells.lua
 mCT.lua

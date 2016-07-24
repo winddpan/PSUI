@@ -10,7 +10,9 @@ local configDefaults = {
 			flagged = false,
 			bg = true,
 			arena = true,
+			arenaSkirmish = true,
 			world = nil,
+			ashran = true,
 		},
 		verbose = true,
 	}
@@ -135,6 +137,25 @@ local optionsTable = {
 				return (not SmartTabTarget:IsEnabled())
 			end,
 		},
+		arenaSkirmish = {
+			order = 650,
+			name = "In Arena Skirmish",
+			desc = "Switch tab-targetting to players-only whenever you are in an arena skirmish",
+			type = "toggle",
+
+			set = function(info, value)
+				SmartTabTarget.db.profile.switch.arenaSkirmish = value
+				SmartTabTarget:CheckSwitch()
+			end,
+
+			get = function(info)
+				return SmartTabTarget.db.profile.switch.arenaSkirmish
+			end,
+
+			disabled = function()
+				return (not SmartTabTarget:IsEnabled())
+			end,
+		},
 		world = {
 			order = 700,
 			name = "In World PvP Zones",
@@ -155,6 +176,26 @@ local optionsTable = {
 				return (not SmartTabTarget:IsEnabled())
 			end,
 		},
+		ashran = {
+			order = 800,
+			name = "In Ashran",
+			desc = "Switch tab-targetting to players-only whenever you are in Ashran.",
+			type = "toggle",
+			tristate = true,
+
+			set = function(info, value)
+				SmartTabTarget.db.profile.switch.ashran = value
+				SmartTabTarget:CheckSwitch()
+			end,
+
+			get = function(info)
+				return SmartTabTarget.db.profile.switch.ashran
+			end,
+
+			disabled = function()
+				return (not SmartTabTarget:IsEnabled())
+			end,
+		},
 
 	},
 }
@@ -164,10 +205,14 @@ function SmartTabTarget:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileChanged", "CheckSwitch")
 	self.db.RegisterCallback(self, "OnProfileCopied", "CheckSwitch")
 	self.db.RegisterCallback(self, "OnProfileReset", "CheckSwitch")
-
+	
+	if self.db.profile.switch.ashran == nil then
+		self.db.profile.switch.ashran = true
+	end
+	
 	AceConfigRegistry:RegisterOptionsTable(addonName, optionsTable)
 	AceConfigDialog:AddToBlizOptions(addonName)
-	AceConfigDialog:SetDefaultSize(addonName, 400, 200)
+	AceConfigDialog:SetDefaultSize(addonName, 400, 250)
 
 	self:RegisterChatCommand("stt", function()
 		AceConfigDialog:Open(addonName)
@@ -205,16 +250,21 @@ end
 
 -- checks if tab-targetting should be switched based on current options
 function SmartTabTarget:CheckSwitch()
+	--pvp flagged
 	if self.db.profile.switch.flagged and UnitIsPVP("player") then
 		self:DoSwitch(true)
 		return
 	end
 
-	if self.db.profile.switch.bg or self.db.profile.switch.arena then
+	--battleground/arena
+	if self.db.profile.switch.bg or self.db.profile.switch.arena or self.db.profile.switch.arenaSkirmish then
 		for i = 1, GetMaxBattlefieldID() do
 			local status, _, _, _, _, queueType = GetBattlefieldStatus(i)
 			if status == "active" then
 				if (queueType == "ARENA") and self.db.profile.switch.arena then
+					self:DoSwitch(true)
+					return
+				elseif (queueType == "ARENASKIRMISH") and self.db.profile.switch.arenaSkirmish then
 					self:DoSwitch(true)
 					return
 				elseif (queueType == "BATTLEGROUND") and self.db.profile.switch.bg then
@@ -240,6 +290,16 @@ function SmartTabTarget:CheckSwitch()
 		end
 	end
 
+	--ashran
+	if self.db.profile.switch.ashran then
+		local _, name = GetWorldPVPAreaInfo(3)
+		if name == GetRealZoneText() then
+			self:DoSwitch(true)
+			return
+		end
+	end
+	
+	--world pvp zone
 	if self.db.profile.switch.world ~= false then
 		local inWorldPvPZone = false
 		for i = 1, GetNumWorldPVPAreas() do

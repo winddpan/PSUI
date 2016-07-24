@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 70000 
 ## Version: 1.0
 ## Author: WINDDPAN
 ## Title: |cff3399FFPSStatus|r

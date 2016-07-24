@@ -37,7 +37,7 @@ local function Timer_ForceUpdate(self)
 end
 
 local function Timer_OnSizeChanged(self, width, height)
-	local fontScale = Round(width) / 40
+	local fontScale = Round(width) / 50
 	if fontScale == self.fontScale then
 		return
 	end

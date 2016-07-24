@@ -1,0 +1,233 @@
+------------------------------------------------------------------------------
+* Basics of LiteBag code
+
+    The Blizzard code for bags is in:
+        FrameXML/ContainerFrame.xml
+        FrameXML/ContainerFrame.lua
+        FrameXML/BankFrame.xml
+        FrameXML/BankFrame.lua
+
+    See https://github.com/gethe/wow-ui-source/blob/live/FrameXML
+
+    The Blizzard code is very bag-focused, most of the bag/bank-related API
+    calls take a (bag, slot) pair as the identifier.  There is a global
+    inventory slot ID but it's almost unused.
+
+    The Blizzard bags/banks are holders for the item buttons, which are either:
+        * ContainerFrameItemButtonTemplate
+        * BankItemButtonGenericTemplate
+        * ReagentBankItemButtonGenericTemplate
+    which all inherit from ItemButtonTemplate
+
+    In the Blizzard code the container frames themselves are responsible for
+    doing all of the updates on the item buttons.
+
+    LiteBag is pretty simple, all of the complexity is in the detail:
+
+        LiteBagItemButtonTemplate is an item button that inherits from
+        ContainerFrameItemButtonTemplate.  It can do all its own updating,
+        plus we add a few extra indicators on it.  The updating code is
+        more or less split out and copied from ContainerFrame.lua.
+
+        LiteBagBagButtonTemplate is a button to hold the actual bag iself,
+        where you drag a new bag on when you buy one.
+
+        LiteBagFrameTemplate is a template for our one-bag frames.  It is
+        assigned some bag IDs and a size, and automatically knows how to do
+        things a bit differently if one of its bag IDs is the bank.
+
+        In LiteBag.xml we define two one-bag frames, inventory and bank.
+
+        In ReplaceBlizzard.lua are the various functions to replace the
+        Blizzard standard bag and bank UI with ours.
+
+
+------------------------------------------------------------------------------
+* Hello programmers!
+
+    If you are ever doing any work on LiteBag, read the git log comments.
+    Everything intelligent I've ever written is in there. Unfortunately
+    so is every dumb thing I've ever written. You win some, you lose some.
+
+
+------------------------------------------------------------------------------
+* Tag-fu
+
+    List tags;
+        git tag
+    Tag a release:
+        git tag -a -m 'Tagging x.y.z' x.y.z
+    Tag a beta:
+        git tag -a -m 'Tagging x.y.zbeta' x.y.zbeta
+    Automatically fetch tags:
+        git config remote.origin.tagopt --tags
+    Manually get tags:
+        git pull --tags
+    Push tags:
+        git push --tags
+    Deleting a tag (and at remote):
+        git tag -d x.y.z
+        git push origin :refs/tags/x.y.z
+            or
+        git push --delete origin x.y.z
+
+
+------------------------------------------------------------------------------
+* Branch-fu
+
+    List branches including at curseforge:
+        git branch -a
+    Get a branch from curseforge:
+        git checkout --track origin/branchname
+    Create a new branch:
+        git checkout -b branchname
+    Merge master changes into your branch:
+        git checkout branchname
+        git merge master
+    Merge another branch into master:
+        git checkout master
+        git merge branchname
+    Delete a branch when you're done with it:
+        git branch -d branchname
+        git push origin :branchname
+
+
+------------------------------------------------------------------------------
+* Git reset to curseforge version
+
+    git fetch origin
+    git reset --hard origin/master
+
+
+------------------------------------------------------------------------------
+* Diff since last release:
+
+    git diff <previoustag>
+
+    All hail git.
+
+
+------------------------------------------------------------------------------
+* XML syntax check
+
+    xmllint --noout *.xml
+
+
+------------------------------------------------------------------------------
+* TODO List
+
+    Switch the Token stuff to using the CURRENCY_DISPLAY_UPDATE event?
+    Would need to call TokenFrame_LoadUI() somewhere before we have
+    access to MAX_WATCHED_TOKENS.  It might be easier to leave it.
+
+    What to do with the Token display if we allow resizing.
+
+    Attach the bag buttons somewhere sensible.
+
+    What to do with the specialist bag types?
+
+    Is there a use for indication of "non-useable" items a-la Combuctor?
+
+    Redo the logic for the BagButton colors/texture/tooltips, it is a mess.
+
+    Put the blank spots at the top, not the bottom, so that dragging
+    bigger bags in rearranges things the least.  Maybe?
+
+    Make the frames resizeable?  Can't let them get so small that the
+    search box doesn't fit any more.  Or the bag buttons if we attach
+    them to the outside.
+
+    Make the bank frame default to 14 wide? (Default bank bag is 28 slots.)
+
+
+------------------------------------------------------------------------------
+* Slot colors
+
+    FWIW, these are the colors for different bags from Bagnon.
+
+        slotColors = {
+                leather = {1, .6, .45},
+                enchant = {0.64, 0.83, 1},
+                inscri = {.64, 1, .82},
+                engineer = {.68, .63, .25},
+                tackle = {0.42, 0.59, 1},
+                cooking = {1, .5, .5},
+                gem = {1, .65, .98},
+                mine = {1, .81, .38},
+                herb = {.5, 1, .5},
+                normal = {1, 1, 1},
+        }
+
+
+------------------------------------------------------------------------------
+* Frame event debugging
+
+    -- Figure out exactly where InCombatLockdown() begins and also
+    -- where we first know the bag sizes.
+
+    MyDebugFrame = CreateFrame("Frame", UIParent)
+    MyDebugFrame.eventList = { }
+    MyDebugFrame:SetScript('OnEvent', function (self, event, ...)
+            tinsert(self.eventList, {
+                                        time(),
+                                        event,
+                                        InCombatLockdown(),
+                                        GetContainerNumSlots(1)
+                                    })
+            if event == "PLAYER_ALIVE" then self:UnregisterAllEvents() end
+        end)
+    MyDebugFrame:RegisterAllEvents()
+
+    /dump MyDebugFrame.eventList
+
+
+------------------------------------------------------------------------------
+* Interface Options Panels
+
+    Look inside FrameXML/OptionsPanelTemplates.{xml,lua}
+
+    Making the base frame(s).
+
+    <Script file="MyOptionsPanel.lua" />
+    <Frame name="MyOptionsPanel" hidden="true">
+        <Scripts>
+            <OnLoad>
+                self.name = "NameForLeftMenu"
+                BlizzardOptionsPanel_OnLoad(self)
+                InterfaceOptionsFrame_AddCategory(self)
+                -- or for a sub-options frame
+                -- InterfaceOptionsFrame_AddCategory(self, parentPanel)
+            </OnLoad>
+        </Scripts>
+    </Frame>
+
+    These frames inherently have "Okay", "Cancel" and "Default" buttons. These
+    by default these loop over all the UI elements inserted into the
+    MyOptionsPanel.controls table and call their okay, cancel and default
+    methods.
+
+    The theory is that you twiddle the controls which stores the updated values
+    inside the control itself (in a .value attribute) and then (for example)
+    OK loops over them and actually sets it outside the GUI.
+
+    There are defaults for the okay/cancel/default functions but remembering
+    how they work is way more effort than doing your own every time.
+
+    Putting controls in it.
+
+    <CheckButton name="$parentMySetting1" inherits="OptionsCheckButtonTemplate">
+        <Scripts>
+            <OnLoad>
+                self.text:SetText("abcdef")
+                self.refresh = function (self)
+                    end
+                self.okay = function (self)
+                    end
+                self.cancel = function (self)
+                    end
+                self.default = function (self)
+                    end
+                BlizzardOptionsPanel_RegisterControl(self, self:GetParent())
+            </OnLoad>
+        </Scripts>
+    </CheckButton>

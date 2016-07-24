@@ -14,7 +14,7 @@ Misc.namesize = 14					-- 法术名称字体大小
 Misc.maxTestIcon = 8				-- 测试模式下,每项显示最大图标数量
 
 -- Cooldowns.lua
-Misc.cdsize = 18					-- 图标中间的 CD 数字大小
+Misc.cdsize = 15					-- 图标中间的 CD 数字大小
 
 -- config.lua
 Misc.Tbar = "OFF"					-- 开(ON)\关(OFF) target_bar 目标计时条
@@ -26,17 +26,19 @@ Misc.CDnum = 5						-- COOLDOWN 冷却图标每行显示几个
 getscreenheight = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")) 
 getscreenwidth = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x+%d")) 
 
---   Pixel perfect script of custom ui Scale 
+--[[   Pixel perfect script of custom ui Scale 
 UIScale = function() 
    uiscale = min(2, max(0.64, 768 / string.match(GetCVar("gxResolution"), "%d+x(%d+)"))) 
 end 
 UIScale() 
 
+
 local mult = 768 / string.match(GetCVar("gxResolution"), "%d+x(%d+)") / uiscale 
 local Scale = function(x) 
    return mult * math.floor(x / mult + 0.5) 
 end 
-Misc.mult = mult 
+]]
+Misc.mult = 1 
 ----------------------- ShestakUI_Filger_1px -----------------------
 
 -- 命名空间

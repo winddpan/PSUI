@@ -45,4 +45,4 @@ local Enable = function(self)
 	end
 end
 
-oUF:AddElement('Indicators', nil, Enable, nil)
+--oUF:AddElement('Indicators', nil, Enable, nil)

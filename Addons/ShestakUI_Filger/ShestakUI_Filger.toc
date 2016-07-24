@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 70000 
 ## Title: ShestakUI Filger
 ## Notes: Class timers
 ## Author: Nils Ruesch

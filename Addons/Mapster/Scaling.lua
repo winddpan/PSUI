@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2009-2014, Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
+Copyright (c) 2009-2016, Hendrik "Nevcairiel" Leppkes < h.leppkes@gmail.com >
 All rights reserved.
 
 Initial implementation provided by yssaril
@@ -9,8 +9,6 @@ local Mapster = LibStub("AceAddon-3.0"):GetAddon("Mapster")
 
 local MODNAME= "Scale"
 local Scale = Mapster:NewModule(MODNAME)
-
-local LibWindow = LibStub("LibWindow-1.1")
 
 local scaler, mousetracker
 local SOS = { --Scaler Original State
@@ -54,11 +52,11 @@ function Scale:OnEnable()
 			scaler.tex:SetDesaturated(true)
 		end)
 		mousetracker:SetScript("OnMouseUp", function(self)
-			LibWindow.SavePosition(WorldMapFrame)
 			self:SetScript("OnUpdate", nil)
 			self:SetAllPoints(scaler)
+			Mapster.db.profile.scale = WorldMapFrame:GetScale()
 
-			WorldMapBlobFrame_ResetHitTranslations()
+			WorldMapFrame_ResetPOIHitTranslations()
 		end)
 		mousetracker:SetScript("OnMouseDown",function(self)
 			SOS.left, SOS.top = WorldMapFrame:GetLeft(), WorldMapFrame:GetTop()

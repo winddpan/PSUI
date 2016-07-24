@@ -8,15 +8,15 @@
 -------------------------------------------------------------------------------
 
 BRH_ComboSkill = 35;
-
 BRH_FinishSkill = 30;
 
-BlinkRogueHelper_FontSizePixel = 35;--38;
+BlinkRogueHelper_FontSizePixel = 38;--38;
 
 local Yajust = 80;
+local PreviousCombo = 0;
 
 function BlinkRogueHelperFrame_OnLoad()
-	BlinkRogueHelperFrame:RegisterEvent("UNIT_COMBO_POINTS");
+	BlinkRogueHelperFrame:RegisterEvent("UNIT_POWER_FREQUENT");
 	BlinkRogueHelperFrame:RegisterEvent("UNIT_ENERGY");
 
 	BlinkRogueHelperFrame.fadeInTime = 0.2;		-- fade in time(sec)
@@ -39,11 +39,16 @@ function BlinkRogueHelperFrame_OnEvent(event)
 			SetBubbleTextColor();
 		end
 	end
-	if ( event == "UNIT_COMBO_POINTS" and BlinkRogueHelper_Enabled == 1 ) or event == "UNIT_ENERGY" then
-		if( GetComboPoints(PlayerFrame.unit, "target")>0 )then
-			BlinkComboShow();
-		else
+	if ( event == "UNIT_POWER_FREQUENT" and BlinkRogueHelper_Enabled == 1 ) or event == "UNIT_ENERGY" then
+		local cp = UnitPower('player', 4)
+		if(cp == 0) then
+			PreviousCombo = 0
 			BlinkRogueHelperFrame:Hide();
+		elseif(cp ~= PreviousCombo) then
+			if PreviousCombo - cp ~= 1 then -- 自然减少不跳出来
+				BlinkComboShow(cp);
+			end
+			PreviousCombo = cp
 		end
 	end
 end
@@ -238,45 +243,12 @@ local skipCall = 0
 
 
 -- added by winddpan@nga
-function BlinkComboShow()
-
-	local combo = GetComboPoints(PlayerFrame.unit, "target");
-	local total = combo
-	local Anticipation = select(4, UnitBuff("player", GetSpellInfo(114015)))
-	local show = true
-	
-	--[[
-	if Anticipation ~= nil then 			--有预感时
-
-		if perCombo == 5 and combo == 5 and Anticipation == 5 then  --10星时 继续攒星
-			total = 10
-		elseif Anticipation == perAnticipation then   --有预感时 终结技
-			if skipCall == 0 then  
-				total = combo + Anticipation
-				skipCall = 1
-			else		--跳过第二轮
-				show = false
-				skipCall = 0
-			end
-		elseif Anticipation > perAnticipation or (combo == 5 and perAnticipation == 5 and Anticipation < 5) then   --攒星
-			total = combo + Anticipation
-		end
-		
-		perAnticipation = Anticipation
-	end
-	
-	perCombo = combo
-	
-	if Anticipation == nil then
-		perAnticipation = 0
-	end
-	]]
-	
+function BlinkComboShow(cp)
+	local show = cp > 0
 	if show then
-		SetBubbleText(total);
+		SetBubbleText(cp);
 		BlinkRogueHelper_Show();
 	end
-
 end
 
 function SetBubbleText(combo)

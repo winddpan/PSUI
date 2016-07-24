@@ -50,9 +50,7 @@
     },
   }
 
-  local ceil, min, max = ceil, min, max
-  local ShouldShowConsolidatedBuffFrame = ShouldShowConsolidatedBuffFrame
-  
+  local ceil, min, max = ceil, min, max  
   local buffFrameHeight = 0
 
   ---------------------------------------
@@ -179,25 +177,15 @@
     local offset      = numEnchants
     local realIndex, previousButton, aboveButton
     --position the tempenchant button depending on the consolidated button status
-    if ShouldShowConsolidatedBuffFrame() then
-      TempEnchant1:ClearAllPoints()
-      TempEnchant1:SetPoint("TOPRIGHT", ConsolidatedBuffs, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
-      offset = offset + 1
-    else
-      TempEnchant1:ClearAllPoints()
-      TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
-    end
+    TempEnchant1:ClearAllPoints()
+    TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
     
     --calculate the previous button in case tempenchant or consolidated buff are loaded
     if BuffFrame.numEnchants > 0 then
       previousButton = _G["TempEnchant"..numEnchants]
-    elseif ShouldShowConsolidatedBuffFrame() then
-      previousButton = ConsolidatedBuffs
     end
     --calculate the above button in case tempenchant or consolidated buff are loaded
-    if ShouldShowConsolidatedBuffFrame() then
-      aboveButton = ConsolidatedBuffs
-    elseif numEnchants > 0 then
+	if numEnchants > 0 then
       aboveButton = TempEnchant1
     end
     --loop on all active buff buttons
@@ -269,15 +257,6 @@
   TempEnchant2:SetPoint("TOPRIGHT", TempEnchant1, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
   TempEnchant3:ClearAllPoints()
   TempEnchant3:SetPoint("TOPRIGHT", TempEnchant2, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
-
-  --consolidated buff stuff
-  ConsolidatedBuffs:SetScript("OnLoad", nil) --do not fuck up the icon anymore
-  applySkin(ConsolidatedBuffs)
-  --position the consolidate buff button
-  ConsolidatedBuffs:ClearAllPoints()
-  ConsolidatedBuffs:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
-  
-  ConsolidatedBuffsTooltip:SetScale(cfg.consolidatedTooltipScale)
 
   --hook Blizzard functions
   hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", updateAllBuffAnchors)

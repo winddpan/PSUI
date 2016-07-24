@@ -803,9 +803,9 @@
   lib.gen_Runes = function(f)
     if class ~= "DEATHKNIGHT" then return end
       f.Runes = CreateFrame("Frame", nil, f)
-	  f.Runes:SetPoint('CENTER', f.Health, 'TOP', 0, 1)
+	  f.Runes:SetPoint('BOTTOM', f.Health, 'TOP', 0, 1)
 	  if cfg.oUF.settings.ClassBars.undock then f.Runes:ClearAllPoints() f.Runes:SetPoint(unpack(cfg.oUF.settings.ClassBars.position)) end
-	  f.Runes:SetSize(f.width*0.90, f.height/3)
+	  f.Runes:SetSize(f.width +2, f.height/3+1)
       for i = 1, 6 do
         r = CreateFrame("StatusBar", f:GetName().."_Runes"..i, f)
         r:SetSize(f.Runes:GetWidth()/6 - 2, f.Runes:GetHeight()-1)
@@ -1062,8 +1062,8 @@
     local h = CreateFrame("Frame", nil, f)
     h:SetAllPoints(f.Health)
     h:SetFrameLevel(10)
-    local cp = lib.gen_fontstring(h, cfg.oUF.media.font, 30, "THINOUTLINE")
-    cp:SetPoint("CENTER", f.Health, "CENTER",0,3)
+    local cp = lib.gen_fontstring(h, cfg.oUF.media.font, 25, "THINOUTLINE")
+    cp:SetPoint("CENTER", f.Health, "CENTER",0,2)
     f:Tag(cp, '[mono:cp]')
   end
   --gen LFD role indicator

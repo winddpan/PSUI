@@ -26,7 +26,7 @@ barmod.ApplySettings = function(self, win)
 	end
 	
 	skada:SetTexture(blank)
-	skada:SetFont(STANDARD_TEXT_FONT, 10, "THICKOUTLINE")
+	skada:SetFont(STANDARD_TEXT_FONT, 10, "NONE")
 	skada:SetSpacing(barSpacing)
 	skada:SetBarHeight(16)
 	skada:SetFrameLevel(1)

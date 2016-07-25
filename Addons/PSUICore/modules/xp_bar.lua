@@ -88,6 +88,7 @@ function bf_ShowRep()
 		bf:Hide()
 		xbar:Hide()
 		bbg:Hide()
+		rbar:Hide()
 		--[[
 		mxp = UnitXPMax("player")
 		xp = UnitXP("player")
@@ -100,7 +101,8 @@ function bf_ShowXP(rxp, xp, mxp)
 	bf:Show()
 	xbar:Show()
 	bbg:Show()
-		
+	rbar:Show()
+	
 	bbg:SetVertexColor(xpcolor.r,xpcolor.g,xpcolor.b, 0.2)
 	xbar:SetStatusBarColor(xpcolor.r,xpcolor.g,xpcolor.b, 0.85)
 	xbar:SetMinMaxValues(0,mxp)

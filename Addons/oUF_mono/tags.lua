@@ -129,7 +129,6 @@ oUF.Tags.Methods['mono:info'] = function(u)
 		return hex(color)..level..'r'
 	else
 		if UnitIsPlayer(u) then
-			--if level == 80 then level = "" end 
 			-- select(2,UnitClass(u)) hex(oUF.colors.class[select(2,UnitClass(u))])
 			if u=='player' then race = "" end
 			return hex(color)..level.." |cffFFFFFF"..race.."|r "..hex(oUF.colors.class[select(2,UnitClass(u))])..class

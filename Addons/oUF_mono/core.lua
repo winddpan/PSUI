@@ -63,8 +63,7 @@
     lib.gen_ppstrings(self)
 	
 	if cfg.oUF.settings.ClassBars.enable then
-		if class == "PRIEST" or class == "MONK" or class == "PALADIN" then lib.gen_ClassIcons(self)	end
-		lib.gen_WarlockSpecBar(self)
+		lib.gen_ClassIcons(self)
 		lib.gen_Runes(self)
 		lib.gen_TotemBar(self)
 	    lib.gen_cp(self)

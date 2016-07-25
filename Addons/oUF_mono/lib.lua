@@ -841,15 +841,15 @@
 	end
   end 
   lib.gen_ClassIcons = function(f)
- 	if not (class == "PRIEST" or class == "MONK" or class == "PALADIN") then return end
+ 	if not (class == "WARLOCK" or class == "MONK" or class == "PALADIN") then return end
 	local ci = CreateFrame("Frame", nil, f)
 	ci:SetPoint('CENTER', f.Health, 'TOP', 0, 1)
 	if cfg.oUF.settings.ClassBars.undock then ci:ClearAllPoints() ci:SetPoint(unpack(cfg.oUF.settings.ClassBars.position)) end
 	ci:SetSize(f.width*0.7, f.height/3)
-		--local c = 5
-		for i = 1, 5 do
+		local count = 5
+		for i = 1, count do
 			ci[i] = CreateFrame("StatusBar", f:GetName().."_ClassBar"..i, f)
-			ci[i]:SetSize(ci:GetWidth()/5-2, ci:GetHeight()-1) 
+			ci[i]:SetSize(ci:GetWidth()/count-2, ci:GetHeight()-1) 
 			ci[i]:SetStatusBarTexture(cfg.oUF.media.statusbar)
 			--ci[i]:SetStatusBarColor(.95,.88,.48)
 			ci[i]:SetFrameLevel(11)
@@ -869,104 +869,6 @@
 	f.ClassIcons = ci
 	f.ClassIcons.PostUpdate = PostUpdateClassPowerIcons
   end
-  
-  -- gen bar for warlocks' spec-specific powers
-  lib.gen_WarlockSpecBar = function(f)
-	if class ~= "WARLOCK" then return end
-	
-	local wsb = CreateFrame("Frame", "WarlockSpecBars", f)
-	wsb:SetPoint('CENTER', f.Health, 'TOP', 0, 1)
-	if cfg.oUF.settings.ClassBars.undock then wsb:ClearAllPoints() wsb:SetPoint(unpack(cfg.oUF.settings.ClassBars.position)) end
-	wsb:SetSize(f.width*0.7, f.height/3)
-	wsb:SetFrameLevel(10)
-	
-	for i = 1, 4 do
-		wsb[i] = CreateFrame("StatusBar", "WarlockSpecBars"..i, wsb)
-		wsb[i]:SetHeight(wsb:GetHeight()-1)
-		wsb[i]:SetStatusBarTexture(cfg.oUF.media.statusbar)
-		--wsb[i]:SetStatusBarColor(.86,.22,1)
-		wsb[i].bg = wsb[i]:CreateTexture(nil,"BORDER")
-		wsb[i].bg:SetTexture(cfg.oUF.media.statusbar)
-		wsb[i].bg:SetVertexColor(0,0,0)
-		wsb[i].bg:SetPoint("TOPLEFT",wsb[i],"TOPLEFT",0,0)
-		wsb[i].bg:SetPoint("BOTTOMRIGHT",wsb[i],"BOTTOMRIGHT",0,0)
-		wsb[i].bg.multiplier = .3
-		
-		local h = CreateFrame("Frame",nil,wsb[i])
-		h:SetFrameLevel(10)
-		h:SetPoint("TOPLEFT",-4,3)
-		h:SetPoint("BOTTOMRIGHT",4,-3)
-		lib.gen_backdrop(h)
-		
-		if i == 1 then
-			wsb[i]:SetPoint("LEFT", wsb, "LEFT", 1, 0)
-		else
-			wsb[i]:SetPoint("LEFT", wsb[i-1], "RIGHT", 2, 0)
-		end
-	end
-	
-	f.WarlockSpecBars = wsb
-  end
-  
-  --gen eclipse bar
-  lib.gen_EclipseBar = function(f)
-	if class ~= "DRUID" then return end
-	local eb = CreateFrame('Frame', nil, f)
-	eb:SetPoint('CENTER', f.Health, 'TOP', 0, 1)
-	if cfg.oUF.settings.ClassBars.undock then eb:ClearAllPoints() eb:SetPoint(unpack(cfg.oUF.settings.ClassBars.position)) end
-	eb:SetFrameLevel(10)
-	eb:SetSize(f.width*0.7, f.height/3)
-	local h = CreateFrame("Frame", nil, eb)
-	h:SetPoint("TOPLEFT",-3,3)
-	h:SetPoint("BOTTOMRIGHT",3,-3)
-	lib.gen_backdrop(h)
-	eb.eBarBG = h
-
-	local lb = CreateFrame('StatusBar', nil, eb)
-	lb:SetPoint('LEFT', eb, 'LEFT', 0, 0)
-	lb:SetSize(eb:GetWidth(), eb:GetHeight())
-	lb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	lb:SetStatusBarColor(0.27, 0.47, 0.74)
-	lb:SetFrameLevel(11)
-
-	local sb = CreateFrame('StatusBar', nil, eb)
-	sb:SetPoint('LEFT', lb:GetStatusBarTexture(), 'RIGHT', 0, 0)
-	sb:SetSize(eb:GetWidth(), eb:GetHeight())
-	sb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	sb:SetStatusBarColor(0.87, 0.67, 0.3)
-	sb:SetFrameLevel(11)
-	
-	eb.SolarBar = sb
-	eb.LunarBar = lb
-	f.EclipseBar = eb
-	f.EclipseBar.PostUnitAura = eclipseBarBuff
-    
-	local ebInd = lib.gen_fontstring(sb, cfg.oUF.media.font, 11)
-	ebInd:SetPoint('CENTER', eb, 'CENTER', 0,0)
-	ebInd:SetShadowOffset(1.25, -1.25)
-	
-	local SetEclipseIndicator = function()
-		local ePowerMax = UnitPowerMax('player', SPELL_POWER_ECLIPSE)
-		local ePower = math.abs(UnitPower('player', SPELL_POWER_ECLIPSE)/ePowerMax*100)
-		local dir = GetEclipseDirection()
-		if dir=="sun" then
-			ebInd:SetText("|cffF59D7A"..ePower.."|r >>>")
-		elseif dir=="moon" then
-			ebInd:SetText("<<< |cffF59D7A"..ePower.."|r")
-		else
-			ebInd:SetText("|cffF59D7A"..ePowerMax.."|r")
-		end
-	end
-	f.EclipseBar.PostDirectionChange = function(element, unit)
-		SetEclipseIndicator()
-	end
- 	f.EclipseBar.PostUpdatePower = function(unit)
-		SetEclipseIndicator()
-	end
-	f.EclipseBar.PostUpdateVisibility = function(unit)
-		SetEclipseIndicator()
-	end 
-  end  
   
   --gen TotemBar for shamans
   lib.gen_TotemBar = function(f) 

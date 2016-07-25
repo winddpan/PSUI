@@ -8,13 +8,12 @@ local panels,k   = {},0
 ------	move func
 ----------------------------------------------------------------------------------------------------------------------------
 local Onmove = {}
-local frameInScreenMap = {}
+local FrameNotInScreenMap = {}
 
-local isFrameInScreen = function(PANEL)
-	if frameInScreenMap[PANEL] == nil then frameInScreenMap[PANEL] = true end
-	return frameInScreenMap[PANEL]
+local IsFrameInScreen = function(PANEL)
+	return FrameNotInScreenMap[PANEL] == nil
 end
-lib.isFrameInScreen = isFrameInScreen
+lib.isFrameInScreen = IsFrameInScreen
 
 function CreateStyle(f, size, level, alpha, alphaborder) --
 	if f.shadow then return end
@@ -30,59 +29,58 @@ function CreateStyle(f, size, level, alpha, alphaborder) --
 	return shadow
 end
 
-lib.movefunc = function(PANEL,direction,lock)
+lib.movefunc = function(PANEL, direction, lock, animated)
 	if Onmove[PANEL] == nil then Onmove[PANEL] = false end
 	if lock and UnitAffectingCombat("player") then print("战斗中无法移动！") return end
 	if not Onmove[PANEL] then
-		if isFrameInScreen(PANEL) == true then
-		 local Anchor, relativeTo, relativePoint, OriginalX, OriginalY = PANEL:GetPoint()
-		 local Step, MaxStep = 0, 25
-		 local Height = PANEL:GetHeight() + 50
-		 local Width = PANEL:GetWidth() + 10
-		 local Updater = CreateFrame("Frame")
-		 Updater:SetScript("OnUpdate", function(self, elapsed)
-			Step = Step + 1
-			Onmove[PANEL] = true
+		Onmove[PANEL] = true
+		local InScreen = IsFrameInScreen(PANEL)
+		local Anchor, relativeTo, relativePoint, OriginalX, OriginalY = PANEL:GetPoint()
+		local Step, MaxStep = 0, 25
+		local Height = PANEL:GetHeight() + 50
+		local Width = PANEL:GetWidth() + 10
+		local Updater = CreateFrame("Frame")
+		Updater:SetScript("OnUpdate", function(self, elapsed)
+			Step = math.min(Step + elapsed*60, MaxStep)
+			if not animated then
+				Step = MaxStep;
+			end
 			if direction == "Right" then
-				PANEL:SetPoint(Anchor, OriginalX + (Step/MaxStep)*Width, OriginalY)
+				if InScreen then
+					PANEL:SetPoint(Anchor, OriginalX + (Step/MaxStep)*Width, OriginalY)
+				else
+					PANEL:SetPoint(Anchor, OriginalX - (Step/MaxStep)*Width, OriginalY)
+				end
 			elseif direction == "Left" then
-				PANEL:SetPoint(Anchor, OriginalX - (Step/MaxStep)*Width, OriginalY)
-			elseif direction =="UP" then
-				PANEL:SetPoint(Anchor, OriginalX, OriginalY + (Step/MaxStep)*Height)
-			else
-				PANEL:SetPoint(Anchor, OriginalX, OriginalY - (Step/MaxStep)*Height)
+				if InScreen then
+					PANEL:SetPoint(Anchor, OriginalX - (Step/MaxStep)*Width, OriginalY)
+				else
+					PANEL:SetPoint(Anchor, OriginalX + (Step/MaxStep)*Width, OriginalY)
+				end
+			elseif direction == "Up" then
+				if InScreen then
+					PANEL:SetPoint(Anchor, OriginalX, OriginalY + (Step/MaxStep)*Height)
+				else
+					PANEL:SetPoint(Anchor, OriginalX, OriginalY - (Step/MaxStep)*Height)
+				end
+			elseif direction == "Down" then
+				if InScreen then
+					PANEL:SetPoint(Anchor, OriginalX, OriginalY - (Step/MaxStep)*Height)
+				else
+					PANEL:SetPoint(Anchor, OriginalX, OriginalY + (Step/MaxStep)*Height)
+				end
 			end
 			if Step >= MaxStep then
 			   self:SetScript("OnUpdate", nil)
-			   frameInScreenMap[PANEL] = false
+			   Updater = nil
 			   Onmove[PANEL] = false
+			   if InScreen then
+			   		FrameNotInScreenMap[PANEL] = 1
+				else
+					FrameNotInScreenMap[PANEL] = nil
+			   end
 			end
-		 end) 
-		else
-		 local Anchor, relativeTo, relativePoint, OriginalX, OriginalY = PANEL:GetPoint()
-		 local Step, MaxStep = 0, 25
-		 local Height = PANEL:GetHeight() +50
-		 local Width = PANEL:GetWidth() + 10
-		 local Updater = CreateFrame("Frame")
-		 Updater:SetScript("OnUpdate", function(self, elapsed)
-			Step = Step + 1
-			Onmove[PANEL] = true
-			if direction == "Right" then
-				PANEL:SetPoint(Anchor, OriginalX - (Step/MaxStep)*Width, OriginalY)
-			elseif direction == "Left" then
-				PANEL:SetPoint(Anchor, OriginalX + (Step/MaxStep)*Width, OriginalY)
-			elseif direction =="UP" then
-				PANEL:SetPoint(Anchor, OriginalX, OriginalY - (Step/MaxStep)*Height)
-			else
-				PANEL:SetPoint(Anchor, OriginalX, OriginalY + (Step/MaxStep)*Height)
-			end
-			if Step >= MaxStep then
-			   self:SetScript("OnUpdate", nil)
-			   frameInScreenMap[PANEL] = true
-			   Onmove[PANEL] = false
-			end
-		 end) 
-	    end
+		end) 
 	end
 end
 ----------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +115,7 @@ lib.CreateButton = function(tag,movetag,direction,clickcolor,lock)
 		tag:SetScript("OnMouseUp",function(self)
 			tag:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
 			if clickcolor then tag:SetBackdropBorderColor(unpack(clickcolor)) end
-			if movetag then lib.movefunc(movetag,direction,lock) end
+			if movetag then lib.movefunc(movetag,direction,lock,true) end
 		end)
 end
 

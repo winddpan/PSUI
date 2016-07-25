@@ -99,7 +99,7 @@ end
 local f = CreateFrame("Frame")
 local login = function()
 	if lib.isFrameInScreen(rightPanel2) then
-		lib.movefunc(rightPanel2)
+		lib.movefunc(rightPanel2, "Down", false, false)
 	end
 	
 	FCF_SetLocked(ChatFrame1, nil)

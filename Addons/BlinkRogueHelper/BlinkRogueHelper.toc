@@ -3,5 +3,5 @@
 ## Title: Blink's RogueHelper
 ## Author: Blink / Darthn / fixed by WINDDPAN
 ## Notes: Rogue's or Cat druid's combo point.
-## SavedVariables: BlinkRogueHelper_Enabled,BlinkRogueHelper_Type
+## SavedVariables: BlinkRogueHelper_Enabled, BlinkRogueHelper_Type, BlinkRogueHelper_FontSizePixel
 BlinkRogueHelper.xml

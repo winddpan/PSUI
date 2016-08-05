@@ -356,6 +356,7 @@ Filger_Spells = {
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 				{spellID = 207319, unitID = "player",caster = "all", filter = "BUFF"}, 
+				{spellID = 216974, unitID = "player", caster = "player", filter = "BUFF"},
 
 				--符文劍舞
 				{ spellID = 49028, unitID = "player", caster = "player", filter = "BUFF" },
@@ -456,6 +457,9 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 			-- 影舞
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 暗刃
+			{spellID = 121471, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- 嗜血
 			{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
 			-- 英勇气概
@@ -466,6 +470,14 @@ Filger_Spells = {
 			{spellID = 212283, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 227151, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 195627, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 骰子6buff
+			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193356, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
 
 			--潜行
 			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
@@ -545,24 +557,6 @@ Filger_Spells = {
 			-- Dancing Steel (Agility)
 			{spellID = 118334, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 170879, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 影踪突袭邪恶护符
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			--雪怒圣物
-			{spellID = 128984, unitID = "player", caster = "player", filter = "BUFF"},
-			--舞钢
-			{spellID = 120032, unitID = "player", caster = "player", filter = "BUFF"},
-			--雷声老1SP
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 138737, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			--既定天命
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			--522 娃娃
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			--重生
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177038, unitID = "player", caster = "all", filter = "BUFF"},
-			{spellID = 162915, unitID = "player", caster = "all", filter = "BUFF"},
 			--战歌之印
 			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},

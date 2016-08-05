@@ -9,22 +9,22 @@
 
 BRH_ComboSkill = 35;
 BRH_FinishSkill = 30;
-
-BlinkRogueHelper_FontSizePixel = 38;--38;
+if BlinkRogueHelper_FontSizePixel == nil then
+	BlinkRogueHelper_FontSizePixel = 38;
+end
 
 local Yajust = 80;
 local PreviousCombo = 0;
+local PreviousPower = 0;
 
 function BlinkRogueHelperFrame_OnLoad()
-	BlinkRogueHelperFrame:RegisterEvent("UNIT_POWER_FREQUENT");
-	BlinkRogueHelperFrame:RegisterEvent("UNIT_ENERGY");
+	BlinkRogueHelperFrame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player")
 
 	BlinkRogueHelperFrame.fadeInTime = 0.2;		-- fade in time(sec)
 	BlinkRogueHelperFrame.holdTime = 2;		-- hold time(sec)
 	BlinkRogueHelperFrame.fadeOutTime = 0.8;		-- fade out time(sec)
 	BlinkRogueHelperFrame.flowTime = BlinkRogueHelperFrame.fadeInTime + BlinkRogueHelperFrame.holdTime +BlinkRogueHelperFrame.fadeOutTime;
 	BlinkRogueHelperFrame.PI = 3.141592;
-
 	BlinkRogueHelperFrame:Hide();
 
 	BlinkRogueHelper_Register();
@@ -34,22 +34,22 @@ function BlinkRogueHelperFrame_OnLoad()
 end
 
 function BlinkRogueHelperFrame_OnEvent(event)
-	if ( event == "UNIT_ENERGY" ) then
-		if ( arg1 == "player" ) then
-			SetBubbleTextColor();
-		end
-	end
-	if ( event == "UNIT_POWER_FREQUENT" and BlinkRogueHelper_Enabled == 1 ) or event == "UNIT_ENERGY" then
+	if event == "UNIT_POWER_FREQUENT" and BlinkRogueHelper_Enabled == 1 then
+		local mana = UnitPower("player", 3)
 		local cp = UnitPower('player', 4)
+		
 		if(cp == 0) then
 			PreviousCombo = 0
 			BlinkRogueHelperFrame:Hide();
-		elseif(cp ~= PreviousCombo) then
+		elseif(cp ~= PreviousCombo or mana < PreviousPower) then
 			if PreviousCombo - cp ~= 1 then -- 自然减少不跳出来
+				SetBubbleTextColor();
 				BlinkComboShow(cp);
 			end
-			PreviousCombo = cp
 		end
+		
+		PreviousCombo = cp
+		PreviousPower = mana;
 	end
 end
 
@@ -217,7 +217,7 @@ function BlinkRogueHelper_Type5()
 end
 
 function SetBubbleTextColor()
-	local mana = UnitMana("player");
+	local mana = UnitPower("player", 3)
 	local r,g,b;
 
 	if( mana >= BRH_ComboSkill )then
@@ -285,6 +285,9 @@ function BlinkRogueHelper_Register()
 	SlashCmdList["BLINKROGUEHELPERSELECT5"] = BlinkRogueHelper_SelectType5;
 	SLASH_BLINKROGUEHELPERSELECT51 = "/blinkroguehelper5";
 	SLASH_BLINKROGUEHELPERSELECT52 = "/brh5";
+	
+	SlashCmdList["BLINKROGUEHELPERSLASHFONT"] = BlinkRogueHelper_FontChange;
+	SLASH_BLINKROGUEHELPERSLASHFONT1 = "/brhfont";
 end
 
 function BlinkRogueHelper_Toggle()
@@ -305,27 +308,31 @@ end
 function BlinkRogueHelper_SelectType2()
 	BlinkRogueHelper_Type = 2;
 	ChatFrame1:AddMessage("BlinkRogueHelper - Preset 2");
-	BlinkRogueHelper_FontSizePixel=70;
 	BubbleTextString:SetTextHeight(BlinkRogueHelper_FontSizePixel);
 end
 
 function BlinkRogueHelper_SelectType3()
 	BlinkRogueHelper_Type = 3;
 	ChatFrame1:AddMessage("BlinkRogueHelper - Preset 3");
-	BlinkRogueHelper_FontSizePixel=70;
 	BubbleTextString:SetTextHeight(BlinkRogueHelper_FontSizePixel);
 end
 
 function BlinkRogueHelper_SelectType4()
 	BlinkRogueHelper_Type = 4;
 	ChatFrame1:AddMessage("BlinkRogueHelper - Preset 4");
-	BlinkRogueHelper_FontSizePixel=70;
 	BubbleTextString:SetTextHeight(BlinkRogueHelper_FontSizePixel);
 end
 
 function BlinkRogueHelper_SelectType5()
 	BlinkRogueHelper_Type = 5;
 	ChatFrame1:AddMessage("BlinkRogueHelper - Preset 5");
-	BlinkRogueHelper_FontSizePixel=70;
 	BubbleTextString:SetTextHeight(BlinkRogueHelper_FontSizePixel);
+end
+
+function BlinkRogueHelper_FontChange(value)
+	local number = tonumber(value)
+	if number ~= nil then
+		BlinkRogueHelper_FontSizePixel = number;
+		ChatFrame1:AddMessage("BlinkRogueHelper Font -> "..value);
+	end
 end

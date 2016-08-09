@@ -106,9 +106,9 @@ mCTi:SetScript("OnEvent", function(self, event, subev, arg2, arg3)
 			frames[info.frame]:AddMessage(msg..suffix or "", info.r, info.g, info.b)
 		end
 	elseif event=="PLAYER_REGEN_ENABLED" then
-		mCT2:AddMessage("-"..LEAVING_COMBAT.."-",.1,1,.1)
+		--mCT2:AddMessage("-"..LEAVING_COMBAT.."-",.1,1,.1)
 	elseif event=="PLAYER_REGEN_DISABLED" then
-		mCT2:AddMessage("+"..ENTERING_COMBAT.."+",1,.1,.1)
+		--mCT2:AddMessage("+"..ENTERING_COMBAT.."+",1,.1,.1)
 	end
 end)
 -- Outgoing damage

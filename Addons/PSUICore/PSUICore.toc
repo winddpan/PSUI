@@ -33,6 +33,8 @@ automation\durability.lua
 automation\error_frame.lua
 automation\mail_get.lua
 automation\AutoRepair&Sell.lua
+automation\bg_hide_quest.lua
+automation\Invite.lua
 
 skin\StyleSkada.lua
 skin\StyleDBM.lua

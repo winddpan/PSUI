@@ -602,7 +602,41 @@ Filger_Spells = {
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 			
+			-- DPS
+			{spellID = 162264, unitID = "player", caster = "player", filter = "BUFF"},
+
+			-- TANK
+			{spellID = 178740, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 187827, unitID = "player", caster = "player", filter = "BUFF"},
+
+		},
+		{
+			Name = "P_PROC_ICON",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 36,
+			Position = {unpack(Filger_Settings.player_proc_icon)},
+
+			{spellID = 188499, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 212800, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			{spellID = 203819, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 218256, unitID = "player", caster = "player", filter = "BUFF"},
+		},
+		
+		{
+			Name = "T_DEBUFF_ICON",
+			Direction = "RIGHT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 37,
+			Position = {unpack(Filger_Settings.target_debuff_icon)},
+
+			{spellID = 198813, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 207744, unitID = "target", caster = "player", filter = "DEBUFF"},
 		},
 	},
 	["DRUID"] = {			--[小德]

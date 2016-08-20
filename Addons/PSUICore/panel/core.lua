@@ -2,8 +2,8 @@ local addon, ns = ...
 local lib = ns.lib
 local _G = _G
 
-local screenwidth = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x%d+")
-local screenhigh = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")
+--local screenwidth = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x%d+")
+--local screenhigh = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")
 local bordercolor = {0,0,0,.95}
 local mainfont = "Fonts\\ARIALN.TTF"
 ----------------------------------------------------------------------------------------------------------------------------

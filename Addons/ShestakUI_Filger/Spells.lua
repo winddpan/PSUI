@@ -355,9 +355,10 @@ Filger_Spells = {
 			Mode = "ICON",
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
+				-- 收割急速buff
+				{spellID = 215711, unitID = "player", caster = "player", filter = "BUFF" },
 				{spellID = 207319, unitID = "player",caster = "all", filter = "BUFF"}, 
 				{spellID = 216974, unitID = "player", caster = "player", filter = "BUFF"},
-
 				--符文劍舞
 				{ spellID = 49028, unitID = "player", caster = "player", filter = "BUFF" },
 				--冰霜之柱
@@ -386,12 +387,10 @@ Filger_Spells = {
 				{spellID = 81141, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 符文刃舞
 				{spellID = 81256, unitID = "player",caster = "all", filter = "BUFF"},
-								--黑暗突变
+				--黑暗突变
 				{spellID = 63560, unitID = "pet",caster = "all", filter = "BUFF"}, 
 				--符能转换
 				{ spellID = 119975, unitID = "player", caster = "player", filter = "BUFF" },	
-				--死亡脚步
-				--{spellID = 96268, unitID = "player", caster = "player", filter = "BUFF"},
 				--符文腐化
 				{spellID = 51460, unitID = "player", caster = "player", filter = "BUFF"},
 		},
@@ -435,7 +434,7 @@ Filger_Spells = {
 		},
 		{
 			Name = "innerCooldown",
-			Direction = "RIGHT",
+			Direction = "LEFT",
 			Interval = 0,
 			Mode = "ICON",
 			IconSize = 35,
@@ -594,7 +593,18 @@ Filger_Spells = {
 			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},
 		},
 	},
-	
+	["DEMONHUNTER"] = {{
+			Name = "P_BUFF_ICON",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 37,
+			Position = {unpack(Filger_Settings.player_buff_icon)},
+			
+			{spellID = 212800, unitID = "player", caster = "player", filter = "BUFF"},
+		},
+	},
 	["DRUID"] = {			--[小德]
 		{
 			Name = "P_BUFF_ICON",

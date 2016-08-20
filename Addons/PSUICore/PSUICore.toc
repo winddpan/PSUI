@@ -26,7 +26,8 @@ modules\HoverBind.lua
 modules\xp_bar.lua
 modules\ObjectiveTrackerMover.lua
 modules\SimpleChannel.lua
-modules\rougehelper.lua
+##modules\rougehelper.lua
+modules\EasyChannel.lua
 
 automation\buystack.lua
 automation\durability.lua

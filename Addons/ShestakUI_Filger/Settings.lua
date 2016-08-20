@@ -23,8 +23,8 @@ Misc.barw = 180						-- 计时条长度
 Misc.CDnum = 5						-- COOLDOWN 冷却图标每行显示几个
 
 -------------------------------------------------------- 
-local getscreenheight = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")) 
-local getscreenwidth = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x+%d")) 
+--local getscreenheight = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")) 
+--local getscreenwidth = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x+%d")) 
 local resolution = ({GetScreenResolutions()})[GetCurrentResolution()] or GetCVar("gxWindowedResolution")
 
 --[[   Pixel perfect script of custom ui Scale 

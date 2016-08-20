@@ -86,7 +86,7 @@
 
   --func AddSpellIdRow
   local function AddSpellIdRow(tooltip,spellid)
-    tooltip:AddDoubleLine("|cff0099ffSpell ID|r",spellid)
+	tooltip:AddDoubleLine("|cff0099ffSpell ID|r",spellid)
     tooltip:Show()
   end
 

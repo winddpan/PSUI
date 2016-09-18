@@ -359,51 +359,55 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
     self:Show(frame);
 end
 
-function BuyEmAll:AltCurrencyTranslating(Texture)
-    if (strmatch(Texture, "%a+_%d+$") == "variety_01") then
+function BuyEmAll:AltCurrencyTranslating(Texture) -- Uses the texture string/path to determine which currency it is, only way I know how right now.
+    if (strmatch(Texture, "%a+_%d+$") == "variety_01") then -- Dalaran Jewelcrafter's Token
         return 61;
-    elseif (strmatch(Texture, "%a+_%d+$") == "ribbon_01") then
+    elseif (strmatch(Texture, "%a+_%d+$") == "ribbon_01") then -- Epicurean's Award
         return 81;
-    elseif (strmatch(Texture, "_(%a+)$") == "artofwar") then
+    elseif (strmatch(Texture, "_(%a+)$") == "artofwar") then -- Champion's Seal
         return 241;
-    elseif (strmatch(Texture, "_(%w+)$") == "argentdawn3") then
+    elseif (strmatch(Texture, "_(%w+)$") == "argentdawn3") then -- Illustrious Jewelcrafter's Token
         return 361;
-    elseif (strmatch(Texture, "$a+_%a+$") == "zone_tolbarad") then
+    elseif (strmatch(Texture, "$a+_%a+$") == "zone_tolbarad") then -- Tol Barad Commendation
         return 391;
-    elseif (strmatch(Texture, "-(%a+)-") == "Honor") then
-        return 392;
-    elseif (strmatch(Texture, "-(%a+)-") == "Conquest") then
-        return 390;
-    elseif (strmatch(Texture, "-(%a+)$") == "justice") then
-        return 395;
-    elseif (strmatch(Texture, "-(%a+)$") == "valor") then
-        return 396;
-    elseif (strmatch(Texture, "_(%a+)$") == "idolofferocity") then
+    elseif (strmatch(Texture, "_(%a+)$") == "idolofferocity") then -- Ironpaw Token
         return 402;
-    elseif (strmatch(Texture, "_(%a+)$") == "markoftheworldtree") then
+    elseif (strmatch(Texture, "_(%a+)$") == "markoftheworldtree") then -- Mark of the World Tree
         return 416;
-    elseif (strmatch(Texture, "%a+_%d+$") == "darkmoon_01") then
+    elseif (strmatch(Texture, "%a+_%d+$") == "darkmoon_01") then -- Darkmoon Prize Ticket
         return 515;
-    elseif (strmatch(Texture, "%a+_%a+$") == "titan_fragment") then
-        return 698;
-    elseif (strmatch(Texture, "_(%a+)$") == "sealofkings") then
+    elseif (strmatch(Texture, "_(%a+)$") == "sealofkings") then -- Mote of Darkness
         return 614;
-    elseif (strmatch(Texture, "%a+_%a+$") == "primal_shadow") then
+    elseif (strmatch(Texture, "%a+_%a+$") == "primal_shadow") then -- Essence of Corrupted Deathwing
         return 615;
-    elseif (strmatch(Texture, "%a+_%d+$") == "coin_17") then
+    elseif (strmatch(Texture, "%a+_%d+$") == "coin_17") then -- Elder Charm of Good Fortune
         return 697;
-    elseif (strmatch(Texture, "%a+_%d+$") == "coin_18") then
+    elseif (strmatch(Texture, "%a+_%d+$") == "coin_18") then -- Lesser Charm of Good Fortune
         return 738;
-    elseif (strmatch(Texture, "%a+$") == "mogucoin") then
-        return 752;
-    elseif (strmatch(Texture, "%a+$") == "timelesscoin") then
+    elseif (strmatch(Texture, "%a+$") == "timelesscoin") then -- Timeless Coin
         return 777;
-    elseif (strmatch(Texture, "%a+-%a+$") == "timelesscoin-bloody") then
+    elseif (strmatch(Texture, "%a+-%a+$") == "timelesscoin-bloody") then -- Bloody Coin
         return 789;
-    elseif (strmatch(Texture, "%a+_%a+$") == "apexis_draenor") then
+    elseif (strmatch(Texture, "%a+_%a+$") == "apexis_draenor") then -- Apexis Crystal
         return 823;
-    elseif (strmatch(Texture, "%a+_%a+$") == "garrison_resource") then
+    elseif (strmatch(Texture, "%a+_%a+$") == "garrison_resource") then -- Garrison Resources
         return 824;
+    elseif (strmatch(Texture, "%a+_%a+$") == "ashran_artifact") then -- Artifact Fragment
+        return 944;
+    elseif (strmatch(Texture, "%a+_%a+_%d+$") == "misc_coin_09") then -- Dingy Iron Coins
+        return 980;
+    elseif (strmatch(Texture, "%a+_%a+_%a+$") == "reputation_kirintor_offensive") then -- Sightless Eye
+        return 1149;
+    elseif (strmatch(Texture, "%a+-%a+$") == "pvecurrency-justice") then -- Timewarped Badge
+        return 1166;
+    elseif (strmatch(Texture, "%a+-%a+$") == "pvecurrency-valor") then -- Valor
+        return 1191;
+    elseif (strmatch(Texture, "%a+%d+$") == "datacrystal01") then -- Nethershard
+        return 1226;
+    elseif (strmatch(Texture, "%a+_%a+$") == "orderhall_orderresources") then -- Order Resources
+        return 1220;
+    elseif (strmatch(Texture, "%a+_%a+$") == "misc_elvencoins") then -- Curious Coin
+        return 1275;
     end
 end
 

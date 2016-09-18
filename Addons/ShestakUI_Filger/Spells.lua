@@ -458,6 +458,11 @@ Filger_Spells = {
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 暗刃
 			{spellID = 121471, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 狂徒神器
+			{spellID = 202665, unitID = "player", caster = "player", filter = "DEBUFF"},
+			-- 敏锐神器
+			{spellID = 220901, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- 嗜血
 			{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},
@@ -467,16 +472,22 @@ Filger_Spells = {
 			{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
 			-- 敏锐死亡标记
 			{spellID = 212283, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 227151, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 195627, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- 骰子6buff
-			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193356, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 227151, unitID = "player", caster = "player", filter = "BUFF"},
+			--{spellID = 195627, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- Slice and Dicepoison
+			{spellID = 5171, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 动如脱兔
+			{spellID = 197003, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 登船突击队
+			{spellID = 209754, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 阴险伎俩
+			{spellID = 213995, unitID = "player", caster = "player", filter = "BUFF"},
+
+			-- 狂徒天赋-敏锐
+			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
 
 			--潜行
 			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
@@ -488,8 +499,6 @@ Filger_Spells = {
 			{spellID = 115192, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Envenom
 			{spellID = 32645, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Slice and Dicepoison
-			{spellID = 5171, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Adrenaline Rush
 			{spellID = 13750, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Evasion
@@ -529,7 +538,7 @@ Filger_Spells = {
 				{spellID = 146308, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 		{
-			Name = "P_PROC_ICON",
+			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
 			Mode = "ICON",
 			Interval = 2,
@@ -537,27 +546,13 @@ Filger_Spells = {
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
-			-- Trinkets
-			-- General
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- Dancing Steel (Agility)
-			{spellID = 118334, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 170879, unitID = "player", caster = "player", filter = "BUFF"},
-			--战歌之印
-			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 骰子6buff
+			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193356, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",

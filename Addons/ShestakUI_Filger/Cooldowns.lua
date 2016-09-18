@@ -14,6 +14,7 @@ local format = string.format
 local floor = math.floor
 local min = math.min
 
+--[[
 local function GetFormattedTime(s)
 	local day, hour, minute = 86400, 3600, 60
 	if s >= day then
@@ -24,6 +25,19 @@ local function GetFormattedTime(s)
 		return format("%dm", floor(s / minute + 0.5)), s % minute
 	end
 	return floor(s + 0.5), s - floor(s)
+end
+]]
+
+local function GetFormattedTime(s)
+	local day, hour, minute = 86400, 3600, 60
+	if s >= day then
+		return format("%dd", floor(s / day + 0.5)), s % day
+	elseif s >= hour then
+		return format("%dh", floor(s / hour + 0.5)), s % hour
+	elseif s >= minute then
+		return format("%dm", floor(s / minute + 0.5)), s % minute
+	end
+	return floor(s), s - floor(s)
 end
 
 local function Timer_Stop(self)

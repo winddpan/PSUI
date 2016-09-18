@@ -2,7 +2,8 @@
 ## Title: Enhanced Chat Filter MOD Fix
 ## Notes: A chat filter base on blackwords and other triggers
 ## Notes-zhCN: 基于黑名单的聊天插件，包含了更多过滤器
-## Version: 7.0.3-1
+## Author: Rubgrsch
+## Version: 7.0.3-7
 ## SavedVariables: ecfDB
 
 #@no-lib-strip@

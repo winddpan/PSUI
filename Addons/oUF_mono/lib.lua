@@ -1160,7 +1160,7 @@
 	--app.v:SetText(cur)
 	local self = app.__owner
     local tex, r, g, b = UnitAlternatePowerTextureInfo(self.unit, 2)
-	if not tex then return end
+	if not tex or type(tex) ~= "string" then return end
     if tex:match("STONEGUARDAMETHYST_HORIZONTAL_FILL.BLP") then
 		app:SetStatusBarColor(.7, .3, 1)
 	elseif tex:match("STONEGUARDCOBALT_HORIZONTAL_FILL.BLP") then

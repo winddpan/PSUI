@@ -133,7 +133,8 @@ function bf_OnEvent(this, event, arg1, arg2, arg3, arg4, ...)
 			bf_ShowXP(rxp, xp, mxp)
 		end
 	elseif event == "MODIFIER_STATE_CHANGED" then
-		if arg1 == "LCTRL" or arg1 == "RCTRL" then
+		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+		if (arg1 == "LCTRL" or arg1 == "RCTRL") and name then
 			if arg2 == 1 then
 				bf_ShowRep()
 			elseif arg2 == 0 and UnitLevel("player") ~= MAX_PLAYER_LEVEL then

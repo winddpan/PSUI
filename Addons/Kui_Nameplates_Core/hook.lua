@@ -12,14 +12,17 @@ local kui = LibStub('Kui-1.0')
 KuiNameplatesCore = addon:Layout()
 local core = KuiNameplatesCore
 
--- positioned and "shown" on the player's frame when/if it is shown
-KuiNameplatesPlayerAnchor = CreateFrame('Frame')
-KuiNameplatesPlayerAnchor:Hide()
-
 if not core then
     -- another layout is already loaded
     return
 end
+
+-- positioned and "shown" on the player's frame when/if it is shown
+local anchor = CreateFrame('Frame','KuiNameplatesPlayerAnchor')
+anchor:Hide()
+
+local plugin_fading
+local plugin_classpowers
 -- messages ####################################################################
 function core:Create(f)
     self:CreateBackground(f)
@@ -27,6 +30,7 @@ function core:Create(f)
     self:CreatePowerBar(f)
     self:CreateFrameGlow(f)
     self:CreateTargetGlow(f)
+    self:CreateTargetArrows(f)
     self:CreateNameText(f)
     self:CreateLevelText(f)
     self:CreateGuildText(f)
@@ -37,16 +41,12 @@ function core:Create(f)
     self:CreateThreatBrackets(f)
     self:CreateStateIcon(f)
     self:CreateRaidIcon(f)
+    self:CreateNameOnlyGlow(f)
 end
 function core:Show(f)
     f.state.player = UnitIsUnit(f.unit,'player')
     f.state.friend = UnitIsFriend('player',f.unit)
     f.state.enemy = UnitIsEnemy('player',f.unit)
-
-    if f.state.player then
-        KuiNameplatesPlayerAnchor:SetAllPoints(f)
-        KuiNameplatesPlayerAnchor:Show()
-    end
 
     -- go into nameonly mode if desired
     self:NameOnlyUpdate(f)
@@ -73,11 +73,31 @@ function core:Show(f)
     f:UpdateRaidIcon()
     -- enable/disable castbar
     f:UpdateCastBar()
+    -- enable/disable auras
+    f:UpdateAuras()
+    -- set guild text
+    f:UpdateGuildText()
+
+    if f.TargetArrows then
+        -- show/hide target arrows
+        f:UpdateTargetArrows()
+    end
+
+    if f.state.player then
+        anchor:SetAllPoints(f)
+        anchor:Show()
+
+        if addon.ClassPowersFrame then
+            -- force class powers position update
+            -- as our post function uses state.player
+            plugin_classpowers:TargetUpdate()
+        end
+    end
 end
 function core:Hide(f)
     if f.state.player then
-        KuiNameplatesPlayerAnchor:ClearAllPoints()
-        KuiNameplatesPlayerAnchor:Hide()
+        anchor:ClearAllPoints()
+        anchor:Hide()
     end
 
     self:NameOnlyUpdate(f,true)
@@ -95,7 +115,7 @@ function core:HealthColourChange(f)
     self:NameOnlyUpdate(f)
     self:NameOnlyUpdateFunctions(f)
 end
-function core:PowerUpdate(f)
+function core:PowerTypeUpdate(f)
     f:UpdatePowerBar()
 end
 function core:GlowColourChange(f)
@@ -112,7 +132,7 @@ function core:GainedTarget(f)
     f.state.target = true
 
     -- disable nameonly on target
-    self:NameOnlyUpdate(f,true)
+    self:NameOnlyUpdate(f)
     -- show name on target
     self:ShowNameUpdate(f)
 
@@ -137,7 +157,11 @@ function core:ClassificationChanged(f)
 end
 function core:RaidIconUpdate(f)
     -- registered by configChanged, fade_avoid_raidicon
-    f:UpdateRaidIcon()
+    plugin_fading:UpdateFrame(f)
+end
+function core:ExecuteUpdate(f)
+    -- registered by configChanged, fade_avoid_execute_friend/hostile
+    plugin_fading:UpdateFrame(f)
 end
 -- events ######################################################################
 function core:QUESTLINE_UPDATE()
@@ -166,8 +190,9 @@ end
 function core:Initialise()
     self:InitialiseConfig()
 
-    -- TODO resets upon changing any interface options
-    C_NamePlate.SetNamePlateOtherSize(100,20)
+    -- we don't want the distance scaling
+    SetCVar('NameplateMinScale',1)
+    SetCVar('NameplateMaxScale',1)
 
     -- register messages
     self:RegisterMessage('Create')
@@ -175,7 +200,7 @@ function core:Initialise()
     self:RegisterMessage('Hide')
     self:RegisterMessage('HealthUpdate')
     self:RegisterMessage('HealthColourChange')
-    self:RegisterMessage('PowerUpdate')
+    self:RegisterMessage('PowerTypeUpdate')
     self:RegisterMessage('GlowColourChange')
     self:RegisterMessage('CastBarShow')
     self:RegisterMessage('CastBarHide')
@@ -190,12 +215,19 @@ function core:Initialise()
 
     -- register callbacks
     self:AddCallback('Auras','PostCreateAuraButton',self.Auras_PostCreateAuraButton)
+    self:AddCallback('Auras','PostUpdateAuraFrame',self.Auras_PostUpdateAuraFrame)
     self:AddCallback('Auras','DisplayAura',self.Auras_DisplayAura)
     self:AddCallback('ClassPowers','PostPositionFrame',self.ClassPowers_PostPositionFrame)
+    self:AddCallback('ClassPowers','CreateBar',self.ClassPowers_CreateBar)
+    self:AddCallback('ClassPowers','PostCreateIcon',self.ClassPowers_PostCreateIcon)
+    self:AddCallback('ClassPowers','PostRuneUpdate',self.ClassPowers_PostRuneUpdate)
 
     -- update layout's locals with configuration
     self:SetLocals()
 
     -- set element configuration tables
     self:InitialiseElements()
+
+    plugin_fading = addon:GetPlugin('Fading')
+    plugin_classpowers = addon:GetPlugin('ClassPowers')
 end

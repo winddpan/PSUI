@@ -8,15 +8,21 @@
 -- initalise addon global
 KuiNameplates = CreateFrame('Frame')
 local addon = KuiNameplates
-addon.MAJOR,addon.MINOR=2,1
+addon.MAJOR=2
 
---addon.debug = true
+--[===[@alpha@
+addon.debug = true
+--@end-alpha@]===]
+--[===[@debug@
+--addon.debug_config = true
 --addon.debug_units = true
 --addon.debug_messages = true
 --addon.draw_frames = true
+--@end-debug@]===]
 
 -- kui nameplate container frame size
 addon.uiscale = .71 -- updated upon reload
+addon.IGNORE_UISCALE = nil
 addon.width,addon.height = 140,40
 
 local framelist = {}
@@ -77,6 +83,22 @@ end
 function addon:UI_SCALE_CHANGED()
     self.uiscale = UIParent:GetEffectiveScale()
 
+    if self.IGNORE_UISCALE then
+        local resolutions = {GetScreenResolutions()}
+        local resolution = GetCurrentResolution()
+
+        if #resolutions > 0 and resolution > 0 then
+            local resolution_text = resolutions[resolution]
+
+            if resolution_text then
+                resolution_text = tonumber(string.match(resolution_text,"%d+x(%d+)"))
+            end
+            if resolution_text then
+                self.uiscale = 768 / resolution_text
+            end
+        end
+    end
+
     if #framelist > 0 then
         for i,f in self:Frames() do
             f:SetScale(self.uiscale)
@@ -112,11 +134,18 @@ local function OnEvent(self,event,...)
         end
     end
 
+    -- initialise the layout
     if type(self.layout.Initialise) == 'function' then
         self.layout:Initialise()
     end
 
-    addon:DispatchMessage('Initialised')
+    -- fire layout initialised to plugins
+    -- for plugins to fetch values from the layout, etc
+    for k,plugin in ipairs(self.plugins) do
+        if type(plugin.Initialised) == 'function' then
+            plugin:Initialised()
+        end
+    end
 end
 ------------------------------------------- initialise addon scripts & events --
 addon:SetScript('OnEvent',OnEvent)

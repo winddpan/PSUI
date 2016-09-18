@@ -1,0 +1,12 @@
+tag 2016.09.07
+1e4881073bed07db7091fd3dfe6b04c1250a48d8
+warbabyy <warbaby@163.com>
+2016-09-07 01:54:32 +0800
+
+tag release
+
+
+--------------------
+
+warbabyy:
+	- mark POIs on minimap using HereBeDragons

@@ -1,0 +1,7 @@
+﻿## Interface: 70000 
+## Title: |cff3399FF!DamageFont|r
+## Notes: !DamageFont
+## Notes-zhCN: 战斗字体修改
+## Version: 1.0
+
+main.lua

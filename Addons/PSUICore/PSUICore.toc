@@ -1,9 +1,9 @@
-## Interface: 70000 
+ï»¿## Interface: 70000 
 ## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
-## Notes-zhCN: PSUIºËĞÄ£¬°üº¬Ãæ°åÃÀ»¯¡¢Ğ¡µØÍ¼¡¢±³°üµÈ
+## Notes-zhCN: PSUIæ ¸å¿ƒï¼ŒåŒ…å«é¢æ¿ç¾åŒ–ã€å°åœ°å›¾ã€èƒŒåŒ…ç­‰
 ## Author: WINDDPAN
-## Version: 2.1
+## Version: 2.2
 ## OptionalDeps:Skada, DBM-Core, Aurora
 
 info/info.xml
@@ -28,6 +28,7 @@ modules\ObjectiveTrackerMover.lua
 modules\SimpleChannel.lua
 ##modules\rougehelper.lua
 modules\EasyChannel.lua
+modules\HideOrderHallBar.lua
 
 automation\buystack.lua
 automation\durability.lua

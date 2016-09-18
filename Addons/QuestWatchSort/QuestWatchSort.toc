@@ -1,0 +1,18 @@
+## Interface: 70000
+## Title: QuestWatchSort |cffEEEE00[Warbaby]|r
+## Notes: Sort watching quests according to the distance. A solution for Blizzard's broken SortQuestWatches()
+## Version: 2016.09.03
+## Author: warbaby
+## SavedVariables: QuestWatchSortDB
+## X-Curse-Packaged-Version: 2016.09.07
+## X-Curse-Project-Name: QuestWatchSort
+## X-Curse-Project-ID: questwatchsort
+## X-Curse-Repository-ID: wow/questwatchsort/mainline
+
+HereBeDragons-1.0\LibStub\LibStub.lua
+HereBeDragons-1.0\CallbackHandler-1.0\CallbackHandler-1.0.lua
+HereBeDragons-1.0\HereBeDragons-1.0.lua
+HereBeDragons-1.0\HereBeDragons-Pins-1.0.lua
+
+Locales.lua
+QuestWatchSort.lua

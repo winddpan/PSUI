@@ -2,7 +2,7 @@
 
   LiteBag/UIOptions.lua
 
-  Copyright 2016 Mike Battersby
+  Copyright 2015-2016 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -18,6 +18,24 @@ function LiteBagOptionsConfirmSort_OnLoad(self)
             end
         self.GetOption = function (self)
                 return not LiteBag_GetGlobalOption("NoConfirmSort")
+            end
+        self.GetOptionDefault = function (self) return true end
+        LiteBagOptionsControl_OnLoad(self)
+end
+
+function LiteBagOptionsEquipsetDisplay_OnLoad(self)
+        self.Text:SetText("Display equipment set membership icons.")
+        self.SetOption = function (self, setting)
+                if not setting or setting == "0" then
+                    LiteBag_SetGlobalOption("HideEquipsetIcon", true)
+                else
+                    LiteBag_SetGlobalOption("HideEquipsetIcon", nil)
+                end
+                LiteBagFrame_Update(LiteBagInventory)
+                LiteBagFrame_Update(LiteBagBank)
+            end
+        self.GetOption = function (self)
+                return not LiteBag_GetGlobalOption("HideEquipsetIcon")
             end
         self.GetOptionDefault = function (self) return true end
         LiteBagOptionsControl_OnLoad(self)

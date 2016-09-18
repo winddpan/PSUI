@@ -2,7 +2,7 @@
 
   LiteBag/Options.lua
 
-  Copyright 2013-2015 Mike Battersby
+  Copyright 2013-2016 Mike Battersby
 
   Released under the terms of the GNU General Public License version 2 (GPLv2).
   See the file LICENSE.txt.
@@ -49,15 +49,14 @@ function LiteBag_OptionSlashFunc(argstr)
 
     local args = { strsplit(" ", argstr) }
 
-    if #args == 1 then
-        InterfaceOptionsFrame:Show()
-        InterfaceOptionsFrame_OpenToCategory(LiteBagOptions)
-        return
-    end
-
-    for i = 2, #args do
+    for i = 1, #args do
         local arg = strlower(args[i])
-        if arg == "confirm" then
+        if arg == "" then
+            InterfaceOptionsFrame:Show()
+            InterfaceOptionsFrame_OpenToCategory(LiteBagOptions)
+            return
+        end
+        if arg == "confirmsort" then
             if args[i+1] == "on" then
                 LiteBag_SetGlobalOption("NoConfirmSort", nil)
                 LiteBag_Print("Bag sort confirmation popup enabled.")
@@ -67,12 +66,27 @@ function LiteBag_OptionSlashFunc(argstr)
             end
             return
         end
+        if arg == "equipset" then
+            if args[i+1] == "on" then
+                LiteBag_SetGlobalOption("HideEquipsetIcon", nil)
+                LiteBag_Print("Equipment set icon display enabled.")
+            elseif args[i+1] == "off" then
+                LiteBag_SetGlobalOption("HideEquipsetIcon", true)
+                LiteBag_Print("Equipment set icon display disabled.")
+            end
+            LiteBagFrame_Update(LiteBagInventory)
+            LiteBagFrame_Update(LiteBagBank)
+            return
+        end
         if arg == "inventory.columns" then
             local n = tonumber(args[i+1])
             if n and n >= 8 then
                 LiteBag_SetFrameOption(LiteBagInventory, "columns", n)
                 LiteBagFrame_Initialize(LiteBagInventory)
+                LiteBagFrame_Update(LiteBagInventory)
                 LiteBag_Print("Inventory frame width set to "..n.." columns")
+            else
+                LiteBag_Print("Can't set frame width to less than 8")
             end
             return
         end
@@ -81,10 +95,18 @@ function LiteBag_OptionSlashFunc(argstr)
             if n and n >= 8 then
                 LiteBag_SetFrameOption(LiteBagBank, "columns", n)
                 LiteBagFrame_Initialize(LiteBagBank)
+                LiteBagFrame_Update(LiteBagBank)
                 LiteBag_Print("Bank frame width set to "..n.." columns")
+            else
+                LiteBag_Print("Can't set frame width to less than 8")
             end
             return
         end
+        LiteBag_Print("Usage:")
+        LiteBag_Print("  /litebag bank.columns <n>")
+        LiteBag_Print("  /litebag inventory.columns <n>")
+        LiteBag_Print("  /litebag equipset <on | off>")
+        LiteBag_Print("  /litebag confirmsort <on | off>")
     end
 end
 

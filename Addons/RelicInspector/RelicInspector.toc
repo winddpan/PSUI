@@ -1,0 +1,12 @@
+## Interface: 70000
+## Title: RelicInspector
+## Notes: Displays artifact weapon relics in the tooltip
+## Author: Thoralie
+## Version: 1.8
+## SavedVariables: RelicInspectorDB
+
+embeds.xml
+
+ArtifactData.lua
+TraitSpellIDs.lua
+RelicInspector.lua

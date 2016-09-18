@@ -1,20 +1,22 @@
 ## Interface: 70000
 ## Title: LiteBag
-## Version: 7.0.1
+## Version: 7.0.8
 ## Author: Xodiv of Proudmoore
 ## Email: mib@post.com
-## Dependencies: Blizzard_TokenUI
 ## SavedVariablesPerCharacter: LiteBag_OptionsDB
-## X-Curse-Packaged-Version: 7.0.1
+## X-Curse-Packaged-Version: 7.0.8
 ## X-Curse-Project-Name: LiteBag
 ## X-Curse-Project-ID: litebag
 ## X-Curse-Repository-ID: wow/litebag/mainline
 
 Options.lua
-LiteBagItemButtonTemplate.xml
-LiteBagBagButtonTemplate.xml
-LiteBagFrameTemplate.xml
+ItemButton.xml
+BagButton.xml
+Frame.xml
 LiteBag.xml
 ReplaceBlizzard.lua
+
+Plugin_EquipSets\EquipSets.xml
+
 UI\UIOptionsPanelTemplate.xml
 UI\UIOptions.xml

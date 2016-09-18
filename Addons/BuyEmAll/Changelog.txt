@@ -1,4 +1,7 @@
-﻿v3.2.9
+﻿v3.3.0
+Alternate currency list cleaned and updated to include Legion.
+
+v3.2.9
 Nothing seems broken, TOC bump.
 
 v3.2.8

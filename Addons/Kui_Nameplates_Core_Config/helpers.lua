@@ -44,6 +44,17 @@ local function GenericOnShow(self)
 end
 -- element creation helpers ####################################################
 do
+    local function Get(self)
+        if self.env then
+            self:SetChecked(opt.profile[self.env])
+        end
+    end
+    local function Set(self)
+        if self.env and opt.config then
+            opt.config:SetConfig(self.env,self:GetChecked())
+        end
+    end
+
     local function CheckBoxOnClick(self)
         if self:GetChecked() then
             PlaySound("igMainMenuOptionCheckBoxOn")
@@ -51,28 +62,18 @@ do
             PlaySound("igMainMenuOptionCheckBoxOff")
         end
 
-        if self.env and opt.config then
-            opt.config:SetConfig(self.env,self:GetChecked())
-        end
-
-        if self.callback then
-            self:callback()
-        end
+        self:Set()
     end
     local function CheckBoxOnShow(self)
         if not opt.profile then return end
-        if self.env then
-            self:SetChecked(opt.profile[self.env])
-        end
-
+        self:Get()
         GenericOnShow(self)
     end
 
-    function opt.CreateCheckBox(parent, name, callback)
+    function opt.CreateCheckBox(parent, name)
         local check = CreateFrame('CheckButton', frame_name..name..'Check', parent, 'OptionsBaseCheckButtonTemplate')
 
         check.env = name
-        check.callback = callback
         check:SetScript('OnClick',CheckBoxOnClick)
         check:SetScript('OnShow',CheckBoxOnShow)
 
@@ -85,6 +86,9 @@ do
         check.label:SetText(opt.titles[name] or name or 'Checkbox')
         check.label:SetPoint('LEFT', check, 'RIGHT')
 
+        check.Get = Get
+        check.Set = Set
+
         if name and type(parent.elements) == 'table' then
             parent.elements[name] = check
         end
@@ -92,10 +96,18 @@ do
     end
 end
 do
-    local function DropDownOnChanged(self,value,text)
+    local function Get(self)
+        if type(self.initialize) ~= 'function' then return end
+        self:initialize()
+    end
+    local function Set(self,v)
         if self.env and opt.config then
-            opt.config:SetConfig(self.env,value)
+            opt.config:SetConfig(self.env,v)
         end
+    end
+
+    local function DropDownOnChanged(self,v)
+        self:Set(v)
     end
     local function DropDownGenericInit(self)
         local list = {}
@@ -116,9 +128,21 @@ do
             self.initialize = DropDownGenericInit
         end
 
-        if type(self.initialize) ~= 'function' then return end
-        self:initialize()
+        self:Get()
+        GenericOnShow(self)
     end
+
+    local function DropDownEnable(self)
+        self.labelText:SetFontObject('GameFontNormalSmall')
+        self.valueText:SetFontObject('GameFontHighlightSmall')
+        self.button:Enable()
+    end
+    local function DropDownDisable(self)
+        self.labelText:SetFontObject('GameFontDisableSmall')
+        self.valueText:SetFontObject('GameFontDisableSmall')
+        self.button:Disable()
+    end
+
     function opt.CreateDropDown(parent, name, width)
         local dd = pcdd:New(
             parent,
@@ -136,6 +160,13 @@ do
         dd.OnLeave = OnLeave
         dd.OnValueChanged = DropDownOnChanged
 
+        -- replace phanx helpers to override the font
+        dd.Enable = DropDownEnable
+        dd.Disable = DropDownDisable
+
+        dd.Get = Get
+        dd.Set = Set
+
         if name and type(parent.elements) == 'table' then
             parent.elements[name] = dd
         end
@@ -143,25 +174,40 @@ do
     end
 end
 do
-    local function SliderOnShow(self)
-        if not opt.profile then return end
-        if self.env and opt.profile[self.env] then
-            self:SetValue(opt.profile[self.env])
+    local function SliderOnChanged(self,v)
+        -- copy value to display text
+        if not v then
+            v = self:GetValue()
         end
 
-        GenericOnShow(self)
-    end
-    local function SliderOnChanged(self)
-        local r_v = string.format('%.4f',self:GetValue())
+        -- round value for display to hide floating point errors
+        local r_v = string.format('%.4f',v)
         r_v = string.gsub(r_v,'0+$','')
         r_v = string.gsub(r_v,'%.$','')
         self.display:SetText(r_v)
     end
-    local function SliderOnManualChange(self)
+
+    local function Get(self)
+        if self.env and opt.profile[self.env] then
+            self:SetValue(opt.profile[self.env])
+            -- set text to correct value if outside min/max
+            SliderOnChanged(self,opt.profile[self.env])
+        end
+    end
+    local function Set(self,v)
         if not self:IsEnabled() then return end
         if self.env and opt.config then
-            opt.config:SetConfig(self.env,self:GetValue())
+            opt.config:SetConfig(self.env,v or self:GetValue())
         end
+    end
+
+    local function SliderOnShow(self)
+        if not opt.profile then return end
+        self:Get()
+        GenericOnShow(self)
+    end
+    local function SliderOnMouseUp(self)
+        self:Set()
     end
     local function SliderOnMouseWheel(self,delta)
         if not self:IsEnabled() then return end
@@ -171,20 +217,35 @@ do
             delta = -self:GetValueStep()
         end
         self:SetValue(self:GetValue()+delta)
-        SliderOnManualChange(self)
+        self:Set()
     end
     local function SliderSetMinMaxValues(self,min,max)
         self:orig_SetMinMaxValues(min,max)
         self.Low:SetText(min)
         self.High:SetText(max)
     end
-    local function SliderEditBoxOnEscapePressed(self)
-        -- revert to previous value
-        self:ClearFocus()
-        SliderOnChanged(self:GetParent())
+    local function SliderOnDisable(self)
+        self.display:Disable()
+        self.display:SetFontObject('GameFontDisableSmall')
+        self.label:SetFontObject('GameFontDisable')
     end
-    local function SliderEditBoxOnEnterPressed(self)
+    local function SliderOnEnable(self)
+        self.display:Enable()
+        self.display:SetFontObject('GameFontHighlightSmall')
+        self.label:SetFontObject('GameFontNormal')
+    end
+
+    local function EditBox_OnFocusGained(self)
+        self:HighlightText()
+    end
+    local function EditBox_OnEscapePressed(self)
         self:ClearFocus()
+        self:HighlightText(0,0)
+
+        -- revert to current value
+        SliderOnShow(self:GetParent())
+    end
+    local function EditBox_OnEnterPressed(self)
         -- dumb-verify input
         local v = tonumber(self:GetText())
 
@@ -192,11 +253,15 @@ do
             -- display change
             self:GetParent():SetValue(v)
             -- push to config
-            SliderOnManualChange(self:GetParent())
+            self:GetParent():Set(v)
         else
-            SliderEditBoxOnEscapePressed(self)
+            EditBox_OnEscapePressed(self)
         end
+
+        -- re-grab focus
+        self:SetFocus()
     end
+
     function opt.CreateSlider(parent, name, min, max)
         local slider = CreateFrame('Slider',frame_name..name..'Slider',parent,'OptionsSliderTemplate')
         slider:SetWidth(190)
@@ -214,14 +279,22 @@ do
 
         local display = CreateFrame('EditBox',nil,slider)
         display:SetFontObject('GameFontHighlightSmall')
-        display:SetHeight(10)
-        display:SetPoint('TOP',slider,'BOTTOM')
-        display:SetPoint('LEFT',slider.Low,'RIGHT')
-        display:SetPoint('RIGHT',slider.High,'LEFT')
+        display:SetSize(50,15)
+        display:SetPoint('TOP',slider,'BOTTOM',0,1)
         display:SetJustifyH('CENTER')
         display:SetAutoFocus(false)
-        display:SetScript('OnEnterPressed',SliderEditBoxOnEnterPressed)
-        display:SetScript('OnEscapePressed',SliderEditBoxOnEscapePressed)
+        display:SetBackdrop({
+            bgFile='interface/buttons/white8x8',
+            edgeFile='interface/buttons/white8x8',
+            edgeSize=1
+        })
+        display:SetBackdropBorderColor(1,1,1,.2)
+        display:SetBackdropColor(0,0,0,.5)
+
+        display:SetScript('OnEditFocusGained',EditBox_OnFocusGained)
+        display:SetScript('OnEditFocusLost',EditBox_OnEscapePressed)
+        display:SetScript('OnEnterPressed',EditBox_OnEnterPressed)
+        display:SetScript('OnEscapePressed',EditBox_OnEscapePressed)
 
         slider.orig_SetMinMaxValues = slider.SetMinMaxValues
         slider.SetMinMaxValues = SliderSetMinMaxValues
@@ -232,12 +305,15 @@ do
 
         slider:HookScript('OnEnter',OnEnter)
         slider:HookScript('OnLeave',OnLeave)
-        slider:HookScript('OnEnable',OnEnable)
-        slider:HookScript('OnDisable',OnDisable)
+        slider:HookScript('OnEnable',SliderOnEnable)
+        slider:HookScript('OnDisable',SliderOnDisable)
         slider:HookScript('OnShow',SliderOnShow)
         slider:HookScript('OnValueChanged',SliderOnChanged)
-        slider:HookScript('OnMouseUp',SliderOnManualChange)
+        slider:HookScript('OnMouseUp',SliderOnMouseUp)
         slider:HookScript('OnMouseWheel',SliderOnMouseWheel)
+
+        slider.Get = Get
+        slider.Set = Set
 
         slider:SetValueStep(1)
         slider:SetMinMaxValues(min or 0, max or 100)
@@ -249,20 +325,23 @@ do
     end
 end
 do
-    local function ColourPickerOnShow(self)
-        if not opt.profile then return end
+    local function Get(self)
         if self.env and opt.profile[self.env] then
             self.block:SetBackdropColor(unpack(opt.profile[self.env]))
         end
+    end
+    local function Set(self,col)
+        opt.config:SetConfig(self.env,col)
+    end
 
+    local function ColourPickerOnShow(self)
+        if not opt.profile then return end
+        self:Get()
         GenericOnShow(self)
     end
     local function ColourPickerOnClick(self)
         opt.Popup.pages['colour_picker'].colour_picker = self
         opt.Popup:ShowPage('colour_picker')
-    end
-    local function ColourPickerOnSet(self,col)
-        opt.config:SetConfig(self.env,col)
     end
 
     function opt.CreateColourPicker(parent,name)
@@ -296,12 +375,65 @@ do
         container:SetScript('OnClick',ColourPickerOnClick)
         container:SetScript('OnEnter',OnEnter)
         container:SetScript('OnLeave',OnLeave)
-        container.Set = ColourPickerOnSet
+
+        container.Get = Get
+        container.Set = Set -- called by popup
 
         if name and type(parent.elements) == 'table' then
             parent.elements[name] = container
         end
         return container
+    end
+end
+do
+    function opt.CreateEditBox(parent,name,multiline,width,height)
+        local e_name = name and frame_name..name..'EditBox' or nil
+        width,height = width or 150,height or 20
+
+        local box = CreateFrame('EditBox',e_name,parent)
+        box:SetMultiLine(multiline==true)
+        box:SetAutoFocus(false)
+        box:SetFontObject('ChatFontNormal')
+        box:SetSize(width,height)
+        box.env = name
+
+        local bg = CreateFrame('Frame',nil,parent)
+        bg:SetBackdrop({
+            bgFile = 'Interface\\ChatFrame\\ChatFrameBackground',
+            edgeFile = 'Interface\\Tooltips\\UI-Tooltip-border',
+            edgeSize = 16,
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+        bg:SetBackdropColor(.1, .1 , .1, .3)
+        bg:SetBackdropBorderColor(.5, .5, .5)
+        box.bg = bg
+
+        if multiline then
+            local scroll = CreateFrame('ScrollFrame',nil,parent,'UIPanelScrollFrameTemplate')
+            scroll:SetSize(width,height)
+            scroll:SetScrollChild(box)
+            box.scroll = scroll
+
+            scroll:SetScript('OnMouseDown', function(self)
+                self:GetScrollChild():SetFocus()
+            end)
+
+            bg:SetPoint('TOPLEFT', scroll, -10, 10)
+            bg:SetPoint('BOTTOMRIGHT', scroll, 30, -10)
+        else
+            bg:SetPoint('TOPLEFT', box, -10, 10)
+            bg:SetPoint('BOTTOMRIGHT', box, 30, -10)
+        end
+
+        box:SetScript('OnShow',GenericOnShow)
+        box:SetScript('OnEnable',OnEnable)
+        box:SetScript('OnDisable',OnDisable)
+        box:SetScript('OnEscapePressed',EditBoxOnEscapePressed)
+
+        if name and type(parent.elements) == 'table' then
+            parent.elements[name] = container
+        end
+        return box
     end
 end
 function opt.CreateSeperator(parent,name)
@@ -353,6 +485,7 @@ do
         CreateSlider = opt.CreateSlider,
         CreateColourPicker = opt.CreateColourPicker,
         CreateSeperator = opt.CreateSeperator,
+        CreateEditBox = opt.CreateEditBox,
 
         HidePage = HidePage,
         ShowPage = ShowPage
@@ -391,7 +524,7 @@ do
     function opt:CreatePageTab(page)
         local tab = CreateFrame('Button',frame_name..page.name..'PageTab',self.TabList,'OptionsListButtonTemplate')
         tab:SetScript('OnClick',OnClick)
-        tab:SetText(self.page_names[page.name] or 'Tab')
+        tab:SetText(self.page_names[page.name] or page.name or 'Tab')
         tab:SetWidth(120)
 
         tab.child = page
@@ -434,7 +567,7 @@ do
         opt.Popup:Hide()
     end
 
-    local function PopupShowPage(self,page_name)
+    local function PopupShowPage(self,page_name,...)
         if self.active_page then
             self.active_page:Hide()
         end
@@ -447,6 +580,10 @@ do
                 self:SetSize(unpack(self.active_page.size))
             else
                 self:SetSize(400,300)
+            end
+
+            if type(self.active_page.PostShow) == 'function' then
+                self.active_page:PostShow(...)
             end
         end
 
@@ -538,33 +675,31 @@ do
         opt.Popup.pages.rename_profile = pg
     end
 
-    -- delete profile ##########################################################
-    local function DeleteProfile_OnShow(self)
-        self.label:SetText(string.format(
-            opt.titles['delete_profile_label'],
-            opt.config.csv.profile
-        ))
+    -- confirm dialog ##########################################################
+    local function ConfirmDialog_PostShow(self,desc,callback)
+        self.label:SetText('')
+        self.callback = nil
+
+        if desc then
+            self.label:SetText(desc)
+        end
+        if callback then
+            self.callback = callback
+        end
     end
-    local function CreatePopupPage_DeleteProfile()
+    local function CreatePopupPage_ConfirmDialog()
         local pg = CreateFrame('Frame',nil,opt.Popup)
         pg:SetAllPoints(opt.Popup)
         pg:Hide()
         pg.size = { 400,150 }
 
-        function pg:callback(accept)
-            if accept then
-                opt.config:DeleteProfile(opt.config.csv.profile)
-            end
-        end
-
         local label = pg:CreateFontString(nil,'ARTWORK','GameFontNormal')
         label:SetPoint('CENTER',0,10)
 
         pg.label = label
+        pg.PostShow = ConfirmDialog_PostShow
 
-        pg:SetScript('OnShow',DeleteProfile_OnShow)
-
-        opt.Popup.pages.delete_profile = pg
+        opt.Popup.pages.confirm_dialog = pg
     end
 
     -- colour picker ###########################################################
@@ -602,12 +737,19 @@ do
         slider:GetParent().text:SetText(text)
     end
     local function ColourPicker_OnShow(self)
-        if not self.colour_picker then
+        if not self.colour_picker or
+           not self.colour_picker.env
+        then
             opt.Popup:Hide()
             return
         end
 
         local val = opt.profile[self.colour_picker.env]
+
+        if not val then
+            opt.Popup:Hide()
+            return
+        end
 
         if #val == 4 then
             self.o:Show()
@@ -734,7 +876,7 @@ do
         CreatePopupPage_NewProfile()
         CreatePopupPage_ColourPicker()
         CreatePopupPage_RenameProfile()
-        CreatePopupPage_DeleteProfile()
+        CreatePopupPage_ConfirmDialog()
 
         opt:HookScript('OnHide',function(self)
             self.Popup:Hide()
@@ -805,20 +947,44 @@ function opt:Initialise()
     p_delete:SetPoint('TOPRIGHT',-10,-26)
     p_delete:SetText('Delete profile')
     p_delete:SetSize(110,22)
-
+    p_delete.callback = function(self,accept)
+        if accept then
+            opt.config:DeleteProfile(opt.config.csv.profile)
+        end
+    end
     p_delete:SetScript('OnShow',ProfileButtonOnShow)
     p_delete:SetScript('OnClick',function(self)
-        opt.Popup:ShowPage('delete_profile')
+        opt.Popup:ShowPage(
+            'confirm_dialog',
+            string.format(opt.titles.delete_profile_label,opt.config.csv.profile),
+            self.callback
+        )
     end)
 
     local p_rename = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
     p_rename:SetPoint('RIGHT',p_delete,'LEFT',-5,0)
     p_rename:SetText('Rename profile')
     p_rename:SetSize(115,22)
-
     p_rename:SetScript('OnShow',ProfileButtonOnShow)
     p_rename:SetScript('OnClick',function(self)
         opt.Popup:ShowPage('rename_profile')
+    end)
+
+    local p_reset = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
+    p_reset:SetPoint('RIGHT',p_rename,'LEFT',-5,0)
+    p_reset:SetText('Reset profile')
+    p_reset:SetSize(115,22)
+    p_reset.callback = function(self,accept)
+        if accept then
+            opt.config:ResetProfile(opt.config.csv.profile)
+        end
+    end
+    p_reset:SetScript('OnClick',function(self)
+        opt.Popup:ShowPage(
+            'confirm_dialog',
+            string.format(opt.titles.reset_profile_label,opt.config.csv.profile),
+            self.callback
+        )
     end)
 
     -- create backgrounds

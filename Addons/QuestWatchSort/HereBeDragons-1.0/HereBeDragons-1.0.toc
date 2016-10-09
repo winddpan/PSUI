@@ -11,7 +11,7 @@
 ## X-Curse-Project-Name: HereBeDragons-1.0
 ## X-Curse-Project-ID: herebedragons
 ## X-Curse-Repository-ID: wow/herebedragons/mainline
-## X-Curse-Packaged-Version: 2016.09.07
+## X-Curse-Packaged-Version: 20161007
 ## X-Curse-Project-Name: QuestWatchSort
 ## X-Curse-Project-ID: questwatchsort
 ## X-Curse-Repository-ID: wow/questwatchsort/mainline

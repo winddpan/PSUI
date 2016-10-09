@@ -911,7 +911,7 @@ function mod:AddDisplayOptions(win, options)
 						return c.r, c.g, c.b, c.a
 					end,
 				set=function(i, r,g,b,a)
-						db.title.titlecolor = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
+						db.title.textcolor = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
 						Skada:ApplySettings()
 					end,
 				order=4.1,

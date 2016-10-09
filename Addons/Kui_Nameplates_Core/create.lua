@@ -298,7 +298,6 @@ do
     function core.AurasButton_SetFont(button)
         UpdateFontObject(button.cd)
         UpdateFontObject(button.count)
-        UpdateFontObject(button.name)
     end
     function core:configChangedFontOption()
         -- update font objects
@@ -1152,10 +1151,6 @@ do
         button.count:SetShadowOffset(1,-1)
         button.count:SetShadowColor(0,0,0,1)
 
-        if not addon.BarAuras then
-            button.count.fontobject_small = true
-        end
-
         core.AurasButton_SetFont(button)
     end
     function core.Auras_PostUpdateAuraFrame(frame)
@@ -1396,17 +1391,24 @@ end
 function core:ShowNameUpdate(f)
     if not FADE_UNTRACKED and f.IN_NAMEONLY then return end
 
-    if f.state.player or not SHOW_NAME_TEXT then
-        f.state.no_name = true
-    elseif
-        not core.profile.hide_names or
-        f.state.target or
-        f.state.threat or
-        UnitShouldDisplayName(f.unit) or
-        UnitIsPlayer(f.unit)
+    if f.state.target or
+       f.state.threat or
+       UnitShouldDisplayName(f.unit)
     then
+        f.state.tracked = true
         f.state.no_name = nil
     else
+        f.state.tracked = nil
+        f.state.no_name = true
+    end
+
+    if not core.profile.hide_names then
+        f.state.no_name = nil
+    end
+
+    if f.state.player or
+       not SHOW_NAME_TEXT
+    then
         f.state.no_name = true
     end
 

@@ -4,7 +4,7 @@
 ## Version: 2016.09.03
 ## Author: warbaby
 ## SavedVariables: QuestWatchSortDB
-## X-Curse-Packaged-Version: 2016.09.07
+## X-Curse-Packaged-Version: 20161007
 ## X-Curse-Project-Name: QuestWatchSort
 ## X-Curse-Project-ID: questwatchsort
 ## X-Curse-Repository-ID: wow/questwatchsort/mainline

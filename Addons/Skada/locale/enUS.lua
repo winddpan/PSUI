@@ -468,3 +468,21 @@ L["Various tweaks to get around deficiences and problems in the game's combat lo
 L["Adds a set of standard themes to Skada. Custom themes can also be used."] = true
 L["Smart"] = true
 L["Memory usage is high. You may want to reset Skada, and enable one of the automatic reset options."] = true
+
+L["Other"] = true
+
+L["Energy gained"] = true
+L["Rage gained"] = true
+L["Runic power gained"] = true
+L["Holy power gained"] = true
+L["Energy gain sources"] = true
+L["Rage gain sources"] = true
+L["Holy power gain sources"] = true
+L["Runic power gain sources"] = true
+L["Power gains"] = true
+L["Focus gained"] = true
+L["Focus gain sources"] = true
+
+L["Minimum"] = true
+L["Maximum"] = true
+L["Average"] = true

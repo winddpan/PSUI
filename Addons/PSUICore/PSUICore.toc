@@ -37,6 +37,7 @@ automation\mail_get.lua
 automation\AutoRepair&Sell.lua
 automation\bg_hide_quest.lua
 automation\Invite.lua
+automation\auto_gearswap.lua
 
 skin\StyleSkada.lua
 skin\StyleDBM.lua

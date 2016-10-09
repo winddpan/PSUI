@@ -1,8 +1,9 @@
-## Interface: 70000 
+## Interface: 70000
 ## Author: zork
 ## Title: rLib
-## Notes: Library for rAddons
+## Notes: Zork's addon library.
 
-core\dragframe.lua
-core\slashcmd.lua
-core\fader.lua
+core.lua
+dragframe.lua
+framefader.lua
+slashcmd.lua

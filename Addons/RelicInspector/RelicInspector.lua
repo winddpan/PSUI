@@ -73,14 +73,16 @@ local locRelicOffspecOptions = {
 local relicSpecOptions = {
     [1] = "None",
     [2] = "Specs",
-    [3] = "SpecsAndQuantities"
+    [3] = "SpecsAndQuantities",
+    [4] = "SpecsAndTraits"
 }
 local invRelicSpecOptions = invertTable(relicSpecOptions)
 
 local locRelicSpecOptions = {
     [1] = NONE,
     [2] = ALL_SPECS,
-    [3] = ALL_SPECS .. " (with Quantities)"
+    [3] = ALL_SPECS .. " (with Quantities)",
+    [4] = ALL_SPECS .. " & " .. ARTIFACTS_PERK_TAB
 }
 
 local defaults = {
@@ -257,12 +259,12 @@ local function DecorateArtifact(self)
 					if type(gemLink) == 'string' then
 						--Display the gem name, item level, and relic type
 						local _, _, _, gemLevel = GetItemInfo(gemLink)
-						local artifactLevelGain = C_ArtifactUI.GetItemLevelIncreaseProvidedByRelic(gemLink)
 						local relicType = RelicTypeNames[RelicSlotsByArtifact[tonumber(itemID)][i]]
 						if nil == relicType then relicType = "???" end
 						
 						local itemLevel = gemLevel
 						if invItemLevelOptions[db.profile.itemLevelDisplay] == 2 then
+							local artifactLevelGain = C_ArtifactUI.GetItemLevelIncreaseProvidedByRelic(gemLink)
 							itemLevel = "+" .. artifactLevelGain
 						end
 
@@ -309,49 +311,6 @@ local function DecorateRelic(self)
 		local _, _, relicTypeKey = C_ArtifactUI.GetRelicInfoByItemID(tonumber(itemID))
 
 		if nil == relicTypeKey then	return end -- If it's not a relic then we don't care
-
-		-- See if spec requirements are enabled for relics
-		if invRelicSpecOptions[db.profile.relicSpecs] > 1 then
-
-			-- First find the specs that use it, and how many of each
-			local usableSpecs = {}
-			for k, v in pairs(RelicSlotsByArtifact) do
-				local aSpec = SpecByArtifact[k]
-				local specRelicCount = 0
-				for i = 1,3 do
-					if(v[i] == relicTypeKey) then
-						specRelicCount = specRelicCount + 1
-					end
-				end
-				if specRelicCount > 0 then
-					tinsert(usableSpecs,aSpec,specRelicCount)
-				end
-			end
-
-			-- Make a table of required specs and sort that to keep class specs together
-			local specKeys = {}
-			for k in pairs(usableSpecs) do
-				tinsert(specKeys,k)
-			end
-			table.sort(specKeys) 
-
-			-- Assemble the string of all specs (and quantities if applicable)
-			local specsStr = ""
-			for q = 1,#specKeys do
-				local _, specName, _, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
-				local classColorSet = RAID_CLASS_COLORS[classKey]
-				local classColor = classColorSet.colorStr
-				local separator = ", "
-				if q == #specKeys then separator = "" end
-				local quantity = "" 
-				if invRelicSpecOptions[db.profile.relicSpecs] == 3 and usableSpecs[specKeys[q]] > 1 then
-					quantity = format(' (%d)',usableSpecs[specKeys[q]])
-				end
-				local specString = format('|c%s%s%s|r%s',classColor,specName,quantity,separator)
-				specsStr = specsStr .. specString
-			end
-			self:AddLine(format(ITEM_REQ_SPECIALIZATION,specsStr), 1, 1, 1, true)
-		end
 
 		local showOffspecs = false -- Let's assume false to start
 		if invRelicOffspecOptions[db.profile.offspecsToShow] > 1 then
@@ -408,6 +367,68 @@ local function DecorateRelic(self)
 						end
 					end
 				end
+			end
+		end
+
+		-- See if spec requirements are enabled for relics
+		if invRelicSpecOptions[db.profile.relicSpecs] > 1 then
+			self:AddLine(' ',1,1,1,false)
+			-- First find the specs that use it, and how many of each
+			local usableSpecs = {}
+			for k, v in pairs(RelicSlotsByArtifact) do
+				local aSpec = SpecByArtifact[k]
+				local specRelicCount = 0
+				for i = 1,3 do
+					if(v[i] == relicTypeKey) then
+						specRelicCount = specRelicCount + 1
+					end
+				end
+				if specRelicCount > 0 then
+					tinsert(usableSpecs,aSpec,specRelicCount)
+				end
+			end
+
+			-- Make a table of required specs and sort that to keep class specs together
+			local specKeys = {}
+			for k in pairs(usableSpecs) do
+				tinsert(specKeys,k)
+			end
+			table.sort(specKeys) 
+
+			if invRelicSpecOptions[db.profile.relicSpecs] > 3 then
+				for q = 1,#specKeys do
+					local _, specName, _, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
+					local classColorSet = RAID_CLASS_COLORS[classKey]
+					local classColor = classColorSet.colorStr
+					local spellLookupKey = ArtifactBySpec[specKeys[q]] .. '.' .. itemID
+					local traitSpellID = RelicSpells[spellLookupKey]
+					local traitName = GetSpellInfo(traitSpellID)
+
+					local quantity = ""
+					if usableSpecs[specKeys[q]] > 1 then
+						quantity = format(' (%d)',usableSpecs[specKeys[q]])
+					end
+
+					local specLine = format('|c%s%s%s:|r %s',classColor,specName,quantity,traitName or "???")
+					self:AddLine(format(specLine), 1, 1, 1, true)
+				end
+			else
+				-- Assemble the string of all specs (and quantities if applicable)
+				local specsStr = ""
+				for q = 1,#specKeys do
+					local _, specName, _, _, _, _, classKey = GetSpecializationInfoByID(specKeys[q])
+					local classColorSet = RAID_CLASS_COLORS[classKey]
+					local classColor = classColorSet.colorStr
+					local separator = ", "
+					if q == #specKeys then separator = "" end
+					local quantity = "" 
+					if invRelicSpecOptions[db.profile.relicSpecs] == 3 and usableSpecs[specKeys[q]] > 1 then
+						quantity = format(' (%d)',usableSpecs[specKeys[q]])
+					end
+					local specString = format('|c%s%s%s|r%s',classColor,specName,quantity,separator)
+					specsStr = specsStr .. specString
+				end
+				self:AddLine(format(ITEM_REQ_SPECIALIZATION,specsStr), 1, 1, 1, true)
 			end
 		end
 	end

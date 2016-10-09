@@ -12,7 +12,7 @@ local UTF8Symbols = {['·']='',['＠']='',['＃']='',['％']='',
 	['Ｑ']='Q',['Ｒ']='R',['Ｓ']='S',['Ｔ']='T',['Ｕ']='U',['Ｖ']='V',['Ｗ']='W',['Ｘ']='X',
 	['Ｙ']='Y',['Ｚ']='Z',['〔']='',['〕']='',['〈']='',['〉']='',['‖']=''}
 local RaidAlertTagList = {"%*%*.+%*%*", "EUI:.+施放了", "EUI:.+中断", "EUI:.+就绪", "EUI_RaidCD", "PS 死亡: .+>", "|Hspell.+ => ", "受伤源自 |Hspell.+ %(总计%): ", "Fatality:.+> %d"}  -- RaidAlert Tag
-local QuestReportTagList = {"任务进度提示%s?[:：]", "%(任务完成%)", "<大脚组队提示>", "%[接受任务%]", "<大脚团队提示>", "进度:.+: %d+/%d+", "接受任务:%[%d+%]"} -- QuestReport Tag
+local QuestReportTagList = {"任务进度提示%s?[:：]", "%(任务完成%)", "<大脚组队提示>", "%[接受任务%]", "<大脚团队提示>", "进度:.+: %d+/%d+", "接受任务: ?%[%d+%]"} -- QuestReport Tag
 
 -- ECF
 local _, ecf = ...
@@ -23,7 +23,7 @@ local chatLines = {}
 local prevLineID = 0
 local filterResult = nil
 local filterCharList = "[|@!/<>\"`'_#&;:~\\]" -- work on any blackWord
-local filterCharListRegex = "[%(%)%.%%%+%-%*%?%[%]%$%^={}]" -- won't work on regex blackWord
+local filterCharListRegex = "[%(%)%.%%%+%-%*%?%[%]%$%^={}]" -- won't work on regex blackWord, but works on others
 local allowWisper = {}
 local config
 
@@ -138,7 +138,7 @@ end
 
 --method run on /ecf-debug
 function EnhancedChatFilter:EnhancedChatFilterDebug()
-	if(config.debugMode) then print("Debug Mode Off!") else print("Debug Mode On!") end
+	print(config.debugMode and "Debug Mode Off!" or "Debug Mode On!")
 	config.debugMode = not config.debugMode
 end
 
@@ -405,11 +405,7 @@ local options = {
 							if (checkBlacklist(key, v)) then
 								EnhancedChatFilter:Print(key..L["IncludeAutofilteredWord"])
 							else
-								if (v == true) then
-									blackStringList[#blackStringList+1] = key
-								else
-									blackStringList[#blackStringList+1] = key..","..v
-								end
+								blackStringList[#blackStringList+1] = (v == true) and key or key..","..v
 							end
 						end
 						local blackString = tconcat(blackStringList,";")
@@ -515,7 +511,7 @@ local options = {
 					func = function() config.lootItemFilterList, config.lootCurrencyFilterList, lootHighlight = {}, {}, {} end,
 					confirm = true,
 					confirmText = L["DoYouWantToClear"]..L["LootFilterList"]..L["?"],
-					disabled = function() return next(config.lootItemFilterList) == nil and config.lootCurrencyFilterList == nil end,
+					disabled = function() return next(config.lootItemFilterList) == nil and next(config.lootCurrencyFilterList) == nil end,
 				},
 				LootFilterList = {
 					type = "multiselect",
@@ -634,11 +630,7 @@ local function stringDifference(stringA, stringB)
 	for i=1, len_a do
 		temp[1] = i
 		for j=1, len_b do
-			if(stringA:sub(i,i) == stringB:sub(j,j)) then
-				temp[j+1] = templast[j]
-			else
-				temp[j+1] = min(templast[j+1], temp[j], templast[j]) + 1
-			end
+			temp[j+1] = (stringA:sub(i,i) == stringB:sub(j,j)) and templast[j] or (min(templast[j+1], temp[j], templast[j]) + 1)
 		end
 		for j=0, len_b do templast[j+1]=temp[j+1] end
 	end
@@ -753,18 +745,18 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 
 		--msgdata
 		local msgtable = {Sender = trimmedPlayer, Msg = msgLine, Time = GetTime()}
-		for i=1, #chatLines do
+		tinsert(chatLines, msgtable)
+		for i=1, #chatLines-1 do
 			--if there is not much difference between msgs, then filter it
 			--(optional) if someone sends msgs within 0.6s ,then filter it
 			if (chatLines[i].Sender == msgtable.Sender and ((config.multiLine and (msgtable.Time - chatLines[i].Time) < 0.600) or stringDifference(chatLines[i].Msg,msgtable.Msg) <= config.stringDifferenceLimit)) then
-				chatLines[i] = msgtable
+				tremove(chatLines, i)
 				if config.debugMode then print("Trigger: Repeat Filter") end
 				filterResult = true
 				return true
 			end
 			if i >= config.chatLinesLimit then tremove(chatLines, 1) end
 		end
-		tinsert(chatLines, msgtable)
 	end
 end
 

@@ -1,4 +1,4 @@
-if U1GetAddonInfo then return end
+if select(5, GetAddOnInfo("!!!163ui!!!"))==nil then return end
 
 local QuestPOIGetIconInfo, GetNumQuestWatches, GetSuperTrackedQuestID, GetDistanceSqToQuest, QuestHasPOIInfo = QuestPOIGetIconInfo, GetNumQuestWatches, GetSuperTrackedQuestID, GetDistanceSqToQuest, QuestHasPOIInfo
 local questsDis, orderedIndexes, GetQuestWatchInfo_old = {}, {}, GetQuestWatchInfo
@@ -62,6 +62,7 @@ local function UpdateQuestsDistance()
         local questID, questLogTitle, questLogIndex = GetQuestWatchInfo_old(orderedIndexes[1])
         if (GetTime() > protectionTime and questID ~= GetSuperTrackedQuestID()) then
             --avoid frequent switching
+            if WorldQuestTrackerAddon and WorldQuestTrackerAddon.SuperTracked and WorldQuestTrackerAddon.SuperTracked == GetSuperTrackedQuestID() then return end
             local currDist = GetDistanceSqToQuest(GetQuestLogIndexByID(GetSuperTrackedQuestID()))
             if currDist and currDist - nearest > nearest * 0.07 + 1000 then
                 SetSuperTrackedQuestID(questID)
@@ -74,7 +75,7 @@ local function UpdateQuestsDistance()
         end
 
         -- force update
-        if ObjectiveTrackerFrame and ObjectiveTrackerFrame:IsVisible() then
+        if ObjectiveTrackerFrame and ObjectiveTrackerFrame:IsVisible() and not InCombatLockdown() then
             ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST);
             QuestObjectiveTracker_UpdatePOIs()
         end
@@ -100,6 +101,7 @@ frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 frame:RegisterEvent("ZONE_CHANGED");
 frame:RegisterEvent("QUEST_POI_UPDATE");
 frame:RegisterEvent("QUEST_TURNED_IN");
+frame:RegisterEvent("NEW_WMO_CHUNK");
 
 frame:RegisterEvent("VARIABLES_LOADED");
 
@@ -124,6 +126,9 @@ frame:SetScript("OnEvent", function(self, event)
         QuestWatchSortCheckButton:SetChecked(QuestWatchSortDB.enabled)
         EnableOrDisable()
     else
+        if (event == "NEW_WMO_CHUNK" and not WorldMapFrame:IsVisible()) then
+            SetMapToCurrentZone() --Entering Dalaran Guardian Hall, map is not updated.
+        end
         UpdateQuestsDistance()
     end
 end)
@@ -201,6 +206,7 @@ end)
 
 checkbox:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
+if true then return end  --seem blizzard fixed their bugs, following no longer needed.
 --[[------------------------------------------------------------
 Show quest poi on minimap
 ---------------------------------------------------------------]]

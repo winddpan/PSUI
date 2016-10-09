@@ -481,7 +481,7 @@ end
 local function AuraFrame_SetIconSize(self,size)
     -- set icon size and related variables, update buttons
     if not size then
-        size = 24
+        size = self.size or 24
     end
 
     self.size = size
@@ -579,8 +579,6 @@ local function CreateAuraFrame(parent)
     auraframe.buttons = {}
     auraframe.spellids = {}
 
-    ele:RunCallback('PostCreateAuraFrame',auraframe)
-
     if addon.draw_frames then
         auraframe:SetBackdrop({
             bgFile='interface/buttons/white8x8'
@@ -627,7 +625,7 @@ function addon.Nameplate.CreateAuraFrame(f,frame_def)
 
     new_frame.row_point = row_growth_points[new_frame.row_growth]
 
-    new_frame:SetIconSize(new_frame.size)
+    new_frame:SetIconSize()
 
     if new_frame.kui_whitelist then
         new_frame:SetWhitelist(nil,true)
@@ -642,6 +640,8 @@ function addon.Nameplate.CreateAuraFrame(f,frame_def)
 
     new_frame.id = new_frame.id or #f.Auras.frames+1
     f.Auras.frames[new_frame.id] = new_frame
+
+    ele:RunCallback('PostCreateAuraFrame',new_frame)
 
     return new_frame
 end

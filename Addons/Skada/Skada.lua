@@ -2010,7 +2010,6 @@ function Skada:UpdateDisplay(force)
 
 				-- View available modes.
 				for i, mode in ipairs(modes) do
-
 					local d = win.dataset[i] or {}
 					win.dataset[i] = d
 
@@ -2082,8 +2081,8 @@ function Skada:GetSets()
 	return self.char.sets
 end
 
-function Skada:GetModes()
-	return modes
+function Skada:GetModes(sortfunc)
+    return modes
 end
 
 -- Formats a number into human readable form.
@@ -2141,7 +2140,7 @@ function Skada:AddDisplaySystem(key, mod)
 end
 
 -- Register a mode.
-function Skada:AddMode(mode)
+function Skada:AddMode(mode, category)
 	-- Ask mode to verify our sets.
 	-- Needed in case we enable a mode and we have old data.
 	if self.total then
@@ -2154,6 +2153,10 @@ function Skada:AddMode(mode)
 		verify_set(mode, set)
 	end
 
+    -- Set mode category (used for menus)
+    mode.category = category or L['Other']
+    
+    -- Add to mode list
 	tinsert(modes, mode)
 
 	-- Set this mode as the active mode if it matches the saved one.
@@ -2180,7 +2183,7 @@ function Skada:AddMode(mode)
 	end
 
 	-- Sort modes.
-	table_sort(modes, function(a, b) return a.name < b.name end)
+	table_sort(modes, function(a, b) return a:GetName() < b:GetName() end)
 
 	-- Remove all bars and start over to get ordering right.
 	-- Yes, this all sucks - the problem with this and the above is that I don't know when

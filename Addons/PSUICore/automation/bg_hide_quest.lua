@@ -10,7 +10,7 @@ end
 local vmboss = CreateFrame("Frame", nil)
 vmboss:RegisterEvent("PLAYER_ENTERING_WORLD")
 vmboss:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
-vmboss:RegisterEvent("UNIT_TARGETABLE_CHANGED")
+--vmboss:RegisterEvent("UNIT_TARGETABLE_CHANGED")
 vmboss:RegisterEvent("PLAYER_REGEN_ENABLED")
 vmboss:RegisterEvent("UPDATE_WORLD_STATES")
 vmboss:SetScript("OnEvent", function(self, event)

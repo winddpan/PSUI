@@ -85,14 +85,24 @@
 	else
 		hotkey:SetText(text)
 	end
-end
+  end
+  
+  local function setInsetForButton(bu)
+	local w, h = bu:GetSize()
+	local value = math.ceil(h / 16)
+	bu.icon:SetPoint("TOPLEFT", bu, "TOPLEFT", value, -value)
+    bu.icon:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -value, value)
+  end
 
   local function applyBackground(bu)
     if not bu or (bu and bu.bg) then return end
     --shadows+background
     if bu:GetFrameLevel() < 1 then bu:SetFrameLevel(1) end
     if cfg.background.showbg or cfg.background.showshadow then
-	  local inset = cfg.background.inset -3
+	  local w, h = bu:GetSize()
+	  local value = math.ceil(h / 16)
+	
+	  local inset = cfg.background.inset - value
       bu.bg = CreateFrame("Frame", nil, bu)
       bu.bg:SetAllPoints(bu)
       bu.bg:SetPoint("TOPLEFT", bu, "TOPLEFT", -inset, inset)
@@ -133,9 +143,7 @@ end
     end)
     --icon
     bu.icon:SetTexCoord(0.1,0.9,0.1,0.9)
-    --bu.icon:SetAllPoints(bu)
-	bu.icon:SetPoint("TOPLEFT", bu, "TOPLEFT", 3, -3)
-    bu.icon:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -3, 3)
+	setInsetForButton(bu)
     --cooldown
     bu.cooldown:SetAllPoints(bu.icon)
     --hotkey
@@ -208,8 +216,7 @@ end
     end
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 3, -3)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -3, 3)
+    setInsetForButton(bu)
     --adjust the cooldown frame
     cd:SetPoint("TOPLEFT", bu, "TOPLEFT", cfg.cooldown.spacing, -cfg.cooldown.spacing)
     cd:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -cfg.cooldown.spacing, cfg.cooldown.spacing)
@@ -291,8 +298,7 @@ end
     end)
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+    setInsetForButton(bu)
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
@@ -316,8 +322,7 @@ end
     bu:SetNormalTexture(cfg.textures.normal)
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+    setInsetForButton(bu)
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
@@ -341,8 +346,7 @@ end
     bu:SetNormalTexture(cfg.textures.normal)
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+    setInsetForButton(bu)
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true

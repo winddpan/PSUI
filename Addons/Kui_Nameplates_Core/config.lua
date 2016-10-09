@@ -133,7 +133,7 @@ local default_config = {
 
     classpowers_enable = true,
     classpowers_on_target = true,
-    classpowers_size = 10,
+    classpowers_size = 11,
     classpowers_bar_width = 50,
     classpowers_bar_height = 3,
 
@@ -280,7 +280,7 @@ local function configChangedFadeRule(v,on_load)
 
     if core.profile.fade_untracked then
         plugin:AddFadeRule(function(f)
-            return f.state.no_name and -1
+            return not f.state.tracked and -1
         end,25)
     end
 end

@@ -454,6 +454,9 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
+			
+			{spellID = 221630, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- 影舞
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 暗刃
@@ -489,6 +492,8 @@ Filger_Spells = {
 			-- 狂徒天赋-敏锐
 			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
 
+			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
+
 			--潜行
 			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
 			--暗影集中
@@ -503,8 +508,7 @@ Filger_Spells = {
 			{spellID = 13750, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Evasion
 			{spellID = 5277, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Shadow Dance
-			{spellID = 185313, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199754, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Master of Subtlety
 			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Cloak of Shadows
@@ -524,7 +528,6 @@ Filger_Spells = {
 			-- Feint
 			{spellID = 1966, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 137573, unitID = "player", caster = "player", filter = "BUFF"},
-
 		},
 		{
 			Name = "innerCooldown",
@@ -562,6 +565,10 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
+			
+			-- 狂徒 鬼魅攻击
+			{spellID = 196937, unitID = "target", caster = "player", filter = "DEBUFF"},
+
 			--移动速度减70%
 			{spellID = 115196, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 185763, unitID = "target", caster = "player", filter = "DEBUFF"},
@@ -586,6 +593,7 @@ Filger_Spells = {
 			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Wound Poison
 			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 207777, unitID = "target", caster = "player", filter = "DEBUFF"},
 		},
 	},
 	["DEMONHUNTER"] = {{

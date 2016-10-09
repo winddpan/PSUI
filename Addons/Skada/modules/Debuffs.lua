@@ -275,12 +275,14 @@ Skada:AddLoadableModule("Debuffs", nil, function(Skada, L)
 	function mod:AddSetAttributes(set)
         -- Account for old Total segments
 		for i, player in ipairs(set.players) do
-			for spellname, spell in pairs(player.auras) do
-				if spell.active > 0 then
-                    spell.active = 0
-                    spell.started = nil
-				end
-			end
+            if player.auras ~= nil then
+                for spellname, spell in pairs(player.auras) do
+                    if spell.active > 0 then
+                        spell.active = 0
+                        spell.started = nil
+                    end
+                end
+            end
 		end
 	end
 end)

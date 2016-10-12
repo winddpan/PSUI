@@ -174,8 +174,8 @@ function combineBar4And5()
   frame:SetPoint(unpack(bar4.framePoint))
   frame:SetSize(frameWidth * 2, frameHeight)
 
-  rActionBar_PSUIBar4:SetParent(frame)
-  rActionBar_PSUIBar5:SetParent(frame)
+  _G[A.."Bar4"]:SetParent(frame)
+  _G[A.."Bar5"]:SetParent(frame)
 
   local buttonList = GetButtonList("MultiBarRightButton")
   for i,v in pairs(GetButtonList("MultiBarLeftButton")) do
@@ -190,7 +190,7 @@ combineBar4And5()
 -----------------------------
 
 local stancebar = {
-  framePoint      = { "BOTTOMLEFT", A.."Bar2", "TOPLEFT", 0, 0 },
+  framePoint      = { "BOTTOMLEFT", A.."Bar2", "TOPLEFT", 1, 0 },
   frameScale      = 1,
   framePadding    = 2,
   buttonWidth     = 32,

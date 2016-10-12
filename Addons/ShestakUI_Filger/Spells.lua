@@ -456,6 +456,7 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 			
 			{spellID = 221630, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193641, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- 影舞
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
@@ -491,8 +492,6 @@ Filger_Spells = {
 
 			-- 狂徒天赋-敏锐
 			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
-
-			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
 
 			--潜行
 			--{spellID = 115191, unitID = "player", caster = "player", filter = "BUFF"},
@@ -556,6 +555,11 @@ Filger_Spells = {
 			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- SP
+			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -568,7 +572,8 @@ Filger_Spells = {
 			
 			-- 狂徒 鬼魅攻击
 			{spellID = 196937, unitID = "target", caster = "player", filter = "DEBUFF"},
-
+			{spellID = 192925, unitID = "target", caster = "player", filter = "DEBUFF"},
+ 
 			--移动速度减70%
 			{spellID = 115196, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 185763, unitID = "target", caster = "player", filter = "DEBUFF"},
@@ -585,10 +590,12 @@ Filger_Spells = {
 			{spellID = 703, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Gouge
 			{spellID = 1776, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
 			-- Hemorrhage
 			{spellID = 16511, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Deadly Poison
 			{spellID = 2818, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 200803, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Crippling Poison
 			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Wound Poison

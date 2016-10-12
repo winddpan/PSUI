@@ -5,3 +5,4 @@
 ## RequiredDeps: rActionBar
 
 layout.lua
+cooldown_fix.lua

@@ -74,7 +74,8 @@ local relicSpecOptions = {
     [1] = "None",
     [2] = "Specs",
     [3] = "SpecsAndQuantities",
-    [4] = "SpecsAndTraits"
+    [4] = "SpecsAndTraits",
+    [5] = "SpecsTraitDescription",
 }
 local invRelicSpecOptions = invertTable(relicSpecOptions)
 
@@ -82,7 +83,8 @@ local locRelicSpecOptions = {
     [1] = NONE,
     [2] = ALL_SPECS,
     [3] = ALL_SPECS .. " (with Quantities)",
-    [4] = ALL_SPECS .. " & " .. ARTIFACTS_PERK_TAB
+    [4] = ALL_SPECS .. " & " .. ARTIFACTS_PERK_TAB,
+    [5] = ALL_SPECS .. ", " .. ARTIFACTS_PERK_TAB .. ", & " .. DESCRIPTION
 }
 
 local defaults = {
@@ -289,6 +291,8 @@ local function DecorateArtifact(self)
 								if showTraitDesc == true then
 									local traitDesc = GetSpellDescription(traitSpellID)
 									if nil ~= traitDesc then
+										traitDesc = string.gsub(traitDesc,string.char(10),"")
+										traitDesc = string.gsub(traitDesc,string.char(13),"")
 										self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, true)
 									end
 								end
@@ -363,6 +367,8 @@ local function DecorateRelic(self)
 					if showTraitDesc == true then
 						local traitDesc = GetSpellDescription(tSpellID)
 						if nil ~= traitDesc then
+							traitDesc = string.gsub(traitDesc,string.char(10),"")
+							traitDesc = string.gsub(traitDesc,string.char(13),"")
 							self:AddLine(format('|cffff78ff  %s|r', traitDesc), 1, 1, 1, true)
 						end
 					end
@@ -410,7 +416,15 @@ local function DecorateRelic(self)
 					end
 
 					local specLine = format('|c%s%s%s:|r %s',classColor,specName,quantity,traitName or "???")
-					self:AddLine(format(specLine), 1, 1, 1, true)
+					self:AddLine(format(specLine), 1, 1, 1, false)
+					if invRelicSpecOptions[db.profile.relicSpecs] > 4 then
+						local traitDesc = GetSpellDescription(traitSpellID)
+						if nil ~= traitDesc then
+							traitDesc = string.gsub(traitDesc,string.char(10),"")
+							traitDesc = string.gsub(traitDesc,string.char(13),"")
+							self:AddLine(format('|cffffd200  %s|r', traitDesc), 1, 1, 1, (string.len(traitDesc) > 80))
+						end
+					end
 				end
 			else
 				-- Assemble the string of all specs (and quantities if applicable)
@@ -434,12 +448,13 @@ local function DecorateRelic(self)
 	end
 end
 
-GameTooltip:RegisterEvent("MODIFIER_STATE_CHANGED")
-GameTooltip:HookScript("OnEvent", function(self, event, key, state)
+local m = CreateFrame('frame')
+m:HookScript("OnEvent", function(self, event, key, state)
 	if event == "MODIFIER_STATE_CHANGED" and (key == "LCTRL" or key == "RCTRL") then
 		modifierPressed = state
 	end
 end)
+m:RegisterEvent("MODIFIER_STATE_CHANGED")
 
 local f = CreateFrame('frame')
 f:SetScript('OnEvent', function(self, event, arg1)
@@ -449,6 +464,7 @@ f:SetScript('OnEvent', function(self, event, arg1)
   end
 end)
 f:RegisterEvent('ADDON_LOADED')
+
 
 ItemRefTooltip:HookScript('OnTooltipSetItem', DecorateArtifact)
 GameTooltip:HookScript('OnTooltipSetItem', DecorateArtifact)

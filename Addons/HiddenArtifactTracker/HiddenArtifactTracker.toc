@@ -1,0 +1,4 @@
+## Interface: 70000
+## Title: Hidden Artifact Tracker
+## Title-zhCN: 神器隐藏外观追踪
+HiddenArtifactTracker.lua

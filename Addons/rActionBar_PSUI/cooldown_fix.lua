@@ -12,7 +12,7 @@
     if not button.cooldown then return end
 	
     local parent = button:GetParent():GetParent():GetParent()
-	if parent == nil then
+	if parent == nil or parent:GetName() == nil or string.find(parent:GetName(), "rActionBar") == nil then
 		parent = button:GetParent():GetParent()
 	end
 	hooksecurefunc(parent, "SetAlpha", function(self,alpha) SetCooldownSwipeAlpha(self,button.cooldown,alpha) end)

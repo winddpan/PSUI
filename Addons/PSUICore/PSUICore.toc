@@ -27,6 +27,7 @@ modules\xp_bar.lua
 modules\ObjectiveTrackerMover.lua
 modules\SimpleChannel.lua
 ##modules\rougehelper.lua
+modules\poison_alert.lua
 modules\EasyChannel.lua
 modules\HideOrderHallBar.lua
 

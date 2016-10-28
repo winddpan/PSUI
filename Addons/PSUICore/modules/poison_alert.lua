@@ -2,6 +2,7 @@ if select(2, UnitClass("player")) ~= "ROGUE" then return end
 
 local spn = select(1, GetSpellInfo(2823)) --÷¬√¸
 local spn2 = select(1, GetSpellInfo(200802)) --ø‡Õ¥
+local spn3 = select(1, GetSpellInfo(8679)) --÷¬…À
 local _, _, icon_texture = GetSpellInfo(2823)
 						
 local bar = CreateFrame("Frame", "PoisonAlert", UIParent)
@@ -33,8 +34,8 @@ SpecWatch:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 SpecWatch:RegisterEvent("PLAYER_ENTERING_WORLD")
 SpecWatch:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4 ,arg5, ...)
 	if GetSpecialization() == 1 then
-			CheckerFrame:SetScript("OnUpdate", function(self, ...)
-			if UnitBuff("player", spn) ~= nil or UnitBuff("player", spn2) ~= nil then
+		CheckerFrame:SetScript("OnUpdate", function(self, ...)
+			if UnitBuff("player", spn) ~= nil or UnitBuff("player", spn2) ~= nil or UnitBuff("player", spn3) ~= nil then
 				bar:Hide()
 			else
 				bar:Show()

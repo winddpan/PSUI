@@ -34,7 +34,7 @@
     $parentIconQuestTexture (Texture level=ARTWORK/1)
         Shows the gold ! on items that will start a quest if you click them.
     self.JunkIcon (Texture level=OVERLAY/1)
-        Gold coin icon shown when a vendor is open for grey items.
+        Gold coin icon on grey items, shown when a vendor is open.
     self.flash (Texture level=OVERLAY/1)
         Edge flash for new items, used by an associated Animation.
     self.NewItemTexture (Texture level=OVERLAY/1)
@@ -43,10 +43,12 @@
         Highlight for imaginary items you paid good money for.
     $parentCooldown (Cooldown)
         Normal item cooldown frame (does the sweep etc.).
+    self.UpgradeItem
+        Arrow shown when an item is an upgrade (added in 7.1).
 
   Added by LiteBagItemButtonTemplate:
-    self.backgroundTexture (Texture level=BACKGROUND/0)
-        The slot background, so that empty slots have a texture.
+    self.BackgroundTexture
+        Slot background to show through if the slot is empty.
 
 ----------------------------------------------------------------------------]]--
 
@@ -187,12 +189,12 @@ function LiteBagItemButton_UpdateFiltered(self)
     end
 end
 
--- Make sure to do this after the search overlay update
-function LiteBagItemButton_UpdateRelicTutorial(self)
+-- Make sure to do this after the search overlay update.
+--
+-- Note that the caller must have hidden the ArtifactRelicHelpBox before
+-- updating all its buttons if it was parented to one of the bags.
 
-    if ArtifactRelicHelpBox.owner == self then
-        ArtifactRelicHelpBox:Hide()
-    end
+function LiteBagItemButton_UpdateRelicTutorial(self)
 
     if self.searchOverlay:IsShown() then return end
     if GetCVarBitfield("closedInfoFrames", LE_FRAME_TUTORIAL_ARTIFACT_RELIC_MATCH) then return end
@@ -203,12 +205,19 @@ function LiteBagItemButton_UpdateRelicTutorial(self)
     local itemID = select(10, GetContainerItemInfo(bag, slot))
     ContainerFrame_ConsiderItemButtonForRelicTutorial(self, itemID)
 
-    -- Blizzard sets the owner to the container frame but we set it to the
-    -- itembutton that contains the Artifact.
+end
 
-    if ArtifactRelicHelpBox.owner == self:GetParent() then
-        ArtifactRelicHelpBox.owner = self
-    end
+-- This is a little weird inside, because apparently "is this an upgrade"
+-- is calculated on the server from some algorithm and may not be available
+-- immediately. So the ContainerFrameItemButton_UpdateItemUpgradeIcon function
+-- (from ContainerFrame.lua) puts temporary OnUpdate handler on the button to
+-- keep checking every 0.5 seconds until it's ready (yuk). I don't know why
+-- they didn't just have that trigger a new event.
+
+function LiteBagItemButton_UpdateItemUpgrade(self)
+    -- pre 7.1 check, can take this out after it goes live
+    if not ContainerFrameItemButton_UpdateItemUpgradeIcon then return end
+    ContainerFrameItemButton_UpdateItemUpgradeIcon(self)
 end
 
 function LiteBagItemButton_Update(self)
@@ -219,9 +228,9 @@ function LiteBagItemButton_Update(self)
     LiteBagItemButton_UpdateQuality(self)
     LiteBagItemButton_UpdateCooldown(self)
     LiteBagItemButton_UpdateFiltered(self)
+    LiteBagItemButton_UpdateItemUpgrade(self)
     LiteBagItemButton_UpdateRelicTutorial(self)
 end
-
 
 function LiteBagItemButton_OnLoad(self)
     ContainerFrameItemButton_OnLoad(self)
@@ -238,17 +247,5 @@ function LiteBagItemButton_OnEnter(self)
     end
 end
 
-function LiteBagItemButton_OnLeave(self)
-    -- Bank inherits the ContainerFrameItemButton_OnLeave so no "if" test
-    ContainerFrameItemButton_OnLeave(self)
-end
-
-function LiteBagItemButton_OnHide(self)
-    if self.hasStackSplit and self.hasStackSplit == 1 then
-        StackSplitFrame:Hide()
-    end
-
-    if ArtifactRelicHelpBox.owner == self then
-        ArtifactRelicHelpBox:Hide()
-    end
-end
+-- No OnLeave, both bank and bags use ContainerframeItemButton_OnLeave
+-- which is automatically inherited

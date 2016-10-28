@@ -1,4 +1,11 @@
-﻿v3.3.0
+﻿v3.3.2
+Quick TOC bump.
+
+v3.3.1
+Re-added Mogu Rune of Fate to the alternate currency list, was removed by mistake.
+Added Seal of Tempered Fate to the alternate currency list.
+
+v3.3.0
 Alternate currency list cleaned and updated to include Legion.
 
 v3.2.9

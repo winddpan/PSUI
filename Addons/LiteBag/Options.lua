@@ -11,25 +11,51 @@
 
 local addonName, addonTable = ...
 
+local function UpgradeDBVersion()
+    local db = LiteBag_OptionsDB
+    local oldkey, newkey
+
+    for _,frameName in ipairs({ "LiteBagInventory", "LiteBagBank" }) do
+        oldkey = format("Frame:%s", frameName)
+        newkey = format("Frame:%sPanel", frameName)
+        if db[oldkey] then
+            db[newkey] = db[oldkey]
+            db[oldkey] = nil
+        end
+    end
+
+    -- I made this Panel: in the betas so I better handle it
+    if db["Panel:LiteBagInventoryPanel"] then
+        db["Frame:LiteBagInventoryPanel"] = db["Panel:LiteBagInventoryPanel"]
+        db["Panel:LiteBagInventoryPanel"] = nil
+    end
+    if db["Panel:LiteBagBankPanel"] then
+        db["Frame:LiteBagBankPanel"] = db["Panel:LiteBagBankPanel"]
+        db["Panel:LiteBagBankPanel"] = nil
+    end
+
+end
+
 function LiteBag_InitializeOptions()
     if not LiteBag_OptionsDB then
         LiteBag_OptionsDB = { }
+    else
+        UpgradeDBVersion()
     end
 end
 
 function LiteBag_SetFrameOption(frame, option, value)
+    frame = _G[frame] or frame
     local n = "Frame:" .. frame:GetName()
-    if not LiteBag_OptionsDB[n] then
-        LiteBag_OptionsDB[n] = { }
-    end
+    LiteBag_OptionsDB[n] = LiteBag_OptionsDB[n] or { }
     LiteBag_OptionsDB[n][option] = value
 end
 
 function LiteBag_GetFrameOption(frame, option)
+    frame = _G[frame] or frame
     local n = "Frame:" .. frame:GetName()
-    if LiteBag_OptionsDB[n] then
-        return LiteBag_OptionsDB[n][option]
-    end
+    LiteBag_OptionsDB[n] = LiteBag_OptionsDB[n] or { }
+    return LiteBag_OptionsDB[n][option]
 end
 
 function LiteBag_SetGlobalOption(option, value)
@@ -45,88 +71,83 @@ end
     Slash command function for setting options.
 ----------------------------------------------------------------------------]]--
 
+local function CheckOnOff(arg)
+    if not arg or arg == "off" or arg == "no" then
+        return false
+    else
+        return true
+    end
+end
+
 function LiteBag_OptionSlashFunc(argstr)
 
-    local args = { strsplit(" ", argstr) }
+    local cmd, arg1, arg2 = strsplit(" ", strlower(argstr))
+    local onOff = CheckOnOff(arg1)
 
-    for i = 1, #args do
-        local arg = strlower(args[i])
-        if arg == "" then
-            InterfaceOptionsFrame:Show()
-            InterfaceOptionsFrame_OpenToCategory(LiteBagOptions)
-            return
-        end
-        if arg == "confirmsort" then
-            if args[i+1] == "on" then
-                LiteBag_SetGlobalOption("NoConfirmSort", nil)
-                LiteBag_Print("Bag sort confirmation popup enabled.")
-            elseif args[i+1] == "off" then
-                LiteBag_SetGlobalOption("NoConfirmSort", true)
-                LiteBag_Print("Bag sort confirmation popup disabled.")
-            end
-            return
-        end
-        if arg == "equipset" then
-            if args[i+1] == "on" then
-                LiteBag_SetGlobalOption("HideEquipsetIcon", nil)
-                LiteBag_Print("Equipment set icon display enabled.")
-            elseif args[i+1] == "off" then
-                LiteBag_SetGlobalOption("HideEquipsetIcon", true)
-                LiteBag_Print("Equipment set icon display disabled.")
-            end
-            LiteBagFrame_Update(LiteBagInventory)
-            LiteBagFrame_Update(LiteBagBank)
-            return
-        end
-        if arg == "inventory.columns" then
-            local n = tonumber(args[i+1])
-            if n and n >= 8 then
-                LiteBag_SetFrameOption(LiteBagInventory, "columns", n)
-                LiteBagFrame_Initialize(LiteBagInventory)
-                LiteBagFrame_Update(LiteBagInventory)
-                LiteBag_Print("Inventory frame width set to "..n.." columns")
-            else
-                LiteBag_Print("Can't set frame width to less than 8")
-            end
-            return
-        end
-        if arg == "bank.columns" then
-            local n = tonumber(args[i+1])
-            if n and n >= 8 then
-                LiteBag_SetFrameOption(LiteBagBank, "columns", n)
-                LiteBagFrame_Initialize(LiteBagBank)
-                LiteBagFrame_Update(LiteBagBank)
-                LiteBag_Print("Bank frame width set to "..n.." columns")
-            else
-                LiteBag_Print("Can't set frame width to less than 8")
-            end
-            return
-        end
-        LiteBag_Print("Usage:")
-        LiteBag_Print("  /litebag bank.columns <n>")
-        LiteBag_Print("  /litebag inventory.columns <n>")
-        LiteBag_Print("  /litebag equipset <on | off>")
-        LiteBag_Print("  /litebag confirmsort <on | off>")
+    if cmd == "" or cmd == "options" then
+        InterfaceOptionsFrame:Show()
+        InterfaceOptionsFrame_OpenToCategory(LiteBagOptions)
+        return
     end
-end
 
-
---[[----------------------------------------------------------------------------
-    Printing to active chat frame.
-----------------------------------------------------------------------------]]--
-
-local function ActiveChatFrame()
-    for i = 1, NUM_CHAT_WINDOWS do
-        local f = _G["ChatFrame"..i]
-        if f and f:IsShown() then return f end
+    if cmd == "confirmsort" and arg1 ~= nil then
+        LiteBag_SetGlobalOption("NoConfirmSort", onOff)
+        LiteBag_Print("Bag sort confirmation popup: " .. tostring(onOff))
+        return
     end
-    return DEFAULT_CHAT_FRAME
-end
 
-function LiteBag_Print(msg)
-    ActiveChatFrame():AddMessage("|cff00ff00LiteBag:|r " .. msg)
-end
+    if cmd == "equipset" then
+        LiteBag_SetGlobalOption("HideEquipsetIcon", onOff)
+        LiteBag_Print("Equipment set icon display: " .. tostring(onOff))
+        LiteBagPanel_UpdateItemButtons(LiteBagBankPanel)
+        LiteBagPanel_UpdateItemButtons(LiteBagInventoryPanel)
+        return
+    end
 
+    if cmd == "debug" then
+        LiteBag_SetGlobalOption("DebugEnabled", onOff)
+        LiteBag_Print("Debugging: " .. tostring(onOff))
+        return
+    end
+
+    if cmd == "inventory.snap" then
+        LiteBag_SetFrameOption(LiteBagInventoryPanel, "NoSnapToPosition", onOff)
+        LiteBag_Print("Inventory snap to default position: " .. tostring(onOff))
+        return
+    end
+
+    if cmd == "inventory.columns" then
+        arg1 = tonumber(arg1)
+        if arg1 and arg1 >= 8 then
+            LiteBag_SetFrameOption(LiteBagInventoryPanel, "columns", arg1)
+            LiteBagPanel_UpdateSizeAndLayout(LiteBagInventoryPanel)
+            LiteBag_Print("Inventory columns set to "..arg1.." columns")
+        else
+            LiteBag_Print("Can't set number of columns to less than 8")
+        end
+        return
+    end
+
+    if cmd == "bank.columns" then
+        arg1 = tonumber(arg1)
+        if arg1 and arg1 >= 8 then
+            LiteBag_SetFrameOption(LiteBagBankPanel, "columns", arg1)
+            LiteBagPanel_UpdateSizeAndLayout(LiteBagBankPanel)
+            LiteBag_Print("Bank columns set to "..arg1.." columns")
+        else
+            LiteBag_Print("Can't set number of columns to less than 8")
+        end
+        return
+    end
+
+    LiteBag_Print("Usage:")
+    LiteBag_Print("  /litebag bank.columns <n>")
+    LiteBag_Print("  /litebag inventory.columns <n>")
+    LiteBag_Print("  /litebag inventory.snap <on | off>")
+    LiteBag_Print("  /litebag confirmsort <on | off>")
+    LiteBag_Print("  /litebag equipset <on | off>")
+    LiteBag_Print("  /litebag debug <on | off>")
+end
 
 --[[----------------------------------------------------------------------------
     Initialization.

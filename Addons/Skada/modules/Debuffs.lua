@@ -23,6 +23,7 @@ Skada:AddLoadableModule("Debuffs", nil, function(Skada, L)
 					player.auras[aura.spellname] = {["id"] = aura.spellid, ["name"] = aura.spellname, ["active"] = 1, ["uptime"] = 0, ["auratype"] = aura.auratype, ["started"] = time()}
 				else
 					player.auras[aura.spellname].active = player.auras[aura.spellname].active + 1
+                    player.auras[aura.spellname].started = player.auras[aura.spellname].started or time()
 				end
 			end
 

@@ -1,6 +1,42 @@
+2016-10-25  Tercio  <Tercio>
+
+[8dd5eb0d5401] [tip]
+* WorldQuestTracker.lua, WorldQuestTracker.toc, libs/DF/fw.lua, libs/DF/panel.lua:
+
+- toc 7.1.0
+
+
+2016-10-18  Tercio  <Tercio>
+
+[d73c45b589c5]
+* WorldQuestTracker.lua:
+
+- epic quests should now always be shown even if not pass filters.
+
+
+2016-10-14  Tercio  <Tercio>
+
+[065f885ad92a]
+* WorldQuestTracker.lua:
+
+- China and Taiwan 1K (1000) abbreviate icon fix.
+
+
+[93fdf9b55bbf]
+* WorldQuestTracker.lua:
+
+- fixed the fly map tooltip scale.
+
+
+[6ed89d33224c]
+* WorldQuestTracker.lua:
+
+- quests on suramar won't show it elite/rare quest border.
+
+
 2016-10-03  Tercio  <Tercio>
 
-[ce24ee0ef092] [tip]
+[ce24ee0ef092]
 * WorldQuestTracker.lua:
 
 - when the action button is on cooldown, set its alpha to 0.2
@@ -198,39 +234,5 @@
 
 - fixed the problem with the fly map icons not hiding all textures.
 - added a tutorial bubble pointing out the options on the fly map.
-
-
-[80b258393c57]
-* libs/LibWindow-1.1/LibWindow-1.1.lua, libs/libs.xml:
-
-- added libwindow-1.1
-
-
-[8b330564b3c6]
-* WorldQuestTracker.lua:
-
-- add option to unlock the tracker position.
-
-
-2016-09-09  Tercio  <Tercio>
-
-[e746eb069178]
-* libs/LG/LibGraph-2.0.lua:
-
-- fixing the green chart graph at summary panel.
-
-
-[53b5f6ef181c]
-* WorldQuestTracker.lua:
-
-- added back the auto world map option.
-
-
-2016-09-08  Tercio  <Tercio>
-
-[8cc959f37ad7]
-* WorldQuestTracker.lua, media/icon_party_shared_badT.blp:
-
-- fixed a bug with the statusbar where sometimes it won't show on zone maps.
 
 

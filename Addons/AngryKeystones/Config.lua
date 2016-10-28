@@ -8,10 +8,15 @@ local configDefaults = {
 	autoGossip = true,
 	cosRumors = false,
 	silverGoldTimer = false,
+	splitsFormat = 1,
+	completionMessage = false,
+	smallAffixes = true,
+	deathTracker = true,
 }
 local callbacks = {}
 
 local progressFormatValues = { 1, 2, 3 }
+local splitsFormatValues = { 0, 1, 2 }
 
 setmetatable(Config, {
 	__index = function(self, key)
@@ -190,6 +195,17 @@ local function DropDown_Initialize(self)
 			end
 			UIDropDownMenu_AddButton(info)
 		end
+	elseif key == 'splitsFormat' then
+		for i, value in ipairs(splitsFormatValues) do
+			info.text = Addon.Locale['config_splitsFormat_'..i]
+			info.value = value
+			if ( selectedValue == info.value ) then
+				info.checked = 1
+			else
+				info.checked = nil
+			end
+			UIDropDownMenu_AddButton(info)
+		end
 	end
 end
 
@@ -197,6 +213,7 @@ local DropDown_Index = 0
 local function DropDown_Create(self)
 	DropDown_Index = DropDown_Index + 1
 	local dropdown = CreateFrame("Frame", ADDON.."ConfigDropDown"..DropDown_Index, self, "UIDropDownMenuTemplate")
+	_G[ADDON.."ConfigDropDown"..DropDown_Index.."Middle"]:SetWidth(200)
 	
 	local text = dropdown:CreateFontString(ADDON.."ConfigDropLabel"..DropDown_Index, "BACKGROUND", "GameFontNormal")
 	text:SetPoint("BOTTOMLEFT", dropdown, "TOPLEFT", 16, 3)
@@ -228,8 +245,8 @@ Panel_OnRefresh = function(self)
 		checkboxes = {}
 		dropdowns = {}
 
-		local checkboxes_order = { "silverGoldTimer", "autoGossip", "progressTooltip" }
-		if Addon.Locale:HasRumors() then table.insert(checkboxes_order, 3, "cosRumors") end
+		local checkboxes_order = { "silverGoldTimer", "smallAffixes", "deathTracker", "autoGossip", "progressTooltip", "completionMessage" }
+		if Addon.Locale:HasRumors() then table.insert(checkboxes_order, 5, "cosRumors") end
 
 		for i,key in ipairs(checkboxes_order) do
 			checkboxes[i] = CreateFrame("CheckButton", nil, self, "InterfaceOptionsCheckButtonTemplate")
@@ -243,7 +260,7 @@ Panel_OnRefresh = function(self)
 			end
 		end
 
-		local dropdowns_order = { "progressFormat" }
+		local dropdowns_order = { "progressFormat", "splitsFormat" }
 
 		for i,key in ipairs(dropdowns_order) do
 			dropdowns[i] = DropDown_Create(self)

@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Version: 100
 ## X-Curse-Packaged-Version: r100
 ## X-Curse-Project-Name: LibBossIDs-1.0

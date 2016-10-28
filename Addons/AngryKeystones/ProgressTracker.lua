@@ -1,5 +1,6 @@
 local ADDON, Addon = ...
 local Mod = Addon:NewModule('ProgressTracker')
+Mod.playerDeaths = {}
 
 local lastQuantity
 local lastDied
@@ -23,6 +24,7 @@ local function ProcessLasts()
 	end
 end
 
+local surrenderSoul
 function Mod:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags)
 	if event == "UNIT_DIED" then
 		if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
@@ -33,6 +35,16 @@ function Mod:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, sourceGUI
 			lastDiedTime = GetTime()
 			lastDiedName = destName
 			ProcessLasts()
+		end
+		if not surrenderSoul then surrenderSoul = GetSpellInfo(212570) end
+		if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 and bit.band(destFlags, COMBATLOG_OBJECT_AFFILIATION_PARTY) > 0 and
+				not (UnitIsFeignDeath(destName) or UnitAura(destName, surrenderSoul)) then
+			if Mod.playerDeaths[destName] then
+				Mod.playerDeaths[destName] = Mod.playerDeaths[destName] + 1
+			else
+				Mod.playerDeaths[destName] = 1
+			end
+			Addon.ObjectiveTracker:UpdatePlayerDeaths()
 		end
 	end
 end
@@ -74,7 +86,7 @@ end
 
 local function CheckTime(...)
 	for i = 1, select("#", ...) do
-		local timerID = select(i, ...);
+		local timerID = select(i, ...)
 		local _, elapsedTime, type = GetWorldElapsedTime(timerID)
 		if type == LE_WORLD_ELAPSED_TIMER_TYPE_CHALLENGE_MODE then
 			local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
@@ -116,7 +128,7 @@ local function OnTooltipSetUnit(tooltip)
 					end
 				end
 				if value and total then
-					local forcesFormat = Addon.Locale:Local("forcesFormat") or format(" - %s: %%s", progressName)
+					local forcesFormat = format(" - %s: %%s", progressName)
 					local text
 					if Addon.Config.progressFormat == 1 then
 						text = format( format(forcesFormat, "+%.2f%%"), value/total*100)
@@ -126,9 +138,9 @@ local function OnTooltipSetUnit(tooltip)
 						text = format( format(forcesFormat, "+%.2f%% - +%d"), value/total*100, value)
 					end
 
-					if forcesFormat then
+					if text then
 						local matcher = format(forcesFormat, "%d+%%")
-						for i=3, tooltip:NumLines() do
+						for i=2, tooltip:NumLines() do
 							local tiptext = _G["GameTooltipTextLeft"..i]
 							local linetext = tiptext:GetText()
 
@@ -137,8 +149,6 @@ local function OnTooltipSetUnit(tooltip)
 								tooltip:Show()
 							end
 						end
-					else
-						tooltip:AddLine(text, HIGHLIGHT_FONT_COLOR:GetRGB())
 					end
 				end
 			end
@@ -149,7 +159,10 @@ end
 function Mod:PLAYER_ENTERING_WORLD(...) CheckTime(GetWorldElapsedTimers()) end
 function Mod:WORLD_STATE_TIMER_START(...) local timerID = ...; CheckTime(timerID) end
 function Mod:WORLD_STATE_TIMER_STOP(...) local timerID = ...; StopTime(timerID) end
-function Mod:CHALLENGE_MODE_START(...) CheckTime(GetWorldElapsedTimers()) end
+function Mod:CHALLENGE_MODE_START(...)
+	wipe(Mod.playerDeaths)
+	CheckTime(GetWorldElapsedTimers())
+end
 
 function Mod:Startup()
 	if not AngryKeystones_Data then

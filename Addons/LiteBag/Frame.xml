@@ -4,75 +4,29 @@
 
 <Script file="Frame.lua" />
 
-<Frame name="LiteBag_ThinGreenEdgeTemplate" virtual="true">
-    <Size x="100" y="20" />
-    <Layers>
-        <Layer level="BACKGROUND">
-            <Texture name="$parentLeft" file="Interface\Common\Moneyframe">
-                <Size x="7" y="20" />
-                <Anchors>
-                    <Anchor point="TOPLEFT" />
-                    <Anchor point="BOTTOMLEFT" />
-                </Anchors>
-                <TexCoords left="0.953125" right="0.9921875" top="0" bottom="0.296875" />
-                <Color r="0" g="1" b="1" />
-            </Texture>
-            <Texture name="$parentRight" file="Interface\Common\Moneyframe">
-                <Size x="7" y="20" />
-                <Anchors>
-                    <Anchor point="TOPRIGHT" />
-                    <Anchor point="BOTTOMRIGHT" />
-                </Anchors>
-                <TexCoords left="0" right="0.0546875" top="0" bottom="0.296875" />
-                <Color r="0" g="1" b="1" />
-            </Texture>
-            <Texture name="$parentMiddle" file="Interface\Common\Moneyframe">
-                <Size x="80" y="20" />
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="TOPRIGHT" />
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentRight" relativePoint="BOTTOMLEFT" />
-                </Anchors>
-                <TexCoords left="0" right="0.9921875" top="0.3125" bottom="0.609375" />
-                <Color r="0" g="1" b="1" />
-            </Texture>
-        </Layer>
-    </Layers>
+<Frame name="LiteBag_ThinGreenEdgeTemplate" inherits="ThinGoldEdgeTemplate" virtual="true">
+    <Scripts>
+        <OnLoad>
+            for _, tex in ipairs({ self:GetRegions() }) do
+                tex:SetVertexColor(0.0, 1.0, 1.0, 1.0)
+            end
+        </OnLoad>
+    </Scripts>
 </Frame>
 
 <Frame name="LiteBagFrameTemplate"
-       movable="true" resizable="true" clampedToScreen="true"
        enableMouse="true"
        frameStrata="HIGH" topLevel="true" hidden="true"
+       movable="true" resizable="true" clampedToScreen="true"
        inherits="ButtonFrameTemplate" virtual="true">
 
     <Size x="384" y="512" />
 
-    <ResizeBounds>
-        <minResize x="360" y="183" />
-    </ResizeBounds>
-
     <Frames>
-        <Button name="$parentDragButton">
-            <Size x="0" y="20"/>
-            <Anchors>
-                <Anchor point="TOPLEFT"/>
-                <Anchor point="TOPRIGHT"/>
-            </Anchors>
-            <Scripts>
-                <OnLoad>
-                    self:RegisterForClicks("LeftButton")
-                </OnLoad>
-                <OnMouseDown>
-                    LiteBagFrame_StartMoving(self:GetParent())
-                </OnMouseDown>
-                <OnMouseUp>
-                    LiteBagFrame_StopMoving(self:GetParent())
-                </OnMouseUp>
-                <OnHide>
-                    LiteBagFrame_StopMoving(self:GetParent())
-                </OnHide>
-            </Scripts>
-        </Button>
+
+        <Anchors>
+            <Anchor point="TOPLEFT" />
+        </Anchors>
 
         <Button name="$parentResizeBottomRight">
             <Size x="16" y="16" />
@@ -84,18 +38,11 @@
                 <OnLoad function="RaiseFrameLevel" />
                 <OnMouseDown>
                     local parent = self:GetParent()
-                    if not parent.isBank or parent.selectedTab == 1 then
-                        parent.sizing = true
-                        parent:StartSizing("BOTTOMRIGHT")
-                    end
+                    LiteBagFrame_StartSizing(parent, "BOTTOMRIGHT")
                 </OnMouseDown>
                 <OnMouseUp>
                     local parent = self:GetParent()
-                    if not parent.isBank or parent.selectedTab == 1 then
-                        parent.sizing = nil
-                        parent:StartSizing("BOTTOMRIGHT")
-                        LiteBagFrame_StopSizing(parent)
-                    end
+                    LiteBagFrame_StopSizing(parent)
                 </OnMouseUp>
             </Scripts>
         </Button>
@@ -109,7 +56,7 @@
 
         <Frame name="$parentMoneyFrame" parentKey="moneyFrame" inherits="SmallMoneyFrameTemplate">
             <Anchors>
-                <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-2" y="9" />
+                <Anchor point="BOTTOMRIGHT" x="-2" y="9" />
             </Anchors>
             <Scripts>
                 <OnLoad>
@@ -127,73 +74,14 @@
             </Anchors>
         </Frame>
 
-        <Button name="$parentToken1" inherits="BackpackTokenTemplate" id="1">
+        <Frame name="$parentTokenFrame" parentKey="tokenFrame" inherits="LiteBagTokenFrameTemplate">
+            <Size x="168" y="13" />
             <Anchors>
-                <Anchor point="BOTTOMLEFT" x="13" y="8"/>
+                <Anchor point="BOTTOMLEFT" x="2" y="8" />
             </Anchors>
-        </Button>
+        </Frame>
 
-        <Button name="$parentToken2" inherits="BackpackTokenTemplate" id="2">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentToken1" relativePoint="RIGHT" x="2" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentToken3" inherits="BackpackTokenTemplate" id="3">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentToken2" relativePoint="RIGHT" x="2" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton1" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="60" y="-31" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton2" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton1" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton3" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton2" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton4" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton3" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton5" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton4" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton6" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton5" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton7" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton6" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentBagButton8" parentArray="bagButtons" inherits="LiteBagBagButtonTemplate">
-            <Anchors>
-                <Anchor point="LEFT" relativeTo="$parentBagButton7" relativePoint="RIGHT" x="4" />
-            </Anchors>
-        </Button>
-
-        <Button name="$parentTab1" inherits="CharacterFrameTabButtonTemplate" parentKey="Tab1" id="1" text="BANK" hidden="true">
+        <Button name="$parentTab1" inherits="CharacterFrameTabButtonTemplate" parentArray="Tabs" id="1" text="BANK" hidden="true">
             <Anchors>
                 <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="11" y="2" />
             </Anchors>
@@ -202,7 +90,7 @@
             </Scripts>
         </Button>
 
-        <Button name="$parentTab2" inherits="CharacterFrameTabButtonTemplate" parentKey="Tab2" id="2" text="REAGENT_BANK" hidden="true">
+        <Button name="$parentTab2" inherits="CharacterFrameTabButtonTemplate" parentArray="Tabs" id="2" text="REAGENT_BANK" hidden="true">
             <Anchors>
                 <Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT" x="-15" y="0" />
             </Anchors>
@@ -215,7 +103,6 @@
 
     <Scripts>
         <OnLoad function="LiteBagFrame_OnLoad" />
-        <OnEvent function="LiteBagFrame_OnEvent" />
         <OnHide function="LiteBagFrame_OnHide" />
         <OnShow function="LiteBagFrame_OnShow" />
         <OnSizeChanged function="LiteBagFrame_OnSizeChanged" />

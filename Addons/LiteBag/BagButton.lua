@@ -120,7 +120,8 @@ end
 
 function LiteBagBagButton_OnEnter(self)
 
-    LiteBagFrame_HighlightBagButtons(self:GetParent(), self:GetID())
+    local frame = self:GetParent()
+    LiteBagPanel_HighlightBagButtons(frame, self:GetID())
 
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 
@@ -153,7 +154,8 @@ function LiteBagBagButton_OnEnter(self)
 end
 
 function LiteBagBagButton_OnLeave(self)
-    LiteBagFrame_UnhighlightBagButtons(self:GetParent(), self:GetID())
+    local frame = self:GetParent()
+    LiteBagPanel_UnhighlightBagButtons(frame, self:GetID())
     GameTooltip:Hide()
     ResetCursor()
 end
@@ -175,7 +177,7 @@ function LiteBagBagButton_OnClick(self)
     end
 
     if self.purchaseCost then
-        PlaySound("igMainMenuOption");
+        PlaySound("igMainMenuOption")
         BankFrame.nextSlotCost = self.purchaseCost
         -- XXX FIXME XXX
         -- Does StaticPopup_Show still cause taint due to blizz bugs?

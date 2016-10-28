@@ -384,6 +384,8 @@ function BuyEmAll:AltCurrencyTranslating(Texture) -- Uses the texture string/pat
         return 697;
     elseif (strmatch(Texture, "%a+_%d+$") == "coin_18") then -- Lesser Charm of Good Fortune
         return 738;
+    elseif (strmatch(Texture, "%a+$") == "mogucoin") then -- Mogu Rune of Fate
+        return 752;
     elseif (strmatch(Texture, "%a+$") == "timelesscoin") then -- Timeless Coin
         return 777;
     elseif (strmatch(Texture, "%a+-%a+$") == "timelesscoin-bloody") then -- Bloody Coin
@@ -394,6 +396,8 @@ function BuyEmAll:AltCurrencyTranslating(Texture) -- Uses the texture string/pat
         return 824;
     elseif (strmatch(Texture, "%a+_%a+$") == "ashran_artifact") then -- Artifact Fragment
         return 944;
+	elseif (strmatch(Texture, "%a+_%a+$") == "ability_animusorbs") then -- Seal of Tempered Fate
+        return 994;
     elseif (strmatch(Texture, "%a+_%a+_%d+$") == "misc_coin_09") then -- Dingy Iron Coins
         return 980;
     elseif (strmatch(Texture, "%a+_%a+_%a+$") == "reputation_kirintor_offensive") then -- Sightless Eye

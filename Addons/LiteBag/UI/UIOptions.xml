@@ -22,6 +22,7 @@
             </Anchors>
             <Scripts>
                 <OnLoad function="LiteBagOptionsConfirmSort_OnLoad" />
+                <OnClick function="LiteBagOptionsControl_OnChanged" />
             </Scripts>
         </CheckButton>
         <CheckButton name="$parentEquipsetDisplay" inherits="InterfaceOptionsCheckButtonTemplate">
@@ -30,24 +31,54 @@
             </Anchors>
             <Scripts>
                 <OnLoad function="LiteBagOptionsEquipsetDisplay_OnLoad" />
+                <OnClick function="LiteBagOptionsControl_OnChanged" />
             </Scripts>
         </CheckButton>
+        <CheckButton name="$parentSnapToPosition" inherits="InterfaceOptionsCheckButtonTemplate">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentEquipsetDisplay" relativePoint="BOTTOMLEFT" x="0" y="-16" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsSnapToPosition_OnLoad" />
+                <OnClick function="LiteBagOptionsControl_OnChanged" />
+            </Scripts>
+        </CheckButton>
+
         <Slider name="$parentInventoryColumns" minValue="8" maxValue="24" valueStep="2" obeyStepOnDrag="true" defaultValue="8" inherits="OptionsSliderTemplate">
             <Anchors>
-                <Anchor point="TOPLEFT" relativeTo="$parentEquipsetDisplay" relativePoint="BOTTOMLEFT" x="32" y="-32" />
+                <Anchor point="TOPLEFT" relativeTo="$parentSnapToPosition" relativePoint="BOTTOMLEFT" x="32" y="-64" />
             </Anchors>
             <Scripts>
                 <OnLoad function="LiteBagOptionsInventoryColumns_OnLoad" />
                 <OnValueChanged function="LiteBagOptionsInventoryColumns_OnValueChanged" />
             </Scripts>
         </Slider>
+        <Slider name="$parentInventoryScale" minValue="0.75" maxValue="1.25" valueStep="0.05" obeyStepOnDrag="true" defaultValue="1.0" inherits="OptionsSliderTemplate" hidden="true">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentInventoryColumns" relativePoint="BOTTOMLEFT" y="-32" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsInventoryScale_OnLoad" />
+                <OnValueChanged function="LiteBagOptionsInventoryScale_OnValueChanged" />
+            </Scripts>
+        </Slider>
+
         <Slider name="$parentBankColumns" minValue="8" maxValue="24" valueStep="2" obeyStepOnDrag="true" defaultValue="14" inherits="OptionsSliderTemplate">
             <Anchors>
-                <Anchor point="TOPLEFT" relativeTo="$parentInventoryColumns" relativePoint="BOTTOMLEFT" x="0" y="-32" />
+                <Anchor point="LEFT" relativeTo="$parentInventoryColumns" relativePoint="RIGHT" x="32" />
             </Anchors>
             <Scripts>
                 <OnLoad function="LiteBagOptionsBankColumns_OnLoad" />
                 <OnValueChanged function="LiteBagOptionsBankColumns_OnValueChanged" />
+            </Scripts>
+        </Slider>
+        <Slider name="$parentBankScale" minValue="0.75" maxValue="1.25" valueStep="0.05" obeyStepOnDrag="true" defaultValue="1.0" inherits="OptionsSliderTemplate" hidden="true">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentBankColumns" relativePoint="BOTTOMLEFT" y="-32" />
+            </Anchors>
+            <Scripts>
+                <OnLoad function="LiteBagOptionsBankScale_OnLoad" />
+                <OnValueChanged function="LiteBagOptionsBankScale_OnValueChanged" />
             </Scripts>
         </Slider>
     </Frames>

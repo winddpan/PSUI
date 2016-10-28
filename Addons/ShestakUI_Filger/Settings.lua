@@ -13,9 +13,6 @@ Misc.numsize = 14					-- 层数, 计时条的计时数字大小
 Misc.namesize = 14					-- 法术名称字体大小
 Misc.maxTestIcon = 8				-- 测试模式下,每项显示最大图标数量
 
--- Cooldowns.lua
-Misc.cdsize = 15					-- 图标中间的 CD 数字大小
-
 -- config.lua
 Misc.Tbar = "OFF"					-- 开(ON)\关(OFF) target_bar 目标计时条
 Misc.Pbar = "OFF"					-- 开(ON)\关(OFF) pve_cc 计时条

@@ -1,8 +1,0 @@
-## Interface: 70000 
-## Version: 1.0
-## Author: WINDDPAN
-## Title: |cff3399FFPSStatus|r
-## Notes: AP/SP Status
-## Notes-zhCN: 攻强/法伤数值显示
-
-core.lua

@@ -90,6 +90,11 @@ function Atr_FullScanStart()
       gSlowScanPage = 0
     else
       gAtr_FullScanState = ATR_FS_STARTED;
+
+      if not ITEM_QUALITY_COLORS[-1] then
+        ITEM_QUALITY_COLORS[-1] = {r=0, b=0, g=0}
+      end
+
       QueryAuctionItems( "", nil, nil, 0, nil, nil, true, false, nil )
     end
 
@@ -109,10 +114,10 @@ function Atr_FullScanFrameIdle()
     gDoSlowScan = IsControlKeyDown()
 
     if (gDoSlowScan) then
-      Atr_FullScanStartButton:SetText ("慢速扫描")
+      Atr_FullScanStartButton:SetText ("Slow scan")
       Atr_FullScanStartButton:Enable();
     else
-      Atr_FullScanStartButton:SetText ("开始扫描")
+      Atr_FullScanStartButton:SetText ("Start Scanning")
       if (gCanQueryAll) then
         Atr_FullScanStartButton:Enable();
       else
@@ -148,10 +153,10 @@ function Atr_FullScanFrameIdle()
     end
   end
 
-  if (gAtr_FullScanState == ATR_FS_STARTED)   then  statusText = "扫描中"   end
-  if (gAtr_FullScanState == ATR_FS_UPDATING_DB) then  statusText = "更新数据库中"      end
-  if (gAtr_FullScanState == ATR_FS_CLEANING_UP) then  statusText = "扫描完成"        end
-  if (gAtr_FullScanState == ATR_FS_ANALYZING )  then  statusText = "更新数据 ["..gFullScanPosition.." / "..gGetAllTotalAuctions.."]";        end
+  if (gAtr_FullScanState == ATR_FS_STARTED)   then  statusText = "Waiting for auction data"   end
+  if (gAtr_FullScanState == ATR_FS_UPDATING_DB) then  statusText = "Updating database"      end
+  if (gAtr_FullScanState == ATR_FS_CLEANING_UP) then  statusText = "Scan complete"        end
+  if (gAtr_FullScanState == ATR_FS_ANALYZING )  then  statusText = "Analyzing data ["..gFullScanPosition.." out of "..gGetAllTotalAuctions.."]";        end
 
 
 

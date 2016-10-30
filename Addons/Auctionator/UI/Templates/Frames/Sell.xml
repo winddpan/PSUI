@@ -124,7 +124,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString inherits="GameFontNormalSmall" text="高级搜索">
+            <FontString inherits="GameFontNormalSmall" text="Advanced">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset><AbsDimension x="2" y="1"/></Offset>
@@ -147,7 +147,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString inherits="GameFontNormalSmall" text="精确匹配">
+            <FontString inherits="GameFontNormalSmall" text="Exact Match">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset><AbsDimension x="2" y="1"/></Offset>
@@ -228,7 +228,7 @@
         <Layers>
           <Layer level="ARTWORK">
 
-            <FontString inherits="GameFontHighlightSmall" text="卖出">
+            <FontString inherits="GameFontHighlightSmall" text="Sell">
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="93" y="18"/></Offset></Anchor></Anchors>
             </FontString>
 
@@ -253,15 +253,15 @@
               <Anchors><Anchor point="TOPLEFT" relativeTo="Atr_Batch_Stacksize_Text"><Offset><AbsDimension x="79" y="-21"/></Offset></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_StartingPriceText" inherits="GameFontHighlightSmall" text="起始价" hidden="true">
+            <FontString name="Atr_StartingPriceText" inherits="GameFontHighlightSmall" text="Starting Price" hidden="true">
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="13" y="-260"/></Offset></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_StartingPriceDiscountText" inherits="GameFontHighlightSmall" text="起始价">
+            <FontString name="Atr_StartingPriceDiscountText" inherits="GameFontHighlightSmall" text="Starting Price">
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="10" y="-270"/></Offset></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_Duration_Text" inherits="GameFontHighlightSmall" text="拍卖时间">
+            <FontString name="Atr_Duration_Text" inherits="GameFontHighlightSmall" text="Duration">
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="10" y="-304"/></Offset></Anchor></Anchors>
             </FontString>
 
@@ -582,13 +582,13 @@
             <Scripts><OnClick>Atr_Onclick_SaveTempList()</OnClick></Scripts>
           </Button>
 
-          <Button name="Atr_Col1_Heading_Button" text="价格排序" inherits="Atr_Col_Heading_Template"  hidden="true">
+          <Button name="Atr_Col1_Heading_Button" text="Lowest Price" inherits="Atr_Col_Heading_Template"  hidden="true">
             <Size><AbsDimension x="100" y="20"/></Size>
             <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="46" y="-21"/></Offset></Anchor></Anchors>
             <Scripts><OnClick>Atr_Onclick_Col1()</OnClick></Scripts>
           </Button>
 
-          <Button name="Atr_Col3_Heading_Button" text="名称排序" inherits="Atr_Col_Heading_Template"  hidden="true">
+          <Button name="Atr_Col3_Heading_Button" text="Item Name" inherits="Atr_Col_Heading_Template"  hidden="true">
             <Size><AbsDimension x="108" y="20"/></Size>
             <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="172" y="-21"/></Offset></Anchor></Anchors>
             <Scripts><OnClick>Atr_Onclick_Col3()</OnClick></Scripts>
@@ -602,15 +602,15 @@
         <Anchors><Anchor point="BOTTOMRIGHT" relativeTo="Atr_HeadingsBar" relativePoint="TOPRIGHT"><Offset><AbsDimension x="0" y="-22"/></Offset></Anchor></Anchors>
 
         <Frames>
-          <Button name="$parentTab3" inherits="TabButtonTemplate" id="3" text="拍卖记录">
+          <Button name="$parentTab3" inherits="TabButtonTemplate" id="3" text="Other">
             <Anchors><Anchor point="BOTTOMRIGHT" ><Offset><AbsDimension x="-8" y="0"/></Offset></Anchor></Anchors>
             <Scripts><OnClick>Atr_ListTabOnClick(3);</OnClick></Scripts>
           </Button>
-          <Button name="$parentTab2" inherits="TabButtonTemplate" id="2" text="历史价格">
+          <Button name="$parentTab2" inherits="TabButtonTemplate" id="2" text="History">
             <Anchors><Anchor point="RIGHT" relativeTo="$parentTab3" relativePoint="LEFT"><Offset><AbsDimension x="-2" y="0"/></Offset></Anchor></Anchors>
             <Scripts><OnClick>Atr_ListTabOnClick(2);</OnClick></Scripts>
           </Button>
-          <Button name="$parentTab1" inherits="TabButtonTemplate" id="1" text="目前拍卖">
+          <Button name="$parentTab1" inherits="TabButtonTemplate" id="1" text="Current">
             <Anchors><Anchor point="RIGHT" relativeTo="$parentTab2" relativePoint="LEFT"><Offset><AbsDimension x="-2" y="0"/></Offset></Anchor></Anchors>
             <Scripts><OnClick>Atr_ListTabOnClick(1);</OnClick></Scripts>
           </Button>

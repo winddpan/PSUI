@@ -162,7 +162,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>AuctionatorOption_Enable_Debug_CB_Text:SetText (gAtr_ZT("调试模式"));</OnLoad>
+          <OnLoad>AuctionatorOption_Enable_Debug_CB_Text:SetText (gAtr_ZT("Enable debug mode"));</OnLoad>
         </Scripts>
       </Frame>
       <Frame name="AuctionatorOption_Def_Duration_Text">
@@ -178,7 +178,7 @@
         </Anchors>
         <Layers>
           <Layer level="ARTWORK">
-            <FontString inherits="GameFontHighlight" name="$parent_Text" text="默认拍卖时间">
+            <FontString inherits="GameFontHighlight" name="$parent_Text" text="Default Auction Duration">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="0" y="0"/>
@@ -213,7 +213,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnLoad>_G[self:GetName().."Text"]:SetText("无"); </OnLoad>
+              <OnLoad>_G[self:GetName().."Text"]:SetText("None"); </OnLoad>
               <OnClick>Atr_SetDurationOptionRB (self:GetName()); </OnClick>
             </Scripts>
           </CheckButton>
@@ -271,7 +271,7 @@
         </Anchors>
         <Layers>
           <Layer level="ARTWORK">
-            <FontString inherits="GameFontHighlight" name="$parent_Text" text="打开拍卖行时打开页面">
+            <FontString inherits="GameFontHighlight" name="$parent_Text" text="Default Auctionator tab">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="0" y="0"/>
@@ -376,7 +376,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>ATR_tipsMailboxOpt_CB_Text:SetText (gAtr_ZT("为邮箱中的物品显示拍卖价"));  </OnLoad>
+          <OnLoad>ATR_tipsMailboxOpt_CB_Text:SetText (gAtr_ZT("Show auction house prices in mailbox tooltips"));  </OnLoad>
         </Scripts>
       </Frame>
 
@@ -607,7 +607,7 @@
           </EdgeSize>
         </Backdrop>
       </Frame>
-      <Button inherits="Atr_SmallButtonTemplate" name="$parent_Edit" parent="Atr_StackingOptionsFrame" text="编辑">
+      <Button inherits="Atr_SmallButtonTemplate" name="$parent_Edit" parent="Atr_StackingOptionsFrame" text="Edit">
         <Size>
           <AbsDimension x="80" y="18"/>
         </Size>
@@ -622,7 +622,7 @@
           <OnClick>Atr_StackingList_Edit_OnClick()</OnClick>
         </Scripts>
       </Button>
-      <Button inherits="Atr_SmallButtonTemplate" name="$parent_New" parent="Atr_StackingOptionsFrame" text="新建">
+      <Button inherits="Atr_SmallButtonTemplate" name="$parent_New" parent="Atr_StackingOptionsFrame" text="New">
         <Size>
           <AbsDimension x="80" y="18"/>
         </Size>
@@ -726,7 +726,7 @@
     </Backdrop>
     <Layers>
       <Layer level="BACKGROUND">
-        <FontString inherits="GameFontNormalSmall" justifyH="LEFT" name="Atr_Mem_itemName_text" text="主分类">
+        <FontString inherits="GameFontNormalSmall" justifyH="LEFT" name="Atr_Mem_itemName_text" text="Item Name">
           <Size>
             <AbsDimension x="200" y="20"/>
           </Size>
@@ -748,7 +748,7 @@
             </Anchor>
           </Anchors>
         </FontString>
-        <FontString inherits="GameFontNormal" justifyH="RIGHT" name="Atr_Mem_stacksOf_text" text="项，堆叠">
+        <FontString inherits="GameFontNormal" justifyH="RIGHT" name="Atr_Mem_stacksOf_text" text="stacks of">
           <Size>
             <AbsDimension x="120" y="30"/>
           </Size>
@@ -872,7 +872,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString inherits="GameFontNormal" justifyH="LEFT" text="最低物品质量:"/>
+            <FontString inherits="GameFontNormal" justifyH="LEFT" text="Minimum quality level:"/>
           </Layer>
         </Layers>
         <Scripts>
@@ -909,7 +909,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString inherits="GameFontNormal" text="数据库占用内存:">
+            <FontString inherits="GameFontNormal" text="Auctionator memory usage:">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="15" y="-20"/>
@@ -923,7 +923,7 @@
                 </Anchor>
               </Anchors>
             </FontString>
-            <FontString inherits="GameFontNormal" text="数据库中物品总数:">
+            <FontString inherits="GameFontNormal" text="Items in the database:">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="15" y="-45"/>
@@ -951,7 +951,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString inherits="GameFontNormal" justifyH="LEFT" spacing="2" text="在启动时自动删除">
+            <FontString inherits="GameFontNormal" justifyH="LEFT" spacing="2" text="On start-up delete historical prices older than:">
               <Size>
                 <AbsDimension x="200"/>
               </Size>
@@ -961,7 +961,7 @@
                 </Anchor>
               </Anchors>
             </FontString>
-            <FontString inherits="GameFontNormal" justifyH="LEFT" text="天前的记录">
+            <FontString inherits="GameFontNormal" justifyH="LEFT" text="days">
               <Anchors>
                 <Anchor point="TOPLEFT">
                   <Offset x="268" y="-11"/>
@@ -989,11 +989,11 @@
   <!-- The Resets screen -->
   <Frame enableMouse="true" frameStrata="MEDIUM" hidden="true" inherits="Atr_OptionsPanelTemplate" name="AuctionatorResetsFrame" parent="InterfaceOptionsFrame">
     <Scripts>
-      <OnLoad>Atr_LoadOptionsSubPanel (self, gAtr_ZT("Clears"), gAtr_ZT("Clears"), gAtr_ZT("当Auctionator内存占用过多时你可能会需要这些功能."));
+      <OnLoad>Atr_LoadOptionsSubPanel (self, gAtr_ZT("Clears"), gAtr_ZT("Clears"), gAtr_ZT("The features below will help you clear out data that Auctionator stores.  Typically you would only need this in the event that that data gets corrupted."));
       </OnLoad>
     </Scripts>
     <Frames>
-      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="清空搜索记录">
+      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="Clear Scanning History">
         <Size x="300" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT">
@@ -1004,7 +1004,7 @@
           <OnClick function="Atr_OnClick_ClearHistory"/>
         </Scripts>
       </Button>
-      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="清空拍卖记录">
+      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="Clear Posting History">
         <Size x="300" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT">
@@ -1015,7 +1015,7 @@
           <OnClick function="Atr_OnClick_ClearPostHistory"/>
         </Scripts>
       </Button>
-      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="清空堆叠设置">
+      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="Clear Stacking Preferences">
         <Size x="300" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT">
@@ -1026,7 +1026,7 @@
           <OnClick function="Atr_OnClick_ClearStackPrefs"/>
         </Scripts>
       </Button>
-      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="清空购物清单">
+      <Button inherits="UIPanelButtonTemplate" parent="AuctionatorResetsFrame" text="Clear Shopping Lists">
         <Size x="300" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT">
@@ -1093,7 +1093,7 @@
           <OnClick function="Atr_OnClick_ClearConfirm_Hide"/>
         </Scripts>
       </Button>
-      <Button inherits="UIPanelButtonTemplate" text="确定清空">
+      <Button inherits="UIPanelButtonTemplate" text="Clear It">
         <Size x="120" y="22"/>
         <Anchors>
           <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="Atr_ClearConfirm_Cancel">
@@ -1111,14 +1111,14 @@
   <!-- The Shopping Lists screen -->
   <Frame enableMouse="true" hidden="true" inherits="Atr_OptionsPanelTemplate" name="Atr_ShpList_Options_Frame" parent="UIParent">
     <Scripts>
-      <OnLoad>Atr_LoadOptionsSubPanel (self, gAtr_ZT("购物清单"), gAtr_ZT("购物清单"));
+      <OnLoad>Atr_LoadOptionsSubPanel (self, gAtr_ZT("Shopping Lists"), gAtr_ZT("Shopping Lists"));
       </OnLoad>
       <OnUpdate>Atr_ShpList_Options_Update (self, elapsed);
       </OnUpdate>
     </Scripts>
     <Layers>
       <Layer level="BACKGROUND">
-        <FontString inherits="GameFontDarkGraySmall" text="按住CTRL键可以选择多个购物清单">
+        <FontString inherits="GameFontDarkGraySmall" text="Select multiple shopping lists by holding down the control key while clicking">
           <Size x="125"/>
           <Anchors>
             <Anchor point="BOTTOMRIGHT" x="-30" y="26"/>

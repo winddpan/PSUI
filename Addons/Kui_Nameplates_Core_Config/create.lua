@@ -7,7 +7,7 @@ version:SetAlpha(.7)
 version:SetPoint('TOPRIGHT',-12,-12)
 version:SetText(string.format(
     opt.titles.version,
-    'KuiNameplates','Kesava','2-14'
+    'KuiNameplates','Kesava','2-14-2'
 ))
 
 opt:Initialise()

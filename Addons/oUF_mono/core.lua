@@ -26,11 +26,10 @@
 	
 	--self.colors.smooth = {1,0,0, .7,.9,.2, .3,.9,.7}
 	self.colors.smooth = {1,0,0, 1,1,0, 1,1,0}	
+	self.Health.colorDisconnected = true
 	self.Health.colorSmooth = true
 	self.Health.colorHealth = true 
 	self.Health.colorClass = true
-	
-	self.Health.colorDisconnected = true
 
    	if cfg.oUF.settings.click2focus.enable then -- may cause taint
 		local MouseButton = 1

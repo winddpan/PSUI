@@ -1,9 +1,22 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- Decimal Check
-	
-	local _, private = ...
-	private.defaults.dcsdefaults.dejacharacterstatsShowDecimalsChecked = {
-		SetChecked = true,
-	}	
+
+local function get_gcd(haste)
+	--TODO checks for cases when cooldown is not according to formula
+	--print("INT",LE_UNIT_STAT_INTELLECT)
+	--print("STR",LE_UNIT_STAT_STRENGTH)
+	--print("AGI",LE_UNIT_STAT_AGILITY)
+	--print(primary)
+	local spec = GetSpecialization();
+	local primaryStat = select(7, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
+	local fn = "";
+	if (primaryStat == LE_UNIT_STAT_INTELLECT) then
+		fn = format("; Global CD %.2fs", 1.5/(1+haste/100))
+	end
+	return fn
+end
 
 local function DCS_DecimalsShow(self)
 	-- Crit Chance
@@ -74,7 +87,8 @@ local function DCS_DecimalsShow(self)
 			end
 		-- PaperDollFrame_SetLabelAndText Format Change
 			PaperDollFrame_SetLabelAndText(statFrame, STAT_HASTE, format(hasteFormatString, format("%.2f%%", haste)), false, haste);
-			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2f%%", haste)) .. FONT_COLOR_CODE_CLOSE;
+
+			statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2f%%", haste)) .. get_gcd(haste) .. FONT_COLOR_CODE_CLOSE;
 
 			local _, class = UnitClass(unit);
 			statFrame.tooltip2 = _G["STAT_HASTE_"..class.."_TOOLTIP"];
@@ -243,7 +257,7 @@ local function DCS_DecimalsHide(self)
 
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_CRITICAL_STRIKE, critChance, true, critChance);
 
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_CRITICAL_STRIKE).." "..format("%.2F%%", critChance)..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_CRITICAL_STRIKE).." "..format("%.2f%%", critChance)..FONT_COLOR_CODE_CLOSE;
 		local extraCritChance = GetCombatRatingBonus(rating);
 		local extraCritRating = GetCombatRating(rating);
 		if (GetCritChanceProvidesParryEffect()) then
@@ -271,7 +285,8 @@ local function DCS_DecimalsHide(self)
 		end
 
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_HASTE, format(hasteFormatString, format("%d%%", haste + 0.5)), false, haste);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2F%%", haste)) .. FONT_COLOR_CODE_CLOSE;
+
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. format(hasteFormatString, format("%.2f%%", haste)) .. get_gcd(haste).. FONT_COLOR_CODE_CLOSE;
 
 		local _, class = UnitClass(unit);
 		statFrame.tooltip2 = _G["STAT_HASTE_"..class.."_TOOLTIP"];
@@ -324,7 +339,7 @@ local function DCS_DecimalsHide(self)
 
 		local lifesteal = GetLifesteal();
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_LIFESTEAL, lifesteal, true, lifesteal);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_LIFESTEAL) .. " " .. format("%.2F%%", lifesteal) .. FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_LIFESTEAL) .. " " .. format("%.2f%%", lifesteal) .. FONT_COLOR_CODE_CLOSE;
 
 		statFrame.tooltip2 = format(CR_LIFESTEAL_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_LIFESTEAL)), GetCombatRatingBonus(CR_LIFESTEAL));
 
@@ -339,7 +354,7 @@ local function DCS_DecimalsHide(self)
 
 		local avoidance = GetAvoidance();
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_AVOIDANCE, avoidance, true, avoidance);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVOIDANCE) .. " " .. format("%.2F%%", avoidance) .. FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVOIDANCE) .. " " .. format("%.2f%%", avoidance) .. FONT_COLOR_CODE_CLOSE;
 
 		statFrame.tooltip2 = format(CR_AVOIDANCE_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_AVOIDANCE)), GetCombatRatingBonus(CR_AVOIDANCE));
 
@@ -354,7 +369,7 @@ local function DCS_DecimalsHide(self)
 
 		local chance = GetDodgeChance();
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_DODGE, chance, true, chance);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, DODGE_CHANCE).." "..string.format("%.2F", chance).."%"..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, DODGE_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = format(CR_DODGE_TOOLTIP, GetCombatRating(CR_DODGE), GetCombatRatingBonus(CR_DODGE));
 		statFrame:Show();
 	end
@@ -367,7 +382,7 @@ local function DCS_DecimalsHide(self)
 
 		local chance = GetParryChance();
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_PARRY, chance, true, chance);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, PARRY_CHANCE).." "..string.format("%.2F", chance).."%"..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, PARRY_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = format(CR_PARRY_TOOLTIP, GetCombatRating(CR_PARRY), GetCombatRatingBonus(CR_PARRY));
 		statFrame:Show();
 	end
@@ -380,42 +395,47 @@ local function DCS_DecimalsHide(self)
 
 		local chance = GetBlockChance();
 		PaperDollFrame_SetLabelAndText(statFrame, STAT_BLOCK, chance, true, chance);
-		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, BLOCK_CHANCE).." "..string.format("%.2F", chance).."%"..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, BLOCK_CHANCE).." "..string.format("%.2f", chance).."%"..FONT_COLOR_CODE_CLOSE;
 		statFrame.tooltip2 = format(CR_BLOCK_TOOLTIP, GetShieldBlock());
 		statFrame:Show();
 	end
 	PaperDollFrame_UpdateStats()
 end
 	
+	
+local _, gdbprivate = ...
+	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowDecimalsChecked = {
+		SetChecked = true,
+	}	
 local DCS_DecimalCheck = CreateFrame("CheckButton", "DCS_DecimalCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_DecimalCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_DecimalCheck:ClearAllPoints()
 	DCS_DecimalCheck:SetPoint("TOPLEFT", 25, -60)
 	DCS_DecimalCheck:SetScale(1.25)
-	DCS_DecimalCheck.tooltipText = 'Displays "Enhancements" category stats to two decimal places.' --Creates a tooltip on mouseover.
-	_G[DCS_DecimalCheck:GetName() .. "Text"]:SetText("Decimals")
+	DCS_DecimalCheck.tooltipText = L['Displays "Enhancements" category stats to two decimal places.'] --Creates a tooltip on mouseover.
+	_G[DCS_DecimalCheck:GetName() .. "Text"]:SetText(L["Decimals"])
 	
 	DCS_DecimalCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-		local checked = private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked
 			self:SetChecked(checked.SetChecked)
 			if self:GetChecked(true) then
 				DCS_DecimalsShow()
-				private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = true
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = true
 			else
 				DCS_DecimalsHide()
-				private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = false
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = false
 			end
 		end
 	end)
 
 	DCS_DecimalCheck:SetScript("OnClick", function(self,event,arg1) 
-		local checked = private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked
 		if self:GetChecked(true) then
 			DCS_DecimalsShow()
-			private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = true
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = true
 		else
 			DCS_DecimalsHide()
-			private.db.dcsdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = false
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowDecimalsChecked.SetChecked = false
 		end
 	end)

@@ -93,9 +93,9 @@ function Atr_SetupOptionsFrame()
           .."|cffaaaaaa"..string.format (ZT("German translation courtesy of %s"),  "|rCkaotik").."<br/>"
           .."|cffaaaaaa"..string.format (ZT("Russian translation courtesy of %s"), "|rStingerSoft, Wetxius").."<br/>"
           .."|cffaaaaaa"..string.format (ZT("Swedish translation courtesy of %s"), "|rHellManiac").."<br/>"
-          .."|cffaaaaaa"..string.format (ZT("French translation courtesy of %s"),  "|rKiskewl").."<br/>"
+          .."|cffaaaaaa"..string.format (ZT("French translation courtesy of %s"),  "|rKiskewl and Klep").."<br/>"
           .."|cffaaaaaa"..string.format (ZT("Spanish translation courtesy of %s"),  "|rElfindor").."<br/>"
-          .."|cffaaaaaa"..string.format (ZT("Chinese/Taiwan translation courtesy of %s"),  "|rNGA-iomect").."<br/>"
+          .."|cffaaaaaa"..string.format (ZT("Chinese/Taiwan translation courtesy of %s"),  "|rScars").."<br/>"
           .."</p>"
           .."</body></html>"
           ;
@@ -564,11 +564,12 @@ function Atr_Memorize_Show (isNew)
 end
 
 -----------------------------------------
+local Atr_StackingList_Check
 
 function Atr_StackingList_Edit_OnClick()
 
   Atr_Memorize_Show(false);
-
+  Atr_StackingList_Check = false
 end
 
 -----------------------------------------
@@ -576,6 +577,7 @@ end
 function Atr_StackingList_New_OnClick()
 
   Atr_Memorize_Show(true);
+  Atr_StackingList_Check = true
 
 end
 
@@ -599,15 +601,18 @@ StaticPopupDialogs[ "ATR_MEMORIZE_TEXT_BLANK" ] = {
 };
 
 function Atr_Memorize_Save()
+  Auctionator.Debug.Message( 'Atr_Memorize_Save' )
 
-  zz ("Saving stacking configuration");
+  local x   = gStackList_SelectedIndex
+  local plist = gStackList_plist
+  local key = Atr_Mem_EB_itemName:GetText()
 
-  local x   = gStackList_SelectedIndex;
-  local plist = gStackList_plist;
-
-  local key = Atr_Mem_EB_itemName:GetText();
-  if (key == nil or key == "") then
-    StaticPopup_Show( "ATR_MEMORIZE_TEXT_BLANK" )
+  if Atr_StackingList_Check then
+    if key == nil or key == "" then
+      StaticPopup_Show( "ATR_MEMORIZE_TEXT_BLANK" )
+    end
+  else
+    key = plist[ x ].sortkey
   end
 
   if (key and key ~= "") then
@@ -669,7 +674,7 @@ end
 function Atr_SONumStacks_OnClick(self)
 
   UIDropDownMenu_SetSelectedValue(self.owner, self.value);
-  Atr_Mem_stacksOf_text:SetText (ZT ((self.value == 1) and "项，堆叠" or "项，堆叠"));
+  Atr_Mem_stacksOf_text:SetText (ZT ((self.value == 1) and "stack of" or "stacks of"));
 end
 
 -----------------------------------------
@@ -845,8 +850,8 @@ function Atr_OnClick_ClearHistory(self)
 
   ShowInterfaceOptionsMask();
 
-  Atr_ClearConfirm_Text1:SetText (ZT("确定清空搜索记录?"))
-  Atr_ClearConfirm_Text2:SetText (ZT("这个操作将会清空你在所有服务器的所有角色上面的拍卖价提示!"))
+  Atr_ClearConfirm_Text1:SetText (ZT("Are you sure you want to clear the scanned prices database?"))
+  Atr_ClearConfirm_Text2:SetText (ZT("This will clear the pricing history for all items for all your characters - even characters on different servers."))
 
   gAtr_ConfirmYesAction = function ()
 
@@ -867,8 +872,8 @@ function Atr_OnClick_ClearPostHistory(self)
 
   ShowInterfaceOptionsMask();
 
-  Atr_ClearConfirm_Text1:SetText (ZT("确定清空拍卖记录?"))
-  Atr_ClearConfirm_Text2:SetText (ZT("这个操作将会清空你在所有服务器的所有角色上面的拍卖历史记录!"))
+  Atr_ClearConfirm_Text1:SetText (ZT("Are you sure you want to clear the posting history?"))
+  Atr_ClearConfirm_Text2:SetText (ZT("This will clear the information that Auctionator keeps for all items that you've posted - as shown on the \"Other\" tab after you scan for an item that you've sold in the past."))
 
   gAtr_ConfirmYesAction = function ()
 
@@ -888,8 +893,8 @@ function Atr_OnClick_ClearStackPrefs(self)
 
   ShowInterfaceOptionsMask();
 
-  Atr_ClearConfirm_Text1:SetText (ZT("确定清空堆叠设置?"))
-  Atr_ClearConfirm_Text2:SetText (ZT("友情提示, 最好挨个删除, 设置这玩意并不轻松"))
+  Atr_ClearConfirm_Text1:SetText (ZT("Are you sure you want to clear your stacking preferences?"))
+  Atr_ClearConfirm_Text2:SetText (ZT("Go ahead - this isn't a big deal.  Auctionator will figure it out again fairly quickly.  This is just some info Auctionator keeps to help it set the default stack size a bit more intelligently."))
 
   gAtr_ConfirmYesAction = function ()
 
@@ -908,8 +913,8 @@ function Atr_OnClick_ClearShopLists(self)
 
   ShowInterfaceOptionsMask();
 
-  Atr_ClearConfirm_Text1:SetText (ZT("确定清空购物清单?"))
-  Atr_ClearConfirm_Text2:SetText (ZT("谨慎操作, 购物清单来之不易"))
+  Atr_ClearConfirm_Text1:SetText (ZT("Are you sure you want to clear your shopping lists?"))
+  Atr_ClearConfirm_Text2:SetText (ZT("If you put a lot of time into constructing detailed shopping lists, this will require you to buidl them all over again."))
 
   gAtr_ConfirmYesAction = function ()
 
@@ -1148,7 +1153,7 @@ local gShplistIndexToRename
 -----------------------------------------
 
 StaticPopupDialogs["ATR_RENAME_SHOPPING_LIST"] = {
-  text = "输入一个新名字",
+  text = "New name for this list",
   button1 = OKAY,
   button2 = CANCEL,
   OnAccept = function(self)
@@ -1277,9 +1282,9 @@ function Atr_OnClick_ShpList_Import()
   Atr_ShpList_SelectAllBut:Hide()
   Atr_ShpList_ImportSaveBut:Show()
 
-  Atr_ShpList_Explanation:SetText("把你之前备份的文本粘贴到这里面来就OK了~")
+  Atr_ShpList_Explanation:SetText("Paste text that was previously exported into the text area to the left.")
 
-  Atr_ShpList_Edit_Name:SetText("导入")
+  Atr_ShpList_Edit_Name:SetText("Import")
 
   Atr_ShpList_Edit_Text:SetText("")
   Atr_ShpList_Edit_Text:SetSpacing(3)
@@ -1478,9 +1483,9 @@ function Atr_OnClick_ShpList_Export(self)
   Atr_ShpList_SelectAllBut:Show()
   Atr_ShpList_ImportSaveBut:Hide()
 
-  Atr_ShpList_Explanation:SetText("Ctrl+A全选, 然后Ctrl+C复制, 保存到你的电脑上面吧.")
+  Atr_ShpList_Explanation:SetText("Click Select All, type Ctrl-C to copy the text and then paste into any text document.")
 
-  Atr_ShpList_Edit_Name:SetText("导出")
+  Atr_ShpList_Edit_Name:SetText("Export")
 
   Atr_ShpList_Edit_Text:SetSpacing(3)
   Atr_ShpList_Edit_Text:SetPoint ("TOPLEFT", 0, -20)

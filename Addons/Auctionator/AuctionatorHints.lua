@@ -319,15 +319,15 @@ function Atr_STWP_AddAuctionInfo (tip, xstring, link, auctionPrice)
     local bondtype = Atr_GetBondType (itemID);
 
     if (bondtype == ATR_BIND_ON_PICKUP) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("拾取绑定").."");
+      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("BOP").."  ");
     elseif (bondtype == ATR_BINDS_TO_ACCOUNT) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("账号绑定").."");
+      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("BOA").."  ");
     elseif (bondtype == ATR_QUEST_ITEM) then
       tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("Quest Item").."  ");
     elseif (auctionPrice ~= nil) then
       tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..zc.priceToMoneyString (auctionPrice));
     else
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("未知").."");
+      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("unknown").."  ");
     end
   end
 end
@@ -340,7 +340,7 @@ function Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice)
     if (dePrice > 0) then
       tip:AddDoubleLine (ZT("Disenchant")..xstring, "|cFFFFFFFF"..zc.priceToMoneyString(dePrice));
     else
-      tip:AddDoubleLine (ZT("Disenchant")..xstring, "|cFFFFFFFF"..ZT("unknown").."");
+      tip:AddDoubleLine (ZT("Disenchant")..xstring, "|cFFFFFFFF"..ZT("unknown").."  ");
     end
   end
 

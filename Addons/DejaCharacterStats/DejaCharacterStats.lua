@@ -1,12 +1,50 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 --------------------------
 -- SavedVariables Setup --
 --------------------------
+local DejaCharacterStats, gdbprivate = ...
+
+gdbprivate.gdbdefaults = {
+}
+gdbprivate.gdbdefaults.gdbdefaults = {
+}
+
+----------------------------
+-- Saved Variables Loader --
+----------------------------
+local loader = CreateFrame("Frame")
+	loader:RegisterEvent("ADDON_LOADED")
+	loader:SetScript("OnEvent", function(self, event, arg1)
+		if event == "ADDON_LOADED" and arg1 == "DejaCharacterStats" then
+			local function initDB(gdb, gdbdefaults)
+				if type(gdb) ~= "table" then gdb = {} end
+				if type(gdbdefaults) ~= "table" then return gdb end
+				for k, v in pairs(gdbdefaults) do
+					if type(v) == "table" then
+						gdb[k] = initDB(gdb[k], v)
+					elseif type(v) ~= type(gdb[k]) then
+						gdb[k] = v
+					end
+				end
+				return gdb
+			end
+
+			DejaCharacterStatsDB = initDB(DejaCharacterStatsDB, gdbprivate.gdbdefaults)
+			gdbprivate.gdb = DejaCharacterStatsDB
+
+			self:UnregisterEvent("ADDON_LOADED")
+		end
+	end)
+
 local DejaCharacterStats, private = ...
 
 private.defaults = {
 }
 private.defaults.dcsdefaults = {
 }
+
 DejaCharacterStats = {};
 
 ----------------------------
@@ -14,8 +52,8 @@ DejaCharacterStats = {};
 ----------------------------
 local loader = CreateFrame("Frame")
 	loader:RegisterEvent("ADDON_LOADED")
-	loader:SetScript("OnEvent", function(self, addon)
-		if addon ~= DejaCharacterStats then 
+	loader:SetScript("OnEvent", function(self, event, arg1)
+		if event == "ADDON_LOADED" and arg1 == "DejaCharacterStats" then
 			local function initDB(db, defaults)
 				if type(db) ~= "table" then db = {} end
 				if type(defaults) ~= "table" then return db end
@@ -26,13 +64,13 @@ local loader = CreateFrame("Frame")
 						db[k] = v
 					end
 				end
-			return db
+				return db
 			end
 
-		DejaCharacterStatsDBPC = initDB(DejaCharacterStatsDBPC, private.defaults)
-		private.db = DejaCharacterStatsDBPC -- add this
-		self:UnregisterEvent("ADDON_LOADED")
-		-- Don't place any frames here
+			DejaCharacterStatsDBPC = initDB(DejaCharacterStatsDBPC, private.defaults)
+			private.db = DejaCharacterStatsDBPC
+
+			self:UnregisterEvent("ADDON_LOADED")
 		end
 	end)
 
@@ -126,7 +164,7 @@ end)
 
 function RegisteredEvents:ADDON_LOADED(event, addon, ...)
 	if (addon == "DejaCharacterStats") then
-		SLASH_DEJACHARACTERSTATS1 = '/dcstats'
+		SLASH_DEJACHARACTERSTATS1 = (L["/dcstats"])
 		SlashCmdList["DejaCharacterStats"] = function (msg, editbox)
 			DejaCharacterStats.SlashCmdHandler(msg, editbox)	
 	end
@@ -139,13 +177,13 @@ for k, v in pairs(RegisteredEvents) do
 end
 
 function DejaCharacterStats.ShowHelp()
-	print("DejaCharacterStats Slash commands (/dcstats):")
-	print("  /dcstats config: Open the DejaCharacterStats addon config menu.")
-	print("  /dcstats reset:  Resets DejaCharacterStats frames to default positions.")
+	print(L["DejaCharacterStats Slash commands (/dcstats):"])
+	print(L["  /dcstats config: Open the DejaCharacterStats addon config menu."])
+	print(L["  /dcstats reset:  Resets DejaCharacterStats frames to default positions."])
 end
 
 function DejaCharacterStats.SetConfigToDefaults()
-	print("Resetting config to defaults")
+	print(L["Resetting config to defaults"])
 	DejaCharacterStatsDBPC = DefaultConfig
 	RELOADUI()
 end
@@ -157,30 +195,30 @@ end
 function DejaCharacterStats.PrintPerformanceData()
 	UpdateAddOnMemoryUsage()
 	local mem = GetAddOnMemoryUsage("DejaCharacterStats")
-	print("DejaCharacterStats is currently using " .. mem .. " kbytes of memory")
+	print(L["DejaCharacterStats is currently using "] .. mem .. L[" kbytes of memory"])
 	collectgarbage(collect)
 	UpdateAddOnMemoryUsage()
 	mem = GetAddOnMemoryUsage("DejaCharacterStats")
-	print("DejaCharacterStats is currently using " .. mem .. " kbytes of memory after garbage collection")
+	print(L["DejaCharacterStats is currently using "] .. mem .. L[" kbytes of memory after garbage collection"])
 end
 
 function DejaCharacterStats.SlashCmdHandler(msg, editbox)
 	--print("command is " .. msg .. "\n")
-	if (string.lower(msg) == "config") then
+	if (string.lower(msg) == L["config"]) then
 		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
-	elseif (string.lower(msg) == "dumpconfig") then
-		print("With defaults")
+	elseif (string.lower(msg) == L["dumpconfig"]) then
+		print(L["With defaults"])
 		for k,v in pairs(DCSDefaultConfig) do
 			print(k,DejaCharacterStats.GetConfigValue(k))
 		end
-		print("Direct table")
+		print(L["Direct table"])
 		for k,v in pairs(DCSDefaultConfig) do
 			print(k,v)
 		end
-	elseif (string.lower(msg) == "reset") then
+	elseif (string.lower(msg) == L["reset"]) then
 		DejaCharacterStatsDBPC = private.defaults;
 		ReloadUI();
-	elseif (string.lower(msg) == "perf") then
+	elseif (string.lower(msg) == L["perf"]) then
 		DejaCharacterStats.PrintPerformanceData()
 	else
 		DejaCharacterStats.ShowHelp()
@@ -215,17 +253,30 @@ local dcstitleFS = dcstitle:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	dcstitleFS:SetPoint("TOPLEFT", 0, 0)
 	dcstitleFS:SetFont("Fonts\\FRIZQT__.TTF", 10)
 	
-dcsresetcheck = CreateFrame("Button", "DCSResetButton", DejaCharacterStatsPanel, "UIPanelButtonTemplate")
+local dcsresetcheck = CreateFrame("Button", "DCSResetButton", DejaCharacterStatsPanel, "UIPanelButtonTemplate")
 	dcsresetcheck:ClearAllPoints()
 	dcsresetcheck:SetPoint("BOTTOMLEFT", 5, 5)
 	dcsresetcheck:SetScale(1.25)
-	dcsresetcheck:SetWidth(125)
+
+	local LOCALE = GetLocale()
+		--print (LOCALE)
+
+	if (LOCALE == "ptBR" or LOCALE == "frFR" or LOCALE == "deDE") then
+		--print ("ptBR, frFR, deDE = 175")
+		LOCALE = 175
+	else
+		--print ("enUS = 125")
+		LOCALE = 125
+	end
+
+	dcsresetcheck:SetWidth(LOCALE)
+
 	dcsresetcheck:SetHeight(30)
-	_G[dcsresetcheck:GetName() .. "Text"]:SetText("Reset to Default")
+	_G[dcsresetcheck:GetName() .. "Text"]:SetText(L["Reset to Default"])
 	dcsresetcheck:SetScript("OnClick", function(self, button, down)
- 		private.db.dcsdefaults = private.defaults.dcsdefaults;
+ 		gdbprivate.gdb.gdbdefaults = gdbprivate.gdbdefaults.gdbdefaults;
 		ReloadUI();
-end)
+	end)
 
 ----------------------------
 -- DCS Functions & Arrays --
@@ -287,9 +338,11 @@ function PaperDollFrame_UpdateStats()
 					else
 						statFrame:SetPoint("TOP", lastAnchor, "BOTTOM", 0, statYOffset);
 					end
-					numStatInCat = numStatInCat + 1;
-					statFrame.Background:SetShown((numStatInCat % 2) == 0);
-					lastAnchor = statFrame;
+					if statFrame:IsShown() then
+						numStatInCat = numStatInCat + 1;
+						statFrame.Background:SetShown((numStatInCat % 2) == 0);
+						lastAnchor = statFrame;
+					end
 					-- done with this stat frame, get the next one
 					statFrame = CharacterStatsPane.statsFramePool:Acquire();
 				end
@@ -456,12 +509,12 @@ local function DCS_RelevantStats()
 		},
 	};
 	
-		local durabilitychecked = private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked
+		local durabilitychecked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked
 		if durabilitychecked == true then 
 			table.insert(PAPERDOLL_STATCATEGORIES[1].stats, { stat = "DURABILITY" })
 			PaperDollFrame_UpdateStats();
 		end
-		local repairchecked = private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked
+		local repairchecked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked
 		if repairchecked == true then 
 			table.insert(PAPERDOLL_STATCATEGORIES[1].stats, { stat = "REPAIRTOTAL" })
 			PaperDollFrame_UpdateStats();
@@ -553,11 +606,14 @@ end
 
 local function DCS_CheckShowSelectChecks()
 	if DCS_SelectStatsCheck:GetChecked(true) then
+		private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 142
 		DCS_SelectStatsReInit()
 	elseif not DCS_SelectStatsCheck:GetChecked(true) then
 		if DCS_ShowAllStatsCheck:GetChecked(true) then
+			private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 128
 			DCS_AllStats()
 		elseif not DCS_ShowAllStatsCheck:GetChecked(true) then
+			private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 34
 			DCS_RelevantStats()
 		end
 	end
@@ -576,14 +632,15 @@ local DCS_ShowAllStatsCheck = CreateFrame("CheckButton", "DCS_ShowAllStatsCheck"
 	DCS_ShowAllStatsCheck:ClearAllPoints()
 	DCS_ShowAllStatsCheck:SetPoint("TOP", 0, -35)
 	DCS_ShowAllStatsCheck:SetScale(1.25)
-	DCS_ShowAllStatsCheck.tooltipText = 'Checked displays all stats. Unchecked displays relevant stats. Use Shift-scroll to snap to the top or bottom.' --Creates a tooltip on mouseover.
-	_G[DCS_ShowAllStatsCheck:GetName() .. "Text"]:SetText("Show All Stats")
+	DCS_ShowAllStatsCheck.tooltipText = L['Checked displays all stats. Unchecked displays relevant stats. Use Shift-scroll to snap to the top or bottom.'] --Creates a tooltip on mouseover.
+	_G[DCS_ShowAllStatsCheck:GetName() .. "Text"]:SetText(L["Show All Stats"])
 	
 	DCS_ShowAllStatsCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
 		local checked = private.db.dcsdefaults.dejacharacterstatsShowAllStatsChecked.ShowAllStatsSetChecked
 			self:SetChecked(checked)
 			if self:GetChecked(true) then
+				private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 128
 				DCS_AllStats()
 				DCS_SelectStatsCheck:SetChecked(false)
 				private.db.dcsdefaults.dejacharacterstatsSelectStatsChecked.SelectStatsSetChecked = false
@@ -597,6 +654,7 @@ local DCS_ShowAllStatsCheck = CreateFrame("CheckButton", "DCS_ShowAllStatsCheck"
 
 	DCS_ShowAllStatsCheck:SetScript("OnClick", function(self, button, down)
 		if self:GetChecked(true) then
+			private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 128
 			DCS_AllStats()
 			DCS_SelectStatsCheck:SetChecked(false)
 			private.db.dcsdefaults.dejacharacterstatsSelectStatsChecked.SelectStatsSetChecked = false
@@ -623,7 +681,7 @@ private.defaults.dcsdefaults.dejacharacterstatsSelectedStats = {
 	MANAREGEN = false,ENERGY_REGEN = false,RUNE_REGEN = false,FOCUS_REGEN = false,MOVESPEED = true,
 	CRITCHANCE = true,HASTE = true,VERSATILITY = true,MASTERY = true,
 	LIFESTEAL = true,AVOIDANCE = true,
-	DODGE = false,PARRY = false,BLOCK = false,DURABILITY = false,REPAIRTOTAL = false,
+	DODGE = false,PARRY = false,BLOCK = false,DURABILITY = true,REPAIRTOTAL = true,
 }
 
 PAPERDOLL_AttributesIndexDefaultStats ={
@@ -645,8 +703,8 @@ local DCS_SelectStatsCheck = CreateFrame("CheckButton", "DCS_SelectStatsCheck", 
 	DCS_SelectStatsCheck:ClearAllPoints()
 	DCS_SelectStatsCheck:SetPoint("TOP", 0, -60)
 	DCS_SelectStatsCheck:SetScale(1.25)
-	DCS_SelectStatsCheck.tooltipText = 'Select which stats to display. Use Shift-scroll to snap to the top or bottom.' --Creates a tooltip on mouseover.
-	_G[DCS_SelectStatsCheck:GetName() .. "Text"]:SetText("Select-A-Stat™")
+	DCS_SelectStatsCheck.tooltipText = L['Select which stats to display. Use Shift-scroll to snap to the top or bottom.'] --Creates a tooltip on mouseover.
+	_G[DCS_SelectStatsCheck:GetName() .. "Text"]:SetText(L["Select-A-Stat™"])
 	
 	DCS_SelectStatsCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
@@ -666,6 +724,7 @@ local DCS_SelectStatsCheck = CreateFrame("CheckButton", "DCS_SelectStatsCheck", 
 
 	DCS_SelectStatsCheck:SetScript("OnClick", function(self, button, down)
 		if self:GetChecked(true) then
+			private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 142
 			DCS_SelectStatsReInit()
 			DCS_ShowAllStatsCheck:SetChecked(false)
 			private.db.dcsdefaults.dejacharacterstatsShowAllStatsChecked.ShowAllStatsSetChecked = false
@@ -689,14 +748,25 @@ local yAttributes
 for k, v in ipairs(PAPERDOLL_AttributesIndexDefaultStats) do
 	local strreplace = v:gsub("%_", " ")
 	local str = strreplace:gsub("(%a)([%w_']*)", tchelper)
-	if v == "ALTERNATEMANA" then str = "Druid Mana" end
-	if v == "ATTACK_DAMAGE" then str = "Damage" end
-	if v == "ATTACK_AP" then str = "Attack Power" end
-	if v == "ATTACK_ATTACKSPEED" then str = "Attack Speed" end
-	if v == "SPELLPOWER" then str = "Spell Power" end
-	if v == "MANAREGEN" then str = "Mana Regen" end
-	if v == "MOVESPEED" then str = "Movement Speed" end
-	if v == "REPAIRTOTAL" then str = "Repair Total" end
+	if v == "HEALTH" then str = L["Health"] end
+	if v == "POWER" then str = L["Power"] end
+	if v == "ALTERNATEMANA" then str = L["Druid Mana"] end
+	if v == "ARMOR" then str = L["Armor"] end
+	if v == "STRENGTH" then str = L["Strength"] end
+	if v == "AGILITY" then str = L["Agility"] end
+	if v == "INTELLECT" then str = L["Intellect"] end
+	if v == "STAMINA" then str = L["Stamina"] end
+	if v == "ATTACK_DAMAGE" then str = L["Damage"] end
+	if v == "ATTACK_AP" then str = L["Attack Power"] end
+	if v == "ATTACK_ATTACKSPEED" then str = L["Attack Speed"] end
+	if v == "SPELLPOWER" then str = L["Spell Power"] end
+	if v == "MANAREGEN" then str = L["Mana Regen"] end
+	if v == "ENERGY_REGEN" then str = L["Energy Regen"] end
+	if v == "RUNE_REGEN" then str = L["Rune Regen"] end
+	if v == "FOCUS_REGEN" then str = L["Focus Regen"] end
+	if v == "MOVESPEED" then str = L["Movement Speed"] end
+	if v == "DURABILITY" then str = L["Durability"] end
+	if v == "REPAIRTOTAL" then str = L["Repair Total"] end
 
 	if yAttributes == nil then
 		yAttributes = 0
@@ -747,9 +817,16 @@ local yEnhancements
 for k, v in ipairs(PAPERDOLL_EnhancementsIndexDefaultStats) do
 	local strreplace = v:gsub("%_", " ")
 	local str = strreplace:gsub("(%a)([%w_']*)", tchelper)
-	if v == "CRITCHANCE" then str = "Critical Strike" end
-	if v == "LIFESTEAL" then str = "Leech" end
-	
+	if v == "CRITCHANCE" then str = L["Critical Strike"] end
+	if v == "HASTE" then str = L["Haste"] end
+	if v == "VERSATILITY" then str = L["Versatility"] end
+	if v == "MASTERY" then str = L["Mastery"] end
+	if v == "LIFESTEAL" then str = L["Leech"] end
+	if v == "AVOIDANCE" then str = L["Avoidance"] end
+	if v == "DODGE" then str = L["Dodge"] end
+	if v == "PARRY" then str = L["Parry"] end
+	if v == "BLOCK" then str = L["Block"] end
+
 	if yEnhancements == nil then
 		yEnhancements = 0
 	else
@@ -798,36 +875,36 @@ end
 -------------------------------
 -- DCS Durability Stat Check --
 -------------------------------
-local _, private = ...
-private.defaults.dcsdefaults.dejacharacterstatsDurabilityStatChecked = {
-	DurabilityStatSetChecked = false,
+local _, gdbprivate = ...
+gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsDurabilityStatChecked = {
+	DurabilityStatSetChecked = true,
 }	
 
 local DCS_DurabilityStatCheck = CreateFrame("CheckButton", "DCS_DurabilityStatCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_DurabilityStatCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_DurabilityStatCheck:ClearAllPoints()
-	DCS_DurabilityStatCheck:SetPoint("TOPLEFT", 25, -85)
+	DCS_DurabilityStatCheck:SetPoint("TOPLEFT", 25, -95)
 	DCS_DurabilityStatCheck:SetScale(1.25)
-	DCS_DurabilityStatCheck.tooltipText = 'Displays the average Durability percentage for equipped items in the stat frame.' --Creates a tooltip on mouseover.
-	_G[DCS_DurabilityStatCheck:GetName() .. "Text"]:SetText('Durability')
+	DCS_DurabilityStatCheck.tooltipText = L['Displays the average Durability percentage for equipped items in the stat frame.'] --Creates a tooltip on mouseover.
+	_G[DCS_DurabilityStatCheck:GetName() .. "Text"]:SetText(L['Durability '])
 
 	DCS_DurabilityStatCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-			local checked = private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked
+			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked
 			self:SetChecked(checked)
 			if self:GetChecked(true) then
-				private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = true
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = true
 			elseif not self:GetChecked(true) then
-				private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = false
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = false
 			end
 		end
 	end)
 
 	DCS_DurabilityStatCheck:SetScript("OnClick", function(self, button, down)
 		if self:GetChecked(true) then
-			private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = true
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = true
 		elseif not self:GetChecked(true) then
-			private.db.dcsdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = false
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsDurabilityStatChecked.DurabilityStatSetChecked = false
 		end
 		DCS_CheckShowSelectChecks()
 	end)
@@ -835,36 +912,36 @@ local DCS_DurabilityStatCheck = CreateFrame("CheckButton", "DCS_DurabilityStatCh
 ---------------------------------
 -- DCS Repair Total Stat Check --
 ---------------------------------
-local _, private = ...
-private.defaults.dcsdefaults.dejacharacterstatsRepairTotalStatChecked = {
-	RepairTotalStatSetChecked = false,
+local _, gdbprivate = ...
+gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsRepairTotalStatChecked = {
+	RepairTotalStatSetChecked = true,
 }	
 
 local DCS_RepairTotalStatCheck = CreateFrame("CheckButton", "DCS_RepairTotalStatCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_RepairTotalStatCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_RepairTotalStatCheck:ClearAllPoints()
-	DCS_RepairTotalStatCheck:SetPoint("TOPLEFT", 25, -110)
+	DCS_RepairTotalStatCheck:SetPoint("TOPLEFT", 25, -120)
 	DCS_RepairTotalStatCheck:SetScale(1.25)
-	DCS_RepairTotalStatCheck.tooltipText = 'Displays the Repair Total before discounts for equipped items in the stat frame.' --Creates a tooltip on mouseover.
-	_G[DCS_RepairTotalStatCheck:GetName() .. "Text"]:SetText('Repair Total')
+	DCS_RepairTotalStatCheck.tooltipText = L['Displays the Repair Total before discounts for equipped items in the stat frame.'] --Creates a tooltip on mouseover.
+	_G[DCS_RepairTotalStatCheck:GetName() .. "Text"]:SetText(L['Repair Total '])
 
 	DCS_RepairTotalStatCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-			local checked = private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked
+			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked
 			self:SetChecked(checked)
 			if self:GetChecked(true) then
-				private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = true
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = true
 			elseif not self:GetChecked(true) then
-				private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = false
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = false
 			end
 		end
 	end)
 
 	DCS_RepairTotalStatCheck:SetScript("OnClick", function(self, button, down)
 		if self:GetChecked(true) then
-			private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = true
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = true
 		elseif not self:GetChecked(true) then
-			private.db.dcsdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = false
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsRepairTotalStatChecked.RepairTotalStatSetChecked = false
 		end
 		DCS_CheckShowSelectChecks()
 	end)
@@ -898,13 +975,13 @@ end
 -- Movement Speed Mouseover --
 function MovementSpeed_OnEnter(statFrame)
 	GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
-	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MOVEMENT_SPEED).." "..format("%d%%", statFrame.speed+0.5)..FONT_COLOR_CODE_CLOSE);
+	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, L[STAT_MOVEMENT_SPEED]).." "..format("%d%%", statFrame.speed+0.5)..FONT_COLOR_CODE_CLOSE);
 
-	GameTooltip:AddLine(format(STAT_MOVEMENT_GROUND_TOOLTIP, statFrame.runSpeed+0.5));
+	GameTooltip:AddLine(L[format(STAT_MOVEMENT_GROUND_TOOLTIP, statFrame.runSpeed+0.5)]);
 	if (statFrame.unit ~= "pet") then
-		GameTooltip:AddLine(format(STAT_MOVEMENT_FLIGHT_TOOLTIP, statFrame.flightSpeed+0.5));
+		GameTooltip:AddLine(L[format(STAT_MOVEMENT_FLIGHT_TOOLTIP, statFrame.flightSpeed+0.5)]);
 	end
-	GameTooltip:AddLine(format(STAT_MOVEMENT_SWIM_TOOLTIP, statFrame.swimSpeed+0.5));
+	GameTooltip:AddLine(L[format(STAT_MOVEMENT_SWIM_TOOLTIP, statFrame.swimSpeed+0.5)]);
 
 	GameTooltip:Show();
 end
@@ -918,6 +995,8 @@ function PaperDollFrame_SetMovementSpeed(statFrame, unit)
 	statFrame.onEnterFunc = MovementSpeed_OnEnter;
 	-- TODO: Fix if we decide to show movement speed
 	-- statFrame:SetScript("OnUpdate", MovementSpeed_OnUpdate);
+
+	PaperDollFrame_SetLabelAndText(statFrame, L[STAT_MOVEMENT_SPEED], format("%d%%", statFrame.speed+0.5), false, statFrame.speed+0.5);
 
 	statFrame:Show();
 end

@@ -17,7 +17,7 @@
   -----------------------------
   -- FUNCTIONS
   -----------------------------
-
+		
   --fontstring func
   lib.gen_fontstring = function(f, name, size, outline)
     local fs = f:CreateFontString(nil, "OVERLAY")

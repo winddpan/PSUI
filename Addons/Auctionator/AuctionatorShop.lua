@@ -606,7 +606,7 @@ end
 
 function Atr_MngSLists_OnClick ()
 
-  InterfaceOptionsFrame_OpenToCategory ("购物清单");
+  InterfaceOptionsFrame_OpenToCategory ("Shopping Lists");
 
   local slist
 

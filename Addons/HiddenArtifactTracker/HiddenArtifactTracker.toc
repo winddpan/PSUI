@@ -1,4 +1,5 @@
 ## Interface: 70100
 ## Title: Hidden Artifact Tracker
-## Title-zhCN: 神器隐藏外观追踪
+## SavedVariables: HiddenArtifactTracker
+HiddenArtifactTracker_artifacts.lua
 HiddenArtifactTracker.lua

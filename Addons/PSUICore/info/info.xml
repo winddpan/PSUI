@@ -1,21 +1,21 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="info\cfg.lua"/>
-	<Script file="info\init.lua"/>	
+	<Script file="cfg.lua"/>
+	<Script file="init.lua"/>	
 	
-	<Script file="info\locale\english.lua"/>
-	<Script file="info\locale\chinese.lua"/>
-	<Script file="info\locale\taiwan.lua"/>
+	<Script file="locale\english.lua"/>
+	<Script file="locale\chinese.lua"/>
+	<Script file="locale\taiwan.lua"/>
 	
-	<Script file="info\modules\Bags.lua"/>
-	<Script file="info\modules\Coords.lua"/>
-	<Script file="info\modules\Durability.lua"/>
-	<Script file="info\modules\Friends.lua"/>
-	<Script file="info\modules\Gold.lua"/>
-	<Script file="info\modules\Guild.lua"/>
-	<Script file="info\modules\Mail.lua"/>
-	<Script file="info\modules\Memory.lua"/>
-	<Script file="info\modules\Positions.lua"/>
-	<Script file="info\modules\Spec.lua"/>
-	<Script file="info\modules\System.lua"/>
-	<Script file="info\modules\Time.lua"/>
+	<Script file="modules\Bags.lua"/>
+	<Script file="modules\Coords.lua"/>
+	<Script file="modules\Durability.lua"/>
+	<Script file="modules\Friends.lua"/>
+	<Script file="modules\Gold.lua"/>
+	<Script file="modules\Guild.lua"/>
+	<Script file="modules\Mail.lua"/>
+	<Script file="modules\Memory.lua"/>
+	<Script file="modules\Positions.lua"/>
+	<Script file="modules\Spec.lua"/>
+	<Script file="modules\System.lua"/>
+	<Script file="modules\Time.lua"/>
 </Ui>

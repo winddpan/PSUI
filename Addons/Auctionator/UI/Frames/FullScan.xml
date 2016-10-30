@@ -47,7 +47,7 @@
         </Scripts>
       </Button>
 
-      <Button name="Atr_FullScanStartButton" inherits="UIPanelButtonTemplate" text="开始扫描">
+      <Button name="Atr_FullScanStartButton" inherits="UIPanelButtonTemplate" text="Start Scanning">
         <Size><AbsDimension x="120" y="22"/>  </Size>
         <Anchors><Anchor point="RIGHT" relativeTo="Atr_FullScanDone" relativePoint="LEFT"><Offset><AbsDimension x="-4" y="0"/></Offset></Anchor></Anchors>
         <Scripts>
@@ -76,7 +76,7 @@
 
         <Layers>
           <Layer level="ARTWORK">
-            <FontString name="Atr_FSR_scanned_text" inherits="GameFontNormal" text="扫描物品总数:">
+            <FontString name="Atr_FSR_scanned_text" inherits="GameFontNormal" text="Auctions scanned:">
               <Anchors><Anchor point="TOPRIGHT"><Offset x="-170" y="-40"/></Anchor></Anchors>
             </FontString>
 
@@ -84,7 +84,7 @@
               <Anchors><Anchor point="LEFT" relativeTo="Atr_FSR_scanned_text" relativePoint="RIGHT"><Offset x="15"/></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_FSR_added_text" inherits="GameFontNormal" text="新增物品:">
+            <FontString name="Atr_FSR_added_text" inherits="GameFontNormal" text="Items added:">
               <Anchors><Anchor point="TOPRIGHT"><Offset x="-170" y="-65"/></Anchor></Anchors>
             </FontString>
 
@@ -92,7 +92,7 @@
               <Anchors><Anchor point="LEFT" relativeTo="Atr_FSR_added_text" relativePoint="RIGHT"><Offset x="15"/></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_FSR_updated_text" inherits="GameFontNormal" text="更新物品:">
+            <FontString name="Atr_FSR_updated_text" inherits="GameFontNormal" text="Items updated:">
               <Anchors><Anchor point="TOPRIGHT"><Offset x="-170" y="-90"/></Anchor></Anchors>
             </FontString>
 
@@ -100,7 +100,7 @@
               <Anchors><Anchor point="LEFT" relativeTo="Atr_FSR_updated_text" relativePoint="RIGHT"><Offset x="15"/></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_FSR_ignored_text" inherits="GameFontNormal" text="忽略物品:">
+            <FontString name="Atr_FSR_ignored_text" inherits="GameFontNormal" text="Items ignored:">
               <Anchors><Anchor point="TOPRIGHT"><Offset x="-170" y="-115"/></Anchor></Anchors>
             </FontString>
 

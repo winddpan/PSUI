@@ -1,10 +1,17 @@
+local ADDON_NAME, namespace = ... 	--localization
+local L = namespace.L 				--localization
+
 -- Scroll Frame	
 
 -- Scrollframe Parent Frame
-	local DCS_ScrollframeParentFrame = CreateFrame("Frame", nil, CharacterFrameInsetRight)
+	local DCS_ScrollframeParentFrame = CreateFrame("Frame", "DCS_ScrollframeParentFrame", CharacterFrameInsetRight)
 		DCS_ScrollframeParentFrame:SetSize(198, 352)
 		DCS_ScrollframeParentFrame:SetPoint("TOP", CharacterFrameInsetRight, "TOP", 0, -4)
 
+local _, private = ...
+private.defaults.dcsdefaults.dejacharacterstatsScrollbarMax = {
+	DCS_ScrollbarMax = 34,
+}	
  -- Scrollframe 
 	local DCS_ScrollFrame = CreateFrame("ScrollFrame", nil, DCS_ScrollframeParentFrame)
 		DCS_ScrollFrame:SetPoint("TOP")
@@ -15,56 +22,81 @@
 --		DCS_scrollframetexture:SetColorTexture(.5,.5,.5,1) 
 
 -- DCS_Scrollbar 
-	local DCS_Scrollbar = CreateFrame("Slider", nil, DCS_ScrollFrame, "UIPanelScrollBarTemplate") 
+	local DCS_Scrollbar = CreateFrame("Slider", "DCS_Scrollbar", DCS_ScrollFrame, "UIPanelScrollBarTemplate") 
+		DCS_Scrollbar:RegisterEvent("PLAYER_LOGIN")
 		DCS_Scrollbar:SetPoint("TOPLEFT", CharacterFrameInsetRight, "TOPRIGHT", -18, -20) 
 		DCS_Scrollbar:SetPoint("BOTTOMLEFT", CharacterFrameInsetRight, "BOTTOMRIGHT", -18, 18) 
-		DCS_Scrollbar:SetMinMaxValues(1, 2) 
 		DCS_Scrollbar:SetValueStep(1) 
 		DCS_Scrollbar.scrollStep = 1
 		DCS_Scrollbar:SetValue(0) 
 		DCS_Scrollbar:SetWidth(16) 
-		DCS_Scrollbar:SetScript("OnValueChanged", function (self, value) 
-			self:GetParent():SetVerticalScroll(value) 
-		end) 
 --		DCS_Scrollbar:Hide() 
 
- -- Scrollbar Check
+	DCS_Scrollbar:SetScript("OnEvent", function(self, event, arg1)
+		if event == "PLAYER_LOGIN" then
+		local cur_val = self:GetValue()
+		local min_val, max_val = DCS_Scrollbar:GetMinMaxValues()
+		DCS_Scrollbar:SetMinMaxValues(cur_val, private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax)
+		if DCS_SelectStatsCheck:GetChecked(true) then
+				private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 142
+			elseif not DCS_SelectStatsCheck:GetChecked(true) then
+				if DCS_ShowAllStatsCheck:GetChecked(true) then
+					private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 128
+				elseif not DCS_ShowAllStatsCheck:GetChecked(true) then
+					private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax = 34
+				end
+			end
+			DCS_Scrollbar:UnregisterAllEvents();
+		end
+	end)
+	
+	DCS_Scrollbar:SetScript("OnValueChanged", function (self, value) 
+		local cur_val = self:GetValue()
+		local min_val, max_val = DCS_Scrollbar:GetMinMaxValues()
+		
+		DCS_Scrollbar:SetMinMaxValues(cur_val, private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax)
 
-	local _, private = ...
-	private.defaults.dcsdefaults.dejacharacterstatsScrollbarChecked = {
+		self:GetParent():SetVerticalScroll(value) 
+	end) 
+
+-- Scrollbar Check
+
+	local _, gdbprivate = ...
+	gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsScrollbarChecked = {
 		ScrollbarSetChecked = false,
 	}	
 	
 local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ScrollbarCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ScrollbarCheck:ClearAllPoints()
-	DCS_ScrollbarCheck:SetPoint("LEFT", 25, -100)
+	DCS_ScrollbarCheck:SetPoint("LEFT", 25, -175)
 	DCS_ScrollbarCheck:SetScale(1.25)
-	DCS_ScrollbarCheck.tooltipText = 'Displays the DCS scrollbar.' --Creates a tooltip on mouseover.
-	_G[DCS_ScrollbarCheck:GetName() .. "Text"]:SetText("Scrollbar")
+	DCS_ScrollbarCheck.tooltipText = L['Displays the DCS scrollbar.'] --Creates a tooltip on mouseover.
+	_G[DCS_ScrollbarCheck:GetName() .. "Text"]:SetText(L["Scrollbar"])
 	
 	DCS_ScrollbarCheck:SetScript("OnEvent", function(self, event, arg1)
 		if event == "PLAYER_LOGIN" then
-		local checked = private.db.dcsdefaults.dejacharacterstatsScrollbarChecked
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 			self:SetChecked(checked.ScrollbarSetChecked)
 			if self:GetChecked(true) then
 				DCS_Scrollbar:Show() 
-				private.db.dcsdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
 			else
 				DCS_Scrollbar:Hide() 
-				private.db.dcsdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
+				gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
 			end
 		end
+		DCS_ScrollbarCheck:UnregisterAllEvents();
 	end)
 
 	DCS_ScrollbarCheck:SetScript("OnClick", function(self,event,arg1) 
-		local checked = private.db.dcsdefaults.dejacharacterstatsScrollbarChecked
+		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked
 		if self:GetChecked(true) then
 			DCS_Scrollbar:Show() 
-			private.db.dcsdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = true
 		else
 			DCS_Scrollbar:Hide() 
-			private.db.dcsdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
+			gdbprivate.gdb.gdbdefaults.dejacharacterstatsScrollbarChecked.ScrollbarSetChecked = false
 		end
 	end)
  
@@ -91,23 +123,16 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 -- Enable mousewheel scrolling
 	DCS_ScrollFrame:EnableMouseWheel(true)
 	DCS_ScrollFrame:SetScript("OnMouseWheel", function(self, delta)
-		if DCS_ShowAllStatsCheck:GetChecked(true) then
-			DCS_Scrollbar:SetMinMaxValues(1, 128) 
-		elseif DCS_SelectStatsCheck:GetChecked(true) then
-			DCS_Scrollbar:SetMinMaxValues(1, 142) 
-		elseif not DCS_ShowAllStatsCheck:GetChecked(true) then
-			DCS_Scrollbar:SetMinMaxValues(1, 34) 
-		end
-			
+		DCS_Scrollbar:SetMinMaxValues(0, private.db.dcsdefaults.dejacharacterstatsScrollbarMax.DCS_ScrollbarMax)
 		local cur_val = DCS_Scrollbar:GetValue()
 		local min_val, max_val = DCS_Scrollbar:GetMinMaxValues()
 
 		if delta < 0 and cur_val < max_val then
 			if IsShiftKeyDown() then
-				if DCS_ShowAllStatsCheck:GetChecked(true) then
-					DCS_Scrollbar:SetValue(128)
-				elseif DCS_SelectStatsCheck:GetChecked(true) then
+				if DCS_SelectStatsCheck:GetChecked(true) then
 					DCS_Scrollbar:SetValue(142)
+				elseif DCS_ShowAllStatsCheck:GetChecked(true) then
+					DCS_Scrollbar:SetValue(128)
 				elseif not DCS_ShowAllStatsCheck:GetChecked(true) then
 					DCS_Scrollbar:SetValue(34)
 				end
@@ -184,5 +209,9 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 	end)
 	
 	PaperDollSidebarTab2:HookScript("OnClick", function(self,event) 
+		DCS_ScrollframeParentFrame:Hide()
+	end)
+	
+	PaperDollSidebarTab3:HookScript("OnClick", function(self,event) 
 		DCS_ScrollframeParentFrame:Hide()
 	end)

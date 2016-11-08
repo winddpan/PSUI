@@ -24,6 +24,7 @@ local arti_names = {
 	["Sheilun, Staff of the Mists"]=43662,
 	["Fists of the Heavens"]=43663,
 	["The Silver Hand"]=43664,
+		["Tome of the Silver Hand"]=43664,
 	["Truthguard"]=43665,
 		["Oathseeker"]=43665,
 	["Ashbringer"]=43666,
@@ -50,6 +51,64 @@ local arti_names = {
 		["Scaleshard"]=43681
 }
 
+local artNumbers = {
+	[128402] = "Maw of the Damned",
+	[128292] = "Blades of the Fallen Prince",
+	[128293] = "Blades of the Fallen Prince",
+	[128403] = "Apocalypse",
+	[127829] = "Twinblades of the Deceiver",
+	[127830] = "Twinblades of the Deceiver",
+	[128832] = "Aldrachi Warblades",
+	[128831] = "Aldrachi Warblades",
+	[128858] = "Scythe of Elune",
+	[128859] = "Fangs of Ashamane",
+	[128860] = "Fangs of Ashamane",
+	[128821] = "Claws of Ursoc",
+	[128822] = "Claws of Ursoc",
+	[128306] = "G'Hanir, the Mother Tree",
+	[128861] = "Titanstrike",
+	[128826] = "Thas'dorah, Legacy of the Windrunners",
+	[128808] = "Talonclaw",
+	[127857] = "Aluneth",
+	[128820] = "Felo'melorn",
+	[133959] = "Heart of the Phoenix",
+	[128862] = "Ebonchill",
+	[128938] = "Fu Zan, the Wanderer's Companion",
+	[128937] = "Sheilun, Staff of the Mists",
+	[128940] = "Fists of the Heavens",
+	[133948] = "Fists of the Heavens",
+	[128823] = "The Silver Hand", 
+	[128824] = "Tome of the Silver Hand",
+	[128866] = "Truthguard",
+	[128867] = "Oathseeker",
+	[120978] = "Ashbringer",
+	[128868] = "Light's Wrath",
+	[128825] = "T'uure, Beacon of the Naaru",
+	[128827] = "Xal'atath, Blade of the Black Empire",
+	[133958] = "Secrets of the Void",
+	[128870] = "The Kingslayers",
+	[128869] = "The Kingslayers",
+	[128872] = "The Dreadblades",
+	[134552] = "The Dreadblades",
+	[128476] = "Fangs of the Devourer",
+	[128479] = "Fangs of the Devourer",
+	[128935] = "The Fist of Ra-den",
+	[128936] = "The Highkeeper's Ward",
+	[128819] = "Doomhammer",
+	[128873] = "Fury of the Stonemother",
+	[128911] = "Sharas'dal, Scepter of Tides",
+	[128934] = "Shield of the Sea Queen",
+	[128942] = "Ulthalesh, the Deadwind Harvester",
+	[128943] = "Skull of the Man'ari",
+	[137246] = "Spine of Thal'kiel",
+	[128941] = "Scepter of Sargeras",
+	[128910] = "Strom'kar, the Warbreaker",
+	[128908] = "Warswords of the Valarjar",
+	[134553] = "Warswords of the Valarjar",
+	[128289] = "Scale of the Earth-Warder",
+	[128288] = "Scaleshard"
+	}
+
 SLASH_HIDDENAT1 = '/hat'
 function SlashCmdList.HIDDENAT(msg, editbox)
 	if msg=="on" then
@@ -75,6 +134,20 @@ GameTooltip:SetScript("OnTooltipSetItem",
 
 		-- artifact specific additional text
 		local name = GameTooltip:GetItem()
+
+		if GetLocale() ~= "enUS" and GetLocale() ~= "enGB" then --have to do longer item matching for non-english clients
+			
+			for key,value in pairs(artNumbers) do
+				local localName = GetItemInfo(key)
+				if localName == name then
+					name = value
+					break
+				end
+			end
+
+		end
+	
+
 		if HiddenArtifactTracker.active and arti_names[name] then
 
 			-- Advanced tracking for unlocking base appearance (only for supported artifacts [WIP])

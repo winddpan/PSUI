@@ -529,17 +529,6 @@ Filger_Spells = {
 			{spellID = 137573, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
-			Name = "innerCooldown",
-			Direction = "LEFT",
-			Interval = 0,
-			Mode = "ICON",
-			IconSize = 40,
-			Position = {unpack(Filger_Settings.innner_cooldown)},
-				{spellID = 138699, filter = "ICD", trigger = "BUFF", duration = 105},
-				--既定天命
-				{spellID = 146308, filter = "ICD", trigger = "BUFF", duration = 115},
-		},
-		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
 			Mode = "ICON",
@@ -557,6 +546,10 @@ Filger_Spells = {
 			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			-- SP
+			{spellID = 214802, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 214807, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 214803, unitID = "player", caster = "player", filter = "BUFF"},
+
 			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},

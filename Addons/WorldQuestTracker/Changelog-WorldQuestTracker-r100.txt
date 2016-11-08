@@ -1,6 +1,14 @@
+2016-11-06  Tercio  <Tercio>
+
+[78d169328545] [tip]
+* WorldQuestTracker.lua:
+
+- hardcoded a framework function to avoid issues with old non updated addon using very old framework versions.
+
+
 2016-10-25  Tercio  <Tercio>
 
-[8dd5eb0d5401] [tip]
+[8dd5eb0d5401]
 * WorldQuestTracker.lua, WorldQuestTracker.toc, libs/DF/fw.lua, libs/DF/panel.lua:
 
 - toc 7.1.0
@@ -227,12 +235,5 @@
 
 - libwindow warning if not found.
 - fixed the header not showing on the custom positioning.
-
-
-[c616d8f1b719]
-* WorldQuestTracker.lua:
-
-- fixed the problem with the fly map icons not hiding all textures.
-- added a tutorial bubble pointing out the options on the fly map.
 
 

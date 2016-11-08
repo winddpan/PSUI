@@ -1,4 +1,4 @@
-## Interface: 70100
+﻿## Interface: 70100
 ## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
@@ -8,7 +8,7 @@
 
 info\info.xml
 lib\libs.xml
-modules\Cooldown\Cooldown.xml
+modules\CC\cc.xml
 
 core.lua
 slashcmd.lua

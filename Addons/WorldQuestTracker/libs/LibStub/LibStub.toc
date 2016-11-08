@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 40200
 ## Title: Lib: LibStub
 ## Notes: Universal Library Stub
 ## Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel
@@ -9,7 +9,7 @@
 ## X-Curse-Project-Name: LibStub
 ## X-Curse-Project-ID: libstub
 ## X-Curse-Repository-ID: wow/libstub/mainline
-## X-Curse-Packaged-Version: r99
+## X-Curse-Packaged-Version: r100
 ## X-Curse-Project-Name: World Quest Tracker
 ## X-Curse-Project-ID: world-quest-tracker
 ## X-Curse-Repository-ID: wow/world-quest-tracker/mainline

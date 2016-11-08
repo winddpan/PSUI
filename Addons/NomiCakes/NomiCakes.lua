@@ -446,7 +446,7 @@ do -- Experimental work order stuff
 		if event == 'SHIPMENT_CRAFTER_OPENED' then
 			if ... == 122 then -- we're talking to nomi
 				ShipmentOpenTime = time()
-				NumWorkOrdersOrdered, WorkOrderType = 0
+				NumWorkOrdersOrdered, WorkOrderType = 0, nil
 				self:RegisterEvent('SHIPMENT_UPDATE')
 				self:RegisterEvent('SHIPMENT_CRAFTER_CLOSED')
 				self:RegisterEvent('SHIPMENT_CRAFTER_INFO')
@@ -469,24 +469,35 @@ do -- Experimental work order stuff
 					-- "name" is not guaranteed to exist, if the item info hasn't been cached yet it will return nil, so don't bother recording it
 					-- we might need to manually cache the names for all of our items using GET_ITEM_INFO_UPDATE so we can add them to the tooltip later
 					local name, texture, _, itemID, _, startDelta, timeRemaining = C_Garrison.GetPendingShipmentInfo(i)
-					local orderPlaced = now - startDelta -- time the work order was placed, not when the work order will start
-					local endTime = now + timeRemaining
-					-- local startTime = endTime - 14400 -- start time is end time of previous recipe, or endTime - 14400, which makes recording it kind of pointless
-					WorkOrders[i] = {WorkOrderItemIDs[itemID], orderPlaced, endTime}
+					local ingredientItemID = itemID and WorkOrderItemIDs[itemID]
+					if ingredientItemID then
+						local orderPlaced = now - startDelta -- time the work order was placed, not when the work order will start
+						local endTime = now + timeRemaining
+						-- local startTime = endTime - 14400 -- start time is end time of previous recipe, or endTime - 14400, which makes recording it kind of pointless
+						WorkOrders[i] = {ingredientItemID, orderPlaced, endTime}
+					else
+						-- we're missing information for whatever this is supposed to be?
+					end
 				end
 			end
 		elseif event == 'SHIPMENT_UPDATE' then
 			if ... then -- this will fire for each separate shipment if you queue multiple work orders at once
 				local name, texture, quality, itemID, followerID, duration = C_Garrison.GetShipmentItemInfo()
-				-- if itemID and WorkOrderItemIDs[itemID] then -- todo: sanity check if all else fails, but I would prefer this error out if something isn't working as expected
-				local numWorkOrders = #WorkOrders
-				local orderPlaced = time()
-				local startTime = numWorkOrders > 0 and WorkOrders[numWorkOrders][3] or orderPlaced
-				local endTime = startTime + duration
-				WorkOrders[ #WorkOrders + 1 ] = {WorkOrderItemIDs[itemID], orderPlaced, endTime}
-				WorkOrderType = WorkOrderItemIDs[itemID]
-				NumWorkOrdersOrdered = NumWorkOrdersOrdered + 1
-				-- print(GetTime(), 'SHIPMENT_UPDATE', name, itemID, duration, 'started')
+				local ingredientItemID = itemID and WorkOrderItemIDs[itemID]
+				if ingredientItemID then
+					-- if itemID and WorkOrderItemIDs[itemID] then -- todo: sanity check if all else fails, but I would prefer this error out if something isn't working as expected
+					local numWorkOrders = #WorkOrders
+					local orderPlaced = time()
+					local startTime = numWorkOrders > 0 and WorkOrders[numWorkOrders][3] or orderPlaced
+					local endTime = startTime + duration
+					WorkOrders[ #WorkOrders + 1 ] = {ingredientItemID, orderPlaced, endTime}
+					WorkOrderType = ingredientItemID
+					NumWorkOrdersOrdered = NumWorkOrdersOrdered + 1
+					-- print(GetTime(), 'SHIPMENT_UPDATE', name, itemID, duration, 'started')
+				else
+					-- missing ingredient item information for this shipment somehow
+					--print('NomiCakes missing ingredient information for itemID', itemID)
+				end
 			end
 		elseif event == 'SHIPMENT_CRAFTER_CLOSED' then -- if this event doesn't fire for some reason, we won't unregister events properly and will bug the next time the player talks to a work order npc
 			-- output what work orders were placed when the window is closed
@@ -503,6 +514,7 @@ do -- Experimental work order stuff
 					name = format('|T%d:16|t %s', ingredientIcon, name)
 				end
 				print(format('%d |4Work Order:Work Orders; placed for %s', NumWorkOrdersOrdered, name))
+				NumWorkOrdersOrdered, WorkOrderType = 0, nil
 			end
 		elseif event == 'ADDON_LOADED' and ... == addonName then
 			self:UnregisterEvent('ADDON_LOADED')

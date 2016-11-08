@@ -62,7 +62,7 @@ HiddenArtifactTrackerFuncs["Fangs of Ashamane"] =
 --guardian
 HiddenArtifactTrackerFuncs["Claws of Ursoc"] = 
 	function()
-		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Ursoc", 2) 
+		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Ursoc", 1) 
 	end
 
 --marksmanship
@@ -74,7 +74,7 @@ HiddenArtifactTrackerFuncs["Thas'dorah, Legacy of the Windrunners"] =
 --survival
 HiddenArtifactTrackerFuncs["Talonclaw"] =
 	function()
-		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Ursoc", 2) 
+		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Ursoc", 1) 
 	end
 
 --arcane
@@ -107,7 +107,7 @@ HiddenArtifactTrackerFuncs["Ebonchill"] =
 --mistweaver
 HiddenArtifactTrackerFuncs["Sheilun, Staff of the Mists"] = 
 	function()
-		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Dragons of Nightmare", 4) 
+		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Dragons of Nightmare", 2) 
 	end
 
 --holy (paladin)
@@ -115,6 +115,7 @@ HiddenArtifactTrackerFuncs["The Silver Hand"] =
 	function()
 		HiddenArtifactTrackerFuncs.getAK(5)
 	end
+HiddenArtifactTrackerFuncs["Tome of the Silver Hand"] = HiddenArtifactTrackerFuncs["The Silver Hand"]
 
 --retribution
 HiddenArtifactTrackerFuncs["Ashbringer"] =
@@ -152,7 +153,7 @@ HiddenArtifactTrackerFuncs["T'uure, Beacon of the Naaru"] =
 --shadow
 HiddenArtifactTrackerFuncs["Xal'atath, Blade of the Black Empire"] = 
 	function()
-		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1288, "Il'gynoth, The Heart of Corruption", 3) 
+		HiddenArtifactTrackerFuncs.BossLockouts("The Emerald Nightmare", 1287, "Il'gynoth, The Heart of Corruption", 2) 
 	end
 HiddenArtifactTrackerFuncs["Secrets of the Void"] = HiddenArtifactTrackerFuncs["Xal'atath, Blade of the Black Empire"]	
 

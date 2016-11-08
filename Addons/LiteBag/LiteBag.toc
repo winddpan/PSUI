@@ -1,10 +1,10 @@
 ## Interface: 70100
 ## Title: LiteBag
-## Version: 7.1.2
+## Version: 7.1.4
 ## Author: Xodiv of Proudmoore
 ## Email: mib@post.com
 ## SavedVariablesPerCharacter: LiteBag_OptionsDB
-## X-Curse-Packaged-Version: 7.1.2
+## X-Curse-Packaged-Version: 7.1.4
 ## X-Curse-Project-Name: LiteBag
 ## X-Curse-Project-ID: litebag
 ## X-Curse-Repository-ID: wow/litebag/mainline

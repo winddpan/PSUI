@@ -13,7 +13,11 @@ local BANK_BAG_IDS = { -1, 5, 6, 7, 8, 9, 10, 11 }
 
 function LiteBagBank_OnLoad(self)
     LiteBagFrame_OnLoad(self)
-    self:RegisterEvent("PLAYER_LOGIN")
+
+    local placer = self:GetParent()
+    self.CloseButton:SetScript("OnClick", function () HideUIPanel(placer) end)
+
+    self:RegisterEvent("ADDON_LOADED")
 end
 
 function LiteBagBank_Initialize(self)
@@ -24,9 +28,6 @@ function LiteBagBank_Initialize(self)
     panel.defaultColumns = 16
     panel.canResize = true
     LiteBagFrame_AddPanel(self, panel, BankFrameTab1:GetText())
-
-    -- Update sizes when buying a new bank slot
-    hooksecurefunc('PurchaseSlot', function () LiteBagPanel_UpdateBagSizes(panel) end)
 
     -- Attach in the other Blizzard bank panels. Note that we are also
     -- responsible for handling their events!
@@ -50,10 +51,6 @@ function LiteBagBank_Initialize(self)
     --   http://www.wowwiki.com/Creating_standard_left-sliding_frames
     -- but note that UIPanelLayout-enabled isn't a thing at all.
 
-    self:SetAttribute("UIPanelLayout-defined", true)
-    self:SetAttribute("UIPanelLayout-area", "left")
-    self:SetAttribute("UIPanelLayout-pushable", 6)
-
     -- Different inset texture for the bank
 
     self.Inset.Bg:SetTexture("Interface\\FrameGeneral\\UI-Background-Rock", true, true)
@@ -68,17 +65,18 @@ function LiteBagBank_Initialize(self)
 
 end
 
-function LiteBagBank_OnEvent(self, event, ...)
-    local arg1, arg2 = ...
+function LiteBagBank_OnEvent(self, event, arg1, arg2, ...)
 
     LiteBag_Debug(format("Bank OnEvent %s %s %s", event, tostring(arg1), tostring(arg2)))
-    if event == "PLAYER_LOGIN" then
-        LiteBagBank_Initialize(self)
+    if event == "ADDON_LOADED" then
+        if arg1 == "LiteBag" then
+            LiteBagBank_Initialize(self)
+        end
     elseif event == "BANKFRAME_OPENED" then
         LiteBagFrame_ShowPanel(self, 1)
-        ShowUIPanel(self)
+        ShowUIPanel(self:GetParent())
     elseif event == "BANKFRAME_CLOSED" then
-        HideUIPanel(self)
+        HideUIPanel(self:GetParent())
     elseif event == "INVENTORY_SEARCH_UPDATE" then
         ContainerFrame_UpdateSearchResults(ReagentBankFrame)
     elseif event == "ITEM_LOCK_CHANGED" then
@@ -92,6 +90,10 @@ function LiteBagBank_OnEvent(self, event, ...)
     elseif event == "PLAYERREAGENTBANKSLOTS_CHANGED" then
         -- slot = arg1
         BankFrameItemButton_Update(ReagentBankFrame["Item"..(arg1)])
+    elseif event == "PLAYER_MONEY" then
+        if self.selectedTab == 1 then
+            LiteBagPanel_UpdateBagSizes(LiteBagBankPanel)
+        end
     end
 end
 
@@ -107,6 +109,7 @@ function LiteBagBank_OnShow(self)
     self:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
     self:RegisterEvent("INVENTORY_SEARCH_UPDATE")
     self:RegisterEvent("ITEM_LOCK_CHANGED")
+    self:RegisterEvent("PLAYER_MONEY")
 end
 
 function LiteBagBank_OnHide(self)
@@ -117,4 +120,5 @@ function LiteBagBank_OnHide(self)
     self:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
     self:UnregisterEvent("INVENTORY_SEARCH_UPDATE")
     self:UnregisterEvent("ITEM_LOCK_CHANGED")
+    self:UnregisterEvent("PLAYER_MONEY")
 end

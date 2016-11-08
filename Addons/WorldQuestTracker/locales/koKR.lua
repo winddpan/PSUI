@@ -3,7 +3,7 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "획득 가능"
 L["S_APOWER_DOWNVALUE"] = "%s|1으로;로; 표시된 퀘스트는 현재 유물 연구보다 더 긴 시간을 가집니다."
-L["S_APOWER_NEXTLEVEL"] = "다음 단계"
+L["S_APOWER_NEXTLEVEL"] = "다음 등급"
 L["S_ENABLED"] = "사용"
 L["S_ERROR_NOTIMELEFT"] = "이 퀘스트는 만료되었습니다."
 L["S_ERROR_NOTLOADEDYET"] = "이 퀘스트를 아직 불러오지 못했습니다, 몇 초만 기다려주세요."
@@ -69,7 +69,7 @@ L["S_QUESTTYPE_PETBATTLE"] = "애완동물 대전"
 L["S_QUESTTYPE_PROFESSION"] = "전문 기술"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "자원"
-L["S_QUESTTYPE_TRADESKILL"] = "제작 재료"
+L["S_QUESTTYPE_TRADESKILL"] = "직업용품"
 L["S_SHAREPANEL_THANKS"] = [=[World Quest Tracker를 공유해주셔서 감사합니다!
 링크를 페이스북, 트위터의 친구들에게 전송하세요.]=]
 L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"

@@ -13,27 +13,6 @@ local addonName, addonTable = ...
 
 local function UpgradeDBVersion()
     local db = LiteBag_OptionsDB
-    local oldkey, newkey
-
-    for _,frameName in ipairs({ "LiteBagInventory", "LiteBagBank" }) do
-        oldkey = format("Frame:%s", frameName)
-        newkey = format("Frame:%sPanel", frameName)
-        if db[oldkey] then
-            db[newkey] = db[oldkey]
-            db[oldkey] = nil
-        end
-    end
-
-    -- I made this Panel: in the betas so I better handle it
-    if db["Panel:LiteBagInventoryPanel"] then
-        db["Frame:LiteBagInventoryPanel"] = db["Panel:LiteBagInventoryPanel"]
-        db["Panel:LiteBagInventoryPanel"] = nil
-    end
-    if db["Panel:LiteBagBankPanel"] then
-        db["Frame:LiteBagBankPanel"] = db["Panel:LiteBagBankPanel"]
-        db["Panel:LiteBagBankPanel"] = nil
-    end
-
 end
 
 function LiteBag_InitializeOptions()
@@ -128,6 +107,16 @@ function LiteBag_OptionSlashFunc(argstr)
         return
     end
 
+    if cmd == "inventory.scale" then
+        arg1 = tonumber(arg1)
+        if arg1 > 0 and arg1 <= 2 then
+            LiteBag_SetFrameOption(LiteBagInventory, "scale", arg1)
+            LiteBag_Print("Inventory scale set to "..arg1)
+        else
+            LiteBag_Print("Scale must be between 0 and 2.")
+        end
+        return
+    end
     if cmd == "bank.columns" then
         arg1 = tonumber(arg1)
         if arg1 and arg1 >= 8 then
@@ -140,9 +129,22 @@ function LiteBag_OptionSlashFunc(argstr)
         return
     end
 
+    if cmd == "bank.scale" then
+        arg1 = tonumber(arg1)
+        if arg1 > 0 and arg1 <= 2 then
+            LiteBag_SetFrameOption(LiteBagBank, "scale", arg1)
+            LiteBag_Print("Bank scale set to "..arg1)
+        else
+            LiteBag_Print("Scale must be between 0 and 2.")
+        end
+        return
+    end
+            
     LiteBag_Print("Usage:")
     LiteBag_Print("  /litebag bank.columns <n>")
+    LiteBag_Print("  /litebag bank.scale <s>")
     LiteBag_Print("  /litebag inventory.columns <n>")
+    LiteBag_Print("  /litebag inventory.scale <s>")
     LiteBag_Print("  /litebag inventory.snap <on | off>")
     LiteBag_Print("  /litebag confirmsort <on | off>")
     LiteBag_Print("  /litebag equipset <on | off>")

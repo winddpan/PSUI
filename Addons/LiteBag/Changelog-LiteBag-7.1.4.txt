@@ -1,0 +1,12 @@
+tag 7.1.4
+0d688beb516d572e969b40aa4433c0f8549d6cbe
+Mike "Xodiv" Battersby <mib@post.com>
+2016-10-31 08:12:54 +1100
+
+Tagging 7.1.4, options fix.
+
+
+--------------------
+
+Mike "Xodiv" Battersby:
+	- Fix options resetting on reload / restart.

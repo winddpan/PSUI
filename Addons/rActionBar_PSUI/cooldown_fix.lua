@@ -4,6 +4,7 @@
   local function SetCooldownSwipeAlpha(self,cooldown,alpha)
     cooldown:SetSwipeColor(0,0,0,0.8*alpha)
 	cooldown:SetDrawBling(alpha == 1)
+	cooldown:SetDrawSwipe(alpha > 0) 
   end
    
   --ApplyButtonCooldownAlphaFix

@@ -1,0 +1,9 @@
+﻿## Interface: 70100
+## Title: Simple Interrupt Announce |cff00ffff汉化:Entruv - 荆棘谷|r
+## Notes: A simple interrupt announcer
+## Author: BeathsCurse (Saphod - Draenor EU)
+## Version: 版本号：1.0.31 |cff00ffff汉化:Entruv - 荆棘谷|r
+## SavedVariablesPerCharacter: SIACFG
+
+SimpleInterruptAnnounce.lua
+ConfigurationPanelLoader.lua

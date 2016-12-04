@@ -8,12 +8,12 @@ if cfg.combattext.font == "Fonts\\FRIZQT__.ttf" then
 	cfg.combattext.font = "Interface\\Addons\\m_CombatText\\media\\font.ttf"
 end
 
---[[ -- Making sure that combat text is enabled
+ -- Making sure that combat text is enabled
 local d=CreateFrame"Frame"
 d:RegisterEvent("VARIABLES_LOADED")
 d:SetScript("OnEvent", function() 
-	SetCVar("enableCombatText", 1, true) 
-end) ]]
+	SetCVar("enableFloatingCombatText", 1, true) 
+end) 
 
 -- Enabling Blizzard_CombatText add-on and hiding default floating combat text frames
 LoadAddOn("Blizzard_CombatText")
@@ -77,10 +77,12 @@ local tbl = {
 }
 local info
 local template = "-%s (%s)"
-local mCTi = CreateFrame"Frame"
-mCTi:RegisterEvent"COMBAT_TEXT_UPDATE"
-mCTi:RegisterEvent"PLAYER_REGEN_ENABLED"
-mCTi:RegisterEvent"PLAYER_REGEN_DISABLED"
+local mCTi = CreateFrame("Frame")
+
+local mCTRegister = CreateFrame("Frame") 
+mCTi:RegisterEvent("PLAYER_REGEN_ENABLED")
+mCTi:RegisterEvent("PLAYER_REGEN_DISABLED")
+mCTi:RegisterEvent("COMBAT_TEXT_UPDATE")
 mCTi:SetScript("OnEvent", function(self, event, subev, arg2, arg3)
 	if event=="COMBAT_TEXT_UPDATE" then
 		info = tbl[subev]
@@ -90,10 +92,12 @@ mCTi:SetScript("OnEvent", function(self, event, subev, arg2, arg3)
 			local msg = info.prefix or ""
 			if(info.spec) then
 				if(arg3) then
-					msg = template:format(arg2, arg3)
+					msg = template:format(SVal(arg2), SVal(arg3))
 				end
 			else
-				if(info.arg2) then msg = msg..floor(arg2) end
+				if(info.arg2) then
+					msg = msg..floor(arg2)
+				end
 				if(info.arg3) then
 					if (subev=="HEAL" or subev=="HEAL_CRIT") then
 						msg = msg..SVal(arg3) 
@@ -274,6 +278,7 @@ if cfg.combattext.show_healing then
 				if(amount>=cfg.combattext.threshold.heal)then
 					local color={.1,1,.1}
 					local rawamount=amount
+					amount=SVal(amount)
 					if cfg.combattext.show_overhealing and abs(overhealing) > 0 then amount = SVal(math.floor(amount-overhealing)).." ("..SVal(floor(overhealing))..")" end
 					if (critical) then 
 						amount="|cffFF0000*|r"..amount.."|cffFF0000*|r"
@@ -327,9 +332,11 @@ end
 		TimeSinceLastUpdate=TimeSinceLastUpdate+elapsed
 		if(TimeSinceLastUpdate>UpdateInterval)then
 			if(i==1)then
-			frames[i]:AddMessage("-"..random(100000),1,random(255)/255,random(255)/255)
+				local msg=SVal(random(100000))
+				frames[i]:AddMessage("-"..msg,1,random(255)/255,random(255)/255)
 			elseif(i==2)then
-			frames[i]:AddMessage("+"..random(50000),.1,random(128,255)/255,.1)
+				local msg=SVal(random(50000))
+				frames[i]:AddMessage("+"..msg,.1,random(128,255)/255,.1)
 			elseif(i==3)then
 				local msg
 				local icon
@@ -339,7 +346,7 @@ end
 					_,_,icon=GetSpellInfo(msg)
 				end
 				if(icon)then
-					msg=msg.." \124T"..icon..":"..cfg.combattext.iconsize..":"..cfg.combattext.iconsize..":0:0:64:64:5:59:5:59\124t"
+					msg=SVal(msg).." \124T"..icon..":"..cfg.combattext.iconsize..":"..cfg.combattext.iconsize..":0:0:64:64:5:59:5:59\124t"
 						color={1,1,0}
 				end
 				frames[i]:AddMessage(msg,unpack(color))

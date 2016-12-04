@@ -1,6 +1,15 @@
+2016-11-16  Tercio  <Tercio>
+
+[96c800fdab66] [tip]
+* WorldQuestTracker.lua:
+
+- added an option to use the real gear icons.
+- localization updates.
+
+
 2016-11-06  Tercio  <Tercio>
 
-[78d169328545] [tip]
+[78d169328545]
 * WorldQuestTracker.lua:
 
 - hardcoded a framework function to avoid issues with old non updated addon using very old framework versions.
@@ -226,14 +235,5 @@
 * WorldQuestTracker.lua:
 
 - fix for elvui bar anchoring.
-
-
-2016-09-12  Tercio  <Tercio>
-
-[813927363491]
-* WorldQuestTracker.lua:
-
-- libwindow warning if not found.
-- fixed the header not showing on the custom positioning.
 
 

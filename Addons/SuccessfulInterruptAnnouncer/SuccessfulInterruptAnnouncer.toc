@@ -1,8 +1,0 @@
-## Interface: 70100
-## Author: Eisenheim
-## Version: 1.6
-## Title: Successful Interrupt Announcer
-## Notes: Addon that sends a say, yell, party, raid, or self message when you successfully interrupt something.
-## SavedVariablesPerCharacter: INSraid, INSparty, INSyell, INSsay, INSself, INSspell, INStarget
-
-SuccessfulInterruptAnnouncer.lua

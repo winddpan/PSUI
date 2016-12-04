@@ -81,12 +81,10 @@ local OnLeave = function()
 end
 
 local createAuraIcon = function(icons, index)
-	icons.createdIcons = icons.createdIcons + 1
-
-	local button = CreateFrame("Button", "AltzAuraButton"..index, icons)
+	local button = CreateFrame("Button", icons:GetDebugName().."Button"..index, icons)
 	button:RegisterForClicks'RightButtonUp'
 
-	local cd = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
+	local cd = CreateFrame("Cooldown", "$parentCooldown", button, "CooldownFrameTemplate")
 	cd:SetAllPoints(button)
 
 	local icon = button:CreateTexture(nil, "BORDER")
@@ -113,7 +111,6 @@ local createAuraIcon = function(icons, index)
 	button:SetScript("OnEnter", OnEnter)
 	button:SetScript("OnLeave", OnLeave)
 
-	table.insert(icons, button)
 
 	button.icon = icon
 	button.count = count
@@ -132,14 +129,14 @@ local createAuraIcon = function(icons, index)
 	return button
 end
 
-local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster)
+local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, expirationTime, caster)
 	if((icons.onlyShowPlayer and icon.isPlayer) or (not icons.onlyShowPlayer and name)) then
 		return true
 	end
 end
 
 local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visible)
-	local name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff = UnitAura(unit, index, filter)
+	local name, rank, texture, count, dtype, duration, expirationTime, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll = UnitAura(unit, index, filter)
 	if(name) then
 		local n = visible + offset + 1
 		local icon = icons[n]
@@ -156,7 +153,14 @@ local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visibl
 
 			 A button used to represent aura icons.
 			]]
+			local prev = icons.createdIcons
 			icon = (icons.CreateIcon or createAuraIcon) (icons, n)
+
+			-- XXX: Update the counters if the layout doesn't.
+			if(prev == icons.createdIcons) then
+				table.insert(icons, icon)
+				icons.createdIcons = icons.createdIcons + 1
+			end
 		end
 
 		local isPlayer
@@ -188,7 +192,7 @@ local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visibl
 		 A boolean value telling the aura element if it should be show the icon
 		 or not.
 		]]
-		local show = (icons.CustomFilter or customFilter) (icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff)
+		local show = (icons.CustomFilter or customFilter) (icons, unit, icon, name, rank, texture, count, dtype, duration, expirationTime, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		if(show) then
 			-- We might want to consider delaying the creation of an actual cooldown
 			-- object to this point, but I think that will just make things needlessly
@@ -196,7 +200,7 @@ local updateIcon = function(unit, icons, index, offset, filter, isDebuff, visibl
 			local cd = icon.cd
 			if(cd and not icons.disableCooldown) then
 				if(duration and duration > 0) then
-					cd:SetCooldown(timeLeft - duration, duration)
+					cd:SetCooldown(expirationTime - duration, duration)
 					cd:Show()
 				else
 					cd:Hide()
@@ -329,7 +333,16 @@ local UpdateAuras = function(self, event, unit)
 			hasGap = true
 			visibleBuffs = visibleBuffs + 1
 
-			local icon = auras[visibleBuffs] or (auras.CreateIcon or createAuraIcon) (auras, visibleBuffs)
+			local icon = auras[visibleBuffs]
+			if(not icon) then
+				local prev = auras.createdIcons
+				icon = (auras.CreateIcon or createAuraIcon) (auras, visibleBuffs)
+				-- XXX: Update the counters if the layout doesn't.
+				if(prev == auras.createdIcons) then
+					table.insert(auras, icon)
+					auras.createdIcons = auras.createdIcons + 1
+				end
+			end
 
 			-- Prevent the icon from displaying anything.
 			if(icon.cd) then icon.cd:Hide() end

@@ -1,0 +1,8 @@
+﻿## Interface: 70100
+## Title: Simple Interrupt Announce 配置菜单 |cff00ffff汉化:Entruv - 荆棘谷|r
+## Notes: Configuration panel for SIA
+## Author: BeathsCurse (Saphod - Draenor EU)
+## Dependencies: SimpleInterruptAnnounce
+## LoadOnDemand: 1
+
+ConfigurationPanel.lua

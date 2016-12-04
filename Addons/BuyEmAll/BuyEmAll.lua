@@ -163,6 +163,7 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         self.NPCName = UnitName("npc");
 
         self.AltCurrencyMode = false;
+        self.AtVendor = true; -- Currently at the vendor, for later purchase interruption.
 
         local name, texture, price, quantity, numAvailable =
         GetMerchantItemInfo(self.itemIndex);
@@ -244,21 +245,6 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
     end
 end
 
--- Searches through the reagent bank for specific items during a price calculation.
-
-function BuyEmAll:ReagentBankSearcher(RBNumSlots, itemID)
-    local RBItemAmt = 0;
-    for RBNumItem = 1, RBNumSlots do
-        if (GetContainerItemInfo(REAGENTBANK_CONTAINER, RBNumItem)) then
-            local RBItemID = tonumber(strmatch(select(7, GetContainerItemInfo(REAGENTBANK_CONTAINER, RBNumItem)), "item:(%d+):"));
-            if (RBItemID == itemID) then
-                RBItemAmt = RBItemAmt + select(2, GetContainerItemInfo(REAGENTBANK_CONTAINER, RBNumItem));
-            end
-        end
-    end
-    return RBItemAmt;
-end
-
 --[[ Processor for Alternate Currencies. Yeah, it's huge, as far as I can tell it's as small as I can get it while also
 including every possibility, but I still want to see if I can make it smaller. ]]
 
@@ -273,24 +259,22 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
     local Afford1, Afford2, Afford3 = 999999, 999999, 999999; -- Set them all to a high number to begin with. For later.
 
     local NumAltCurrency = GetMerchantItemCostInfo(itemIndex);
-    local RBNumSlots = GetContainerNumSlots(REAGENTBANK_CONTAINER);
 
 
     self.NumAltCurrency = NumAltCurrency;
     if (NumAltCurrency == 1) or (NumAltCurrency == 2) or (NumAltCurrency == 3) then
         if (select(3, GetMerchantItemCostItem(itemIndex, 1)) == nil) then -- Itemlink check.
-        self.AltCurrency1Type = 0; -- 0 = Pure currency, 1 = Item/Currency, possibly more later.
-        self.AltCurrency1Tex = select(1, GetMerchantItemCostItem(itemIndex, 1)); -- Grabs texture path, hopefully the same no matter the language.
-        self.AltCurrency1 = self:AltCurrencyTranslating(self.AltCurrency1Tex); -- Uses the currency texture to determine which one it is.
-        price1 = select(2, GetMerchantItemCostItem(itemIndex, 1)); -- Gets the cost of the item being purchased.
-        Afford1 = floor(select(2, GetCurrencyInfo(self.AltCurrency1)) / price1) * self.preset; -- How much can be bought.
+            self.AltCurrency1Type = 0; -- 0 = Pure currency, 1 = Item/Currency, possibly more later.
+            self.AltCurrency1Tex = select(1, GetMerchantItemCostItem(itemIndex, 1)); -- Grabs texture path, hopefully the same no matter the language.
+            self.AltCurrency1 = self:AltCurrencyTranslating(self.AltCurrency1Tex); -- Uses the currency texture to determine which one it is.
+            price1 = select(2, GetMerchantItemCostItem(itemIndex, 1)); -- Gets the cost of the item being purchased.
+            Afford1 = floor(select(2, GetCurrencyInfo(self.AltCurrency1)) / price1) * self.preset; -- How much can be bought.
         else
             self.AltCurrency1Type = 1; -- Currency is an item/something that can be in bags.
             self.AltCurrency1 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 1)), "item:(%d+):")); -- Grabs the item's ID.
             self.AltCurrency1Tex = select(10, GetItemInfo(self.AltCurrency1)); -- Gets the texture for the item to show in the BEA frame.
             price1 = select(2, GetMerchantItemCostItem(itemIndex, 1)); -- Gets the number of the item required.
-            local AC1RBAmt = self:ReagentBankSearcher(RBNumSlots, self.AltCurrency1); -- Checks the reagent bank for the currency item.
-            Afford1 = floor((GetItemCount(self.AltCurrency1) + AC1RBAmt) / price1) * self.preset; -- How much can be bought.
+            Afford1 = floor((GetItemCount(self.AltCurrency1, true)) / price1) * self.preset; -- How much can be bought.
         end
     end
     if (NumAltCurrency == 2) or (NumAltCurrency == 3) then
@@ -305,8 +289,7 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
             self.AltCurrency2 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 2)), "item:(%d+):"));
             self.AltCurrency2Tex = select(10, GetItemInfo(self.AltCurrency2));
             price2 = select(2, GetMerchantItemCostItem(itemIndex, 2));
-            local AC2RBAmt = self:ReagentBankSearcher(RBNumSlots, self.AltCurrency2);
-            Afford2 = floor((GetItemCount(self.AltCurrency2) + AC2RBAmt) / price2) * self.preset;
+            Afford2 = floor((GetItemCount(self.AltCurrency2, true)) / price2) * self.preset;
         end
     end
     if (NumAltCurrency == 3) then
@@ -321,8 +304,7 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
             self.AltCurrency3 = tonumber(strmatch(select(3, GetMerchantItemCostItem(itemIndex, 3)), "item:(%d+):"));
             self.AltCurrency3Tex = select(10, GetItemInfo(self.AltCurrency3));
             price3 = select(2, GetMerchantItemCostItem(itemIndex, 3));
-            local AC3RBAmt = self:ReagentBankSearcher(RBNumSlots, self.AltCurrency3);
-            Afford3 = floor((GetItemCount(self.AltCurrency3) + AC3RBAmt) / price3) * self.preset;
+            Afford3 = floor((GetItemCount(self.AltCurrency3, true)) / price3) * self.preset;
         end
     end
 
@@ -396,7 +378,7 @@ function BuyEmAll:AltCurrencyTranslating(Texture) -- Uses the texture string/pat
         return 824;
     elseif (strmatch(Texture, "%a+_%a+$") == "ashran_artifact") then -- Artifact Fragment
         return 944;
-	elseif (strmatch(Texture, "%a+_%a+$") == "ability_animusorbs") then -- Seal of Tempered Fate
+    elseif (strmatch(Texture, "%a+_%a+$") == "ability_animusorbs") then -- Seal of Tempered Fate
         return 994;
     elseif (strmatch(Texture, "%a+_%a+_%d+$") == "misc_coin_09") then -- Dingy Iron Coins
         return 980;
@@ -466,14 +448,14 @@ function BuyEmAll:onUpdate(sinceLastUpdate)
         return
     end
     if (self.sinceLastUpdate >= 0.5) then -- In seconds, this being half a second.
-    if (frameNumLoops == 0) and (frameLeftover ~= 0) then
-        BuyMerchantItem(frameItemIndex, frameLeftover);
-        frameLeftover = 0;
-    else
-        BuyMerchantItem(frameItemIndex, framePurchAmount);
-        frameNumLoops = frameNumLoops - 1;
-    end
-    self.sinceLastUpdate = 0;
+        if (frameNumLoops == 0) and (frameLeftover ~= 0) then
+            BuyMerchantItem(frameItemIndex, frameLeftover);
+            frameLeftover = 0;
+        else
+            BuyMerchantItem(frameItemIndex, framePurchAmount);
+            frameNumLoops = frameNumLoops - 1;
+        end
+        self.sinceLastUpdate = 0;
     end
 end
 
@@ -517,6 +499,27 @@ end
 
 function BuyEmAll:UpdateDisplay()
     local purchase = self.split;
+    
+    BuyEmAllLeftButton:Enable();
+    BuyEmAllRightButton:Enable();
+    BuyEmAllMaxButton:Enable();
+    if (self.split == self.max) then
+        BuyEmAllRightButton:Disable();
+        BuyEmAllMaxButton:Disable();
+    end
+    if (self.AltCurrencyMode == false) and (self.split == 1) then
+        BuyEmAllLeftButton:Disable();
+    end
+    if (self.AltCurrencyMode == true) and (self.split == self.preset) then
+        BuyEmAllLeftButton:Disable();
+    end
+
+    self:SetStackClick();
+    BuyEmAllStackButton:Enable();
+    if self.max < self.stackClick then
+        BuyEmAllStackButton:Disable();
+    end
+    
     if (self.AltCurrencyMode == false) then
         local cost = 0;
         if self.defaultStack > 1 then
@@ -562,26 +565,6 @@ function BuyEmAll:UpdateDisplay()
     end
 
     BuyEmAllText:SetText(self.split);
-
-    BuyEmAllLeftButton:Enable();
-    BuyEmAllRightButton:Enable();
-    BuyEmAllMaxButton:Enable();
-    if (self.split == self.max) then
-        BuyEmAllRightButton:Disable();
-        BuyEmAllMaxButton:Disable();
-    end
-    if (self.AltCurrencyMode == false) and (self.split == 1) then
-        BuyEmAllLeftButton:Disable();
-    end
-    if (self.AltCurrencyMode == true) and (self.split == self.preset) then
-        BuyEmAllLeftButton:Disable();
-    end
-
-    self:SetStackClick();
-    BuyEmAllStackButton:Enable();
-    if self.max < self.stackClick then
-        BuyEmAllStackButton:Disable();
-    end
 end
 
 
@@ -665,9 +648,10 @@ function BuyEmAll:OnChar(text)
         self:UpdateDisplay();
         return
     end
-
     if split <= self.max then
         self.split = split;
+    elseif (split > self.max) then
+        self.split = self.max;
     elseif split == 0 then
         self.split = 1;
     end

@@ -4,17 +4,16 @@
 ## Author: Ermad
 ## SavedVariables: AngryKeystones_Config, AngryKeystones_Data
 ## SavedVariablesPerCharacter: AngryKeystones_CharacterConfig
-## X-Curse-Packaged-Version: v0.6.8
-## X-Curse-Project-Name: Angry Keystones
-## X-Curse-Project-ID: angry-keystones
-## X-Curse-Repository-ID: wow/angry-keystones/mainline
+## X-Packaged-Version: v0.8.0
 
 Core.lua
 Locale.lua
 Config.lua
 
+Persist.lua
 ObjectiveTracker.lua
 ProgressTracker.lua
 Keystone.lua
 Gossip.lua
 Splits.lua
+Schedule.lua

@@ -25,6 +25,7 @@ Filger_Spells = {
 			{spellID =  108194, unitID = "target", caster = "all", filter = "DEBUFF"},  -- "CC",		-- Asphyxiate
 			{spellID =  47476, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Silence",		-- Strangulate
 			{spellID =  96294, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "Root",		-- Chains of Ice (Chilblains)
+			{spellID =  221562, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- 窒息
 			-- Death Knight Ghoul
 			{spellID =  91800, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Gnaw
 			{spellID =  91797, unitID = "target", caster = "all", filter = "DEBUFF"},    -- "CC",		-- Monstrous Blow (Dark Transformation)
@@ -355,6 +356,8 @@ Filger_Spells = {
 			Mode = "ICON",
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
+				--冰霜之柱
+				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
 				-- 收割急速buff
 				{spellID = 215711, unitID = "player", caster = "player", filter = "BUFF" },
 				{spellID = 207319, unitID = "player",caster = "all", filter = "BUFF"}, 
@@ -395,25 +398,18 @@ Filger_Spells = {
 				{spellID = 51460, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
-			Name = "boom",
+			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
-			Interval = 2,
 			Mode = "ICON",
-			IconSize = 37,
-			Position = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 46},
-				--被动PVP饰品
-				{spellID = 126700, unitID = "player",caster = "all", filter = "BUFF"},
-				--主动PVP饰品
-				{spellID = 170397, unitID = "player",caster = "all", filter = "BUFF"},
-				--十字军附魔
-				{spellID = 53365, unitID = "player",caster = "all", filter = "BUFF"},
-				--冰霜之柱
-				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
-				--WOD PVP 4件
-				{spellID = 166062, unitID = "player",caster = "all", filter = "BUFF"}, 
+			Interval = 2,
+			Alpha = 1,
+			IconSize = 36,
+			Position = {unpack(Filger_Settings.player_proc_icon)},
+			{spellID = 195181, unitID = "player", caster = "player", filter = "BUFF"},
+
 		},
 		{
-			Name = "Disease",
+			Name = "DEBUFF",
 			Direction = "RIGHT",
 			Interval = 0,
 			Mode = "ICON",
@@ -431,17 +427,10 @@ Filger_Spells = {
 				{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
 				-- 冰链
 				{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
-		},
-		{
-			Name = "innerCooldown",
-			Direction = "LEFT",
-			Interval = 0,
-			Mode = "ICON",
-			IconSize = 35,
-			Position = {unpack(Filger_Settings.innner_cooldown)},
-				{spellID = 128986, filter = "ICD", trigger = "BUFF", duration = 45},
-				{spellID = 138702,  filter = "ICD", trigger = "BUFF", duration = 85 },
-				{spellID = 126700,  filter = "ICD", trigger = "BUFF", duration = 60 },
+				
+				{spellID = 206977, unitID = "target", caster = "player", filter = "DEBUFF"},
+				{spellID = 143375, unitID = "target", caster = "player", filter = "DEBUFF"},
+				{spellID = 206930, unitID = "target", caster = "player", filter = "DEBUFF"},
 
 		},
 	},
@@ -591,9 +580,11 @@ Filger_Spells = {
 			{spellID = 200803, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Crippling Poison
 			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 198097, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Wound Poison
 			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 207777, unitID = "target", caster = "player", filter = "DEBUFF"},
+
 		},
 	},
 	["DEMONHUNTER"] = {{

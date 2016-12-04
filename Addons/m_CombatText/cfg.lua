@@ -6,7 +6,7 @@ cfg.combattext = {
 	fontsize = 20,												-- font size
 	fontstyle = "OUTLINE",										-- font style
 	
-	frame1_pos = {"CENTER", "UIParent", "CENTER", -250, -70},	-- incoming damage frame position
+	frame1_pos = {"CENTER", "UIParent", "CENTER", -200, -70},	-- incoming damage frame position
 	frame2_pos = {"CENTER", "UIParent", "CENTER", -205, -70},	-- incoming healing frame position
 	--cfg.frame3_pos = {"LEFT", "UIParent", "CENTER", 320, 42}	-- outgoing damage/healing frame position
 	frame3_pos = {"LEFT", "UIParent", "CENTER", 220, 42},	-- outgoing damage/healing frame position
@@ -26,7 +26,7 @@ cfg.combattext = {
 		heal = 1,					-- the minimum ammount of healing done to display
 		damage = 1,					-- the minimum ammount of damage done to display
 		heal_maxlvl = 0,			-- different healing threshold for players @ max lvl
-		damage_maxlvl = 0,		-- different damage threshold for players @ max lvl
+		damage_maxlvl = 0,			-- different damage threshold for players @ max lvl
 	},
 	
 	merge_aoe_spam = true,			-- merge multiple damage/healing events happening simultaniously in a single message

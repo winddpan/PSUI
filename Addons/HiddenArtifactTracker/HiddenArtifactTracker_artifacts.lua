@@ -178,17 +178,50 @@ HiddenArtifactTrackerFuncs["Skull of the Man'ari"] =
 	end
 HiddenArtifactTrackerFuncs["Spine of Thal'kiel"] = HiddenArtifactTrackerFuncs["Skull of the Man'ari"]
 
+--fury
+HiddenArtifactTrackerFuncs["Warswords of the Valarjar"] =
+	function()
+		HiddenArtifactTrackerFuncs.RepCheck(1948, 8) --Valarjar to exalted
+		HiddenArtifactTrackerFuncs.getWorldBossQ("Nithogg", 42270, 1017) -- Nithogg / questnumber / in Stormheim
+		HiddenArtifactTrackerFuncs.getWorldBossQ("Shar'thos", 42779, 1018) --Shar'thos / quest number / in val'sharah
+	end
+
 --protection (warrior)
 HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"] =
 	function()
 		HiddenArtifactTrackerFuncs.getAK(5)
+		
+		if IsQuestFlaggedCompleted(44311) then
+			local r = HiddenArtifactTracker.colourOptions and 0 or 1
+			local g = 1
+			local b = HiddenArtifactTracker.colourOptions and 0 or 1
+			GameTooltip:AddLine("Visit Neltharion's Vault in Highmountain (not Lair!).", r,g,b)
+		end
 	end
 HiddenArtifactTrackerFuncs["Scaleshard"] = HiddenArtifactTrackerFuncs["Scale of the Earth-Warder"]
 
-
-
-
 -- utility functions
+function HiddenArtifactTrackerFuncs.getWorldBossQ(name, qNumber, zNumber)
+
+	SetMapByID(1007)
+	local a=C_TaskQuest.GetQuestsForPlayerByMapID(zNumber)
+
+	for i,j in ipairs(a) do
+		if j.questId == qNumber then
+			local r = HiddenArtifactTracker.colourOptions and 0 or 1
+			local g = 1
+			local b = HiddenArtifactTracker.colourOptions and 0 or 1
+			GameTooltip:AddLine("World Boss "..name.." is available!",r,g,b)
+			return
+		end
+	end
+	
+	local r = 1
+	local g = HiddenArtifactTracker.colourOptions and 0 or 1
+	local b = HiddenArtifactTracker.colourOptions and 0 or 1
+	GameTooltip:AddLine("World Boss "..name.." is NOT available.",r,g,b)
+
+end
 
 function HiddenArtifactTrackerFuncs.getBossAvailability(rName, bName, bDiff)
 
@@ -279,9 +312,9 @@ function HiddenArtifactTrackerFuncs.RepCheck(faction, level)
 		local r,g,b=1,1,1
 
 		if HiddenArtifactTracker.colourOptions then
-			r = 1 - math.min(1, value/standingLvls[level])
-			g = math.min(1, value/standingLvls[level])
-			b = (level > standingID) and 0.5 or 0
+			r = math.min(1, 2 - 2*value/standingLvls[level])
+			g = math.min(1, 2*value/standingLvls[level])
+			b = (level < standingID) and 0.5 or 0
 		end
 		GameTooltip:AddLine("\n"..name..": "..value.."/"..standingLvls[level].." ("..standing[standingID].."/"..standing[level]..")", r,g,b)
 end

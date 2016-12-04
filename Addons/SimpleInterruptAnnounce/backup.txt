@@ -1,0 +1,9 @@
+-- Create possessive form by appending 's to the string, unless it ends
+-- with s, x, or z, in which case only ' is added.
+local function StringOwns(s)
+	if s:sub(-1):find('[sxzSXZ]') then
+		return s .. '\''
+	else
+		return s .. '\'s'
+	end
+end

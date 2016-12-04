@@ -1,4 +1,11 @@
-﻿v3.3.2
+﻿v3.3.4
+Forgot to completely remove old reagent bank search, my bad!
+
+v3.3.3
+Fixed alternate currency bank searching, turns out I did it both bad and wrong.
+Prevented the purchase amount going over the maximum when typing in manually.
+
+v3.3.2
 Quick TOC bump.
 
 v3.3.1

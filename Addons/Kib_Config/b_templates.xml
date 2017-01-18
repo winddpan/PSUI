@@ -1,0 +1,699 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+<!-- CHECKBUTTON ELEMENT -->
+
+    <CheckButton name="Kib_CheckButtonTemplate" virtual="true" enableMouse="true">
+        <Size x="128" y="16"/>
+        <HitRectInsets><AbsInset left="0" right="0" top="0" bottom="0"/></HitRectInsets>
+        <Anchors><Anchor point="RIGHT" x="-64" y="0"/></Anchors>
+        <NormalTexture file="Interface\AddOns\Kib_Config\media\boolean"/>
+    </CheckButton>
+
+<!-- SLIDER ELEMENT -->
+
+    <Slider name="Kib_SliderTemplate" orientation="HORIZONTAL" virtual="true" enableMouse="true">
+        <Size x="128" y="16"/>
+        <Anchors><Anchor point="RIGHT" x="-64" y="0"/></Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentTexture" file="Interface\AddOns\Kib_Config\media\slider" setAllPoints="true"/>
+            </Layer>
+        </Layers>
+        <ThumbTexture name="$parentThumb" file="Interface\AddOns\Kib_Config\media\slider_thumb">
+            <Size x="16" y="16"/>
+        </ThumbTexture>
+    </Slider>
+
+<!-- COLOR ELEMENT -->
+
+    <Button name="Kib_ColorTemplate" enableMouse="true" virtual="true">
+        <Size x="24" y="12"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Texture" setAllPoints="true"><Color r="1" g="1" b="1"/></Texture>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <Slider parentKey="Slider" minValue="0" maxValue="1" valueStep=".01" hidden="true" orientation="VERTICAL" enableMouse="true" toplevel="true" ObeyStepOnDrag="true">
+                <Size x="24" y="128"/>
+                <Anchors><Anchor point="BOTTOM"/></Anchors>
+
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="Texture" setAllPoints="true"/>
+                        <FontString parentKey="Text" inherits="GameTooltipTextSmall">
+                            <Anchors><Anchor point="RIGHT"/></Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+
+                <ThumbTexture file="Interface\AddOns\Kib_Config\media\colorslider_thumb"><Size x="16" y="16"/></ThumbTexture>
+                <Scripts>
+                    <OnLeave> self:Hide() </OnLeave>
+                </Scripts>
+            </Slider>
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+            </OnLoad>
+            <OnClick>
+                if self.Slider:IsShown() then self.Slider:Hide() else self.Slider:Show() end
+            </OnClick>
+        </Scripts>
+    </Button>
+
+<!-- POPUP FRAME -->
+
+    <Frame name="Kib_PopupFrameTemplate" frameStrata="DIALOG" toplevel="true" enableMouse="true" setAllPoints="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+            <Color r="0.078" g="0.078" b="0.075" a="0.5"/>
+        </Backdrop>
+
+        <Frames>
+            <Frame name="$parentFrame" parentKey="Frame">
+                <Size x="320" y="128"/>
+                <Anchors><Anchor point="CENTER"/></Anchors>
+
+                <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+                    <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentText" parentKey="Text" inherits="GameTooltipTextSmall" justifyH="CENTER" wordwrap="false" text="">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="20" y="-5"/>
+                                <Anchor point="BOTTOMRIGHT" x="-20" y="52"/>
+                            </Anchors>
+                        </FontString>
+
+                        <Texture name="$parentDivider_Top">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="-1" y="1"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT"/>
+                            </Anchors>
+                        </Texture>
+
+                        <Texture name="$parentDivider_Left">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="-1" y="30"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="BACKGROUND">
+                        <Texture name="$parentFrameBackground">
+                            <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+                            <Size x="320" y="128"/>
+                            <Anchors><Anchor point="CENTER"/></Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+
+                <Frames>
+                    <Button name="$parentYes" parentKey="Yes" text="Accept">
+                        <Size x="96" y="32"/>
+                        <Anchors><Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="-5" y="10"/></Anchors>
+                        <Backdrop edgeFile="Interface\Buttons\WHITE8X8"><EdgeSize val="1"/></Backdrop>
+                        <NormalFont style="GameFontHighlight"/>
+                        <HighlightFont style="GameFontNormal"/>
+                    </Button>
+
+                    <Button name="$parentNo" parentKey="No" text="Decline">
+                        <Size x="96" y="32"/>
+                        <Anchors><Anchor point="BOTTOMLEFT" relativePoint="BOTTOM" x="5" y="10"/></Anchors>
+                        <Backdrop edgeFile="Interface\Buttons\WHITE8X8"><EdgeSize val="1"/></Backdrop>
+                        <NormalFont style="GameFontHighlight"/>
+                        <HighlightFont style="GameFontNormal"/>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+<!-- PROFILE FRAME -->
+
+    <Frame name="Kib_ProfileFrameTemplate" hidden="true" toplevel="true" virtual="true">
+        <Anchors>
+            <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+            <Anchor point="BOTTOMLEFT" x="0" y="-64"/>
+        </Anchors>
+
+        <Frames>
+            <Button name="$parentAccept" parentKey="Accept" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOP" x="-4" y="-24"/>
+                </Anchors>
+
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentDivider" parentKey="Divider">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="4" y="2"/>
+                                <Anchor point="BOTTOMRIGHT" x="-4" y="0"/>
+                            </Anchors>
+                        </Texture>
+
+                        <FontString parentKey="Text" inherits="GameTooltipTextSmall" justifyH="CENTER"></FontString>
+                    </Layer>
+                </Layers>
+
+                <Scripts>
+                    <OnEnter> self.Divider:SetColorTexture(1, 1, 0, 1) </OnEnter>
+                    <OnLeave> self.Divider:SetColorTexture(1, 1, 1, 1) </OnLeave>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentDecline" parentKey="Decline" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPRIGHT"/>
+                    <Anchor point="BOTTOMLEFT" relativePoint="TOP" x="4" y="-24"/>
+                </Anchors>
+
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentDivider" parentKey="Divider">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="4" y="2"/>
+                                <Anchor point="BOTTOMRIGHT" x="-4" y="0"/>
+                            </Anchors>
+                        </Texture>
+
+                        <FontString parentKey="Text" inherits="GameTooltipTextSmall" justifyH="CENTER"></FontString>
+                    </Layer>
+                </Layers>
+
+                <Scripts>
+                    <OnEnter> self.Divider:SetColorTexture(1, 1, 0, 1) </OnEnter>
+                    <OnLeave> self.Divider:SetColorTexture(1, 1, 1, 1) </OnLeave>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+
+<!-- PROFILE EDITBOX -->
+
+    <EditBox name="Kib_ProfileEditBoxTemplate" hidden="true" letters="25" autoFocus="false" virtual="true">
+        <TextInsets left="5" right="0" top="0" bottom="0"/>
+
+        <Anchors>
+            <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" x="-11" y="32"/>
+            <Anchor point="BOTTOMLEFT" x="11" y="0"/>
+        </Anchors>
+
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8" edgeFile="Interface\Buttons\WHITE8X8">
+            <EdgeSize val="1"/>
+            <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+        </Backdrop>
+    
+        <FontString inherits="GameFontHighlight" justifyH="LEFT" />
+    
+        <Scripts>
+            <OnEditFocusGained> self:SetText("") </OnEditFocusGained>
+        </Scripts>
+    </EditBox>
+
+<!-- CONFIG FRAME -->
+
+    <Frame name="Kib_ConfigFrameTemplate" frameStrata="HIGH" hidden="true" virtual="true">
+        <Anchors><Anchor point="TOP" x="0" y="-400"/></Anchors>
+
+        <Frames>
+            <Button name="$parentClose" parentKey="Close">
+                <Size x="32" y="32"/>
+                <Anchors><Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/></Anchors>
+                <NormalTexture file="Interface\AddOns\Kib_Config\media\close"/>
+                <HighlightTexture file="Interface\AddOns\Kib_Config\media\glow_round" alphaMode="ADD"/>
+                <Scripts>
+                    <OnClick> self:GetParent():Hide() </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentInfoFrame" parentKey="InfoFrame">
+                <Anchors><Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="-10" y="0"/></Anchors>
+                <Size x="224" y="192"/>
+
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentDivider1">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-28" y="0"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="10" y="-2"/>
+                            </Anchors>
+                        </Texture>
+
+                        <Texture name="$parentDivider2">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" x="28" y="-2"/>
+                            </Anchors>
+                        </Texture>
+
+                        <FontString name="$parentTip" parentKey="Tip" inherits="GameTooltipTextSmall" justifyH="LEFT" justifyV="TOP" wordwrap="true" text="">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="0" y="-32"/>
+                                <Anchor point="BOTTOMRIGHT" x="-10" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame name="$parentWelcomeFrame" parentKey="WelcomeFrame" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+                    <Anchor point="BOTTOMLEFT" x="0" y="-320"/>
+                </Anchors>
+
+                <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+                    <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+                    <BackgroundInsets left="0" right="0" top="1" bottom="1"/>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentTitle" parentKey="Title" inherits="GameTooltipTextSmall" justifyH="CENTER" text="KIBUI">
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="CENTER" x="128" y="5"/>
+                                <Anchor point="TOPLEFT" relativePoint="CENTER" x="-128" y="133"/>
+                            </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentTip" parentKey="Tip" inherits="GameTooltipTextSmall" justifyV="TOP" justifyH="CENTER" wordwrap="true" text="">
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="CENTER" x="128" y="-133"/>
+                                <Anchor point="TOPLEFT" relativePoint="CENTER" x="-128" y="-5"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame name="$parentBackground" parentKey="Background" enableMouse="true" frameStrata="BACKGROUND">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="UIParent"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="UIParent"/>
+                </Anchors>
+
+                <!-- QUITE HACKY, BUT GETS THE JOB DONE -->
+
+                <Scripts>
+                    <OnLoad> 
+                        self.ShowFunc = function() self:Show() end
+                        self.Timer = C_Timer.After 
+                        self.InfoTipFrame = self:GetParent().InfoFrame.Tip
+                    </OnLoad>
+                    <OnEnter> self.InfoTipFrame:SetText("") self:Hide() self.Timer(1, self.ShowFunc) </OnEnter>
+                </Scripts>
+            </Frame>
+        </Frames>
+    </Frame>
+
+<!-- CONFIG ELEMENT FRAME -->
+
+    <Frame name="Kib_ConfigLineFrameTemplate" hidden="true" enableMouse="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+            <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+            <BackgroundInsets left="0" right="0" top="1" bottom="1"/>
+        </Backdrop>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentText_A" parentKey="Text_A" inherits="GameTooltipTextSmall" justifyH="LEFT" wordwrap="false" text="">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM"/>
+                        <Anchor point="TOPLEFT" x="24" y="0"/>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentText_B" parentKey="Text_B" inherits="GameTooltipTextSmall" justifyH="MIDDLE" text="">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-64" y="0"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+<!-- CONFIG TAB -->
+
+    <Button name="Kib_TabTemplate" enableMouse="true" virtual="true">
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameTooltipTextSmall" justifyH="CENTER" wordwrap="false">
+                    <Anchors><Anchor point="BOTTOM" x="0" y="12"/></Anchors>
+                </FontString>
+
+                <Texture parentKey="Divider">
+                    <Color r="1" g="1" b="1" a="1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="0" y="2"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </Texture>
+
+                <Texture parentKey="Icon">
+                    <Anchors><Anchor point="BOTTOM"/></Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Scripts>
+            <OnLeave> self.Text:SetTextColor(1 ,1 ,1 ,1) </OnLeave>
+        </Scripts>
+    </Button>
+
+<!-- CONFIG TAB CHILD CONTAINER -->
+
+    <Button name="Kib_TabChildContainerTemplate" virtual="true">
+        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+        <Anchor point="BOTTOMRIGHT" x="0" y="-32"/>
+
+        <Frames>
+            <Frame parentKey="ScrollFrame" hidden="true">
+                <Size x="16" y="256"/>
+                <Anchors><Anchor point="LEFT" relativePoint="RIGHT" x="5" y="0"/></Anchors>
+
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture parentKey="Divider">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="TOP" x="-1" y="-24"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="1" y="24"/>
+                            </Anchors>
+                        </Texture>
+
+                        <Texture parentKey="ScrollUpBG" file="Interface\AddOns\Kib_Config\media\scroll_up_A">
+                            <Color r="1" g="1" b="1" a="0.3"/>
+                            <Size x="24" y="24"/>
+                            <Anchors><Anchor point="TOP"/></Anchors>
+                        </Texture>
+
+                        <Texture parentKey="ScrollDownBG" file="Interface\AddOns\Kib_Config\media\scroll_down_A">
+                            <Color r="1" g="1" b="1" a="0.3"/>
+                            <Size x="24" y="24"/>
+                            <Anchors><Anchor point="BOTTOM"/></Anchors>
+                        </Texture>
+
+                    </Layer>
+                </Layers>
+
+                <Frames>
+                    <Button parentKey="ScrollUp" toplevel="true" hidden="true">
+                        <Size x="24" y="24"/>
+                        <Anchors><Anchor point="TOP"/></Anchors>
+                        <NormalTexture file="Interface\AddOns\Kib_Config\media\scroll_up_A"/>
+                        <HighlightTexture file="Interface\AddOns\Kib_Config\Media\glow_round" alphaMode="ADD"/>
+                    </Button>
+
+                    <Button parentKey="ScrollDown" toplevel="true" hidden="true">
+                        <Size x="24" y="24"/>
+                        <Anchors><Anchor point="BOTTOM"/></Anchors>
+                        <NormalTexture file="Interface\AddOns\Kib_Config\media\scroll_down_A"/>
+                        <HighlightTexture file="Interface\AddOns\Kib_Config\Media\glow_round" alphaMode="ADD"/>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Button>
+
+<!-- DROPDOWN MAIN BUTTON -->
+
+    <Button name="Kib_DropDownButtonTemplate" hidden="true" virtual="true">
+
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8" edgeFile="Interface\Buttons\WHITE8X8">
+            <EdgeSize val="1"/>
+            <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+        </Backdrop>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Text" inherits="GameTooltipTextSmall" justifyH="LEFT" wordwrap="false" text="">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="5" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" x="-26" y="0"/>
+                    </Anchors>
+                </FontString>
+
+                <Texture parentKey="ExpandTexture" file="Interface\AddOns\Kib_Config\media\scroll_down_C">
+                    <Size x="16" y="16"/>
+                    <Anchors><Anchor point="RIGHT" x="-5" y="0"/></Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <Frame parentKey="Container" hidden="true" toplevel="true" enableMouse="true">
+                <Anchors><Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/></Anchors>
+
+                <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+                    <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture parentKey="ScrollUp" hidden="true" file="Interface\AddOns\Kib_Config\media\scroll_up_C">
+                            <Size x="8" y="8"/>
+                            <Anchors><Anchor point="TOP"/></Anchors>
+                        </Texture>
+
+                        <Texture parentKey="ScrollDown" hidden="true" file="Interface\AddOns\Kib_Config\media\scroll_down_C">
+                            <Size x="8" y="8"/>
+                            <Anchors><Anchor point="BOTTOM"/></Anchors>
+                        </Texture>
+
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+
+        <Scripts>
+            <OnClick>
+                if self.Container:IsShown() then
+                    self.Container:Hide()
+                    self.ExpandTexture:SetTexture("Interface\\AddOns\\Kib_Config\\media\\scroll_down_C")
+                else
+                    self.Container.Scroll_Offset = 0
+                    self.Container:Show()
+                    self.ExpandTexture:SetTexture("Interface\\AddOns\\Kib_Config\\media\\scroll_up_C")
+                end
+            </OnClick>
+        </Scripts>
+    </Button>
+
+<!-- DROPDOWN CONTAINER BUTTON TEMPLATE -->
+
+    <Button name="Kib_DropDownChildButtonTemplate" virtual="true">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentText" parentKey="Text" inherits="GameTooltipTextSmall" justifyH="LEFT" wordwrap="false" text="">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="0"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </FontString>
+
+                <Texture parentKey="Indicator">
+                    <Color r="1" g="1" b="1" a="1"/>
+
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" x="1" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Scripts>
+            <OnLeave> 
+                if not MouseIsOver(self.Parent) then 
+                    self.Parent:Hide() 
+                    self.ExpandIcon:SetTexture("Interface\\AddOns\\Kib_Config\\media\\scroll_down_C")
+                end 
+                self.Indicator:SetColorTexture(1, 1, 1, 1)
+            </OnLeave>
+        </Scripts>
+    </Button>
+
+<!-- EVENT BUCKET FRAME -->
+
+    <Frame name="Kib_EventBucketFrameTemplate" hidden="true" enableMouse="true" movable="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8"><Color r="0.078" g="0.078" b="0.075" a="0.9"/></Backdrop>
+        <Anchors><Anchor point="TOP" x="0" y="-50"/></Anchors>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Text_Title" inherits="GameTooltipTextSmall" justifyH="RIGHT" wordwrap="false" text="KIB Event Bucket">
+                    <Anchors>
+                        <Anchor point="LEFT" x="15" y="0"/>
+                    </Anchors>
+                </FontString>
+
+                <FontString parentKey="Text_EventLines_Cur" inherits="GameTooltipTextSmall" justifyH="LEFT" wordwrap="false">
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-15" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <Frame parentKey="Container">
+                <Anchors><Anchor point="TOP" relativePoint="BOTTOM"/></Anchors>
+
+                <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+                    <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentDivider_Top">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="16" y="0"/>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="-1"/>
+                            </Anchors>
+                        </Texture>
+
+                        <Texture name="$parentDivider_A">
+                            <Color r="1" g="1" b="1" a="1"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-52" y="-27"/>
+                                <Anchor point="BOTTOMRIGHT" x="-51" y="27"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button parentKey="ScrollUp" toplevel="true" hidden="true">
+                <Size x="18" y="18"/>
+                <Anchors><Anchor point="CENTER" relativeKey="$Parent.Container" relativePoint="TOPRIGHT" x="-52" y="-18"/></Anchors>
+                <NormalTexture file="Interface\AddOns\Kib_Config\Media\scroll_up_A"/>
+                <HighlightTexture file="Interface\AddOns\Kib_Config\Media\glow_round" alphaMode="ADD"/>
+            </Button>
+
+            <Button parentKey="ScrollDown" toplevel="true" hidden="true">
+                <Size x="18" y="18"/>
+                <Anchors><Anchor point="CENTER" relativeKey="$Parent.Container" relativePoint="BOTTOMRIGHT" x="-52" y="18"/></Anchors>
+                <NormalTexture file="Interface\AddOns\Kib_Config\Media\scroll_down_A"/>
+                <HighlightTexture file="Interface\AddOns\Kib_Config\Media\glow_round" alphaMode="ADD"/>
+            </Button>
+        </Frames>
+
+        <Scripts>
+            <OnLoad> self:RegisterForDrag("LeftButton", "RightButton") </OnLoad>
+            <OnDragStart> self:ClearAllPoints() self:StartMoving() </OnDragStart>
+            <OnDragStop> self:StopMovingOrSizing() </OnDragStop>
+        </Scripts>
+    </Frame>
+
+<!-- EVENT BUCKET BUTTON -->
+
+    <Button name="Kib_EventBucketButtonTemplate" enableMouse="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8" edgeFile="Interface\Buttons\WHITE8X8">
+            <EdgeSize val="1"/>
+            <Color r="0.078" g="0.078" b="0.075" a="0.9"/>
+        </Backdrop>
+        <Size x="96" y="32"/>
+
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameTooltipTextSmall" justifyH="CENTER" wordwrap="false">
+                    <Anchors><Anchor point="CENTER"/></Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+<!-- EVENT BUCKET LINE -->
+
+    <Button name="Kib_EventBucketLineTemplate" hidden="true" enableMouse="true" virtual="true">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Text_Left" inherits="GameTooltipTextSmall" justifyH="LEFT" justifyV="MIDDLE" wordwrap="false">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="-52" y="0"/>
+                        <Anchor point="TOPLEFT" x="15" y="0"/>
+                    </Anchors>
+                </FontString>
+
+                <FontString parentKey="Text_Right" inherits="GameTooltipTextSmall" justifyH="RIGHT" justifyV="MIDDLE" wordwrap="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$Parent.Text_Left" relativePoint="TOPRIGHT" x="5" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" x="-15" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+<!-- GAME MENU BUTTON -->
+
+    <Button name="Kib_GameMenuButtonTemplate" enableMouse="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+            <Color r="0.078" g="0.078" b="0.075" a="0.6"/>
+            <BackgroundInsets left="0" right="64" top="0" bottom="0"/>
+        </Backdrop>
+
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameTooltipTextSmall"></FontString>
+
+                <Texture parentKey="Edge">
+                    <Color r="1" g="1" b="1" a="1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="-6" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" x="-5" y="0"/>
+                    </Anchors>
+                </Texture>
+
+                <Texture parentKey="Fade" file="Interface\AddOns\Kib_Config\Media\Fade_Right">
+                    <Color r="0.078" g="0.078" b="0.075" a="0.6"/>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" x="32" y="0"/>
+                        <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-64" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Button>
+
+<!-- GAME MENU FRAME -->
+
+    <Frame name="Kib_GameMenuFrameTemplate" frameStrata="HIGH" hidden="true" virtual="true">
+        <Backdrop bgFile="Interface\Buttons\WHITE8X8">
+            <Color r="0.078" g="0.078" b="0.075" a="0"/>
+        </Backdrop>
+
+        <Frames>
+            <Frame parentKey="Container">
+                <Anchors><Anchor point="CENTER"/></Anchors>
+            </Frame>
+        </Frames>
+
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameTooltipTextSmall">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$Parent.Container" relativePoint="TOPLEFT" x="15" y="15"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+</Ui>

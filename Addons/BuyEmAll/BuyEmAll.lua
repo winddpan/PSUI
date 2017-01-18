@@ -443,15 +443,15 @@ local frameItemIndex;
 local PurchaseLoopFrame = CreateFrame("Frame");
 function BuyEmAll:onUpdate(sinceLastUpdate)
     self.sinceLastUpdate = (self.sinceLastUpdate or 0) + sinceLastUpdate;
-    if (frameNumLoops == 0) and (frameLeftover == 0) then
-        PurchaseLoopFrame:SetScript("OnUpdate", nil); -- When purchasing is done, clear the script so it's not running constantly.
-        return
-    end
     if (self.sinceLastUpdate >= 0.5) then -- In seconds, this being half a second.
+        if (frameNumLoops == 0) and (frameLeftover == 0) then
+            PurchaseLoopFrame:SetScript("OnUpdate", nil); -- When purchasing is done, clear the script so it's not running constantly.
+            return
+        end
         if (frameNumLoops == 0) and (frameLeftover ~= 0) then
             BuyMerchantItem(frameItemIndex, frameLeftover);
             frameLeftover = 0;
-        else
+        elseif (frameNumLoops > 0) then
             BuyMerchantItem(frameItemIndex, framePurchAmount);
             frameNumLoops = frameNumLoops - 1;
         end

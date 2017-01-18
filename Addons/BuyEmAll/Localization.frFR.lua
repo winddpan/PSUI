@@ -1,4 +1,4 @@
--- Thanks to Layrajha!
+﻿-- Thanks to Layrajha!
 
 if GetLocale() == "frFR" then
 	BUYEMALL_LOCALS = {

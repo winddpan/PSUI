@@ -1,0 +1,22 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<!-- NameSpace Definition -->
+	<Script file="Base.lua"/>
+
+	<!-- System Class Definition -->
+	<Include file="System\System.xml"/>
+
+	<!-- IGAS Addon Definition -->
+	<Script file="IGAS.lua"/>
+
+	<!-- Localization Definition -->
+	<Include file="Localization\Localization.xml"/>
+
+	<!-- Widget Class Definition -->
+	<Include file="System\Widget\Widget.xml"/>
+
+	<!-- Manager Class Definition -->
+	<Include file="System\Manager\Manager.xml"/>
+
+	<!-- Special Frames Definition -->
+	<Include file="SpecialFrame\SpecialFrame.xml"/>
+</Ui>

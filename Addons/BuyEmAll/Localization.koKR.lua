@@ -1,4 +1,4 @@
--- Thanks to sayclub!
+﻿-- Thanks to sayclub!
 
 if GetLocale() == "koKR" then
 	BUYEMALL_LOCALS = {

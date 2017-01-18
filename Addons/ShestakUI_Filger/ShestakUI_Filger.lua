@@ -59,36 +59,36 @@ SpellActivationOverlayFrame:SetFrameStrata("BACKGROUND")
 local Filger = {}
 local MyUnits = {player = true, vehicle = true, pet = true}
 
-function Filger:UnitBuff(unitID, inSpellID, spn, absID)
+function Filger:UnitBuff(unitID, inSpellID, spn, absID, stack)
 	if absID then
 		for i = 1, 40, 1 do
 			local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitBuff(unitID, i)
 			if not name then break end
-			if inSpellID == spellID then
+			if inSpellID == spellID and (not stack or count >= stack) then
 				return name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
 			end
 		end
 	else
 		local name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = UnitBuff(unitID, spn)
-		if spid == inSpellID then
+		if spid == inSpellID and (not stack or count >= stack) then
 			return name, _, icon, count, _, duration, expirationTime, caster, _, _, spid 
 		end
 	end
 	return nil
 end
 
-function Filger:UnitDebuff(unitID, inSpellID, spn, absID)
+function Filger:UnitDebuff(unitID, inSpellID, spn, absID, stack)
 	if absID then
 		for i = 1, 40, 1 do
 			local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitDebuff(unitID, i)
 			if not name then break end
-			if inSpellID == spellID then
+			if inSpellID == spellID and (not stack or count >= stack) then
 				return name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
 			end
 		end
 	else
 		local name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = UnitDebuff(unitID, spn)
-		if spid == inSpellID then
+		if spid == inSpellID and (not stack or count >= stack) then
 			return name, _, icon, count, _, duration, expirationTime, caster, _, _, spid 
 		end
 	end
@@ -351,7 +351,7 @@ function Filger:OnEvent(event, unit)
 				local caster, spn, expirationTime
 				spn, _, _ = GetSpellInfo(data.spellID)
 				if spn then
-					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitBuff(data.unitID, data.spellID, spn, data.absID)
+					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitBuff(data.unitID, data.spellID, spn, data.absID, data.stack)
 					if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
 						start = expirationTime - duration
 						found = true
@@ -361,7 +361,7 @@ function Filger:OnEvent(event, unit)
 				local caster, spn, expirationTime
 				spn, _, _ = GetSpellInfo(data.spellID)
 				if spn then
-					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitDebuff(data.unitID, data.spellID, spn, data.absID)
+					name, _, icon, count, _, duration, expirationTime, caster, _, _, spid = Filger:UnitDebuff(data.unitID, data.spellID, spn, data.absID, data.stack)
 					if name and (data.caster ~= 1 and (caster == data.caster or data.caster == "all") or MyUnits[caster]) then
 						start = expirationTime - duration
 						found = true
@@ -393,11 +393,11 @@ function Filger:OnEvent(event, unit)
 				if data.trigger == "BUFF" then
 					local spn
 					spn, _, icon = GetSpellInfo(data.spellID)
-					name, _, _, _, _, _, _, _, _, _, spid = Filger:UnitBuff("player", data.spellID, spn, data.absID)
+					name, _, _, _, _, _, _, _, _, _, spid = Filger:UnitBuff("player", data.spellID, spn, data.absID, data.stack)
 				elseif data.trigger == "DEBUFF" then
 					local spn
 					spn, _, icon = GetSpellInfo(data.spellID)
-					name, _, _, _, _, _, _, _, _, _, spid = Filger:UnitDebuff("player", data.spellID, spn, data.absID)
+					name, _, _, _, _, _, _, _, _, _, spid = Filger:UnitDebuff("player", data.spellID, spn, data.absID, data.stack)
 				end
 				if name then
 					if data.slotID then

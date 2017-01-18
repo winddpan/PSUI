@@ -1,4 +1,4 @@
--- Thanks to JokerGermany and Lysandro!
+﻿-- Thanks to JokerGermany and Lysandro!
 
 if GetLocale() == "deDE" then
 	BUYEMALL_LOCALS = {

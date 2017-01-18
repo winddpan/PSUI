@@ -1,0 +1,13 @@
+## Interface: 70100
+## Title: Kib: Quest Mobs
+## Author: Tosaido
+## Version: 1.15
+## Notes: Keep it Basic: Quest Mobs. Adds a quest indicator above nameplates.
+## OptionalDeps: Kib_Config
+## DefaultState: enabled
+
+a_localization.lua
+b_register.lua
+c_core.lua
+d_config.lua
+e_finalize.lua

@@ -357,10 +357,13 @@ end
 local function UpdateFrameSize(f)
     -- set frame size and position
     if f.state.minus then
+        f:SetSize(FRAME_WIDTH_MINUS+10,FRAME_HEIGHT_MINUS+20)
         f.bg:SetSize(FRAME_WIDTH_MINUS,FRAME_HEIGHT_MINUS)
     elseif f.state.player then
+        f:SetSize(FRAME_WIDTH_PERSONAL+10,FRAME_HEIGHT_PERSONAL+20)
         f.bg:SetSize(FRAME_WIDTH_PERSONAL,FRAME_HEIGHT_PERSONAL)
     else
+        f:SetSize(FRAME_WIDTH+10,FRAME_HEIGHT+20)
         f.bg:SetSize(FRAME_WIDTH,FRAME_HEIGHT)
     end
 
@@ -369,8 +372,8 @@ local function UpdateFrameSize(f)
     end
 
     -- calculate point to remain pixel-perfect
-    f.x = floor((addon.width / 2) - (f.bg:GetWidth() / 2))
-    f.y = floor((addon.height / 2) - (f.bg:GetHeight() / 2))
+    f.x = floor((f:GetWidth() / 2) - (f.bg:GetWidth() / 2))
+    f.y = floor((f:GetHeight() / 2) - (f.bg:GetHeight() / 2))
 
     f.bg:SetPoint('BOTTOMLEFT',f.x,f.y)
 
@@ -459,6 +462,19 @@ do
 end
 -- name text ###################################################################
 do
+    local function SetNameTextPlayerColor(f)
+        -- override colour based on config
+        if not f.state.player and UnitIsPlayer(f.unit) then
+            if f.state.friend then
+                if CLASS_COLOUR_FRIENDLY_NAMES then
+                    f.NameText:SetTextColor(GetClassColour(f))
+                end
+            elseif CLASS_COLOUR_ENEMY_NAMES then
+                f.NameText:SetTextColor(GetClassColour(f))
+            end
+        end
+    end
+
     local function UpdateNameText(f)
         if f.IN_NAMEONLY then
             if TITLE_TEXT_PLAYERS then
@@ -469,21 +485,26 @@ do
 
             f.NameText:Show()
 
+            -- reaction colour
             if not UnitCanAttack('player',f.unit) and
                f.state.reaction >= 4
             then
-                -- friendly colour
+                -- friendly
                 f.NameText:SetTextColor(.6,1,.6)
                 f.GuildText:SetTextColor(.8,.9,.8,.9)
             else
-                f.NameText:SetTextColor(1,.4,.3)
-                f.GuildText:SetTextColor(1,.8,.7,.9)
+                if f.state.reaction == 4 then
+                    -- neutral, attackable
+                    f.NameText:SetTextColor(1,1,.4)
+                    f.GuildText:SetTextColor(1,1,.8,.9)
+                else
+                    -- hostile
+                    f.NameText:SetTextColor(1,.4,.3)
+                    f.GuildText:SetTextColor(1,.8,.7,.9)
+                end
             end
 
-            if UnitIsPlayer(f.unit) then
-                -- player class colour
-                f.NameText:SetTextColor(GetClassColour(f))
-            end
+            SetNameTextPlayerColor(f)
 
             -- set name text colour to health
             core:NameOnlySetNameTextToHealth(f)
@@ -495,16 +516,7 @@ do
 
             -- white name text by default
             f.NameText:SetTextColor(1,1,1,1)
-
-            if not f.state.player and UnitIsPlayer(f.unit) then
-                if f.state.friend then
-                    if CLASS_COLOUR_FRIENDLY_NAMES then
-                        f.NameText:SetTextColor(GetClassColour(f))
-                    end
-                elseif CLASS_COLOUR_ENEMY_NAMES then
-                    f.NameText:SetTextColor(GetClassColour(f))
-                end
-            end
+            SetNameTextPlayerColor(f)
 
             if f.state.no_name then
                 f.NameText:Hide()
@@ -1273,66 +1285,6 @@ function core.ClassPowers_CreateBar()
 
     return bar
 end
-do
-    local orig_SetVertexColor,orig_Active,orig_Inactive,orig_ActiveOverflow,
-          orig_Hide
-
-    local function Icon_SetVertexColor(icon,...)
-        -- also set glow colour
-        icon.glow:SetVertexColor(...)
-        icon.glow:SetAlpha(.8)
-
-        orig_SetVertexColor(icon,...)
-    end
-    local function Icon_Active(icon)
-        orig_Active(icon)
-        icon.glow:Show()
-    end
-    local function Icon_Inactive(icon)
-        orig_Inactive(icon)
-        icon.glow:Hide()
-    end
-    local function Icon_ActiveOverflow(icon)
-        orig_ActiveOverflow(icon)
-        icon.glow:Show()
-    end
-    local function Icon_Hide(icon)
-        orig_Hide(icon)
-        icon.glow:Hide()
-    end
-
-    function core.ClassPowers_PostCreateIcon(icon)
-        -- add icon glow
-        local ig = addon.ClassPowersFrame:CreateTexture(nil,'ARTWORK',nil,0)
-        ig:SetTexture(MEDIA..'combopoint-glow')
-        ig:SetPoint('TOPLEFT',icon,-5,5)
-        ig:SetPoint('BOTTOMRIGHT',icon,5,-5)
-        ig:SetVertexColor(icon:GetVertexColor())
-        ig:Hide()
-
-        icon.glow = ig
-
-        -- function overloads
-        orig_Hide = icon.Hide
-        orig_Active = icon.Active
-        orig_Inactive = icon.Inactive
-        orig_ActiveOverflow = icon.ActiveOverflow
-        orig_SetVertexColor = icon.SetVertexColor
-
-        icon.Hide = Icon_Hide
-        icon.Active = Icon_Active
-        icon.Inactive = Icon_Inactive
-        icon.ActiveOverflow = Icon_ActiveOverflow
-        icon.SetVertexColor = Icon_SetVertexColor
-    end
-end
-function core.ClassPowers_PostRuneUpdate(icon)
-    if icon.cd:IsShown() then
-        icon.glow:Hide()
-    else
-        icon.glow:Show()
-    end
-end
 -- threat brackets #############################################################
 do
     local TB_TEXTURE = MEDIA..'threat-bracket'
@@ -1443,7 +1395,7 @@ end
 -- nameonly ####################################################################
 do
     local NAMEONLY_NO_FONT_STYLE,NAMEONLY_ENEMIES,NAMEONLY_DAMAGED_FRIENDS,
-    NAMEONLY_ALL_ENEMIES,NAMEONLY_TARGET
+    NAMEONLY_ALL_ENEMIES,NAMEONLY_TARGET,NAMEONLY_HEALTH_COLOUR
 
     function core:configChangedNameOnly()
         NAMEONLY_NO_FONT_STYLE = self.profile.nameonly_no_font_style
@@ -1451,6 +1403,7 @@ do
         NAMEONLY_ALL_ENEMIES = self.profile.nameonly_all_enemies
         NAMEONLY_ENEMIES = NAMEONLY_ALL_ENEMIES or self.profile.nameonly_enemies
         NAMEONLY_TARGET = self.profile.nameonly_target
+        NAMEONLY_HEALTH_COLOUR = self.profile.nameonly_health_colour
 
         if NAMEONLY_ALL_ENEMIES or NAMEONLY_TARGET then
             -- create target/threat glow
@@ -1563,7 +1516,7 @@ do
     end
     function core:NameOnlySetNameTextToHealth(f)
         -- set name text colour to approximate health
-        if not f.IN_NAMEONLY then return end
+        if not f.IN_NAMEONLY or not NAMEONLY_HEALTH_COLOUR then return end
 
         if f.state.health_cur and f.state.health_cur > 0 and
            f.state.health_max and f.state.health_max > 0
@@ -1638,6 +1591,7 @@ function core:InitialiseElements()
         bar_width = self.profile.classpowers_bar_width,
         bar_height = self.profile.classpowers_bar_height,
         icon_texture = MEDIA..'combopoint-round',
+        icon_glow_texture = MEDIA..'combopoint-glow',
         cd_texture = 'interface/playerframe/classoverlay-runecooldown',
         bar_texture = BAR_TEXTURE,
         point = { 'CENTER','bg','BOTTOM',0,1 },

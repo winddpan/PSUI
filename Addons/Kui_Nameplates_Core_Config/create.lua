@@ -7,7 +7,7 @@ version:SetAlpha(.7)
 version:SetPoint('TOPRIGHT',-12,-12)
 version:SetText(string.format(
     opt.titles.version,
-    'KuiNameplates','Kesava','2-14-2'
+    'KuiNameplates','Kesava','2-14-4'
 ))
 
 opt:Initialise()
@@ -38,8 +38,8 @@ local target_arrows = general:CreateCheckBox('target_arrows')
 local frame_glow_size = general:CreateSlider('frame_glow_size',4,16)
 local target_arrows_size = general:CreateSlider('target_arrows_size',20,60)
 
-combat_hostile.SelectTable = {'Do nothing','Hide','Show'}
-combat_friendly.SelectTable = {'Do nothing','Hide','Show'}
+combat_hostile.SelectTable = {'Do nothing','Hide, then show','Show, then hide'}
+combat_friendly.SelectTable = combat_hostile.SelectTable
 
 combat_hostile:SetPoint('TOPLEFT',10,-10)
 combat_friendly:SetPoint('LEFT',combat_hostile,'RIGHT',10,0)
@@ -223,6 +223,7 @@ health_text_hostile_dmg.enabled = health_text_friend_max.enabled
 -- nameonly ####################################################################
 local nameonlyCheck = nameonly:CreateCheckBox('nameonly')
 local nameonly_no_font_style = nameonly:CreateCheckBox('nameonly_no_font_style')
+local nameonly_health_colour = nameonly:CreateCheckBox('nameonly_health_colour')
 local nameonly_damaged_friends = nameonly:CreateCheckBox('nameonly_damaged_friends')
 local nameonly_enemies = nameonly:CreateCheckBox('nameonly_enemies')
 local nameonly_all_enemies = nameonly:CreateCheckBox('nameonly_all_enemies')
@@ -232,6 +233,7 @@ local guild_text_players = nameonly:CreateCheckBox('guild_text_players')
 local title_text_players = nameonly:CreateCheckBox('title_text_players')
 
 nameonly_no_font_style.enabled = function(p) return p.nameonly end
+nameonly_health_colour.enabled = nameonly_no_font_style.enabled
 nameonly_enemies.enabled = function(p) return p.nameonly and not p.nameonly_all_enemies end
 nameonly_damaged_friends.enabled = nameonly_no_font_style.enabled
 nameonly_all_enemies.enabled = nameonly_no_font_style.enabled
@@ -242,8 +244,9 @@ title_text_players.enabled = nameonly_no_font_style.enabled
 
 nameonlyCheck:SetPoint('TOPLEFT',10,-10)
 nameonly_no_font_style:SetPoint('LEFT',nameonlyCheck,'RIGHT',190,0)
+nameonly_health_colour:SetPoint('TOPLEFT',nameonlyCheck,'BOTTOMLEFT')
 
-nameonly_target:SetPoint('TOPLEFT',nameonlyCheck,'BOTTOMLEFT',0,-20)
+nameonly_target:SetPoint('TOPLEFT',nameonly_health_colour,'BOTTOMLEFT',0,-20)
 nameonly_all_enemies:SetPoint('TOPLEFT',nameonly_target,'BOTTOMLEFT')
 nameonly_enemies:SetPoint('LEFT',nameonly_all_enemies,'RIGHT',190,0)
 nameonly_damaged_friends:SetPoint('TOPLEFT',nameonly_all_enemies,'BOTTOMLEFT')

@@ -1,0 +1,13 @@
+## Interface: 70100
+## Title: [Lib] IGAS
+## Author: kurapica.igas@gmail.com
+## Version: v136
+## Notes: In-game addon system
+## URL: http://github.com/kurapica/IGAS
+## Dependencies: PLoop
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: IGAS_DB
+## SavedVariablesPerCharacter: IGAS_DB_Char
+
+IGAS.xml

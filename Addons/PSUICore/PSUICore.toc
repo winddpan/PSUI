@@ -40,6 +40,7 @@ automation\AutoRepair&Sell.lua
 automation\bg_hide_quest.lua
 automation\Invite.lua
 automation\auto_gearswap.lua
+automation\convenient.lua
 
 skin\StyleSkada.lua
 skin\StyleDBM.lua

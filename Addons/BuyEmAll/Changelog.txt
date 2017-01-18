@@ -1,4 +1,7 @@
-﻿v3.3.4
+﻿v3.3.5
+Super tiny and quick change to hopefully fix some syncing issues with sites.
+
+v3.3.4
 Forgot to completely remove old reagent bank search, my bad!
 
 v3.3.3

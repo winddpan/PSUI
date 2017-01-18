@@ -21,6 +21,11 @@ end
 local anchor = CreateFrame('Frame','KuiNameplatesPlayerAnchor')
 anchor:Hide()
 
+if addon.draw_frames then
+    anchor:SetBackdrop({ edgeFile = kui.m.t.solid, edgeSize = 1 })
+    anchor:SetBackdropBorderColor(0,0,1)
+end
+
 local plugin_fading
 local plugin_classpowers
 -- messages ####################################################################
@@ -84,7 +89,8 @@ function core:Show(f)
     end
 
     if f.state.player then
-        anchor:SetAllPoints(f)
+        anchor:SetParent(f)
+        anchor:SetAllPoints()
         anchor:Show()
 
         if addon.ClassPowersFrame then
@@ -219,8 +225,6 @@ function core:Initialise()
     self:AddCallback('Auras','DisplayAura',self.Auras_DisplayAura)
     self:AddCallback('ClassPowers','PostPositionFrame',self.ClassPowers_PostPositionFrame)
     self:AddCallback('ClassPowers','CreateBar',self.ClassPowers_CreateBar)
-    self:AddCallback('ClassPowers','PostCreateIcon',self.ClassPowers_PostCreateIcon)
-    self:AddCallback('ClassPowers','PostRuneUpdate',self.ClassPowers_PostRuneUpdate)
 
     -- update layout's locals with configuration
     self:SetLocals()

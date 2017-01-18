@@ -1,0 +1,14 @@
+﻿## Interface: 70100
+## Title: GladiatorlosSA
+## Notes: PVP Spell Sound Alert
+## Notes-zhTW: PVP技能語音提示
+## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan, Grit (Legion Update), Mini_Dragon, LordKuper
+## SavedVariables: GladiatorlosSADB
+## Version: 1.14
+
+embeds.xml
+Locales\locales.xml
+
+GladiatorlosSA2.lua
+spelllist.lua
+options.lua

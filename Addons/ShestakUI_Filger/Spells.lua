@@ -298,8 +298,6 @@ Filger_Spells = {
 			--MOP ADD
 			--剑在人在 ZS
 			{ spellID = 118038,  unitID = "target", caster = "all" , filter = "BUFF"},	
-			--时光护盾 FS
-			{ spellID = 115610,  unitID = "target", caster = "all" , filter = "BUFF"},	
 			--黑暗再生 SS
 			{ spellID = 108359,  unitID = "target", caster = "all" , filter = "BUFF"},
 			--ttt
@@ -446,6 +444,7 @@ Filger_Spells = {
 			
 			{spellID = 221630, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 193641, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 192425, unitID = "target", caster = "player", filter = "DEBUFF"},
 
 			-- 影舞
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
@@ -526,6 +525,10 @@ Filger_Spells = {
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
+			-- 敏锐终结技buff
+			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 197498, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- 骰子6buff
 			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
@@ -542,6 +545,13 @@ Filger_Spells = {
 			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 披风
+			{spellID = 208693, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
+			{spellID = 228224, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
+			
+
+
 		},
 		{
 			Name = "T_DEBUFF_ICON",

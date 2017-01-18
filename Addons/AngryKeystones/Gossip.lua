@@ -77,10 +77,27 @@ function Mod:GOSSIP_SHOW()
 	end
 end
 
+local function PlayCurrent()
+	if select(10, C_Scenario.GetInfo()) == LE_SCENARIO_TYPE_CHALLENGE_MODE and Addon.Config.hideTalkingHead then
+		local frame = TalkingHeadFrame
+		if (frame.finishTimer) then
+			frame.finishTimer:Cancel()
+			frame.finishTimer = nil
+		end
+		frame:Hide()
+	end
+end
+
+function Mod:Blizzard_TalkingHeadUI()
+	hooksecurefunc("TalkingHeadFrame_PlayCurrent", PlayCurrent)
+end
+
 function Mod:Startup()
 	if not AngryKeystones_Data then AngryKeystones_Data = {} end
 	if not AngryKeystones_Data.rumors then AngryKeystones_Data.rumors = {} end
 	if Addon.Config.cosRumors then self:RumorCleanup() end
 
 	self:RegisterEvent("GOSSIP_SHOW")
+
+	self:RegisterAddOnLoaded("Blizzard_TalkingHeadUI")
 end

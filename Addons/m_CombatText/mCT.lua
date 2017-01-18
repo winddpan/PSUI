@@ -99,7 +99,7 @@ mCTi:SetScript("OnEvent", function(self, event, subev, arg2, arg3)
 					msg = msg..floor(arg2)
 				end
 				if(info.arg3) then
-					if (subev=="HEAL" or subev=="HEAL_CRIT") then
+					if (subev=="HEAL" or subev=="HEAL_CRIT" or subev=="PERIODIC_HEAL") then
 						msg = msg..SVal(arg3) 
 					else
 						msg = msg..arg3
@@ -278,7 +278,6 @@ if cfg.combattext.show_healing then
 				if(amount>=cfg.combattext.threshold.heal)then
 					local color={.1,1,.1}
 					local rawamount=amount
-					amount=SVal(amount)
 					if cfg.combattext.show_overhealing and abs(overhealing) > 0 then amount = SVal(math.floor(amount-overhealing)).." ("..SVal(floor(overhealing))..")" end
 					if (critical) then 
 						amount="|cffFF0000*|r"..amount.."|cffFF0000*|r"

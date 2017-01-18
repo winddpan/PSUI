@@ -1,0 +1,26 @@
+2016/12/02 v5.13
+	1. Update for PLoop v163.
+
+2016/10/27 v5.12
+    1. Update toc for WOW 7.1
+
+2016/02/27: v5.10
+	1. Update for IGAS lib.
+	2. Auto-complete delay can be changed for less disturb.
+
+2014/10/17: v5.8
+	1. Update toc for wow 6.0
+
+2014/10/14: v5.7
+	1. WOW API added to auto complete list.
+	2. Menu added to modify code editor settings.
+	3. Fix some input error with "|" with IGAS v57.
+
+2013/08/15: v5.6
+	1. fix localization error
+
+2013/08/15: v5.5
+	1. Fix the addon system, now can be used.
+
+2013/06/27: v5.4
+    1. Update for IGAS v39

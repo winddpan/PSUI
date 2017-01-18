@@ -1,4 +1,4 @@
--- Please e-mail localization files to MuaDragon@gmail.com
+﻿-- Please e-mail localization files to MuaDragon@gmail.com
 
 if GetLocale() == "xxXX" then
 	BUYEMALL_LOCALS = {

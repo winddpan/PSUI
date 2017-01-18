@@ -1,0 +1,13 @@
+tag 7002136a3500b8e89112a7555768abeaf115e23e 1.0.9
+Author:	Benjamin Staneck <staneck@gmail.com>
+Date:	Sat Jan 14 04:56:45 2017 +0100
+
+commit 9ec6a0d6ed4bb00715c5718fdcbcedeff8d55a53
+Author: semlar <teslagraafs@gmail.com>
+Date:   Fri Jan 13 21:21:57 2017 -0500
+
+    More aggressively prevent user from modifying cvars in combat
+    
+    If I had a nickel for every time I tainted the interface I could afford
+    to do this full-time
+

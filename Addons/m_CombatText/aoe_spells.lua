@@ -177,6 +177,12 @@ elseif player_class=="ROGUE"then
 		aoe.spell[8680]=true		-- Instant Poison
 		aoe.spell[159238]=true		-- 破碎之血附魔
 		aoe.spell[22482]=true		-- 剑刃乱舞
+		aoe.spell[143924]=true
+		aoe.spell[209043]=true
+		aoe.spell[5374]=true          -- 毁伤
+		aoe.spell[27576]=5374          -- 副手毁伤
+		aoe.spell[192660]=true          -- 毒药池
+
 	end
 end
 

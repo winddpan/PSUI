@@ -1,18 +1,17 @@
 -- Some UTF-8 symbols that will be auto-changed
-local UTF8Symbols = {['·']='',['＠']='',['＃']='',['％']='',
-	['＆']='',['＊']='',['——']='',['＋']='',['｜']='',['～']='',['　']='',
-	['，']='',['。']='',['、']='',['？']='',['！']='',['：']='',['；']='',
-	['’']='',['‘']='',['“']='',['”']='',['【']='',['】']='',['『']='',
-	['』']='',['《']='',['》']='',['（']='',['）']='',['￥']='',['＝']='',
-	['…']='',['……']='',['１']='1',['２']='2',['３']='3',['４']='4',['５']='5',
-	['６']='6',['７']='7',['８']='8',['９']='9',['０']='0',['⒈']='1',['⒉']='2',
-	['⒊']='3',['⒋']='4',['⒌']='5',['⒍']='6',['⒎']='7',['⒏']='8',['⒐']='9',
-	['Ａ']='A',['Ｂ']='B',['Ｃ']='C',['Ｄ']='D',['Ｅ']='E',['Ｆ']='F',['Ｇ']='G',['Ｈ']='H',
-	['Ｉ']='I',['Ｊ']='J',['Ｋ']='K',['Ｌ']='L',['Ｍ']='M',['Ｎ']='N',['Ｏ']='O',['Ｐ']='P',
-	['Ｑ']='Q',['Ｒ']='R',['Ｓ']='S',['Ｔ']='T',['Ｕ']='U',['Ｖ']='V',['Ｗ']='W',['Ｘ']='X',
-	['Ｙ']='Y',['Ｚ']='Z',['〔']='',['〕']='',['〈']='',['〉']='',['‖']=''}
+local UTF8Symbols = {['·']='',['＠']='',['＃']='',['％']='',['／']='',['＆']='',['＊']='',
+	['－']='',['＋']='',['｜']='',['～']='',['　']='',['，']='',['。']='',['、']='',
+	['？']='',['！']='',['：']='',['；']='',['￥']='',['＝']='',['——']='',['……']='',['‖']='',
+	['【']='',['】']='',['『']='',['』']='',['《']='',['》']='',['（']='',['）']='',['〔']='',
+	['〕']='',['〈']='',['〉']='',['＇']='',['＂']='',['’']='',['‘']='',['“']='',['”']='',
+	['１']='1',['２']='2',['３']='3',['４']='4',['５']='5',['６']='6',['７']='7',['８']='8',
+	['９']='9',['０']='0',['⒈']='1',['⒉']='2',['⒊']='3',['⒋']='4',['⒌']='5',['⒍']='6',
+	['⒎']='7',['⒏']='8',['⒐']='9',['Ａ']='A',['Ｂ']='B',['Ｃ']='C',['Ｄ']='D',['Ｅ']='E',
+	['Ｆ']='F',['Ｇ']='G',['Ｈ']='H',['Ｉ']='I',['Ｊ']='J',['Ｋ']='K',['Ｌ']='L',['Ｍ']='M',
+	['Ｎ']='N',['Ｏ']='O',['Ｐ']='P',['Ｑ']='Q',['Ｒ']='R',['Ｓ']='S',['Ｔ']='T',['Ｕ']='U',
+	['Ｖ']='V',['Ｗ']='W',['Ｘ']='X',['Ｙ']='Y',['Ｚ']='Z'}
 local RaidAlertTagList = {"%*%*.+%*%*", "EUI:.+施放了", "EUI:.+中断", "EUI:.+就绪", "EUI_RaidCD", "PS 死亡: .+>", "|Hspell.+ => ", "受伤源自 |Hspell.+ %(总计%): ", "Fatality:.+> %d"}  -- RaidAlert Tag
-local QuestReportTagList = {"任务进度提示%s?[:：]", "%(任务完成%)", "<大脚组队提示>", "%[接受任务%]", "<大脚团队提示>", "进度:.+: %d+/%d+", "接受任务: ?%[%d+%]", "【网%.易%.有%.爱】"} -- QuestReport Tag
+local QuestReportTagList = {"任务进度提示%s?[:：]", "%(任务完成%)", "<大脚组队提示>", "%[接受任务%]", "<大脚团队提示>", "进度:.+: %d+/%d+", "接受任务: ?%[%d+%]", "【网%.易%.有%.爱】", "任务%[%d+%]%[.+%] 已完成!"} -- QuestReport Tag
 local filterCharList = "[|@!/<>\"`'_#&;:~\\]" -- work on any blackWord
 local filterCharListRegex = "[%(%)%.%%%+%-%*%?%[%]%$%^={}]" -- won't work on regex blackWord, but works on others
 
@@ -23,27 +22,29 @@ local L = ecf.L -- locales.lua
 
 local config
 
-local gsub, select, ipairs, tinsert, pairs, strsub, format, tonumber, strmatch, tconcat, strfind = gsub, select, ipairs, tinsert, pairs, strsub, format, tonumber, strmatch, table.concat, string.find -- lua
+local gsub, select, ipairs, pairs, next, strsub, format, tonumber, strmatch, tconcat, strfind, strbyte, fmod = gsub, select, ipairs, pairs, next, strsub, format, tonumber, strmatch, table.concat, string.find, string.byte, math.fmod -- lua
 local GetItemInfo, GetCurrencyLink = GetItemInfo, GetCurrencyLink -- options
-local Ambiguate, GetNumFriends = Ambiguate, GetNumFriends -- main filter
+local Ambiguate = Ambiguate -- main filter
 local ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime = ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime -- acievements
 
-local EnhancedChatFilter = LibStub("AceAddon-3.0"):NewAddon("EnhancedChatFilter", "AceConsole-3.0", "AceEvent-3.0")
+local EnhancedChatFilter = LibStub("AceAddon-3.0"):NewAddon("EnhancedChatFilter", "AceConsole-3.0")
 
 --Default Options
 local defaults = {
 	profile = {
-		enableFilter = true, -- Main Filter
+		enableFilter = true, -- Main Toggle
 		enableWisper = false, -- Wisper WhiteMode
 		enableDND = true, -- DND
 		enableCFA = true, -- Achievement Filter
 		enableRAF = false, -- RaidAlert Filter
-		enableQRF = false, -- QuestReport and Group Filter
-		enableIGM = false, -- IgnoreMore
+		enableQRF = false, -- Quest/Group Report Filter
+		enableDSS = true, -- Spec spell Filter
 		multiLine = false, -- MultiLines, in RepeatFilter
 		blackWordList = {},
+		regexToggle = false,
 		blackWordFilterGroup = false, -- blackWord enabled in group and raid
 		ignoreMoreList = {},
+		lootType = "ITEMS", -- loot filter type
 		lootItemFilterList = {[118043] = true, [71096] = true}, -- item list, [id] = true
 		lootCurrencyFilterList = {[944] = true}, -- Currency list, [id] = true
 		lootQualityMin = 0, -- loot quality filter, 0..4 = poor..epic
@@ -51,7 +52,7 @@ local defaults = {
 			hide = false, -- minimap
 		},
 		advancedConfig = false, -- show advancedConfig
-		chatLinesLimit = 20, -- in repeatFilter
+		chatLinesLimit = 20, -- also enable repeatFilter
 		stringDifferenceLimit = 0.1, -- in repeatFilter
 		debugMode = false,
 	}
@@ -78,15 +79,14 @@ end
 
 --http://www.wowwiki.com/USERAPI_StringHash
 local function StringHash(text)
-	local counter = 1
-	local len = string.len(text)
+	local counter, len = 1, #text
 	for i = 1, len, 3 do
-	counter = math.fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
-		(string.byte(text,i)*16776193) +
-		((string.byte(text,i+1) or (len-i+256))*8372226) +
-		((string.byte(text,i+2) or (len-i+256))*3932164)
+	counter = fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
+		(strbyte(text,i)*16776193) +
+		((strbyte(text,i+1) or (len-i+256))*8372226) +
+		((strbyte(text,i+2) or (len-i+256))*3932164)
 	end
-	return math.fmod(counter, 4294967291) -- 2^32 - 5: Prime (and different from the prime in the loop)
+	return fmod(counter, 4294967291) -- 2^32 - 5: Prime (and different from the prime in the loop)
 end
 
 --Convert old config to new one
@@ -141,14 +141,16 @@ end
 --These settings won't be saved
 local scrollHighlight = {}
 local lootHighlight = {}
-local ignoreHighlight = {}
-local regexToggle = false
 local stringIO = "" -- blackWord input
-local lootType = "Item" -- loot filter type
+
+local colorT = {} -- used in lootFilter
+for i=0, 4 do
+	colorT[i]=format("|c%s%s|r",select(4,GetItemQualityColor(i)),_G["ITEM_QUALITY"..i.."_DESC"])
+end
 
 local options = {
 	type = "group",
-	name = "EnhancedChatFilter",
+	name = "EnhancedChatFilter "..GetAddOnMetadata("EnhancedChatFilter", "Version"),
 	get = function(info) return config[info[#info]] end,
 	set = function(info, value) config[info[#info]] = value end,
 	disabled = function() return not config.enableFilter end,
@@ -177,7 +179,7 @@ local options = {
 			args = {
 				line1 = {
 					type = "header",
-					name = L["Filters"],
+					name = FILTERS,
 					order = 10,
 				},
 				enableDND = {
@@ -190,24 +192,25 @@ local options = {
 					type = "toggle",
 					name = L["Achievement"],
 					desc = L["AchievementFilterTooltip"],
-					order = 13,
+					order = 12,
 				},
 				enableRAF = {
 					type = "toggle",
 					name = L["RaidAlert"],
 					desc = L["RaidAlertFilterTooltip"],
-					order = 14,
+					order = 13,
 				},
 				enableQRF = {
 					type = "toggle",
 					name = L["QuestReport"],
 					desc = L["QuestReportFilterTooltip"],
-					order = 15,
+					order = 14,
 				},
-				enableIGM = {
+				enableDSS = {
 					type = "toggle",
-					name = L["IgnoreMoreList"],
-					order = 16,
+					name = L["SpecSpell"],
+					desc = L["SpecSpellFilterTooltip"],
+					order = 15,
 				},
 				line2 = {
 					type = "header",
@@ -216,8 +219,8 @@ local options = {
 				},
 				chatLinesLimit = {
 					type = "range",
-					name = L["chatLinesLimitSlider"],
-					desc = L["chatLinesLimitSliderTooltips"],
+					name = L["chatLinesLimit"],
+					desc = L["chatLinesLimitTooltips"],
 					order = 21,
 					min = 0,
 					max = 100,
@@ -226,8 +229,8 @@ local options = {
 				},
 				stringDifferenceLimit = {
 					type = "range",
-					name = L["stringDifferenceLimitSlider"],
-					desc = L["stringDifferenceLimitSliderTooltips"],
+					name = L["stringDifferenceLimit"],
+					desc = L["stringDifferenceLimitTooltips"],
 					order = 22,
 					min = 0,
 					max = 1,
@@ -285,25 +288,23 @@ local options = {
 					order = 1,
 					get = nil,
 					set = function(_,value)
-						if (checkBlacklist(value, regexToggle)) then
+						if (checkBlacklist(value, config.regexToggle and "regex")) then
 							EnhancedChatFilter:Printf(L["IncludeAutofilteredWord"],value)
 						else
-							config.blackWordList[value] = regexToggle or true
+							config.blackWordList[value] = config.regexToggle and "regex" or true
 							scrollHighlight = {}
 						end
 					end,
 				},
-				regex = {
+				regexToggle = {
 					type = "toggle",
 					name = L["Regex"],
 					desc = L["RegexTooltip"],
 					order = 2,
-					get = function() return regexToggle end,
-					set = function(_,value) regexToggle = value and "regex" end,
 				},
 				DeleteButton = {
 					type = "execute",
-					name = L["Remove"],
+					name = REMOVE,
 					order = 3,
 					func = function()
 						for key in pairs(scrollHighlight) do config.blackWordList[key] = nil end
@@ -334,7 +335,7 @@ local options = {
 				},
 				line1 = {
 					type = "header",
-					name = L["Options"],
+					name = OPTIONS,
 					order = 20,
 				},
 				blackWordFilterGroup = {
@@ -362,7 +363,7 @@ local options = {
 					order = 32,
 					func = function()
 						local wordString, HashString = strsplit("@", stringIO)
-						if (tonumber(HashString) ~= tonumber(StringHash(wordString))) then
+						if (tonumber(HashString) ~= StringHash(wordString)) then
 							EnhancedChatFilter:Print(L["StringHashMismatch"])
 							return
 						end
@@ -401,49 +402,10 @@ local options = {
 				},
 			},
 		},
-		igoreMoreFilter = {
-			type = "group",
-			name = L["IgnoreMoreList"],
-			order = 5,
-			disabled = function() return not config.enableFilter or not config.enableIGM end,
-			args = {
-				DeleteButton = {
-					type = "execute",
-					name = L["Remove"],
-					order = 1,
-					func = function()
-						for key in pairs(ignoreHighlight) do config.ignoreMoreList[key] = nil end
-						ignoreHighlight = {}
-					end,
-					disabled = function() return next(ignoreHighlight) == nil end,
-				},
-				ClearUpButton = {
-					type = "execute",
-					name = L["ClearUp"],
-					order = 2,
-					func = function() config.ignoreMoreList, ignoreHighlight = {}, {} end,
-					confirm = true,
-					confirmText = format(L["DoYouWantToClear"],L["IgnoreMoreList"]),
-					disabled = function() return next(config.ignoreMoreList) == nil end,
-				},
-				ignoreMoreList = {
-					type = "multiselect",
-					name = L["IgnoreMoreList"],
-					order = 10,
-					get = function(_,key) return ignoreHighlight[key] end,
-					set = function(_,key,value) ignoreHighlight[key] = value or nil end,
-					values = function()
-						local ignoreNameList = {}
-						for name in pairs(config.ignoreMoreList) do ignoreNameList[name] = name end
-						return ignoreNameList
-					end,
-				},
-			},
-		},
 		lootFilter = {
 			type = "group",
 			name = L["LootFilter"],
-			order = 6,
+			order = 5,
 			args = {
 				addItem = {
 					type = "input",
@@ -452,15 +414,15 @@ local options = {
 					get = nil,
 					set = function(_,value)
 						local Id = tonumber(value)
-						if(lootType == "Item") then
+						if(config.lootType == "ITEMS") then
 							if (Id == nil or GetItemInfo(Id) == nil) then -- TODO: If an item doesn't exist in cache, it reports as 'NotExists'(nil)
-								EnhancedChatFilter:Print(format("%s: ID=%d%s",L[lootType],Id,L["NotExists"]))
+								EnhancedChatFilter:Print(format("%s: ID=%d%s",_G[config.lootType],Id,L["NotExists"]))
 							else
 								config.lootItemFilterList[Id] = true
 							end
 						else
 							if (Id == nil or GetCurrencyLink(Id) == nil) then
-								EnhancedChatFilter:Print(L[lootType]..L["NotExists"])
+								EnhancedChatFilter:Print(_G[config.lootType]..L["NotExists"])
 							else
 								config.lootCurrencyFilterList[Id] = true
 							end
@@ -469,15 +431,15 @@ local options = {
 				},
 				typedropdown = {
 					type = "select",
-					name = L["Type"],
+					name = TYPE,
 					order = 2,
-					values = {["Item"] = L["Item"], ["Currency"] = L["Currency"]},
-					get = function() return lootType end,
-					set = function(_,value) lootType = value end,
+					values = {["ITEMS"] = ITEMS, ["CURRENCY"] = CURRENCY},
+					get = function() return config.lootType end,
+					set = function(_,value) config.lootType = value end,
 				},
 				DeleteButton = {
 					type = "execute",
-					name = L["Remove"],
+					name = REMOVE,
 					order = 3,
 					func = function()
 						for key in pairs(lootHighlight) do
@@ -523,14 +485,14 @@ local options = {
 					name = L["LootQualityFilter"],
 					desc = L["LootQualityFilterTooltips"],
 					order = 11,
-					values = {[0]=L["Poor"], [1]=L["Common"], [2]=L["Uncommon"], [3]=L["Rare"], [4]=L["Epic"]}
+					values = colorT,
 				},
 			},
 		},
 		FAQTab = {
 			type = "group",
 			name = L["FAQ"],
-			order = 7,
+			order = 6,
 			args = {
 				FAQText = {
 					type = "description",
@@ -544,45 +506,10 @@ LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("EnhancedChatFilter", opti
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions("EnhancedChatFilter", "EnhancedChatFilter")
 
 --Disable profanityFilter
-local GetCVar,SetCVar = GetCVar,SetCVar
-
-local profanityFilter=CreateFrame("Frame")
-profanityFilter:SetScript("OnEvent", function()
-	if GetCVar("profanityFilter")~="0" then SetCVar("profanityFilter", "0") end
-end)
-profanityFilter:RegisterEvent("VARIABLES_LOADED")
-profanityFilter:RegisterEvent("CVAR_UPDATE")
-profanityFilter:RegisterEvent("PLAYER_ENTERING_WORLD")
-profanityFilter:RegisterEvent("BN_MATURE_LANGUAGE_FILTER")
-profanityFilter:RegisterEvent("BN_CONNECTED")
+if GetCVar("profanityFilter")~="0" then SetCVar("profanityFilter", "0") end
 
 -------------------------------------- Filters ------------------------------------
---IgnoreMore
-local function ignoreMore(player)
-	if (not config.enableIGM or not player) then return end
-	local ignore = nil
-	if GetNumIgnores() >= 50 then
-		for i = 1, GetNumIgnores() do
-			local name = GetIgnoreName(i)
-			if (player == name) then
-				ignore = true
-				break
-			end
-		end
-		if (not ignore) then
-			local trimmedPlayer = Ambiguate(player, "none")
-			tinsert(config.ignoreMoreList,{trimmedPlayer})
-			if config.debugMode then print("Added to ECF ignoreMoreList!") end
-			SendMessage("CHAT_MSG_SYSTEM", format(ERR_IGNORE_ADDED_S, trimmedPlayer))
-		end
-	end
-end
-
-hooksecurefunc("AddIgnore", ignoreMore)
-hooksecurefunc("AddOrDelIgnore", ignoreMore)
-
 --Update allowWisper list whenever login/friendlist updates
-local login = nil
 local allowWisper = {}
 local ecfFrame = CreateFrame("Frame")
 ecfFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -591,14 +518,10 @@ ecfFrame:SetScript("OnEvent", function(self, event)
 	if event == "PLAYER_ENTERING_WORLD" then
 		ShowFriends() --friend list
 	else
-		if not login then --once per login
-			login = true
-			local num = GetNumFriends()
-			for i = 1, num do
-				local n = GetFriendInfo(i)
-				if n then allowWisper[n] = true end -- added to allowWisper list
-			end
-			return
+		self:Hide()
+		for i = 1, GetNumFriends() do
+			local n = GetFriendInfo(i)
+			if n then allowWisper[n] = true end -- added to allowWisper list
 		end
 	end
 	if config.debugMode then for k in pairs(allowWisper) do print("ECF allowed: "..k) end end
@@ -609,16 +532,17 @@ local function addToAllowWisper(self,_,_,player)
 	local trimmedPlayer = Ambiguate(player, "none")
 	allowWisper[trimmedPlayer] = true
 end
+ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", addToAllowWisper)
 
 --stringDifference for repeatFilter, ranged from 0 to 1, while 0 is absolutely the same
-local function stringDifference(stringA, stringB)
-	local len_a, len_b = #stringA, #stringB
+local function stringDifference(sA, sB)
+	local len_a, len_b = #sA, #sB
 	local templast, temp = {}, {}
 	for j=0, len_b do templast[j+1] = j end
 	for i=1, len_a do
 		temp[1] = i
 		for j=1, len_b do
-			temp[j+1] = (stringA:sub(i,i) == stringB:sub(j,j)) and templast[j] or (min(templast[j+1], temp[j], templast[j]) + 1)
+			temp[j+1] = (sA[i] == sB[j]) and templast[j] or (min(templast[j+1], temp[j], templast[j]) + 1)
 		end
 		for j=0, len_b do templast[j+1]=temp[j+1] end
 	end
@@ -634,14 +558,14 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 	-- exit when main filter is off
 	if(not config.enableFilter) then return end
 
-	-- don't filter player himself
 	local trimmedPlayer = Ambiguate(player, "none")
+	-- don't filter player himself
 	if UnitIsUnit(trimmedPlayer,"player") then return end
 
 	-- if it's GM or DEV then exit
 	if type(flags) == "string" and (flags == "GM" or flags == "DEV") then return end
 
-	-- if it has been worked then use the last result
+	-- if it has been worked then use the worked result
 	if(lineID == prevLineID) then
 		return filterResult
 	else
@@ -657,24 +581,13 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 	filterString = filterString:upper():gsub("|C[0-9A-F]+",""):gsub("|H[^|]+|H",""):gsub("|H|R",""):gsub("%s", ""):gsub(filterCharList, "")
 	local newfilterString = filterString:gsub(filterCharListRegex, "")
 
-	if(config.enableIGM and chatChannel[event] <= 1) then -- IgnoreMore, only whisper
-		for _,ignorePlayer in ipairs(config.ignoreMoreList) do
-			if (trimmedPlayer == ignorePlayer[1]) then
-				if config.debugMode then print("Trigger: IgnoreMore Filter") end
-				filterResult = true
-				return true
-			end
-		end
-	end
-
 	if(config.enableWisper and chatChannel[event] <= 1) then --Whisper Whitelist Mode, only whisper
 		ShowFriends()
 		--Don't filter players that are from same guild/raid/party or friends
 		if allowWisper[trimmedPlayer] or UnitIsInMyGuild(trimmedPlayer) or UnitInRaid(trimmedPlayer) or UnitInParty(trimmedPlayer) then return end
 		--And battlenet friends
 		for i = 1, select(2, BNGetNumFriends()) do
-			local GameAccount = BNGetNumFriendGameAccounts(i)
-			for j = 1, GameAccount do
+			for j = 1, BNGetNumFriendGameAccounts(i) do
 				local _, rName, rGame = BNGetFriendGameAccountInfo(i, j)
 				if (rName == trimmedPlayer and rGame == "WoW") then return end
 			end
@@ -735,9 +648,11 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 		if(msgLine == "") then msgLine = msg end --If it has only symbols, then don't filter it
 
 		--msgdata
-		local msgtable = {Sender = trimmedPlayer, Msg = msgLine, Time = GetTime()}
-		tinsert(chatLines, msgtable)
-		for i=1, #chatLines-1 do
+		local msgtable = {Sender = trimmedPlayer, Msg = {}, Time = GetTime()}
+		for idx=1, #msgLine do msgtable.Msg[idx] = strbyte(msgLine,idx) end
+		local chatLinesSize = #chatLines
+		chatLines[chatLinesSize+1] = msgtable
+		for i=1, chatLinesSize do
 			--if there is not much difference between msgs, then filter it
 			--(optional) if someone sends msgs within 0.6s ,then filter it
 			if (chatLines[i].Sender == msgtable.Sender and ((config.multiLine and (msgtable.Time - chatLines[i].Time) < 0.600) or stringDifference(chatLines[i].Msg,msgtable.Msg) <= config.stringDifferenceLimit)) then
@@ -746,12 +661,11 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 				filterResult = true
 				return true
 			end
-			if i >= config.chatLinesLimit then tremove(chatLines, 1) end
 		end
+		if chatLinesSize >= config.chatLinesLimit then tremove(chatLines, 1) end
 	end
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", addToAllowWisper)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ECFfilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ECFfilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ECFfilter)
@@ -765,40 +679,49 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", ECFfilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ECFfilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ECFfilter)
 
+--SpecSpellFilter
+local function SSFilter(self,_,msg)
+	if (not config.enableFilter or not config.enableDSS) then return end
+
+	local SSFilterStrings = {
+		(ERR_LEARN_ABILITY_S:gsub("%%s","(.*)")),
+		(ERR_LEARN_SPELL_S:gsub("%%s","(.*)")),
+		(ERR_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
+		(ERR_LEARN_PASSIVE_S:gsub("%%s","(.*)")),
+		(ERR_PET_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
+		(ERR_PET_LEARN_ABILITY_S:gsub("%%s","(.*)")),
+		(ERR_PET_LEARN_SPELL_S:gsub("%%s","(.*)")),
+	}
+	for _,s in ipairs(SSFilterStrings) do
+		if strfind(msg, s) then return true end
+	end
+end
+if (UnitLevel("player") == GetMaxPlayerLevel()) then ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", SSFilter) end
+
 --AchievementFilter
 local function SendAchievement(event, achievementID, players)
 	local list = {}
-	for name,guid in pairs(players) do
-		local class, color, r, g, b
-		if (strfind(guid,"Player")) then
-			class = select(2, GetPlayerInfoByGUID(guid))
-			color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
-		end
-		if (not color) then
-			local info = ChatTypeInfo[strsub(event, 10)]
-			r, g, b = info.r, info.g, info.b
-		else
-			r, g, b = color.r, color.g, color.b
-		end
-		list[#list+1] = format("|cff%02x%02x%02x|Hplayer:%s|h%s|h|r", r*255, g*255, b*255, name, name)
+	for name,class in pairs(players) do
+		local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
+		list[#list+1] = format("|cff%02x%02x%02x|Hplayer:%s|h%s|h|r", color.r*255, color.g*255, color.b*255, name, name)
 	end
 	SendMessage(event, format(L["GotAchievement"], tconcat(list, L["And"]), GetAchievementLink(achievementID)))
 end
 
 local function achievementReady(id, achievement)
-	if (achievement.area and achievement.guild) then
+	local area, guild = achievement.CHAT_MSG_ACHIEVEMENT, achievement.CHAT_MSG_GUILD_ACHIEVEMENT
+	if (area and guild) then
 		local playerGuild = GetGuildInfo("player")
-		for name in pairs(achievement.area) do
+		for name in pairs(area) do
 			if (UnitExists(name) and playerGuild and playerGuild == GetGuildInfo(name)) then
-				achievement.guild[name], achievement.area[name] = achievement.area[name], nil
+				guild[name], area[name] = area[name], nil
 			end
 		end
 	end
-	if (achievement.area and next(achievement.area) ~= nil) then
-		SendAchievement("CHAT_MSG_ACHIEVEMENT", id, achievement.area)
-	end
-	if (achievement.guild and next(achievement.guild) ~= nil) then
-		SendAchievement("CHAT_MSG_GUILD_ACHIEVEMENT", id, achievement.guild)
+	for event,players in pairs(achievement) do
+		if type(players) == "table" and next(players) ~= nil then
+			SendAchievement(event, id, players)
+		end
 	end
 end
 
@@ -806,7 +729,7 @@ local achievements = {}
 local achievementFrame = CreateFrame("Frame")
 achievementFrame:Hide()
 achievementFrame:SetScript("OnUpdate", function(self)
-	local found
+	local found = false
 	for id, achievement in pairs(achievements) do
 		if (achievement.timeout <= GetTime()) then
 			achievementReady(id, achievement)
@@ -817,23 +740,19 @@ achievementFrame:SetScript("OnUpdate", function(self)
 	if (not found) then self:Hide() end
 end)
 
-local function queueAchievementSpam(event, achievementID, name, guid)
-	achievements[achievementID] = achievements[achievementID] or {timeout = GetTime() + 0.5}
-	achievements[achievementID][event] = achievements[achievementID][event] or {}
-	achievements[achievementID][event][name] = guid or true
-	achievementFrame:Show()
-end
-
 local function achievementFilter(self, event, msg, _, _, _, _, _, _, _, _, _, _, guid)
 	if (not config.enableCFA or not config.enableFilter) then return end
 	if (not guid or not strfind(guid,"Player")) then return end
 	local achievementID = strmatch(msg, "achievement:(%d+)")
 	if (not achievementID) then return end
 	achievementID = tonumber(achievementID)
-	local Name,Server = select(6,GetPlayerInfoByGUID(guid))
-	if (not Name) then return end -- GetPlayerInfoByGUID rarely returns nil for valid guid
-	if (Server ~= "" and Server ~= GetRealmName()) then Name = Name.."-"..Server end
-	queueAchievementSpam((event == "CHAT_MSG_GUILD_ACHIEVEMENT" and "guild" or "area"), achievementID, Name, guid)
+	local _,class,_,_,_,name,server = GetPlayerInfoByGUID(guid)
+	if (not name) then return end -- GetPlayerInfoByGUID rarely returns nil for valid guid
+	if (server ~= "" and server ~= GetRealmName()) then name = name.."-"..server end
+	achievements[achievementID] = achievements[achievementID] or {timeout = GetTime() + 0.5}
+	achievements[achievementID][event] = achievements[achievementID][event] or {}
+	achievements[achievementID][event][name] = class
+	achievementFrame:Show()
 	return true
 end
 

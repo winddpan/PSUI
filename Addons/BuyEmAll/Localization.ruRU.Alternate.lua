@@ -1,4 +1,4 @@
--- Thanks to Amshaegar! ( Included as an alternate since these are slightly different from the other translations I recieved. )
+﻿-- Thanks to Amshaegar! ( Included as an alternate since these are slightly different from the other translations I recieved. )
 
 if GetLocale() == "ruRU" then
 	BUYEMALL_LOCALS = {

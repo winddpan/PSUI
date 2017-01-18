@@ -16,14 +16,15 @@ opt.tooltips = {
     bar_texture = 'The texture used for status bars (provided by LibSharedMedia)',
     bar_animation = 'The style of animation to use on health/power bars',
 
-    combat_hostile = 'Action to take on hostile frames upon entering combat. Will be inverted upon leaving combat',
-    combat_friendly = 'Action to take on friendly frames upon entering combat. Will be inverted upon leaving combat',
+    combat_hostile = 'Action to take on hostile frames upon entering and leaving combat.',
+    combat_friendly = 'Action to take on friendly frames upon entering and leaving combat.',
 
     ignore_uiscale = 'Ignore the default UI\'s scaling. This allows nameplates to retain pixel-perfectness regardless of resolution, unless you manually resize the game window.|n|nIf running in windowed fullscreen, you must first set the resolution dropdown to your actual screen resolution for this to work correctly (i.e. change to windowed mode, set the resolution dropdown, then change back to windowed fullscreen).|n|n|cffff6666This will not work if you are running the game in a manually resized window.',
     state_icons = 'Show an icon on bosses and rare units (hidden when level text is shown)',
 
     nameonly = 'Hide the healthbars of friendly or unattackable units. While in name-only mode, name text is coloured as a percentage of health',
     nameonly_no_font_style = 'Hide text outline when in name-only mode (by setting the font style to nil)',
+    nameonly_health_colour = 'Partially colour text to represent health percentage',
     nameonly_damaged_friends = 'Use name-only mode even on damaged friendly frames',
     nameonly_enemies = 'Use name-only mode on unattackable enemies (not including enemy players under effects such as Ice Block)',
     nameonly_target = 'Also use name-only mode on your target',
@@ -55,15 +56,15 @@ opt.tooltips = {
     execute_colour = 'Colour to use within execute range',
     execute_percent = 'Manually set execute range',
 
-    hide_names = 'Whether or not a unit is tracked can be set by changing the "NPC Names" dropdown and other checkboxes in the default interface options under Esc > Interface > Names. Note that this does not affect name-only mode',
+    hide_names = 'Whether or not a unit is tracked can be set by changing the "NPC Names" dropdown and other checkboxes in the default interface options under Esc > Interface > Names.|n|nThis does not affect name-only mode.',
     font_face = 'The font used for all strings on nameplates (provided by LibSharedMedia)',
     font_size_normal = 'Standard font size (name, etc)',
     font_size_small = 'Smaller font size (vendor, spell name, etc)',
     text_vertical_offset = 'Vertical offset applied to all strings. Used as some fonts render at odd vertical positions in WoW. Note that this value ends in .5 by default as this helps to reduce vertical jittering when frames are moving',
     name_vertical_offset = 'Vertical offset of the name text',
     bot_vertical_offset = 'Vertical offset of the level and health text strings',
-    class_colour_friendly_names = 'Colour the names of friendly players by their class.|n|nThis does not affect name-only mode.',
-    class_colour_enemy_names = 'Colour the names of enemy players by their class.|n|nThis does not affect name-only mode.',
+    class_colour_friendly_names = 'Colour the names of friendly players by their class.',
+    class_colour_enemy_names = 'Colour the names of enemy players by their class.',
 
     health_text_friend_max = 'Health text format used on friendly units at full health',
     health_text_friend_dmg = 'Health text format used on damaged friendly units',
@@ -80,8 +81,8 @@ opt.tooltips = {
 
     auras_enabled = 'Show auras that you cast on nameplates - buffs on friends, debuffs on enemies',
     auras_on_personal = 'Show auras on your character\'s nameplate if it is enabled',
-    auras_vanilla_filter = 'Use the default UI\'s filter for auras on enemy nameplates, showing things such as other players\' stuns, silences, etc., along with certain important player casts.|n|nNote that the KSLC whitelist is ignored for enemies when this is enabled.',
-    auras_whitelist = 'Use KuiSpellList to filter spells. You can use the extra addon KuiSpellListConfig from Curse to customise this list',
+    auras_vanilla_filter = 'Use the default UI\'s filter for auras on enemy nameplates, showing things such as other players\' stuns, silences, etc., along with certain important player casts.|n|n|cffff6666There is currently no way to edit the spells included by this filter.|n|nNote that the KSLC whitelist is ignored for enemies when this is enabled.',
+    auras_whitelist = 'Use KuiSpellList to filter spells. You can use the extra addon KuiSpellListConfig from Curse to customise this list.|n|n|cffff6666This option and the whitelist is ignored for enemies if "use default UI filter" is also enabled.',
     auras_pulsate = 'Pulsate icons when they are about to expire',
     auras_centre = 'Align icons to horizontal centre relative to the frame, rather than left',
     auras_time_threshold = 'The countdown text will display when there is less than or equal to this amount of time left on an aura. Set to -1 to always display the timer',
@@ -133,6 +134,7 @@ opt.titles = {
 
     nameonly = 'Use name-only mode',
     nameonly_no_font_style = 'No text outline',
+    nameonly_health_colour = 'Health colour',
     nameonly_damaged_friends = 'On damaged friends',
     nameonly_enemies = 'On unattackable enemies',
     nameonly_target = 'On target',

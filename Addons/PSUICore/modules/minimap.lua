@@ -66,6 +66,7 @@ end)
 -- Hiding ugly things
 local dummy = function() end
 local _G = getfenv(0)
+_G = _G
 
 local frames = {
     "GameTimeFrame",

@@ -1,0 +1,27 @@
+## Interface: 70100
+## Title: Enemy Grid
+## Notes: Creates a Grid with enemies near you
+## SavedVariables: EnemyGridDB
+## SavedVariablesPerCharacter: EnemyGridDBChr
+## X-Curse-Packaged-Version: r13
+## X-Curse-Project-Name: Enemy Grid
+## X-Curse-Project-ID: enemy-grid
+## X-Curse-Repository-ID: wow/enemy-grid/mainline
+
+#@no-lib-strip@
+libs\libs.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+EnemyGrid.lua

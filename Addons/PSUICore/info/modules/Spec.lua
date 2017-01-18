@@ -101,8 +101,8 @@ if cfg.Spec == true then
 		if btn == "LeftButton" then
 			ToggleTalentFrame()
 		else
-			c = GetActiveSpecGroup(false,false)
-			SetActiveSpecGroup(c == 1 and 2 or 1)
+			--c = GetActiveSpecGroup(false,false)
+			--SetActiveSpecGroup(c == 1 and 2 or 1)
 		end
 	end)
 end

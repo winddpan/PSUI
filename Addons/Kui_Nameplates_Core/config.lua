@@ -17,12 +17,13 @@ LSM:Register(LSM.MediaType.FONT,'FrancoisOne',kui.m.f.francois)
 LSM:Register(LSM.MediaType.FONT,'Roboto Condensed Bold',kui.m.f.roboto)
 
 LSM:Register(LSM.MediaType.STATUSBAR, 'Kui status bar', kui.m.t.bar)
+LSM:Register(LSM.MediaType.STATUSBAR, 'Kui status bar (brighter)', kui.m.t.brightbar)
 LSM:Register(LSM.MediaType.STATUSBAR, 'Kui shaded bar', kui.m.t.oldbar)
 
 local locale = GetLocale()
 local latin  = (locale ~= 'zhCN' and locale ~= 'zhTW' and locale ~= 'koKR' and locale ~= 'ruRU')
 
-local DEFAULT_FONT = latin and 'FrancoisOne' or LSM:GetDefault(LSM.MediaType.FONT)
+local DEFAULT_FONT = latin and 'Roboto Condensed Bold' or LSM:GetDefault(LSM.MediaType.FONT)
 local DEFAULT_BAR = 'Kui status bar'
 -- default configuration #######################################################
 local default_config = {
@@ -41,6 +42,7 @@ local default_config = {
 
     nameonly = true,
     nameonly_no_font_style = false,
+    nameonly_health_colour = true,
     nameonly_damaged_friends = true,
     nameonly_enemies = true,
     nameonly_all_enemies = false,
@@ -69,7 +71,7 @@ local default_config = {
     name_text = true,
     level_text = false,
     health_text = false,
-    text_vertical_offset = -1.5,
+    text_vertical_offset = -.5,
     name_vertical_offset = -2,
     bot_vertical_offset = -3,
     class_colour_friendly_names = true,
@@ -165,7 +167,10 @@ local function UpdateClickboxSize()
         C_NamePlate.SetNamePlateEnemySize(width,height)
     end
 
-    C_NamePlate.SetNamePlateSelfSize(width,height)
+    C_NamePlate.SetNamePlateSelfSize(
+        (core.profile.frame_width_personal * addon.uiscale) + 10,
+        (core.profile.frame_height_personal * addon.uiscale) + 20
+    )
 end
 local function QueueClickboxUpdate()
     cc:QueueFunction(UpdateClickboxSize)
@@ -242,7 +247,7 @@ local function configChangedFadeRule(v,on_load)
 
     if core.profile.fade_avoid_raidicon then
         plugin:AddFadeRule(function(f)
-            return f.RaidIcon:IsShown() and 1
+            return f.RaidIcon and f.RaidIcon:IsShown() and 1
         end,1)
 
         -- force an alpha update whenever a raid icon is added/removed
@@ -391,6 +396,7 @@ configChanged.nameonly_damaged_friends = configChanged.nameonly
 configChanged.nameonly_enemies = configChanged.nameonly
 configChanged.nameonly_all_enemies = configChanged.nameonly
 configChanged.nameonly_target = configChanged.nameonly
+configChanged.nameonly_health_colour = configChanged.nameonly
 
 function configChanged.auras_enabled(v)
     if v then

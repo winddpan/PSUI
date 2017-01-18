@@ -1,0 +1,316 @@
+2016/12/27 v136
+    1. Fix mount spell.
+
+2016/12/20 v135
+    1. Update for PLoop v168.
+
+2016/12/14 v134
+    1. Fix error for System.Task.
+
+2016/12/09 v133
+    1. Update for PLoop v164.
+
+2016/12/08 v132
+    1. Fix the player can't use mount spell when shapeshift.
+
+2016/11/30 v131
+    1. The IFActionHandler support buttons that control their alpha by themselves.
+
+2016/11/29 v130
+    1. Force refresh when flyout spell is updated.
+
+2016/11/26 v129
+    1. Fix the keep fade out option for action buttons.
+
+2016/11/26 v128
+    1. Fix the random mount spell's button state.
+
+2016/11/26 v127
+    1. Update for New PLoop System.
+    2. Fix several bugs.
+
+2016/11/20 v125
+    1. Fix the double click won't select words in the Multiline-textbox and Code Editor, blz may changed the base.
+
+2016/10/30 v124
+    1. Add support to show upgrade item for bag slot action buttons.(not work until blz fix it)
+
+2016/10/27 v123
+    1. Update for WOW 7.1
+
+2016/10/15: IGAS v120
+    1. Fix for PLoop v155 version.
+
+2016/10/01: IGAS v119
+    1. Fix ActiveThread error for System.Array.
+    2. Improve the dropdownlist so sub-menus won't be blocked by parent's
+
+2016/09/30: IGAS v118
+    1. Fix the aurapanel's refreshing.
+
+2016/09/14: IGAS v117
+    1. The PLoop is removed, it's a standalone addon now.
+
+2016/09/13: IGAS v116
+    1. Use RegisterAutoHide to fix the hover spell bindings not clear for IFSpellHandler.
+
+2016/09/04: IGAS v115
+    1. Fix action buttons for spells not in the spell books.
+
+2016/09/01: IGAS v114
+    1. The BagSlotHandler no longer refresh the buttons that is hidden, it should fix lags in some condition.
+
+2016/08/29: IGAS v113
+    1. Block noname totem seems shouldn't be seen.
+
+2016/08/28: IGAS v112
+    1. Fix the IFTotem and TotemBar.
+
+2016/08/28: IGAS v111
+    1. Fix the lag for sorting container's items.
+    2. Fix error for IFPortrait.
+
+2016/08/24: IGAS v110
+    1. Add RegisterUnitEvent for System.Widget.Frame.
+
+2016/08/22: IGAS v109
+    1. Fix the baghandler for bank bag.
+
+2016/08/22: IGAS v108
+    1. Fix for custom handler, bag handler and bagslot handler.
+
+2016/08/15: IGAS v107
+    1. Fix the bagslot won't display count when first login.
+
+2016/08/14: IGAS v106
+    1. Fix error for TreeView.
+
+2016/08/14: IGAS v105
+    1. Fix bugs and finished the bag-slot handler.
+
+2016/08/04: IGAS v104
+    1. Fix show/hide api for IFRune, IFStagger, IFClassPower.
+
+2016/08/02: IGAS v103
+    1. The mask system would display the position or size of the target.
+
+2016/07/31: IGAS v102
+    1. Add TopToBottom, LeftoToRight property to IFSecurePanel.
+
+2016/07/31: IGAS v101
+    1. Recode the whole unit system, to build a more clearly interface system for unit elements.
+    2. Update for new PLoop System.
+
+2016/07/22: IGAS v100
+    1. Fix the memory increment for layoutpanel system.
+
+2016/07/22: IGAS v99
+    1. Add 'INCLUDE_NAME_PLATE_ONLY' for aura filter.
+
+2016/07/22: IGAS v98
+    1. The SPELL_UPDATE_USABLE doesn't work well, add a thread to force update usable for spell buttons.
+
+2016/07/22: IGAS v97
+    1. Remove useless codes.
+
+2016/07/21: IGAS v96
+    1. Update for wow 7.0 version.
+
+2016/07/04: IGAS v95
+    1. The secure panel can modify elements' position automatically.
+
+2016/07/03: IGAS v94
+    1. No debuff color for enemy's health bar.
+
+2016/07/03: IGAS v93
+    1. Improve the spell handler for clear bindings.
+
+2016/07/03: IGAS v92
+    1. Now the action buttons of the main bar would works well when been temporary shapeshifted.
+
+2016/06/17: IGAS v91
+    1. Fix the cooldown indicator display the number for blizzard's settings.
+
+2016/06/17: IGAS v90
+    1. Fix the frequent headlth and power for changing target.
+
+2016/06/05: IGAS v89
+    1. Update the stance cache when SPELL_CHANGES to fix the stance changed by talents.
+
+2016/06/05: IGAS v88
+    1. No longer clear the stance cache for some stance not work.
+
+2016/06/04: IGAS v87
+    1. Fix IFMana not hidden.
+
+2016/06/03: IGAS v86
+    1. Fix IFMana Error when unit not existed.
+
+2016/06/03: IGAS v85
+    1. No longer save wrapper in the wow's ui element to avoid some addons may save the whole ui element in saved variables.
+
+2016/06/02: IGAS v84
+    1. Fix drop down list not show.
+
+2016/05/24: IGAS v83
+    1. Use macro for spell action buttons, to avoid no use actions.
+    2. Fix stance check.
+
+2016/05/23: IGAS v82
+    1. Recode the System.Widget.Unit.SmoothValue to provide more smooth effect.
+
+2016/04/06: IGAS v80
+    1. Fix CodeEditor's render for hex numbers.
+
+2016/03/08: IGAS v79
+    1. Fix ActionButton's vertex color for usable.
+    2. Fix Mount ActionButton's activation.
+
+2016/03/04: IGAS v78
+    1. Spell Action button now support Draenor zone ability.
+
+2016/03/03: IGAS v77
+    1. Fix Task.NoCombatCall not works well.
+    2. Fix Add/remove pet during combat would cause more unit frame to be shown.
+
+2016/03/01: IGAS v76
+    1. Fix List Each error.
+    2. Fix raid panel's unit frame won't be hidden if the unit not existed.
+
+2016/02/28: IGAS v75
+    1. Use IList instead of IFIterator.
+
+2016/02/28: IGAS v74
+    1. Fix the Form's auto hide.
+
+2016/02/27: IGAS v73
+    1. Update for new PLoop Core.
+    2. Fix spell range check for non-existed spell
+    3. Imporve the auto-complete for codeeditor.
+
+2015/09/04: IGAS v72
+    1. Update for new PLoop Core.
+    2. Update features for MultiLineTextBox.
+
+2015/03/12: IGAS v71
+    1. BagHandler is added to support bag slot buttons.
+    2. Update toc.
+
+2014/12/13: IGAS v70
+    1. Fix Task System empty task warning.
+
+2014/11/16: IGAS v69
+    1. Trap Launcher spell now works like stance spell.
+
+2014/10/30: IGAS v68
+    1. Fix action button can't use hunter traps when Trap Launcher actived.
+
+2014/10/20: IGAS v67
+    1. Using GUID to mark the Timer, make sure older call would be stoped.
+
+2014/10/20: IGAS v66
+    1. Remove the queue system from the Timer, it's too complex and the error can't be fixed, using the Task.DelayCall for the Timer.
+
+2014/10/20: IGAS v65
+    1. Fix a synatx error cause lua error when pick up item.
+
+2014/10/20: IGAS v64
+    1. Fix the flyout aciton not work well when reload.
+
+2014/10/19: IGAS v63
+    1. The mount wouldn't be usable during combat.
+
+2014/10/18: IGAS v62
+    1. Add support to summon random favorite mount spell
+
+2014/10/18: IGAS v61
+    1. The Mask will use the target's min & max resize to make sure not errors.
+
+2014/10/18: IGAS v60
+    1. Use a more smooth method to handle the mount and toy actions.
+
+2014/10/17: IGAS v58
+    1. Fix mount action type, and toy action is added.
+
+2013/11/24: IGAS v56
+    1. Fix some mount can't be used in the action system.
+    2. Now active layout would be displayed correctly for actived mount.
+    3. World marker is added to the action system.
+
+2013/11/13: IGAS v55
+    1. Constructor system rebuild.
+    2. Init-table system rebuild.
+    3. All class files update for the new system.
+    4. Overload system added for methods, constructors and meta-methods.
+
+2013/10/20: IGAS v54
+    1. New property auto fill system. new independence definition environment.
+    2. Fix IFResurrect error.
+
+2013/10/20: IGAS v53
+    1. New NoUnitWatch property for UnitFrame, resuce cost for the SecureStateDriver.
+    2. IFGroup support a mode only show dead players.
+
+2013/10/18: IGAS v52
+    1. Fix the problem that can't use left & right arrow keys when using up & down arrow in a auto-complete list for the MultiLineTextBox
+
+2013/10/07: IGAS v51
+    1. Using thread pool to reduce cost of the thread usage.
+    2. Fix memory cost for IFClassPower for no use nil var search, resuce memory increment.
+
+2013/10/06: IGAS v50
+    1. Fix the scoll position when press enter at the last line of a CodeEditor.
+
+2013/09/16: IGAS v49
+    1. New heal absorb features.
+
+2013/09/09: IGAS v48
+    1. Fix System.Reflector method error.
+
+2013/09/09: IGAS v47
+    1. New property , attribtue system bring into the lua.
+    2. Reduce the memory increasement, and reduce the cpu cost to increase the fps.
+
+2013/08/13: IGAS v46
+    1. The object oriented program system now all moved to Loop folder, separated from the other part for wow.
+    2. Reduce the memory and cpu usage.
+
+2013/08/04: IGAS v45
+    1. Remove old unit check to make sure the unit frame's refresh should be done well when point to different raid/party member.
+
+2013/08/03: IGAS v44
+    1. Fix the pet's updating for warlock.
+
+2013/08/03: IGAS v43
+    1. Reduce cpu and memory cost for pet panel system.
+
+2013/07/26: IGAS v42
+    1. Taint with Blizzard_RaidUI fixed.
+    2. Imrpove the action button system.
+
+2013/07/25: IGAS v42
+    1. New group system for IFGroup, bases on the blizzard's SecureGroupHeader, all works smooth during combat.
+
+2013/07/22:
+	1. Re design the System.Widget.Unit.IFGroup, the unit panel should be worked based on the blizzard's SecureGroupHeader.
+
+2013/07/16:
+	1. Give the ScrollForm's default ScrollChild a default height, so the ScrollChild:GetTop() will return a not-nil value.
+
+2013/07/14: IGAS v41
+	1. Improve the System.Widget.Unit.IFGroup and IFPetGroup, now the raid panel can be show when entering the game in combat mode.More settings added to these interfaces.
+
+2013/07/04:
+    1. System.Widget.Unit.UnitFrame can handle the change of attribute "unit"
+
+2013/06/30:
+    1. Remove the __index and __newindex settings in the System.Widget.Unit.IFSpellHandler.SpellHandlerGroup, use properties to reduce cost and better for browsing.
+
+2013/06/28: IGAS v40
+    1. Improve the System.Widget.Unit.IFResurrect, make sure its objects will be hidden when the resurrection is over
+    2. Fix the System.Widget.Unit.LevelLabel, refresh when the LevelFormat is changed
+
+2013/06/27: IGAS v39
+    1. Delete the custom event system from System.Object.
+    2. Keyword 'script' is renamed to 'event'.
+    3. Update all files with those changes.

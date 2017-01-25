@@ -405,7 +405,7 @@
     elseif f.mystyle == "pet" then
       s:SetPoint("BOTTOMRIGHT",f.Power,"BOTTOMRIGHT",0,0)
       s:SetScale(f:GetScale())
-      s:SetSize(f.width-f.height/2,f.height/2.5)
+      s:SetSize(f.width-f.height/2,floor(f.height/2.5-1))
       i:SetPoint("RIGHT", s, "LEFT", -2, 0)
       h2:SetFrameLevel(9)
       b:Hide() txt:Hide() t:Hide() h:Hide()

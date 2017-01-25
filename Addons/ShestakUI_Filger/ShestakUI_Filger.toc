@@ -9,5 +9,6 @@
 
 Settings.lua
 Spells.lua
+LoseControlSpell.lua
 ShestakUI_Filger.lua
 Cooldowns.lua

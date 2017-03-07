@@ -1,0 +1,262 @@
+MrTarget v5.1.0
+=====================================================================
+Copyright (C) 2016 Lock of War, Renevatium
+
+Warlords of Draenor v7.1.5
+---------------------------------------------------------------------
+13/01/2017
+v5.1.0
+Updated to support patch 7.1.5 (70100)
+Fixed for updated GetSpecializationInfoForClassID
+
+Warlords of Draenor v7.1.0
+---------------------------------------------------------------------
+05/11/2016
+v5.0.1
+Fixes to interfaces options
+Use map ID to identify battlegrounds
+Use 10man config for RBG
+
+26/10/2016
+v5.0.0
+Updated to support patch 7.1.0 (70100)
+Fixed player target icon bug
+Updated range tracking
+
+Warlords of Draenor v7.0.3
+---------------------------------------------------------------------
+25/10/2016
+v4.1.0
+Fixed not loading in battlegrounds
+Per battlefield configuration
+Fixed non-existant target error
+Prepared for patch 7.1
+
+25/09/2016
+v4.0.1
+Fixed bug causing frames to appear randomly (shol)
+Friendly units option displaying correctly
+Per character configuration (aaron)
+Persistant configuration
+Option to hide enemy frames
+Preparation for 40man
+Updated copyright text
+
+02/08/2016
+v4.0.0
+Added columns option
+Added Grid layout
+Full fade when out of range
+Fixed range logic
+
+21/07/2016
+v3.1.5
+Updated to support patch 7.0.3 (70000)
+
+Warlords of Draenor v6.2.4
+---------------------------------------------------------------------
+16/04/2016
+v3.1.4
+Updated to support patch 6.2.4 (60200)
+Fixed error from GetSpecializationInfo
+
+Warlords of Draenor v6.2.3
+---------------------------------------------------------------------
+18/11/2015
+v3.1.3
+Updated to support patch 6.2.3 (60200)
+Party frames no longer shown by default
+Auras now obey orientation
+Disabled for Isle of Conquest and Alterac Valley
+
+Warlords of Draenor v6.2.2
+---------------------------------------------------------------------
+07/09/2015
+v3.1.2
+Updated to support patch 6.2.2 (60200)
+Fix hide/show slash commands
+
+Warlords of Draenor v6.2.1
+---------------------------------------------------------------------
+21/08/2015
+v3.1.1
+Updated to support patch 6.2.1 (60200)
+Fix range tracking
+Fixed objectives frame toggle
+
+Warlords of Draenor v6.2.0
+---------------------------------------------------------------------
+10/08/2015
+v3.1.0
+Party frames
+Dropped arena auras
+
+23/07/2015
+v3.0.1
+Improved targeting
+Improved unit detection
+Switch from UNIT_HEALTH to UNIT_HEALTH_FREQUENT event
+Added UPDATE_MOUSEOVER_UNIT event
+
+17/07/2015
+v3.0.0
+Total rebuild for patch 6.2.0 (60200)
+Dropepd arena functionality (New arena addon coming soon)
+New raid frames (party frames for HEALERS coming soon)
+New unit frames
+New aura system
+New range detection system
+Insane performance improvement
+Upgraded UI elements
+
+Warlords of Draenor v6.1.2
+---------------------------------------------------------------------
+16/04/2015
+v2.2.3
+Fixed nil name error in Arena
+Fixed multiple issues with Arena loading
+
+06/04/2015
+v2.2.2
+Fixed missing buff icons
+
+02/04/2015
+v2.2.1
+Fixed hide/show /commands
+Fixed CompactRaidManager bug (jbbuena)
+Added player cast debuffs in BGs (teakan)
+Added option to hide power bar (teakan)
+Updated for patch 6.1.2 (60100)
+
+Warlords of Draenor v6.1.0
+---------------------------------------------------------------------
+25/02/2015
+v2.1.4
+Updated for patch 6.1.0 (60100)
+Fixed targeted count (SantiagoJH90)
+Generally fixed lots of bugs
+
+02/03/2015
+v2.1.5
+Fixed first load bug (seatleson, evilmonkeyz)
+Improved range tracking
+
+25/02/2015
+v2.1.4
+Updated for patch 6.1.0 (60100)
+Fixed targeted count (SantiagoJH90)
+Generally fixed lots of bugs
+
+Warlords of Draenor v6.0.3
+---------------------------------------------------------------------
+18/02/2015
+v2.1.3
+Fixed font on aura timers in borderless
+Added friendly target counters (SantiagoJH90)
+
+09/02/2015
+v2.1.2
+Fixed several range issues
+Added transmute naming option (pokemon only)
+Disable naming option during battle
+Improved health tracking
+Added spec icons to Borderless UI
+
+23/01/2015
+v2.1.1
+Added Russian transliteration (Sijtsma)
+Only movable with options panel
+Split battleground and arena settings
+Borderless/minimalist/shadowed ui interface option (deathmonkey)
+Fixed options saving bug
+Added range tracking
+Fixed unit frame depth (Kaligma)
+Significantly improved performance
+
+11/12/2014
+v2.0.4
+Fixed bug causing objectives to hide in Garrisson
+
+11/12/2014
+v2.0.3
+Added enable/disable option for battlefields
+Added enable/disable option for renaming
+Added right click /focus (Dazian)
+Added hide/show slash commands
+Fixed bug: not loading immediately in BG (Kelsey)
+Fixed bug: clearing randomly (ed)
+Objectives frame hides
+
+01/12/2014
+v2.0.2
+Update arena auras
+Removed objectives frame hide (taint)
+
+30/11/2014
+v2.0.1
+Disabled range
+Updated Arena auras
+
+28/11/2014
+v2.0.0
+Now resizable
+Added renaming sets
+Added interface options panel
+Updated aura (flag) recovery
+Added Focused/Brutal assault icons
+Arena system (beta)
+Added Arena auras
+GameTooltips for auras
+28 yard range
+
+27/10/2014
+v1.1.3
+Fixed issue with full team name replacement
+Fixed auras [Deepwind Gorge]
+Added slash command to enabled/disable renaming
+Added specialization text to unit frames
+Tooltips implemented but disabled
+
+Warlords of Draenor v6.0.2
+---------------------------------------------------------------------
+15/10/2014
+v1.1.2
+Fix for ObjectiveTrackerFrame
+Upgrade to Interface 60000 (WoD)
+
+Mist of Pandaria v5.4.8
+---------------------------------------------------------------------
+10/10/2014
+v1.1.1
+Name ordering fixed permanently (sorry)
+Arena build fixed [disabled]
+
+08/10/2014
+v1.1.0
+Fixed incorrect ordering
+Moved target/assist icons to the left
+Enlarged and moved aura icons to the right
+First Arena build [disabled]
+
+09/09/2014
+v1.0.4
+Fixed Auctionator error (LP)
+
+30/08/2014
+v1.0.3
+Corrected feedback email
+Updated README
+
+29/08/2014
+v1.0.2
+Improved font visibility
+Corrected frame strata
+Fixed icons [Deepwind Gorge]
+
+28/08/2014
+v1.0.1
+Repackaged for Curse
+
+28/08/2014
+v1.0.0
+First Release

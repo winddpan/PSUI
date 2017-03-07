@@ -1,3 +1,47 @@
+- version 1.14.2
+
+General
+* Removed many unused sound files. Please see the VOListing.txt file for a full list.
+* Removed the request for development assistance. I have someone.
+* Slight tweaks to some of the option names and descriptions for clarity.
+
+Druid
+* Removed Nature's Vigil (no longer exists).
+* Removed Frenzied Regeneration.
+
+Hunter
+* Removed Dire Beast.
+* Barrage is now off by default.
+
+Monk
+* Removed Whirling Dragon Punch.
+* Strike of the Windlord ("OUCH!") is now off by default.
+
+Paladin
+* Removed Seraphim.
+
+Priest
+* Removed Power Word: Shield.
+* Changed the alert for Mind Control to... Mind Control!
+
+Warlock
+* Removed Call Dreadstalkers.
+* Removed Grimoire of Sacrifice.
+
+Warrior
+* Fixed Duel. (I forgot to attach a sound to the application, so only the falloff would alert. WHOOPS.)
+
+===============================================
+- version 1.14.1
+
+Demon Hunter
+* Added non-Detainment Imprison alert.
+* Removed Rain from Above because GSA can't track it and it's pretty obvious to begin with.
+
+Mage
+* Added Presence of Mind in Cast Success.
+* Moved Ice floes from Aura Applied to Cast Success. This change was to allow for more accurate mental tracking of the number of spells ready to be affected by this ability, given that it runs on a charge based system. Of course, this also means it will alert more frequenetly.
+===============================================
 - version 1.14
 
 Demon Hunter

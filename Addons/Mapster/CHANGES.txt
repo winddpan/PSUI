@@ -1,0 +1,12 @@
+tag d2dd13b468be29d57704e4a9b20abd57d1808841 1.7.4.1
+Author:	Hendrik Leppkes <h.leppkes@gmail.com>
+Date:	Wed Feb 1 06:42:15 2017 +0100
+
+Tag as 1.7.4.1
+
+commit d2d9636f07a1155bb164f117900197490aeba3c6
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Oct 26 14:46:37 2016 +0200
+
+    Prevent errors when the player position is unavailable in dungeons
+

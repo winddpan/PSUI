@@ -189,6 +189,7 @@ local default_config = {
 		tracker_scale = 1,
 		tracker_show_time = false,
 		use_quest_summary = false,
+		zone_only_tracked = false,
 		bar_anchor = "bottom",
 		use_old_icons = false,
 		history = {
@@ -1180,7 +1181,7 @@ local questButton_OnClick = function (self, button)
 	end
 
 --shutdown animation and sound for now
-if (true) then return end
+--if (true) then return end
 
 	if (WorldQuestTracker.IsQuestBeingTracked (self.questID)) then
 		if (self.onEndTrackAnimation:IsPlaying()) then
@@ -2413,6 +2414,7 @@ function WorldQuestTracker.UpdateZoneWidgets()
 			if (HaveQuestData (questID)) then
 				local isWorldQuest = QuestMapFrame_IsQuestWorldQuest (questID)
 				if (isWorldQuest) then
+				
 					local isSuppressed = WorldMap_IsWorldQuestSuppressed (questID)
 					local passFilters = WorldMap_DoesWorldQuestInfoPassFilters (info, true, true) --blizzard filters
 					local timeLeft = WorldQuestTracker.GetQuest_TimeLeft (questID)
@@ -2442,6 +2444,10 @@ function WorldQuestTracker.UpdateZoneWidgets()
 								if (isCriteria) then
 									passFilter = true
 								end
+							end
+						elseif (WorldQuestTracker.db.profile.zone_only_tracked) then
+							if (not WorldQuestTracker.IsQuestBeingTracked (questID)) then
+								passFilter = false
 							end
 						end
 
@@ -2919,8 +2925,11 @@ function WorldQuestTracker.ShowTutorialAlert()
 	end
 end
 
---ao abrir ou fechar o mapa
+--ao abrir ou fechar o mapa ~toggle
 hooksecurefunc ("ToggleWorldMap", function (self)
+	if (true) then
+		--return
+	end
 	
 	WorldMapFrame.currentStandingZone = GetCurrentMapAreaID()
 	
@@ -3182,6 +3191,12 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 						else
 							WorldQuestTracker.UpdateZoneWidgets()
 						end
+					end
+				end
+				
+				if (option == "zone_only_tracked") then
+					if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
+						WorldQuestTracker.UpdateZoneWidgets()
 					end
 				end
 			
@@ -3456,9 +3471,9 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				questsLifeTime = questsLifeTime or {}
 				
 				SummaryFrameUp.AccountLifeTime_Gold.text = format (L["S_QUESTTYPE_GOLD"] .. ": %s", (acctLifeTime.gold or 0) > 0 and GetCoinTextureString (acctLifeTime.gold) or 0)
-				SummaryFrameUp.AccountLifeTime_Resources.text = format (L["S_QUESTTYPE_RESOURCE"] .. ": %s", acctLifeTime.resource or 0)
-				SummaryFrameUp.AccountLifeTime_APower.text = format (L["S_QUESTTYPE_ARTIFACTPOWER"] .. ": %s", acctLifeTime.artifact or 0)
-				SummaryFrameUp.AccountLifeTime_QCompleted.text = format (L["S_QUESTSCOMPLETED"] .. ": %s", questsLifeTime.total or 0)
+				SummaryFrameUp.AccountLifeTime_Resources.text = format (L["S_QUESTTYPE_RESOURCE"] .. ": %s", WorldQuestTracker.ToK (acctLifeTime.resource or 0))
+				SummaryFrameUp.AccountLifeTime_APower.text = format (L["S_QUESTTYPE_ARTIFACTPOWER"] .. ": %s", WorldQuestTracker.ToK (acctLifeTime.artifact or 0))
+				SummaryFrameUp.AccountLifeTime_QCompleted.text = format (L["S_QUESTSCOMPLETED"] .. ": %s", comma_value (questsLifeTime.total or 0))
 				
 				local chrLifeTime = WorldQuestTracker.QueryHistory (WQT_QUERYTYPE_REWARD, WQT_QUERYDB_LOCAL)
 				chrLifeTime = chrLifeTime or {}
@@ -3466,9 +3481,9 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				questsLifeTime = questsLifeTime or {}
 				
 				SummaryFrameUp.CharacterLifeTime_Gold.text = format (L["S_QUESTTYPE_GOLD"] .. ": %s", (chrLifeTime.gold or 0) > 0 and GetCoinTextureString (chrLifeTime.gold) or 0)
-				SummaryFrameUp.CharacterLifeTime_Resources.text = format (L["S_QUESTTYPE_RESOURCE"] .. ": %s", chrLifeTime.resource or 0)
-				SummaryFrameUp.CharacterLifeTime_APower.text = format (L["S_QUESTTYPE_ARTIFACTPOWER"] .. ": %s", chrLifeTime.artifact or 0)
-				SummaryFrameUp.CharacterLifeTime_QCompleted.text = format (L["S_QUESTSCOMPLETED"] .. ": %s", questsLifeTime.total or 0)
+				SummaryFrameUp.CharacterLifeTime_Resources.text = format (L["S_QUESTTYPE_RESOURCE"] .. ": %s", WorldQuestTracker.ToK (chrLifeTime.resource or 0))
+				SummaryFrameUp.CharacterLifeTime_APower.text = format (L["S_QUESTTYPE_ARTIFACTPOWER"] .. ": %s", WorldQuestTracker.ToK (chrLifeTime.artifact or 0))
+				SummaryFrameUp.CharacterLifeTime_QCompleted.text = format (L["S_QUESTSCOMPLETED"] .. ": %s", comma_value (questsLifeTime.total or 0))
 				
 			end
 			
@@ -4508,9 +4523,20 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				GameCooltip:AddMenu (2, options_on_click, "zone_map_config", "scale",  1.23)
 				GameCooltip:AddLine ("Very Large Quest Icons", "", 2)
 				GameCooltip:AddMenu (2, options_on_click, "zone_map_config", "scale",  1.35)
-
+				
+				GameCooltip:AddLine ("$div", nil, 2, nil, -7, -14)
+				
+				GameCooltip:AddLine ("Only Tracked", "", 2)
+				if (WorldQuestTracker.db.profile.zone_only_tracked) then
+					GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+				else
+					GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+				end
+				GameCooltip:AddMenu (2, options_on_click, "zone_only_tracked", not WorldQuestTracker.db.profile.zone_only_tracked)
+				
+				
+				
 				GameCooltip:AddLine ("$div")
-
 				--
 				GameCooltip:AddLine (L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"])
 				if (WorldQuestTracker.db.profile.sound_enabled) then
@@ -5712,13 +5738,6 @@ function WorldQuestTracker.IsQuestBeingTracked (questID)
 	return
 end
 
---tomtom track options
---persistent
---minimap
---world
---crazy
---cleardistance
---arrivaldistance
 
 function WorldQuestTracker.AddQuestTomTom (questID, mapID, noRemove)
 	local x, y = C_TaskQuest.GetQuestLocation (questID, mapID)
@@ -6261,6 +6280,7 @@ local UpdateSuperQuestTracker = function()
 	end
 end
 
+--[[
 --rewrite QuestSuperTracking_IsSuperTrackedQuestValid to avoid conflict with World Quest Tracker
 function QuestSuperTracking_IsSuperTrackedQuestValid()
 	local trackedQuestID = GetSuperTrackedQuestID();
@@ -6282,16 +6302,7 @@ function QuestSuperTracking_IsSuperTrackedQuestValid()
 
 	return true;
 end
-
---hooksecurefunc ("QuestSuperTracking_CheckSelection", function()
---	print ("QuestSuperTracking_CheckSelection")
---end)
---hooksecurefunc ("QuestSuperTracking_ChooseClosestQuest", function()
-	--print ("QuestSuperTracking_ChooseClosestQuest")
---end)
---hooksecurefunc ("QuestSuperTracking_OnQuestUntracked", function()
---	print ("quest untrackerd")
---end)
+--]]
 
 hooksecurefunc ("QuestSuperTracking_ChooseClosestQuest", function()
 	if (WorldQuestTracker.SuperTracked) then
@@ -6978,7 +6989,7 @@ local On_ObjectiveTracker_Update = function()
 	end
 
 	WorldQuestTracker.UpdateQuestsInArea()
-	
+
 	--pega a altura do tracker de quests
 	local y = 0
 	for i = 1, #tracker.MODULES do

@@ -47,4 +47,3 @@ L["The transparency of the big map."] = "大地圖的透明度"
 L["The transparency of the map while you are moving and the map is faded."] = "當您是移動中並且地圖已淡出時的此地圖的透明度。"
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "改變世界地圖的透明度，使你在打開地圖的情況下繼續操作你的人物。"
 L["You can control the accuracy of the coordinates, e.g. if you need very exact coordinates you can set this to 2."] = "讓你的座標顯示的更精確。例如：如果你需要精確的位置座標，那麼請設置到2。"
-

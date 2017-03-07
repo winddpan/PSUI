@@ -1,0 +1,72 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+  <Frame name="MrTargetGroupTemplate" inherits="SecureUnitButtonTemplate" toplevel="true" frameStrata="MEDIUM" virtual="true" hidden="true">
+    <Anchors>
+      <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="100" y="150"/>
+    </Anchors>
+    <Frames>
+      <Button name="$parentTargetIcon" parentKey="TARGET" frameLevel="4" hidden="true">
+        <Size x="30" y="30"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="$parentIcon" parentKey="icon" setAllPoints="true" file="Interface\Minimap\Tracking\Target"/>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnEnter>
+            if self.unit then
+              self.unit:OnEnter();
+            end
+          </OnEnter>
+          <OnLeave>
+            if self.unit then
+              self.unit:OnLeave();
+            end
+          </OnLeave>
+        </Scripts>
+      </Button>
+      <Button name="$parentAssistIcon" parentKey="ASSIST" frameLevel="5" hidden="true">
+        <Size x="24" y="24"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentTargetIcon" relativePoint="TOPLEFT" x="0" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="$parentIcon" parentKey="icon" setAllPoints="true" file="Interface\GroupFrame\UI-Group-LeaderIcon"/>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnEnter>
+            if self.unit then
+              self.unit:OnEnter();
+            end
+          </OnEnter>
+          <OnLeave>
+            if self.unit then
+              self.unit:OnLeave();
+            end
+          </OnLeave>
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+  <Font name="TextStatusBarTextLargeBorderless" font="Fonts\ARIALN.ttf" outline="NORMAL" virtual="true">
+    <Color r="1.0" g="1.0" b="1.0"/>
+    <FontHeight val="13"/>
+  </Font>
+  <Font name="TextStatusBarTextRed" font="Fonts\FRIZQT__.TTF" outline="NORMAL" virtual="true">
+    <Color r="1.0" g="0.0" b="0.0"/>
+    <FontHeight val="13"/>
+  </Font>
+  <Font name="TextStatusBarTextRedBorderless" font="Fonts\ARIALN.ttf" outline="NORMAL" virtual="true">
+    <Color r="1.0" g="0.0" b="0.0"/>
+    <FontHeight val="14"/>
+  </Font>
+  <Font name="GameFontHighlightBorderless" inherits="GameFontHighlight" font="Fonts\ARIALN.ttf" virtual="true">
+    <FontHeight val="13"/>
+  </Font>
+</Ui>

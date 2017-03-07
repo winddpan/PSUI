@@ -1,0 +1,40 @@
+tag 44622cb3642ad1e8ffa9228a38c2f4584213abf1 2.4.4
+Author:	Archarodim <archarodim@teaser.fr>
+Date:	Mon Jan 23 01:54:47 2017 +0100
+
+Tagging as 2.4.4
+
+commit a3478fd069dc52214f69a548086af3456f956b06
+Author: Archarodim <archarodim@teaser.fr>
+Date:   Mon Jan 23 01:39:17 2017 +0100
+
+    ... give another chance to wowace packager which cannot localization properly
+    
+    A line finishing by a new line got mangled...
+
+commit 99e9637ef7454e7aad2022ff5f65b7693118f295
+Author: Archarodim <archarodim@teaser.fr>
+Date:   Mon Jan 23 01:19:27 2017 +0100
+
+    fix pkgmeta.yaml again
+
+commit a89b1aff59cb2150fffbf1ce4c14f2a55f1e2418
+Author: Archarodim <archarodim@teaser.fr>
+Date:   Mon Jan 23 01:14:14 2017 +0100
+
+    fix pkgmeta.yaml
+
+commit 55ab1cc5acc6990d2fa2d3afbdb345fe8ea308fd
+Author: Archarodim <archarodim@teaser.fr>
+Date:   Mon Jan 23 01:05:43 2017 +0100
+
+    Do not disable oldName completely, just turn it off persistently.
+    
+    This allows to keep per-character enable/disable settings of the old add-on intact.
+
+commit 011a157c64d1a48ba2e404cdbdf84da1716c5f2b
+Author: Archarodim <archarodim@teaser.fr>
+Date:   Mon Jan 23 01:00:44 2017 +0100
+
+    update embedded libraries repository URLs
+

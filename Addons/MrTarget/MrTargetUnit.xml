@@ -1,0 +1,111 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+  <Button name="MrTargetUnitTemplate" inherits="SecureUnitButtonTemplate" frameStrata="MEDIUM" virtual="true" hidden="true">
+    <Size x="90" y="36"/>
+    <Anchors>
+      <Anchor point="TOPLEFT" x="3" y="-5"/>
+    </Anchors>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBackground" parentKey="background" forceAlpha="true" setAllPoints="true" file="Interface\RaidFrame\Raid-Bar-Hp-Bg">
+          <TexCoords left="0" right="1" top="0" bottom="0.53125"/>
+        </Texture>
+      </Layer>
+      <Layer level="BORDER">
+        <Texture name="$parentHorizDivider" parentKey="horizDivider" horizTile="true" forceAlpha="true" file="Interface\RaidFrame\Raid-HSeparator">
+          <Size x="0" y="8"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="0" y="9"/>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="0" y="9"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentHorizTopBorder" parentKey="horizTopBorder" horizTile="true" forceAlpha="true" file="Interface\RaidFrame\Raid-HSeparator">
+          <Size x="0" y="8"/>
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="0" y="-7"/>
+            <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" x="0" y="-7"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentHorizBottomBorder" parentKey="horizBottomBorder" horizTile="true" forceAlpha="true" file="Interface\RaidFrame\Raid-HSeparator">
+          <Size x="0" y="8"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentVertLeftBorder" parentKey="vertLeftBorder" vertTile="true" forceAlpha="true" file="Interface\RaidFrame\Raid-VSeparator">
+          <Size x="8" y="0"/>
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPLEFT" x="7" y="0"/>
+            <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="7" y="0"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentVertRightBorder" parentKey="vertRightBorder" vertTile="true" forceAlpha="true" file="Interface\RaidFrame\Raid-VSeparator">
+          <Size x="8" y="0"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPRIGHT" x="-2" y="0"/>
+            <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="-2" y="0"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentName" inherits="GameFontHighlight" parentKey="NAME" justifyH="LEFT" wordwrap="false">
+          <FontHeight val="12"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="15" y="-2"/>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" x="-3" y="-3.2"/>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentSpec" inherits="GameFontNormalSmall" parentKey="SPEC" justifyH="LEFT" wordwrap="false">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+            <Anchor point="TOPRIGHT" relativeTo="$parentName" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+          </Anchors>
+        </FontString>
+        <Texture name="$parentSpecIcon" parentKey="SPEC_ICON" forceAlpha="true" hidden="true">
+          <TexCoords left="0.1" right="0.9" top="0.1" bottom="0.9"/>
+          <Size x="35" y="35"/>
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPLEFT" x="-1" y="0"/>
+          </Anchors>
+        </Texture>
+        <FontString name="$parentTargeted" inherits="TextStatusBarTextRed" parentKey="TARGETED" justifyH="RIGHT">
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" x="0" y="-2" />
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="OVERLAY">
+        <Texture name="$parentRoleIcon" parentKey="ROLE_ICON" forceAlpha="true" hidden="false">
+          <TexCoords left="0" right="0.296875" top="0.015625" bottom="0.3125"/>
+          <Size x="12" y="12"/>
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPLEFT" x="2.5" y="-2.5"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentHover" parentKey="HOVER" forceAlpha="true" hidden="true" file="Interface\RaidFrame\Raid-FrameHighlights">
+          <TexCoords left="0.00781250" right="0.55468750" top="0.28906250" bottom="0.55468750"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <StatusBar name="$parentHealthBar" parentKey="HEALTH_BAR" useParentLevel="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="1" y="-1"/>
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="-1" y="9"/>
+        </Anchors>
+        <BarTexture file="Interface\RaidFrame\Raid-Bar-Hp-Fill" layer="BACKGROUND" forceAlpha="true"/>
+      </StatusBar>
+      <StatusBar name="$parentPowerBar" parentKey="POWER_BAR" useParentLevel="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentHealthBar" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
+        </Anchors>
+        <BarTexture file="Interface\RaidFrame\Raid-Bar-Hp-Fill" layer="BACKGROUND" forceAlpha="true"/>
+      </StatusBar>
+      <Frame name="$parentUpdateTargeted" parentKey="UPDATE_TARGETED" hidden="false">
+      </Frame>
+    </Frames>
+  </Button>
+</Ui>

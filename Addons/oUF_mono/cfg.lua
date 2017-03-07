@@ -93,7 +93,7 @@
 		},
 		raid = {						-- Raid frames configuration
 			["enable"] = true,			
-			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 25, -215},
+			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 25, -200},
 			
 			["party"] = false, 								-- show party as 5 men raid group
 			["raid5"] = false, 								-- show raid frame for 5 (or less) men raid group
@@ -104,9 +104,9 @@
 				["position"] = {"BOTTOMLEFT", "UIParent", "BOTTOMRIGHT", -163, 233},	-- MTs frame position
 				["scale"] = 1.5, 														-- MT size relatively to unit size
 			},
-			["width"] = 100, 								-- raid unit width
-			["height"] = 30, 								-- raid unit height
-			["spacing"] = 4, 								-- spacing between units
+			["width"] = 115, 								-- raid unit width
+			["height"] = 26, 								-- raid unit height
+			["spacing"] = 5, 								-- spacing between units
 			["name_length"] = 4, 							-- number of letters to display
 			["font_size"] = 12, 							-- font size for names / hp values
 			["orientation"] = "HORIZONTAL", 				-- hp/mp bar direction
@@ -131,7 +131,7 @@
 			},
 			powerbar = {
 				["enable"] = true, 							-- toggle display of tiny power bars on raid frames
-				["size"] = 0.09, 							-- power bar thickness relatively to unit size
+				["size"] = 2, 								-- power bar size
 			},
 			healbar = { 								
 				["enable"] = true,							-- enable healing prediction bar

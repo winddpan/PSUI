@@ -44,7 +44,8 @@ end
 
 function LiteBagInventory_Initialize(self)
 
-    self.portrait:SetTexture("Interface\\MERCHANTFRAME\\UI-BuyBack-Icon")
+    -- self.portrait:SetTexture("Interface\\MERCHANTFRAME\\UI-BuyBack-Icon")
+    SetPortraitToTexture(self.portrait, "Interface\\ICONS\\INV_Misc_Bag_07")
 
     local panel = CreateFrame("Frame", "LiteBagInventoryPanel", self, "LiteBagPanelTemplate")
     LiteBagPanel_Initialize(panel, INVENTORY_BAG_IDS)

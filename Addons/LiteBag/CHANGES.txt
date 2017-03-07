@@ -1,0 +1,62 @@
+tag bad63a51c7c7d151f49c9241585af162cad5dc8c 7.1.5
+Author:	Mike "Xodiv" Battersby <mib@post.com>
+Date:	Sat Jan 28 11:26:52 2017 +1100
+
+Fix some issues with the bank, and autopositioning when scaled.
+
+commit 41543f9147c53130da3ebb0bd0cfee88d295ee00
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Mon Jan 16 21:14:57 2017 +1100
+
+    I don't even remember what this is but I've been running it for months.
+
+commit 41543f9147c53130da3ebb0bd0cfee88d295ee00
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Mon Jan 16 21:14:57 2017 +1100
+
+    I don't even remember what this is but I've been running it for months.
+
+commit 7dbaeac855d2e49686d60c2bf34f3ba5aa6d12bc
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Mon Nov 21 15:20:25 2016 +1100
+
+    Use the panel show to set the bank selectedTab.
+    Maybe fix for PLAYER_MONEY stuff. Is it even broken?
+
+commit 12e389f231ad73479fc9fc3d37acff665915c23b
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Mon Nov 21 13:08:09 2016 +1100
+
+    Drycoded layout updates.
+    Half-fix the problems with dragging bags in and out of the bag slots.
+
+commit 84c53580ac64823b59e547515c7cf5ca7b9976d7
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Tue Nov 15 21:13:37 2016 +1100
+
+    Snap to position works when scaled.
+
+commit 1fe93f2234b4dae2c7d4e2f1748df8c429afa674
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Wed Nov 9 09:22:05 2016 +1100
+
+    Shorter options init.
+
+commit 81096e2b18cb717425a9edcd7b6ce63e400a795e
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Wed Nov 9 09:03:43 2016 +1100
+
+    Allow resizing columns by 1, not 2.
+
+commit 8e1b509987a05ef621fd00ea9e53cc0c7d5ae69f
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Tue Nov 1 22:51:02 2016 +1100
+
+    Use SetPortraitToTexture for a pleasing rounded look.
+
+commit b7ac340ef2bd587f0b4369cd271de941754d1741
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Tue Nov 1 15:19:15 2016 +1100
+
+    Is this texture cool? I like green.
+

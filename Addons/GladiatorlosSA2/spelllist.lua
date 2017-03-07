@@ -47,12 +47,9 @@
 			[33891] = "incarnationTree",
 			[61336] = "survivalInstincts",
 			[22812] = "barkskin",
-			[132158] = "naturesSwiftness",
-			[22842] = "frenziedRegeneration", 
 			[1850] = "dash",
 			[50334] = "berserk",
 			[69369] = "PredatorSwiftness",
-			[124974] = "natureVigil",
 			[112071] = "celestialAlignment",
 			[102342] = "ironBark",
 			[102351] = "canarionWard",
@@ -66,7 +63,6 @@
 			-- Hunter (Aura Applied)
 			[19263] = "deterrence",
 			[186265] = "deterrence", -- Aspect of the Turtle
-			[3045] = "rapidFire",
 			[53271] = "mastersCall",
 			[53480] = "roarOfSacrifice", -- Pet Skill
 			[186257] = "cheetah",
@@ -80,7 +76,6 @@
 			[12042] = "arcanePower",
 			[12472] = "icyVeins",
 			[12043] = "presenceOfMind",
-			[108839] = "iceFloes",
 			[198111] = "temporalShield",
 			[198144] = "iceForm",
 			[86949] = "cauterize",
@@ -113,8 +108,6 @@
 			[231895] = "crusade",
 			[224668] = "crusade", -- Crusade (Retribution Talent)
 			[105809] = "holyAvenger",
-			[114917] = "healingExecution",
-			[152262] = "Seraphim",
 			[204150] = "lightAegis",
 			[31850] = "ardentDefender",
 			[205191] = "eyeForAnEye",
@@ -129,7 +122,6 @@
 			[33206] = "painSuppression",
 			[47585] = "dispersion",
 			[47788] = "guardianSpirit",
-			[17] = "powerWordShield",
 			[10060] = "powerInfusion",
 			[197862] = "archangelHealing",
 			[197871] = "archangelDamage",
@@ -190,6 +182,7 @@
 			[218826] = "trialByCombat",
 			[23920] = "spellReflection", -- Protection
 			[216890] = "spellReflection", -- Arms/Fury
+			[236273] = "duel",
 		},
 		auraRemoved = {					-- aura removed [spellid] = ".mp3 file name",
 			[642] = "bubbleDown",				--Divine Shield
@@ -200,7 +193,6 @@
 			[33206] = "PSDown",					--Pain Suppression
 			[5277] = "evasionDown", 			--Evasion
 			[45438] = "iceBlockDown", 			--Ice Block
-			[49039] = "lichborneDown",			--Lichborne
 			[48792] = "iceboundFortitudeDown",	--Icebound Fortitude
 			[19263] = "deterrenceDown", 		--Deterrence
 			[186265] = "deterrenceDown",		--Aspect of the Turtle
@@ -335,7 +327,7 @@
 			
 			-- Priest (Spell Casting)
 			[9484] = "shackleUndead", 
-			[605] = "dominateMind",
+			[605] = "MindControl",
 			[32375] = "massDispell",
 			[207946] = "lightsWrath",
 
@@ -367,7 +359,6 @@
 			[112868] = "summonDemon", -- Shivarra (Glyph)
 			[112869] = "summonDemon", -- Observer (Glyph)
 			[152108] = "Cataclysm",
-			[104316] = "dreadstalkers",
 			[30283] = "shadowfury",
 			[30108] = "unstableAffliction",
 			[116858] = "chaosBolt",
@@ -500,7 +491,6 @@
 			[179057] = "chaosNova",
 			[206649] = "leotherasEye",
 			[205604] = "reverseMagic",
-			[206803] = "rainFromAbove",
 			[205629] = "trample",
 			[205630] = "illidansGrasp",
 			[202138] = "gripSigil",
@@ -508,7 +498,7 @@
 			[202137] = "silenceSigil",
 			[211881] = "felEruption",
 			[203704] = "manaBreak",
-			--[217832] = "imprison",		-- Demons Only
+			[217832] = "imprison",		-- Demons Only (until 7.1.5 because lol holinka)
 			[221527] = "imprison",		-- Honor Talent (on Players)
 			[196718] = "darkness",
 			[198013] = "eyeBeam",
@@ -542,17 +532,6 @@
 			[109248] = "bindingShot",
 			[109304] = "Exhilaration",
 			[131894] = "murderOfCrows",
-			[126216] = "direBeast",
-			[126215] = "direBeast",
-			[126214] = "direBeast",
-			[126213] = "direBeast",
-			[122811] = "direBeast",
-			[122809] = "direBeast",
-			[122807] = "direBeast",
-			[122806] = "direBeast",
-			[122804] = "direBeast",
-			[122802] = "direBeast",
-			[121118] = "direBeast",
 			[121818] = "stampede",
 			[202914] = "spiderSting",
 			[208652] = "direHawk",
@@ -584,6 +563,8 @@
 			[235450] = "mageShield", -- Prismatic Barrier
 			[235313] = "mageShield", -- Blazing Barrier
 			[11426] = "mageShield", -- Ice Barrier
+			[205025] = "presenceOfMind",
+			[108839] = "iceFloes",
 			
 			
 			-- Monk (Cast Success)
@@ -756,3 +737,9 @@
 	}
 end
 
+--NOTES
+--Things to add:
+--Holy priest [Greater Fade] & down
+--Monk [Ring of Peace]
+--Balance druid [Faerie Swarm]
+--

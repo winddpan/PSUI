@@ -106,7 +106,7 @@ local bar3 = {
                       fadeInAlpha = 1,
                       fadeInDuration = 0.1,
                       fadeInSmooth = "OUT",
-                      fadeOutAlpha = 0.5,
+                      fadeOutAlpha = 0,
                       fadeOutDuration = 0.1,
                       fadeOutSmooth = "OUT",
                     },

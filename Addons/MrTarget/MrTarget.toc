@@ -1,0 +1,18 @@
+## Interface: 70100
+## Author: Renevatium
+## Version: 5.1.0
+## Title: MrTarget
+## DefaultState: Enabled
+## SavedVariables: MRTARGET_OPTIONS
+## SavedVariablesPerCharacter: MRTARGET_SETTINGS
+## Notes: MrT says Even the Score
+
+MrTargetAuras.xml
+MrTargetAuras.lua
+MrTargetRange.lua
+MrTargetUnit.xml
+MrTargetUnit.lua
+MrTargetGroup.xml
+MrTargetGroup.lua
+MrTargetOptions.xml
+MrTarget.lua

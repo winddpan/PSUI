@@ -2,6 +2,55 @@ Check Voice_enUS for a full list of VO files.
 All files are .ogg unless specifically stated otherwise.
 Inactive files are still included. All VO new to GSA2 that ships with the addon are in this list.
 
+**REMOVED IN v.1.14.2**
+(These files are no longer in use and have been removed. They may return in the future depending on how addon and game development progress.)
+darkRegeneration
+DeathknightEveryMan
+DeathknightWotF
+DemonhunterEveryMan
+DemonhunterWotF
+direBeast
+Disarm3
+divineFavor
+dominateMind
+dreadstalkers
+DruidEveryMan
+DruidWotF
+frenziedRegeneration
+grimoireOfSacrifice
+healingExecution
+HunterEveryMan
+HunterWotF
+HurricaneStrike
+impSwarm
+Licheborne
+LicheborneDown
+MageEveryMan
+MageWotF
+MonkEveryMan
+MonkWotF
+NaturesSwiftness
+NaturesSwiftness2
+natureVigil
+PaladinEveryMan
+PaladinWotF
+powerWordShield
+PriestEveryMan
+PriestWotF
+rainFromAbove
+rapidFire
+readiness
+remorselessWinterOLD
+RogueEveryMan
+RogueWotF
+Seraphim
+ShamanEveryMan
+ShamanWotF
+WarlockEveryMan
+WarlockWotF
+WarriorEveryMan
+WarriorWotF
+
 ADDED IN v1.14
 AvengingCrusader
 AvengingCrusaderDown

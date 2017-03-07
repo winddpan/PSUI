@@ -37,8 +37,8 @@
 -- Author           :   kurapica125@outlook.com                         --
 -- URL              :   http://github.com/kurapica/PLoop                --
 -- Create Date      :   2011/02/03                                      --
--- Last Update Date :   2017/01/11                                      --
--- Version          :   r167                                            --
+-- Last Update Date :   2017/02/19                                      --
+-- Version          :   r169                                            --
 --======================================================================--
 
 ------------------------------------------------------
@@ -5735,7 +5735,7 @@ do
             <param name="value">the test value</param>
             <param name="name">the parameter's name</param>
             <param name="prefix">the prefix string</param>
-            <param name="stacklevel">set if not in the main function call, only work when prefix is setted</param>
+            <param name="stacklevel">the stack level, default 1</param>
             <return>the validated value</return>
             <usage>System.Reflector.Validate(System.String, "Test")</usage>
         ]]
@@ -5752,12 +5752,12 @@ do
             ok, value = pcall(Validate4Type, oType, value)
 
             if not ok then
-                value = strtrim(value:match(":%d+:%s*(.-)$") or value):gsub("%%s[_%w]*", name)
+                value = strtrim(value:match(":%d+:%s*(.-)$") or value):gsub("%%s([_%w]+)", name .. ".%1"):gsub("%%s[_%w]*", name)
 
                 if type(prefix) == "string" then
                     return error(prefix .. value, 1 + stacklevel)
                 else
-                    return error(value)
+                    return error(value, 1 + stacklevel)
                 end
             end
 
@@ -8975,6 +8975,15 @@ do
                 return noiter
             end
             return lst
+        end
+
+        __Doc__[[Clear global defined functions for a new version, since the object method attributes can't be applied if those function existed]]
+        function ClearGlobalMethods(self)
+            for k, v in pairs(self) do
+                if type(v) == "function" then
+                    self[k] = nil
+                end
+            end
         end
 
         ------------------------------------------------------

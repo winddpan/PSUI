@@ -100,12 +100,12 @@
     if ptype == 'MANA' then
       if(cfg.oUF.frames.raid.orientation == "VERTICAL")then
         power:SetPoint"TOP"
-        power:SetWidth(cfg.oUF.frames.raid.width*cfg.oUF.frames.raid.powerbar.size)
-        self.Health:SetWidth((1 - cfg.oUF.frames.raid.powerbar.size)*cfg.oUF.frames.raid.width)
+        power:SetWidth(cfg.oUF.frames.raid.width)
+        self.Health:SetWidth(cfg.oUF.frames.raid.width)
       else
         power:SetPoint"LEFT"
-        power:SetHeight(cfg.oUF.frames.raid.height*cfg.oUF.frames.raid.powerbar.size)
-        self.Health:SetHeight((1 - cfg.oUF.frames.raid.powerbar.size)*cfg.oUF.frames.raid.height)
+        power:SetHeight(cfg.oUF.frames.raid.powerbar.size)
+        self.Health:SetHeight(cfg.oUF.frames.raid.height)
       end
     else
       if(cfg.oUF.frames.raid.orientation == "VERTICAL")then
@@ -178,11 +178,12 @@
     h:SetFrameLevel(10)
     local name = lib.gen_fontstring(h, cfg.oUF.media.font, cfg.oUF.frames.raid.font_size)
     local hpval = lib.gen_fontstring(h, cfg.oUF.media.font, cfg.oUF.frames.raid.font_size-1)
-    name:SetPoint("CENTER", f.Health, "CENTER",0,5)
+    --name:SetPoint("CENTER", f.Health, "CENTER",0,1)
+	name:SetPoint("LEFT", f.Health, "LEFT", 18,0)
     name:SetShadowOffset(1.25, -1.25)
     name:SetJustifyH("LEFT")
 	name.overrideUnit = true
-    hpval:SetPoint("CENTER", f.Health, "BOTTOM",0,8)
+    hpval:SetPoint("RIGHT", f.Health, "RIGHT", -4,0)
     hpval:SetShadowOffset(1.25, -1.25)
     f:Tag(name, '[mono:gridcolor][mono:gridname]')
     if f.mystyle == "mtframe" then
@@ -284,7 +285,7 @@
     -- ReadyCheck
     if cfg.oUF.frames.raid.icons.ready_check then
 	  local rci = f.Health:CreateTexture(nil, "OVERLAY")
-      rci:SetPoint("BOTTOM", f, 0, 3)
+      rci:SetPoint("RIGHT", f, -2, 0)
       rci:SetSize(cfg.oUF.frames.raid.icons.size+2,cfg.oUF.frames.raid.icons.size+2)
 	  rci.finishedTimer = 8
 	  rci.fadeTimer = 1.5
@@ -296,7 +297,7 @@
     -- LFD Icon
     if cfg.oUF.frames.raid.icons.role then
 		local lfdi = lib.gen_fontstring(f.Health, cfg.oUF.media.font, 9)
-		lfdi:SetPoint("LEFT", f.Health, "LEFT",0,3)
+		lfdi:SetPoint("LEFT", f.Health, "LEFT",1,0)
 		lfdi:SetShadowOffset(1.25, -1.25)
 		f:Tag(lfdi, '[mono:LFD]')
     end

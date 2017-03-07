@@ -25,6 +25,8 @@ if (GetLocale() == "zhCN") then
 	L["QuestReportFilterTooltip"] = "过滤各类组队任务喊话提醒"
 	L["SpecSpell"] = "天赋技能"
 	L["SpecSpellFilterTooltip"] = "如果你已满级则过滤你及宠物的技能/天赋学习信息"
+	L["MonsterSay"] = "怪物说话"
+	L["MonsterSayFilterTooltip"] = "用一个重复过滤器减少聊天框内怪物说话的刷屏。该选项不会影响怪物释放技能时的喊话"
 	L["RepeatOptions"] = "重复信息设置"
 	L["chatLinesLimit"] = "重复信息缓存行数"
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20。"
@@ -38,7 +40,7 @@ if (GetLocale() == "zhCN") then
 	L["EnableAdvancedConfig"] = "启用高级选项"
 	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你已经知道危险性，请继续..."
 	L["WhisperWhitelistMode"] = "密语白名单模式"
-	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、战网好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
+	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 --BlackwordList
 	L["BlackwordList"] = "黑名单关键词"
 	L["AddBlackWordTitle"] = "添加新黑名单关键词"
@@ -78,6 +80,8 @@ if (GetLocale() == "zhCN") then
 --AchievementFilter
 	L["GotAchievement"] = "[%s]获得了成就%s！"
 	L["And"] = "、"
+--Version
+	L["ThisIsATestVersion"] = "您更新到一个测试版本。"
 
 -----------------------------------------------------------------------
 -- zhTW -- NEED HELP
@@ -104,6 +108,8 @@ elseif (GetLocale() == "zhTW") then
 	L["QuestReportFilterTooltip"] = "过滤各类组队任务喊话提醒"
 	L["SpecSpell"] = "天赋技能"
 	L["SpecSpellFilterTooltip"] = "如果你已满级则过滤你及宠物的技能/天赋学习信息"
+	L["MonsterSay"] = "怪物说话"
+	L["MonsterSayFilterTooltip"] = "用一个重复过滤器减少聊天框内怪物说话的刷屏。该选项不会影响怪物释放技能时的喊话"
 	L["RepeatOptions"] = "重复信息设置"
 	L["chatLinesLimit"] = "重复信息缓存行数"
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20"
@@ -117,7 +123,7 @@ elseif (GetLocale() == "zhTW") then
 	L["EnableAdvancedConfig"] = "启用高级选项"
 	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你已经知道危险性，请继续..."
 	L["WhisperWhitelistMode"] = "密語白名單模式"
-	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、战网好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
+	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 --BlackwordList
 	L["BlackwordList"] = "黑名单關鍵詞"
 	L["AddBlackWordTitle"] = "添加新黑名單關鍵詞"
@@ -157,9 +163,11 @@ elseif (GetLocale() == "zhTW") then
 --AchievementFilter
 	L["GotAchievement"] = "[%s]獲得了成就%s！"
 	L["And"] = "、"
+--Version
+	L["ThisIsATestVersion"] = "您更新到一个测试版本。"
 
 -----------------------------------------------------------------------
--- Default: 07.29.16 -- NEED HELP
+-- Default -- NEED HELP
 -----------------------------------------------------------------------
 else
 --Titles
@@ -182,6 +190,8 @@ else
 	L["QuestReportFilterTooltip"] = "Filter many kind of grouping messages"
 	L["SpecSpell"] = "SpecSpell"
 	L["SpecSpellFilterTooltip"] = "Filter spell/talent learning messages if player is at max level"
+	L["MonsterSay"] = "MonsterSay"
+	L["MonsterSayFilterTooltip"] = "Use a repeat filter to reduce monster say msg in chat. This will not filter monster yell msg while it cast spells."
 	L["RepeatOptions"] = "Repeat Options"
 	L["chatLinesLimit"] = "Repeat message cache lines"
 	L["chatLinesLimitTooltips"] = "Repeat message lines. Please change it to suit your message amount. Increase it will consume more memory. Set 0 to disable Repeat Filter. Default 20."
@@ -195,7 +205,7 @@ else
 	L["EnableAdvancedConfig"] = "Enable Advanced Config"
 	L["AdvancedWarningText"] = "Please do NOT change any options that you don't understand, or you may mess ECF up. If you DO know the risk, you may continue..."
 	L["WhisperWhitelistMode"] = "Whisper Whitelist Mode"
-	L["WhisperWhitelistModeTooltip"] = "Filter all whisper unless it's from guild/group/raid/battlenet friend or you have just whisper them|n|cffE2252DUse with care!"
+	L["WhisperWhitelistModeTooltip"] = "Filter all whisper unless it's from guild/group/raid/friends or you have just whisper them|n|cffE2252DUse with care!"
 --BlackwordList
 	L["BlackwordList"] = "BlackWordList"
 	L["AddBlackWordTitle"] = "Add Blackword"
@@ -235,6 +245,8 @@ else
 --AchievementFilter
 	L["GotAchievement"] = "[%s]have earned the achievement%s!"
 	L["And"] = ", "
+--Version
+	L["ThisIsATestVersion"] = "You have updated to a test version. "
 end
 
 ecf.L = L

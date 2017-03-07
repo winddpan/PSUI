@@ -1,0 +1,38 @@
+MrTarget v5.1.0
+=====================================================================
+
+RAID STYLE UNIT FRAMES IN BATTLEGROUNDS
+ENEMY AND PARTY FRAME GROUPS
+POKEMON NAMES for RUSSIAN TARGET CALLING
+SUPPORTS GRID LAYOUT
+NOW SUPPORTS 40 MAN BATTLEGROUNDS
+NOW SUPPORTS PER CHARACTER AND BATTLEGROUND SIZE CONFIGURATION
+
+Supports Warlords of Draenor v7.1.0 (Legion)
+
+CHECK OUT THE ADDON IN ACTION WITH SACHIE
+http://youtube.com/c/lockofwar
+
+SEND BUGS or FEATURE REQUESTS TO
+http://twitter.com/renevatium OR hello@renevatium.com
+
+Right-click drag to MOVE (only while options panel is open)
+Unit frame orientation is automatic based on screen position
+Displays a maximum of 15 units per team
+Units are sorted ALPHABETICALLY, then by CLASS, then by ROLE
+Objectives frame will be collapsed during battle
+To avoid taint, options that alter the UI are disabled during battle
+
+MORE FEEDBACK PLEASE!
+We want to hear your ideas/issues
+
+SLASH COMMANDS
+---------------------------------------------------------------------
+/mrtarget, /mrt hide|show - Quick hide/show for during battle
+/mrtarget, /mrt - Open interface options panel
+
+LICENSE
+---------------------------------------------------------------------
+This Work is provided under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+International Public License. For more information see LICENSE.txt included with this distribution
+or visit https://creativecommons.org/licenses/by-nc-nd/4.0/ for the full text.

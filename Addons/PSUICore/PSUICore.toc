@@ -31,6 +31,7 @@ modules\SimpleChannel.lua
 modules\poison_alert.lua
 modules\EasyChannel.lua
 modules\HideOrderHallBar.lua
+modules\safequeue.lua
 
 automation\buystack.lua
 automation\durability.lua

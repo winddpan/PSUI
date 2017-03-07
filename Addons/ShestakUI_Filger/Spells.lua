@@ -187,9 +187,6 @@ Filger_Spells = {
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
-			-- 天赋-敏锐
-			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
-			
 			-- 敏锐终结技buff
 			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 197498, unitID = "player", caster = "player", filter = "BUFF"},
@@ -211,12 +208,12 @@ Filger_Spells = {
 			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
 			
+			-- 天赋-敏锐
+			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- 披风
 			{spellID = 208693, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
 			{spellID = 228224, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
-			
-
-
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -241,13 +238,15 @@ Filger_Spells = {
 
 			-- Vendetta 仇杀
 			{spellID = 79140, unitID = "target", caster = "player", filter = "DEBUFF"},
+			--君王之灾debuff
+			{spellID = 192759, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Rupture
 			{spellID = 1943, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Garrote
 			{spellID = 703, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Gouge
 			{spellID = 1776, unitID = "target", caster = "player", filter = "DEBUFF"},
-			
+
 			-- Hemorrhage
 			{spellID = 16511, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Deadly Poison
@@ -290,6 +289,8 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
+
+			{spellID = 208605, unitID = "player", caster = "player", filter = "BUFF"},
 
 			{spellID = 188499, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 212800, unitID = "player", caster = "player", filter = "BUFF"},

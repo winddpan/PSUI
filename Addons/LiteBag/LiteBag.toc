@@ -1,13 +1,9 @@
 ## Interface: 70100
 ## Title: LiteBag
-## Version: 7.1.4
+## Version: 7.1.5
 ## Author: Xodiv of Proudmoore
 ## Email: mib@post.com
 ## SavedVariablesPerCharacter: LiteBag_OptionsDB
-## X-Curse-Packaged-Version: 7.1.4
-## X-Curse-Project-Name: LiteBag
-## X-Curse-Project-ID: litebag
-## X-Curse-Repository-ID: wow/litebag/mainline
 
 Print.lua
 Options.lua

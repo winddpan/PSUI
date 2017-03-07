@@ -24,11 +24,17 @@ local config
 
 local _G = _G
 local gsub, select, ipairs, pairs, next, strsub, format, tonumber, strmatch, tconcat, strfind, strbyte, fmod = gsub, select, ipairs, pairs, next, strsub, format, tonumber, strmatch, table.concat, string.find, string.byte, math.fmod -- lua
-local GetItemInfo, GetCurrencyLink = GetItemInfo, GetCurrencyLink -- options
-local Ambiguate = Ambiguate -- main filter
-local ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime = ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime -- acievements
+local Ambiguate, ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime, GetItemInfo, GetCurrencyLink = Ambiguate, ChatTypeInfo, GetPlayerInfoByGUID, GetGuildInfo, GetTime, GetItemInfo, GetCurrencyLink -- BLZ
 
 local EnhancedChatFilter = LibStub("AceAddon-3.0"):NewAddon("EnhancedChatFilter", "AceConsole-3.0")
+local version = GetAddOnMetadata("EnhancedChatFilter", "Version")
+local versionParent = strmatch(version,"^([%d%.%-]+)")
+local versionType = strmatch(version,"([ab])%d*$") or "r"
+local versionMsg = {}
+versionMsg["7.1.5-2"] = "此版本更新了好友相关的代码，如果遇到有关问题请反馈:)"
+
+--Player info
+local myRealm, myGuild = GetRealmName(), GetGuildInfo("player")
 
 --Default Options
 local defaults = {
@@ -40,6 +46,7 @@ local defaults = {
 		enableRAF = false, -- RaidAlert Filter
 		enableQRF = false, -- Quest/Group Report Filter
 		enableDSS = true, -- Spec spell Filter
+		enableMSF = true, -- Monster Say Filter
 		chatLinesLimit = 20, -- also enable repeatFilter
 		stringDifferenceLimit = 0.1, -- in repeatFilter
 		multiLine = false, -- MultiLines, in RepeatFilter
@@ -49,13 +56,14 @@ local defaults = {
 		blackWordFilterGroup = false, -- blackWord enabled in group and raid
 		lootType = "ITEMS", -- loot filter type
 		lootItemFilterList = {[118043] = true, [71096] = true}, -- item list, [id] = true
-		lootCurrencyFilterList = {[944] = true}, -- Currency list, [id] = true
+		lootCurrencyFilterList = {[944] = true, [1268] = true}, -- Currency list, [id] = true
 		lootQualityMin = 0, -- loot quality filter, 0..4 = poor..epic
 		minimap = {
 			hide = false, -- minimap
 		},
 		advancedConfig = false, -- show advancedConfig
 		debugMode = false,
+		lastVersion = "",
 	}
 }
 
@@ -121,6 +129,15 @@ function EnhancedChatFilter:OnInitialize()
 	config = LibStub("AceDB-3.0"):New("ecfDB", defaults, "Default").profile
 	icon:Register("Enhanced Chat Filter", ecfLDB, config.minimap)
 	convert()
+	ShowFriends()
+	if config.lastVersion ~= versionParent then
+		config.lastVersion = versionParent
+		local msg = versionMsg[versionParent]
+		if msg then
+			if (versionType ~= "r") then msg = L["ThisIsATestVersion"]..msg end
+			EnhancedChatFilter:Print(msg)
+		end
+	end
 end
 
 --------------- Slash Command ---------------
@@ -149,7 +166,7 @@ end
 
 local options = {
 	type = "group",
-	name = "EnhancedChatFilter "..GetAddOnMetadata("EnhancedChatFilter", "Version"),
+	name = "EnhancedChatFilter "..version,
 	get = function(info) return config[info[#info]] end,
 	set = function(info, value) config[info[#info]] = value end,
 	disabled = function() return not config.enableFilter end,
@@ -210,6 +227,12 @@ local options = {
 					name = L["SpecSpell"],
 					desc = L["SpecSpellFilterTooltip"],
 					order = 15,
+				},
+				enableMSF = {
+					type = "toggle",
+					name = L["MonsterSay"],
+					desc = L["MonsterSayFilterTooltip"],
+					order = 16,
 				},
 				line2 = {
 					type = "header",
@@ -516,27 +539,29 @@ if GetCVar("profanityFilter")~="0" then SetCVar("profanityFilter", "0") end
 
 -------------------------------------- Filters ------------------------------------
 --Update allowWisper list whenever login/friendlist updates
-local allowWisper = {}
-local ecfFrame = CreateFrame("Frame")
-ecfFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-ecfFrame:RegisterEvent("FRIENDLIST_UPDATE")
-ecfFrame:SetScript("OnEvent", function(self, event)
-	if event == "PLAYER_ENTERING_WORLD" then
-		ShowFriends() --friend list
-	else
-		self:Hide()
-		for i = 1, GetNumFriends() do
-			local n = GetFriendInfo(i)
-			if n then allowWisper[n] = true end -- added to allowWisper list
+local friends, allowWisper = {}, {}
+local friendFrame = CreateFrame("Frame")
+friendFrame:RegisterEvent("FRIENDLIST_UPDATE")
+friendFrame:RegisterEvent("BN_FRIEND_INFO_CHANGED")
+friendFrame:SetScript("OnEvent", function(self)
+	friends = {}
+	--Add WoW friends
+	for i = 1, GetNumFriends() do
+		local n = GetFriendInfo(i)
+		if n then friends[Ambiguate(n, "none")] = true end
+	end
+	--And battlenet friends
+	for i = 1, select(2, BNGetNumFriends()) do
+		for j = 1, BNGetNumFriendGameAccounts(i) do
+			local _, characterName, client, realmName = BNGetFriendGameAccountInfo(i, j)
+			if (client == "WoW") then friends[Ambiguate(characterName.."-"..realmName, "none")] = true end
 		end
 	end
-	if config.debugMode then for k in pairs(allowWisper) do print("ECF allowed: "..k) end end
 end)
 
 --Add players you wispered into allowWisper list
 local function addToAllowWisper(self,_,_,player)
-	local trimmedPlayer = Ambiguate(player, "none")
-	allowWisper[trimmedPlayer] = true
+	allowWisper[Ambiguate(player, "none")] = true
 end
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", addToAllowWisper)
 
@@ -552,63 +577,54 @@ local function stringDifference(sA, sB)
 		end
 		for j=0, len_b do templast[j+1]=temp[j+1] end
 	end
-	return temp[len_b+1]/(len_a+len_b)
+	return temp[len_b+1]/max(len_a,len_b)
 end
 
 local chatLines = {}
 local prevLineID = 0
-local filterResult = nil
-local chatChannel = {["CHAT_MSG_WHISPER"] = 1, ["CHAT_MSG_SAY"] = 2, ["CHAT_MSG_CHANNEL"] = 3, ["CHAT_MSG_YELL"] = 3, ["CHAT_MSG_PARTY"] = 4, ["CHAT_MSG_PARTY_LEADER"] = 4, ["CHAT_MSG_RAID"] = 4, ["CHAT_MSG_RAID_LEADER"] = 4, ["CHAT_MSG_RAID_WARNING"] = 4, ["CHAT_MSG_INSTANCE_CHAT"] = 4,["CHAT_MSG_INSTANCE_CHAT_LEADER"] = 4, ["CHAT_MSG_DND"] = 101}
+local filterResult = false
+local chatChannel = {["CHAT_MSG_WHISPER"] = 1, ["CHAT_MSG_SAY"] = 2, ["CHAT_MSG_CHANNEL"] = 3, ["CHAT_MSG_YELL"] = 3, ["CHAT_MSG_PARTY"] = 4, ["CHAT_MSG_PARTY_LEADER"] = 4, ["CHAT_MSG_RAID"] = 4, ["CHAT_MSG_RAID_LEADER"] = 4, ["CHAT_MSG_RAID_WARNING"] = 4, ["CHAT_MSG_INSTANCE_CHAT"] = 4, ["CHAT_MSG_INSTANCE_CHAT_LEADER"] = 4, ["CHAT_MSG_DND"] = 101}
 
 local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 	-- exit when main filter is off
 	if(not config.enableFilter) then return end
-
-	local trimmedPlayer = Ambiguate(player, "none")
-	-- don't filter player himself
-	if UnitIsUnit(trimmedPlayer,"player") then return end
-
-	-- don't filter GM or DEV
-	if type(flags) == "string" and (flags == "GM" or flags == "DEV") then return end
 
 	-- if it has been worked then use the worked result
 	if(lineID == prevLineID) then
 		return filterResult
 	else
 		prevLineID = lineID
-		filterResult = nil
+		filterResult = false
 	end
 
-	if config.debugMode then print("RAWMsg: "..msg) end
+	local trimmedPlayer = Ambiguate(player, "none")
+	-- don't filter player or his friends/BNfriends
+	if UnitIsUnit(trimmedPlayer,"player") or friends[trimmedPlayer] then return end
+
+	-- don't filter GM or DEV
+	if type(flags) == "string" and (flags == "GM" or flags == "DEV") then return end
+
+	if config.debugMode then print("RAWMsg: "..trimmedPlayer..": "..msg) end
 
 	-- remove utf-8 chars
 	local filterString = utf8replace(msg, UTF8Symbols)
-	-- remove color/hypelink/space/symbols
-	filterString = filterString:upper():gsub("|C[0-9A-F]+",""):gsub("|H[^|]+|H",""):gsub("|H|R",""):gsub("%s", ""):gsub(filterCharList, "")
+	-- remove color/hypelink/raidicon/space/symbols
+	filterString = filterString:upper():gsub("|C[0-9A-F]+",""):gsub("|H[^|]+|H",""):gsub("|H|R",""):gsub("{RT%d}",""):gsub("%s", ""):gsub(filterCharList, "")
 	local newfilterString = filterString:gsub(filterCharListRegex, "")
 
-	if(config.enableWisper and chatChannel[event] <= 1) then --Whisper Whitelist Mode, only whisper
-		ShowFriends()
-		--Don't filter players that are from same guild/raid/party or friends
-		if allowWisper[trimmedPlayer] or UnitIsInMyGuild(trimmedPlayer) or UnitInRaid(trimmedPlayer) or UnitInParty(trimmedPlayer) then return end
-		--And battlenet friends
-		for i = 1, select(2, BNGetNumFriends()) do
-			for j = 1, BNGetNumFriendGameAccounts(i) do
-				local _, rName, rGame = BNGetFriendGameAccountInfo(i, j)
-				if (rName == trimmedPlayer and rGame == "WoW") then return end
-			end
-		end
-		if config.debugMode then print("Trigger: WhiteListMode") end
-		filterResult = true
-		return true
-	end
-
-	if(config.enableDND and (chatChannel[event] <= 3 or chatChannel[event] == 101)) then -- DND, whisper/yell/say/channel and auto-reply
-		if ((type(flags) == "string" and flags == "DND") or chatChannel[event] == 101) then
-			if config.debugMode then print("Trigger: DND Filter") end
+	if(config.enableWisper and chatChannel[event] == 1) then --Whisper Whitelist Mode, only whisper
+		--Don't filter players that are from same guild/raid/party or who you have whispered
+		if not(allowWisper[trimmedPlayer] or myGuild == GetGuildInfo(trimmedPlayer) or UnitInRaid(trimmedPlayer) or UnitInParty(trimmedPlayer)) then
+			if config.debugMode then print("Trigger: WhiteListMode") end
 			filterResult = true
 			return true
 		end
+	end
+
+	if(config.enableDND and ((chatChannel[event] <= 3 and type(flags) == "string" and flags == "DND") or chatChannel[event] == 101)) then -- DND, whisper/yell/say/channel and auto-reply
+		if config.debugMode then print("Trigger: DND Filter") end
+		filterResult = true
+		return true
 	end
 
 	if(chatChannel[event] <= (config.blackWordFilterGroup and 4 or 3)) then --blackWord Filter, whisper/yell/say/channel and party/raid(optional)
@@ -671,33 +687,40 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 		if chatLinesSize >= config.chatLinesLimit then tremove(chatLines, 1) end
 	end
 end
+for event in pairs(chatChannel) do ChatFrame_AddMessageEventFilter(event, ECFfilter) end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ECFfilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ECFfilter)
+--MonsterSayFilter
+local monsterLines = {}
+
+local function monsterFilter(self,_,msg)
+	if (not config.enableFilter or not config.enableMSF) then return end
+
+	local monsterLinesSize = #monsterLines
+	monsterLines[monsterLinesSize+1] = msg
+	for i=1, monsterLinesSize do
+		if (monsterLines[i] == msg) then
+			tremove(monsterLines, i)
+			if config.debugMode then print("Trigger: Monster Say Filter") end
+			return true
+		end
+	end
+	if monsterLinesSize >= 7 then tremove(monsterLines, 1) end
+end
+ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", monsterFilter)
 
 --SpecSpellFilter
+local SSFilterStrings = {
+	(ERR_LEARN_ABILITY_S:gsub("%%s","(.*)")),
+	(ERR_LEARN_SPELL_S:gsub("%%s","(.*)")),
+	(ERR_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
+	(ERR_LEARN_PASSIVE_S:gsub("%%s","(.*)")),
+	(ERR_PET_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
+	(ERR_PET_LEARN_ABILITY_S:gsub("%%s","(.*)")),
+	(ERR_PET_LEARN_SPELL_S:gsub("%%s","(.*)")),
+}
 local function SSFilter(self,_,msg)
 	if (not config.enableFilter or not config.enableDSS) then return end
 
-	local SSFilterStrings = {
-		(ERR_LEARN_ABILITY_S:gsub("%%s","(.*)")),
-		(ERR_LEARN_SPELL_S:gsub("%%s","(.*)")),
-		(ERR_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
-		(ERR_LEARN_PASSIVE_S:gsub("%%s","(.*)")),
-		(ERR_PET_SPELL_UNLEARNED_S:gsub("%%s","(.*)")),
-		(ERR_PET_LEARN_ABILITY_S:gsub("%%s","(.*)")),
-		(ERR_PET_LEARN_SPELL_S:gsub("%%s","(.*)")),
-	}
 	for _,s in ipairs(SSFilterStrings) do
 		if strfind(msg, s) then return true end
 	end
@@ -717,9 +740,8 @@ end
 local function achievementReady(id, achievement)
 	local area, guild = achievement.CHAT_MSG_ACHIEVEMENT, achievement.CHAT_MSG_GUILD_ACHIEVEMENT
 	if (area and guild) then
-		local playerGuild = GetGuildInfo("player")
 		for name in pairs(area) do
-			if (UnitExists(name) and playerGuild and playerGuild == GetGuildInfo(name)) then
+			if (UnitExists(name) and myGuild and myGuild == GetGuildInfo(name)) then
 				guild[name], area[name] = area[name], nil
 			end
 		end
@@ -754,14 +776,13 @@ local function achievementFilter(self, event, msg, _, _, _, _, _, _, _, _, _, _,
 	achievementID = tonumber(achievementID)
 	local _,class,_,_,_,name,server = GetPlayerInfoByGUID(guid)
 	if (not name) then return end -- GetPlayerInfoByGUID sometimes returns nil for valid guid
-	if (server ~= "" and server ~= GetRealmName()) then name = name.."-"..server end
+	if (server ~= "" and server ~= myRealm) then name = name.."-"..server end
 	achievements[achievementID] = achievements[achievementID] or {timeout = GetTime() + 0.5}
 	achievements[achievementID][event] = achievements[achievementID][event] or {}
 	achievements[achievementID][event][name] = class
 	achievementFrame:Show()
 	return true
 end
-
 ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", achievementFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD_ACHIEVEMENT", achievementFilter)
 
@@ -773,7 +794,6 @@ local function lootitemfilter(self,_,msg)
 	if(config.lootItemFilterList[itemID]) then return true end
 	if(select(3,GetItemInfo(itemID)) < config.lootQualityMin) then return true end -- ItemQuality is in ascending order
 end
-
 ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", lootitemfilter)
 
 local function lootcurrecyfilter(self,_,msg)
@@ -781,5 +801,4 @@ local function lootcurrecyfilter(self,_,msg)
 	local currencyID = tonumber(strmatch(msg, "|Hcurrency:(%d+)"))
 	if(config.lootCurrencyFilterList[currencyID]) then return true end
 end
-
 ChatFrame_AddMessageEventFilter("CHAT_MSG_CURRENCY", lootcurrecyfilter)

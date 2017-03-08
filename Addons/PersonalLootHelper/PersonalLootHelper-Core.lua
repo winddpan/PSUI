@@ -39,6 +39,21 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170301 - 1.21
+	Added option to display items that can be traded to you directly in the raid frames to make it easier to find people who have loot that
+		you may want and to make it easier to compare that loot to what you have equipped (hold shift over item for comparison).
+		A future version of PLH will also indicate players who can receive items you've looted directly in the raid frames.
+	note:  added PLH_HIGHLIGHT_RAID_FRAMES, HighlightRaidFrames(), and related
+		
+	Added option to exclude notifications if character level is too low to equip an item
+		note: added PLH_CHECK_CHARACTER_LEVEL
+
+	Decoupled "coordinate rolls" mode from "notify group" mode, and enabled raid assistants to perform roll coordination
+		note: added PLH_COORDINATE_ROLLS and PLH_NOTIFY_GROUP; removed references to PLH_NOTIFY_MODE except to set values of the new global variables
+		
+	Removed case sensitivity from trade whispers when "coordinate rolls" is active; also permitted "[item] trade" in addition to existing "trade [item]"
+		note: in ProcessWhisper()
+	
 20170218 - 1.20
 	Added check to see if a character is a high enough level to equip an item that drops (to fix recommendations in holiday and TW dungeons)
 		note:  added check in IsEquippableItemForCharacter
@@ -305,8 +320,6 @@ TODO Refactoring
 	comments - update to reflect the approach to looping logic; just using outer loop now; no inner retry logic
   
 Future enhancement ideas:
-	Add pop up window giving player option to whisper people who can use gear to offer the loot to them
-	add ability for people to opt out of receiving whispers when they receive tradeable items
 	if you have addon installed, get a popup to decide what to do vs. a whisper?
 	option for roll timers - auto-finish rolls after [X] seconds or never, timers for roll warnings
 	add ability to cancel rolls?
@@ -315,14 +328,6 @@ Future enhancement ideas:
 	   for other instances of PLHelper, and report back the selected Notify Mode of each (to help coordinate with
 	   making sure only 1 person is running in Notify Group mode)
 	also check for gem slots & tertiary stats when determining if an item is an upgrade
-	if Blizz fixes the UIDROPDOWNMENU_MENU_LEVEL taint issue, re-enable the Quality and ILVL dropdowns on the config screen
-		and change Notify Mode back into a dropdown.  Taint issue is as follows:
-			--8/26 22:33:52.225  Global variable UIDROPDOWNMENU_MENU_LEVEL tainted by PLHelper - Interface\FrameXML\UIDropDownMenu.lua:38
-			--8/26 22:33:52.225      securecall()
-			--8/26 22:33:52.225      Interface\FrameXML\UIDropDownMenu.lua:64 UIDropDownMenu_Initialize()
-			--8/26 22:33:52.225      Interface\AddOns\PLHelper\PLHelperConfig.lua:63
-			--"There are a few solutions. The simplest should be to treat UIDROPDOWNMENU_MENU_LEVEL in the same manner as UIDROPDOWNMENU_INIT_MENU/UIDROPDOWNMENU_OPEN_MENU and set it through a secure frame and SetAttribute rather than directly. This should be a quick, guaranteed solution to the issue, ensuring that the variable will always remain secure (unless the user mucks with it directly, which should not ever be necessary)."
-
 ]]--
 
 -- slash command
@@ -338,9 +343,13 @@ local DEFAULT_MIN_ILVL = 528  -- personal loot was introduced with Siege of Orgr
 local DEFAULT_MIN_QUALITY = 3  -- Rare
 local DEFAULT_DEBUG = false
 local DEFAULT_CURRENT_SPEC_ONLY = false
+local DEFAULT_CHECK_CHARACTER_LEVEL = true
+local DEFAULT_HIGHLIGHT_RAID_FRAMES = true
+local DEFAULT_HIGHLIGHT_SIZE = 20
 
-local TRADE_MESSAGE = 'TRADE'
+local TRADE_MESSAGE = 'TRADE'  -- added some hardcording in ProcessWhisper for various way people may offer to trade items; customize text there if needed (ex: foreign languages)
 local DELAY_BETWEEN_ROLLS = 4 -- in seconds
+local UNHIGHLIGHT_DELAY = 105  -- in seconds
 local DELAY_BETWEEN_INSPECTIONS = 3  -- in seconds
 local MAX_INSPECT_LOOPS = 3    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 local NUM_EXPECTED_ITEMS = 15 -- number of items we expect each person to have equipped (based on having something in every gear) plus 3 relics
@@ -967,12 +976,14 @@ local inspectReadyEventFrame
 local rosterUpdatedEventFrame
 local combatStatusChangedEventFrame
 local rollDelayFrame
+local highlightDelayFrame
 local groupMemberInfoChangedEventFrame
 
 -- set up variables that will track addon's status
 local isEnabled = false
 local delay = 0
 local nextRollDelay = 0
+local unhighlightDelay = 0
 local priorCacheRefreshTime = 0
 
 local whisperedItems = {}  -- list of items we've whispered to people; index is character name-realm, content is item
@@ -1001,6 +1012,9 @@ local inspectIndex = maxInspectIndex + 1    -- the index of the character within
 local notifyInspectName = nil -- valued if we sent a request to inspect someone, nil otherwise
 --local inspectRetries = 0  -- tracks how many times we've attempted to inspect a specific character without getting an INSPECT_READY result
 local inspectLoop = MAX_INSPECT_LOOPS + 1 -- defaulting to a higher value so PopulateGroupCache() knows to start a new inspection loop the first time it is called
+
+local raidFrameTextures = {}  -- array indexed by characterName-realmName, containing texture to be shown in raid frames (for loot identification)
+local raidFrameTooltips = {}  -- array indexed by characterName-realmName, containing tooltip to be shown in raid frames (for loot identification)
 
 local function GetExpectedRelicCount(level)
 	if level ~= nil then
@@ -1190,7 +1204,7 @@ local function IsEquippableItemForCharacter(item, characterName)
 			end
 			
 			-- check if character is a high enough level to equip the item
-			if requiredLevel > characterLevel then
+			if PLH_CHECK_CHARACTER_LEVEL and requiredLevel > characterLevel then
 				return false
 			end
 			
@@ -1470,17 +1484,109 @@ local function GetNames(namelist, limit)
 	return names
 end
 
+local function PlayerCanCoordinateRolls()
+	return (UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')) and not PLH_IsInLFR()
+end
+
+local function UnhighlightRaidFrames()
+	for characterName, texture in pairs(raidFrameTextures) do
+		texture:Hide()
+	end
+	for characterName, tooltip in pairs(raidFrameTooltips) do
+		tooltip:SetScript("OnEnter", nil)
+		tooltip:SetScript("OnEvent", nil)
+		tooltip:UnregisterAllEvents()
+	end
+end
+
+local function StartUnhighlightRaidFramesTimer()
+	highlightDelayFrame:SetScript('OnUpdate', function(self, elapsed)
+		unhighlightDelay = unhighlightDelay + elapsed
+		if unhighlightDelay >= UNHIGHLIGHT_DELAY then
+			UnhighlightRaidFrames()
+			highlightDelayFrame:SetScript('OnUpdate', nil)
+			unhighlightDelay = 0
+		end
+	end)
+end
+
+function PLH_ResizeHighlights()
+	for characterName, texture in pairs(raidFrameTextures) do
+		raidFrameTextures[characterName]:SetWidth(PLH_HIGHLIGHT_SIZE)
+		raidFrameTextures[characterName]:SetHeight(PLH_HIGHLIGHT_SIZE)
+	end
+	for characterName, tooltip in pairs(raidFrameTooltips) do
+		raidFrameTooltips[characterName]:SetWidth(PLH_HIGHLIGHT_SIZE)
+		raidFrameTooltips[characterName]:SetHeight(PLH_HIGHLIGHT_SIZE)
+	end
+end
+
+function PLH_ApplyFrameTexture(frame, characterName, item)
+	local unitName = PLH_GetUnitNameWithRealm(frame.unit)
+
+	if characterName == unitName then
+		-- create the texture to display in the raid frames
+		if not raidFrameTextures[characterName] then
+			raidFrameTextures[characterName] = frame:CreateTexture(nil, "OVERLAY")
+			raidFrameTextures[characterName]:SetPoint("BOTTOM", 0, 2) 
+			raidFrameTextures[characterName]:SetWidth(PLH_HIGHLIGHT_SIZE)
+			raidFrameTextures[characterName]:SetHeight(PLH_HIGHLIGHT_SIZE)
+		end
+--		local file_id = GetSpellTexture(60650)  -- spell id for "titanium seal of dalaran"
+		local itemTexture = select(10, GetItemInfo(item))
+		raidFrameTextures[characterName]:SetTexture(itemTexture)
+		
+		-- create the tooltip to display when the cursor is over the texture
+		if not raidFrameTooltips[characterName] then
+			raidFrameTooltips[characterName] = CreateFrame("Frame", frame:GetName() .. "itemTooltip", frame)
+			raidFrameTooltips[characterName]:SetPoint("BOTTOM", 0, 2)
+			raidFrameTooltips[characterName]:SetWidth(PLH_HIGHLIGHT_SIZE)
+			raidFrameTooltips[characterName]:SetHeight(PLH_HIGHLIGHT_SIZE)
+		end
+
+		raidFrameTooltips[characterName]:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+			GameTooltip:SetHyperlink(item)
+			GameTooltip:Show()
+			-- the following sets up the listener for the shift key to toggle display of the item comparison
+			raidFrameTooltips[characterName]:SetScript("OnEvent", function(self, event, arg, ...)
+				if raidFrameTooltips[characterName]:IsShown() and event == "MODIFIER_STATE_CHANGED" and (arg == "LSHIFT" or arg == "RSHIFT") then
+					GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+					GameTooltip:SetHyperlink(item)
+					GameTooltip:Show()
+				end
+			end)
+			raidFrameTooltips[characterName]:RegisterEvent("MODIFIER_STATE_CHANGED")
+		end)		
+
+		raidFrameTooltips[characterName]:SetScript("OnLeave", function(self)
+			raidFrameTooltips[characterName]:SetScript("OnEvent", nil)
+			raidFrameTooltips[characterName]:UnregisterAllEvents()
+			GameTooltip:Hide()
+		end)
+		
+		raidFrameTextures[characterName]:Show()
+	end
+end
+
+-- TODO implement for players to whom you can trade as well (keep in mind someone may both trade and receive an item)
+-- TODO what if a single person loots multiple useful items?  (ex: end of m+)
+local function HighlightRaidFrames(characterName, item)
+	if PLH_HIGHLIGHT_RAID_FRAMES then
+		CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "normal", PLH_ApplyFrameTexture, characterName, item)
+		StartUnhighlightRaidFramesTimer()
+	end
+end
+
 -- Determines whether item is not an upgrade for the person who looted the item, and is an upgrade for someone else in the group
 -- If that's the case, performs the action based on the users' selected Notify Mode
 local function PerformNotify(item, characterName)
 	local isAnUpgradeForLooter, equippedILVL = IsAnUpgradeForCharacter(item, characterName)
-	if PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS and UnitIsGroupLeader('player') then
-		if not PLH_IsInLFR() then
-			whisperedItems[characterName] = item  -- use full name-realm since that what we'll get when we look it up from the whisper
---			if #isAnUpgradeForAnyCharacterNames > 1 then  -- more than 1 person can use the item
---						PLH_SendWhisper('You can trade ' .. item .. ', which is an ilvl upgrade for ' .. names .. '. Reply \'' .. TRADE_MESSAGE .. '\' to initiate rolls for this item.', characterName)
---			end
-		end
+	if PLH_COORDINATE_ROLLS and PlayerCanCoordinateRolls() then
+		whisperedItems[characterName] = item  -- use full name-realm since that what we'll get when we look it up from the whisper
+--		if #isAnUpgradeForAnyCharacterNames > 1 then  -- more than 1 person can use the item
+--					PLH_SendWhisper('You can trade ' .. item .. ', which is an ilvl upgrade for ' .. names .. '. Reply \'' .. TRADE_MESSAGE .. '\' to initiate rolls for this item.', characterName)
+--		end
 	end
 	if equippedILVL > 0 and not isAnUpgradeForLooter then
 		-- we now know the item can be traded by the person who received it, so let's check to see if anyone can actually
@@ -1489,7 +1595,7 @@ local function PerformNotify(item, characterName)
 		if isAnUpgradeForAnyCharacter then
 			local names = GetNames(isAnUpgradeForAnyCharacterNames, MAX_NAMES_TO_SHOW)
 
-			if PLH_NOTIFY_MODE == NOTIFY_MODE_GROUP or PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS then
+			if PLH_NOTIFY_GROUP then
 				if not PLH_IsInLFR() then
 					PLH_SendBroadcast(PLH_GetNameWithoutRealm(characterName) .. ' can trade ' .. item .. ', which is an ilvl upgrade for ' .. names)
 				end
@@ -1501,8 +1607,7 @@ local function PerformNotify(item, characterName)
 			elseif IsPlayerInUpgradeList(isAnUpgradeForAnyCharacterNames) then  -- player can receive an item
 				PLH_SendAlert(PLH_GetNameWithoutRealm(characterName) .. ' can trade ' .. item .. ', which is an ilvl upgrade for you!')
 				PlaySound('LEVELUP')
-			elseif PLH_NOTIFY_MODE == NOTIFY_MODE_SELF then
---				PLH_SendUserMessage(PLH_GetNameWithoutRealm(characterName) .. ' can trade ' .. item .. ', which is an ilvl upgrade for ' .. names)
+				HighlightRaidFrames(characterName, item)
 			end
 		end
 	end
@@ -1676,22 +1781,32 @@ local function GetItemFromQueueByPlayer(player)
 end
 
 local function ProcessWhisper(message, sender)
-	if PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS and UnitIsGroupLeader('player') then
+	if PLH_COORDINATE_ROLLS and PlayerCanCoordinateRolls() then
 		if not string.find(sender, '-') then
 			sender = PLH_GetUnitNameWithRealm(sender)
 		end
 
-		-- if the person whispered 'trade [item]', then add the item to the array so we can process it
-		local _, _, whisperedItem = string.find(message, TRADE_MESSAGE .. '  ' .. '(|.+|r)')
+		-- if the person whispered 'trade [item]' or '[item] trade', then add the item to the array so we can process it
+		local _, _, whisperedItem = string.find(message, 'trade  (|.+|r)')
+		if whisperedItem == nil then
+			_, _, whisperedItem = string.find(message, 'Trade  (|.+|r)')
+		end
+		if whisperedItem == nil then
+			_, _, whisperedItem = string.find(message, 'TRADE  (|.+|r)')
+		end
+		if whisperedItem == nil then
+			_, _, whisperedItem = string.find(message, '(|.+|r) trade')
+		end
+		if whisperedItem == nil then
+			_, _, whisperedItem = string.find(message, '(|.+|r) Trade')
+		end
+		if whisperedItem == nil then
+			_, _, whisperedItem = string.find(message, '(|.+|r) TRADE')
+		end
 		if whisperedItem ~= nil then
 			whisperedItems[sender] = whisperedItem
-		else
-			_, _, whisperedItem = string.find(message, string.lower(TRADE_MESSAGE) .. '  ' .. '(|.+|r)')
-			if whisperedItem ~= nil then
-				whisperedItems[sender] = whisperedItem
-			end
 		end
-		
+
 		message = string.upper(message)
 		if whisperedItem ~= nil or message == TRADE_MESSAGE or message == '\'' .. TRADE_MESSAGE .. '\'' then
 			if whisperedItems[sender] ~= nil then
@@ -2040,27 +2155,26 @@ local function Enable()
 	ResetVariables()
 	isEnabled = true
 	lootReceivedEventFrame:RegisterEvent('CHAT_MSG_LOOT')
-	whisperReceivedEventFrame:RegisterEvent('CHAT_MSG_WHISPER')
-	bnWhisperReceivedEventFrame:RegisterEvent('CHAT_MSG_BN_WHISPER')
+	--whisperReceivedEventFrame:RegisterEvent('CHAT_MSG_WHISPER')
+	--bnWhisperReceivedEventFrame:RegisterEvent('CHAT_MSG_BN_WHISPER')
 	rollReceivedEventFrame:RegisterEvent('CHAT_MSG_SYSTEM')
 	inspectReadyEventFrame:RegisterEvent('INSPECT_READY')
 	combatStatusChangedEventFrame:RegisterEvent('PLAYER_REGEN_DISABLED')   -- player entered combat
 	groupMemberInfoChangedEventFrame:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')
 	groupMemberInfoChangedEventFrame:RegisterEvent('UNIT_INVENTORY_CHANGED')
---	PLH_SendStatusMessage(false)
 end
 
 local function Disable()
 	isEnabled = false
 	lootReceivedEventFrame:UnregisterAllEvents()
-	whisperReceivedEventFrame:UnregisterAllEvents()
-	bnWhisperReceivedEventFrame:UnregisterAllEvents()
+	-- keep the following listeners enabled so people can still use the roll coordinate mode during master looter (ex: for BoE drops)
+	--whisperReceivedEventFrame:UnregisterAllEvents()
+	--bnWhisperReceivedEventFrame:UnregisterAllEvents()
 	rollReceivedEventFrame:UnregisterAllEvents()
 	inspectReadyEventFrame:UnregisterAllEvents()
 	combatStatusChangedEventFrame:UnregisterAllEvents()
 	groupMemberInfoChangedEventFrame:UnregisterAllEvents()
 	groupInfoCache = {}
---	PLH_SendStatusMessage(false)
 end
 
 local function EnableOrDisable()
@@ -2136,23 +2250,6 @@ function SlashCmdList.PLHelperCommand(msg, editbox)
 	end
 end
 
-function PLH_SendStatusMessage(onlyShowIfEnabled)
-	if isEnabled then
-		if PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS then
-			PLH_SendUserMessage('Enabled in \'Notify Group + Coordinate Rolls\' mode. Please turn off \'Notify Group\' if someone else in the group is already running PLH in \'Notify Group\' mode. Mode can be changed through interface options.')
-		elseif PLH_NOTIFY_MODE == NOTIFY_MODE_GROUP then
-			PLH_SendUserMessage('Enabled in \'Notify Group\' mode. Please turn off \'Notify Group\' if someone else in the group is already running PLH in \'Notify Group\' mode. Mode can be changed through interface options.')
-		else
-			PLH_SendUserMessage('Enabled in \'Notify Self\' mode. Mode can be changed through interface options.')
-		end
-		if PLH_DEBUG then
-			PLH_SendUserMessage('Debug mode is enabled. \'/run PLH_DisableDebug()\' to turn debug off.')
-		end
-	elseif not onlyShowIfEnabled then
-		PLH_SendUserMessage('Disabled.  PLH will enable itself when you join a group using personal loot.')
-	end
-end
-
 local function Initialize(self, event, addonName, ...)
 	if addonName == 'PersonalLootHelper' then
 	
@@ -2166,7 +2263,16 @@ local function Initialize(self, event, addonName, ...)
 			PLH_DEBUG = DEFAULT_DEBUG
 			PLH_CURRENT_SPEC_ONLY = DEFAULT_CURRENT_SPEC_ONLY
 		end
-
+		
+		-- need global variable option added in version 1.21
+		if PLH_CHECK_CHARACTER_LEVEL == nil then
+			PLH_CHECK_CHARACTER_LEVEL = DEFAULT_CHECK_CHARACTER_LEVEL
+			PLH_COORDINATE_ROLLS = (PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS)
+			PLH_NOTIFY_GROUP = (PLH_NOTIFY_MODE == NOTIFY_MODE_GROUP or PLH_NOTIFY_MODE == NOTIFY_MODE_COORDINATE_ROLLS)
+			PLH_HIGHLIGHT_RAID_FRAMES = DEFAULT_HIGHLIGHT_RAID_FRAMES
+			PLH_HIGHLIGHT_SIZE = DEFAULT_HIGHLIGHT_SIZE
+		end
+		
 		if lootReceivedEventFrame == nil then
 
 			lootReceivedEventFrame = CreateFrame('Frame')
@@ -2195,6 +2301,11 @@ local function Initialize(self, event, addonName, ...)
 			combatStatusChangedEventFrame:SetScript('OnEvent', CombatStatusChangedEvent)
 
 			rollDelayFrame = CreateFrame('Frame')
+			highlightDelayFrame = CreateFrame('Frame')
+
+			-- enable listeners here so people can use the loot coordination feature even for master loot (ex: for BoE drops)
+			whisperReceivedEventFrame:RegisterEvent('CHAT_MSG_WHISPER')
+			bnWhisperReceivedEventFrame:RegisterEvent('CHAT_MSG_BN_WHISPER')
 		end
 		
 		PLH_CreateOptionsPanel()		
@@ -2466,3 +2577,7 @@ function PrintItemSpecInfo(item)
 	end
 end
 ]]--
+
+function PLH_TestHighlight(characterName, item)
+	HighlightRaidFrames(characterName, item)
+end

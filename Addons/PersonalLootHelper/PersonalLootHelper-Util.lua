@@ -5,12 +5,6 @@ local PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
 local PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
 	  PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')
 	  
-local NOTIFY_MODE_NAMES = {
-	'Notify Self',
-	'Notify Group',
-	'Coordinate Rolls'
-}
-
 local tooltip
 
 local waitTable = {};     -- used by PLH_wait
@@ -277,14 +271,6 @@ function PLH_SendDebugMessage(message)
 		print(GetColoredMessage(PLH_SHORT_ADDON_NAME_PREFIX, _G.YELLOW_FONT_COLOR_CODE) .. GetColoredMessage(message, _G.GRAY_FONT_COLOR_CODE))
 	end		
 end	
-
-function PLH_GetNotifyModeName(mode)
-	if mode == nil then
-		return NOTIFY_MODE_NAMES[PLH_NOTIFY_MODE]
-	else
-		return NOTIFY_MODE_NAMES[mode]
-	end
-end
 
 function PLH_wait(delay, func, ...)
   if(type(delay)~='number' or type(func)~='function') then

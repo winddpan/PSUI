@@ -831,8 +831,10 @@ local function UpdateSelectionHighlight(unitFrame)
 	local unit = unitFrame.unit
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 		unitFrame.redarrow:Show()
+		unitFrame.healthBar.bd:SetBackdropBorderColor(1, 1, 1)
 	else
 		unitFrame.redarrow:Hide()
+		unitFrame.healthBar.bd:SetBackdropBorderColor(0, 0, 0)
 	end
 
 	if not C.HorizontalArrow then
@@ -1217,8 +1219,8 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.healthBar.value:SetText("Value")
 		
 		namePlate.UnitFrame.name = createtext(namePlate.UnitFrame, "OVERLAY", G.fontsize-4, G.fontflag, "CENTER")
-		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -4)
-		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -14)
+		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -3)
+		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -13)
 		namePlate.UnitFrame.name:SetIndentedWordWrap(false)
 		namePlate.UnitFrame.name:SetTextColor(1,1,1)
 		namePlate.UnitFrame.name:SetText("Name")

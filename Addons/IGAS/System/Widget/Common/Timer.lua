@@ -31,7 +31,6 @@ __AutoProperty__()
 class "Timer"
 	inherit "VirtualUIObject"
 
-	__StructType__(StructType.Custom)
 	__Default__( 0 )
 	struct "TimerInterval"
 		function __init(value)

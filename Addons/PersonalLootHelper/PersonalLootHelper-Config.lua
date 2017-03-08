@@ -42,47 +42,64 @@ function PLH_CreateOptionsPanel()
 	CurrentSpecOnlyLabel:SetPoint('LEFT', PLH_CurrentSpecOnlyCheckbox, 'RIGHT', 0, 0)
 	CurrentSpecOnlyLabel:SetText('Evaluate based on current spec only')
 
-	--[[ PLH_NOTIFY_MODE ]]--
+	--[[ PLH_NOTIFY_GROUP ]]--
 	PLH_NotifyGroupCheckbox = CreateFrame('CheckButton', 'PLHNotifyGroup', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
 	PLH_NotifyGroupCheckbox:SetPoint('TOPLEFT', PLH_CurrentSpecOnlyCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
-	PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_MODE == 2 or PLH_NOTIFY_MODE == 3)
-	PLH_NotifyGroupCheckbox:SetScript('OnClick', function(frame)
-		if PLH_NotifyGroupCheckbox:GetChecked() then
-			PLH_CoordinateRollsCheckbox:Show()
-			PLH_CoordinateRollsLabel1:Show()
-			PLH_CoordinateRollsLabel2:Show()
-		else
-			PLH_CoordinateRollsCheckbox:Hide()
-			PLH_CoordinateRollsLabel1:Hide()
-			PLH_CoordinateRollsLabel2:Hide()
-		end
-	end)
+	PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_GROUP)
 
 	local NotifyGroupLabel = PLH_NotifyGroupCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	NotifyGroupLabel:SetPoint('LEFT', PLH_NotifyGroupCheckbox, 'RIGHT', 0, 0)
-	NotifyGroupLabel:SetText('Notify Group (automatically turned off in LFR)')
-	NotifyGroupLabel:SetWordWrap(true)
-	NotifyGroupLabel:SetJustifyH('LEFT')
-	NotifyGroupLabel:SetWidth(400)
+	NotifyGroupLabel:SetText('Notify group (automatically disabled in LFR)')
 
+	--[[ PLH_COORDINATE_ROLLS ]]--
 	PLH_CoordinateRollsCheckbox = CreateFrame('CheckButton', 'PLHCoordinateRolls', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
-	PLH_CoordinateRollsCheckbox:SetPoint('TOPLEFT', PLH_NotifyGroupCheckbox, 'BOTTOMLEFT', 25, -VERTICAL_SPACE_BETWEEN_ELEMENTS / 2)
-	PLH_CoordinateRollsCheckbox:SetChecked(PLH_NOTIFY_MODE == 3)
+	PLH_CoordinateRollsCheckbox:SetPoint('TOPLEFT', PLH_NotifyGroupCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
+	PLH_CoordinateRollsCheckbox:SetChecked(PLH_COORDINATE_ROLLS)
 
 	PLH_CoordinateRollsLabel1 = PLH_CoordinateRollsCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	PLH_CoordinateRollsLabel1:SetPoint('LEFT', PLH_CoordinateRollsCheckbox, 'RIGHT', 0, 0)
-	PLH_CoordinateRollsLabel1:SetText('Coordinate Rolls (group leader only)')
-	PLH_CoordinateRollsLabel1:SetWordWrap(true)
-	PLH_CoordinateRollsLabel1:SetJustifyH('LEFT')
-	PLH_CoordinateRollsLabel1:SetWidth(375)
+	PLH_CoordinateRollsLabel1:SetText('Coordinate rolls (group leaders or assistants only)')
 
 	PLH_CoordinateRollsLabel2 = PLH_CoordinateRollsCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 	PLH_CoordinateRollsLabel2:SetPoint('TOPLEFT', PLH_CoordinateRollsLabel1, 'BOTTOMLEFT', 20, -10)
-	PLH_CoordinateRollsLabel2:SetText('Prompt for and manage loot rolls. Players can whisper the group leader with "trade" or "trade [item]" to initiate rolls.')
+	PLH_CoordinateRollsLabel2:SetText('Manage loot rolls. Players can whisper the roll coordinator with "trade" or "trade [item]" to initiate rolls.')
 	PLH_CoordinateRollsLabel2:SetWordWrap(true)
 	PLH_CoordinateRollsLabel2:SetJustifyH('LEFT')
 	PLH_CoordinateRollsLabel2:SetWidth(450)
 
+	--[[ PLH_CHECK_CHARACTER_LEVEL ]]--
+	PLH_CheckCharacterLevelCheckbox = CreateFrame('CheckButton', 'PLHCheckCharacterLevel', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
+	PLH_CheckCharacterLevelCheckbox:SetPoint('TOPLEFT', PLH_CoordinateRollsCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS*2)
+	PLH_CheckCharacterLevelCheckbox:SetChecked(PLH_CHECK_CHARACTER_LEVEL)
+
+	local CheckCharacterLevelLabel = PLH_CheckCharacterLevelCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	CheckCharacterLevelLabel:SetPoint('LEFT', PLH_CheckCharacterLevelCheckbox, 'RIGHT', 0, 0)
+	CheckCharacterLevelLabel:SetText('Exclude notifications if character is too low level to equip item')
+
+	--[[ PLH_HIGHLIGHT_RAID_FRAMES ]]--
+	PLH_HighlightRaidFramesCheckbox = CreateFrame('CheckButton', 'PLHHighlightRaidFrames', PLHConfigFrame, 'InterfaceOptionsCheckButtonTemplate')
+	PLH_HighlightRaidFramesCheckbox:SetPoint('TOPLEFT', PLH_CheckCharacterLevelCheckbox, 'BOTTOMLEFT', 0, -VERTICAL_SPACE_BETWEEN_ELEMENTS)
+	PLH_HighlightRaidFramesCheckbox:SetChecked(PLH_HIGHLIGHT_RAID_FRAMES)
+
+	local HighlightRaidFramesLabel = PLH_HighlightRaidFramesCheckbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+	HighlightRaidFramesLabel:SetPoint('LEFT', PLH_HighlightRaidFramesCheckbox, 'RIGHT', 0, 0)
+	HighlightRaidFramesLabel:SetText('Show tradeable items in raid frames')
+
+	--[[ PLH_HIGHLIGHT_SIZE ]]--
+	PLH_HighlightSizeSlider = CreateFrame("Slider", "PLHHighlightSize", PLHConfigFrame, "OptionsSliderTemplate")
+	PLHConfigFrame.ScalingSlider = slider
+	PLH_HighlightSizeSlider:SetOrientation("HORIZONTAL")
+	PLH_HighlightSizeSlider:SetMinMaxValues(10, 30)
+	PLH_HighlightSizeSlider:SetValueStep(1)
+	PLH_HighlightSizeSlider:SetObeyStepOnDrag(true)
+	PLH_HighlightSizeSlider:SetWidth(180)
+	PLH_HighlightSizeSlider:SetHeight(16)
+	PLH_HighlightSizeSlider:SetPoint("LEFT", HighlightRaidFramesLabel, "RIGHT", 20, 0)
+	_G[PLH_HighlightSizeSlider:GetName().."High"]:SetText("large")
+	_G[PLH_HighlightSizeSlider:GetName().."Low"]:SetText("small")
+	_G[PLH_HighlightSizeSlider:GetName().."Text"]:SetText("icon size")
+	PLH_HighlightSizeSlider:SetValue(PLH_HIGHLIGHT_SIZE)
+	
 	--[[ Thank you message ]] --
 	local ThankYouLabel = PLHConfigFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 	ThankYouLabel:SetPoint('BOTTOM', PLHConfigFrame, 'BOTTOM', 0, 48)
@@ -92,39 +109,25 @@ function PLH_CreateOptionsPanel()
 
 	--[[ OnShow Event]]
 	PLHConfigFrame:SetScript('OnShow', function(frame)
-		if PLH_NOTIFY_MODE == 2 or PLH_NOTIFY_MODE == 3 then
-			PLH_CoordinateRollsCheckbox:Show()
-			PLH_CoordinateRollsLabel1:Show()
-			PLH_CoordinateRollsLabel2:Show()
-		else
-			PLH_CoordinateRollsCheckbox:Hide()
-			PLH_CoordinateRollsLabel1:Hide()
-			PLH_CoordinateRollsLabel2:Hide()
-		end
 		PLH_IncludeBOECheckbox:SetChecked(PLH_INCLUDE_BOE)
 		PLH_CurrentSpecOnlyCheckbox:SetChecked(PLH_CURRENT_SPEC_ONLY)
-		PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_MODE == 2 or PLH_NOTIFY_MODE == 3)
-		PLH_CoordinateRollsCheckbox:SetChecked(PLH_NOTIFY_MODE == 3)
+		PLH_CheckCharacterLevelCheckbox:SetChecked(PLH_CHECK_CHARACTER_LEVEL)
+		PLH_HighlightRaidFramesCheckbox:SetChecked(PLH_HIGHLIGHT_RAID_FRAMES)
+		PLH_NotifyGroupCheckbox:SetChecked(PLH_NOTIFY_GROUP)
+		PLH_CoordinateRollsCheckbox:SetChecked(PLH_COORDINATE_ROLLS)
+		PLH_HighlightSizeSlider:SetValue(PLH_HIGHLIGHT_SIZE)
 	end)
 
 	--[[ Okay Action ]]--
 	function PLHConfigFrame.okay(arg1, arg2, arg3, ...)
 		PLH_INCLUDE_BOE = PLH_IncludeBOECheckbox:GetChecked()
 		PLH_CURRENT_SPEC_ONLY = PLH_CurrentSpecOnlyCheckbox:GetChecked()
-		local selectedNotifyMode
-		if PLH_NotifyGroupCheckbox:GetChecked() then
-			if PLH_CoordinateRollsCheckbox:GetChecked() then
-				selectedNotifyMode = 3
-			else
-				selectedNotifyMode = 2
-			end
-		else
-			selectedNotifyMode = 1
-		end
-		if PLH_NOTIFY_MODE ~= selectedNotifyMode then
-			PLH_NOTIFY_MODE = selectedNotifyMode
-			PLH_SendStatusMessage(true)
-		end
+		PLH_CHECK_CHARACTER_LEVEL = PLH_CheckCharacterLevelCheckbox:GetChecked()
+		PLH_HIGHLIGHT_RAID_FRAMES = PLH_HighlightRaidFramesCheckbox:GetChecked()
+		PLH_NOTIFY_GROUP = PLH_NotifyGroupCheckbox:GetChecked()
+		PLH_COORDINATE_ROLLS = PLH_CoordinateRollsCheckbox:GetChecked()
+		PLH_HIGHLIGHT_SIZE = PLH_HighlightSizeSlider:GetValue()
+		PLH_ResizeHighlights()
 	end
 
 end

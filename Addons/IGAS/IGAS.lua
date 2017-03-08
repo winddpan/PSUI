@@ -122,7 +122,6 @@ end
 ------------------------------------------------------
 -- LocaleString
 ------------------------------------------------------
-__StructType__(StructType.Custom)
 struct "LocaleString"
 	function LocaleString(value)
 		if type(value) ~= "string" then

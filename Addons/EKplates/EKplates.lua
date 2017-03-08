@@ -739,7 +739,7 @@ end
 local function IsOnThreatList(unit)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
 	if threatStatus == 3 then  --穩定仇恨/當前坦克/securely tanking, highest threat
-		return .9, .1, .4  --紅色/red
+		return .9, .1, .1  --紅色/red
 	elseif threatStatus == 2 then  --非當前仇恨/當前坦克/insecurely tanking, another unit have higher threat but not tanking.
 		return .9, .1, .9  --粉色/pink
 	elseif threatStatus == 1 then  --當前仇恨/非當前坦克(遠程ot)/not tanking, higher threat than tank.
@@ -809,11 +809,11 @@ end
 local function UpdateCastBar(unitFrame)
 	local castBar = unitFrame.castBar
 	if not castBar.colored then
-		castBar.startCastColor = CreateColor(0.6, 0.6, 0.6)
-		castBar.startChannelColor = CreateColor(0.6, 0.6, 0.6)
-		castBar.finishedCastColor = CreateColor(0.6, 0.6, 0.6)
+		castBar.startCastColor = CreateColor(0.1, 0.8, 0.1)--可打断施法条颜色
+		castBar.startChannelColor = CreateColor(0.1, 0.8, 0.1)
+		castBar.finishedCastColor = CreateColor(0.1, 0.8, 0.1)
 		castBar.failedCastColor = CreateColor(0.5, 0.2, 0.2)
-		castBar.nonInterruptibleColor = CreateColor(0.9, 0, 1)
+		castBar.nonInterruptibleColor = CreateColor(0.8, 0.1, 0.1)--不可打断施法条颜色
 		CastingBarFrame_AddWidgetForFade(castBar, castBar.BorderShield)
 		castBar.colored = true
 	end
@@ -1075,7 +1075,7 @@ end
 function NamePlates_UpdateNamePlateOptions()
 	-- Called at VARIABLES_LOADED and by "Larger Nameplates" interface options checkbox
 	local baseNamePlateWidth = 96
-	local baseNamePlateHeight = 45
+	local baseNamePlateHeight = 30
 	local horizontalScale = tonumber(GetCVar("NamePlateHorizontalScale"))
 	C_NamePlate.SetNamePlateFriendlySize(math.floor(baseNamePlateWidth * horizontalScale), baseNamePlateHeight)
 	C_NamePlate.SetNamePlateEnemySize(baseNamePlateWidth, baseNamePlateHeight)
@@ -1207,7 +1207,7 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.healthBar:SetPoint("RIGHT", 0, 0)
 		namePlate.UnitFrame.healthBar:SetStatusBarTexture(G.ufbar)
 		namePlate.UnitFrame.healthBar:SetMinMaxValues(0, 1)
-		namePlate.UnitFrame.healthBar:SetFrameLevel(0)
+		namePlate.UnitFrame.healthBar:SetFrameLevel(1)
 
 		namePlate.UnitFrame.healthBar.bd = createBackdrop(namePlate.UnitFrame.healthBar, namePlate.UnitFrame.healthBar, 1) 
 		
@@ -1217,8 +1217,8 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.healthBar.value:SetText("Value")
 		
 		namePlate.UnitFrame.name = createtext(namePlate.UnitFrame, "OVERLAY", G.fontsize-4, G.fontflag, "CENTER")
-		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -10)
-		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -20)
+		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -4)
+		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -14)
 		namePlate.UnitFrame.name:SetIndentedWordWrap(false)
 		namePlate.UnitFrame.name:SetTextColor(1,1,1)
 		namePlate.UnitFrame.name:SetText("Name")
@@ -1226,7 +1226,7 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.castBar = CreateFrame("StatusBar", nil, namePlate.UnitFrame)
 		namePlate.UnitFrame.castBar:Hide()
 		namePlate.UnitFrame.castBar.iconWhenNoninterruptible = false
-		namePlate.UnitFrame.castBar:SetHeight(2)
+		namePlate.UnitFrame.castBar:SetHeight(3)
 		if C.classresource_show and C.classresource == "target" then  
 			namePlate.UnitFrame.castBar:SetPoint("TOPLEFT", namePlate.UnitFrame.healthBar, "BOTTOMLEFT", 0, -7)  
 			namePlate.UnitFrame.castBar:SetPoint("TOPRIGHT", namePlate.UnitFrame.healthBar, "BOTTOMRIGHT", 0, -7)  
@@ -1244,13 +1244,16 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.castBar.Text:SetPoint("TOPRIGHT", namePlate.UnitFrame.castBar, "BOTTOMRIGHT", 5, -11)
 		namePlate.UnitFrame.castBar.Text:SetText("Spell Name")
 		
+		local icon_ratio = 0.8
 		namePlate.UnitFrame.castBar.Icon = namePlate.UnitFrame.castBar:CreateTexture(nil, "OVERLAY", 1)
-		namePlate.UnitFrame.castBar.Icon:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame.castBar, "BOTTOMLEFT", -4, -1)
-		namePlate.UnitFrame.castBar.Icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+		namePlate.UnitFrame.castBar.Icon:SetPoint("TOPRIGHT", namePlate.UnitFrame.healthBar, "TOPLEFT", -4, 0)
+		--namePlate.UnitFrame.castBar.Icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+		namePlate.UnitFrame.castBar.Icon:SetTexCoord(.05,.95,.05+(1-icon_ratio),.95-(1-icon_ratio))
+
 		if C.classresource_show and C.classresource == "target" then  
-			namePlate.UnitFrame.castBar.Icon:SetSize(25, 25)  
+			namePlate.UnitFrame.castBar.Icon:SetSize(25, math.floor(25*icon_ratio)-2)  
 		else  
-			namePlate.UnitFrame.castBar.Icon:SetSize(21, 21)  
+			namePlate.UnitFrame.castBar.Icon:SetSize(21, math.floor(21*icon_ratio)-2)  
 		end  
 
 		namePlate.UnitFrame.castBar.Icon.iconborder = CreateBG(namePlate.UnitFrame.castBar.Icon)
@@ -1258,8 +1261,8 @@ local function OnNamePlateCreated(namePlate)
 		
 		namePlate.UnitFrame.castBar.BorderShield = namePlate.UnitFrame.castBar:CreateTexture(nil, "OVERLAY", 1)
 		namePlate.UnitFrame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
-		namePlate.UnitFrame.castBar.BorderShield:SetSize(16, 16)
-		namePlate.UnitFrame.castBar.BorderShield:SetPoint("LEFT", namePlate.UnitFrame.castBar, "LEFT", 5, -5)
+		namePlate.UnitFrame.castBar.BorderShield:SetSize(15, 15)
+		namePlate.UnitFrame.castBar.BorderShield:SetPoint("LEFT", namePlate.UnitFrame.castBar, "LEFT", 3, -5)
 
 		namePlate.UnitFrame.castBar.Spark = namePlate.UnitFrame.castBar:CreateTexture(nil, "OVERLAY")
 		namePlate.UnitFrame.castBar.Spark:SetSize(30, 25)

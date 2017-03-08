@@ -43,7 +43,7 @@ C.enemyCR = true --敵方職業顏色/enemy class color
 C.threatcolor = true --名字仇恨染色/change name color by threat
 C.cbshield = true  --施法條不可打斷圖示/show castbar un-interrupt shield icon
 C.level = false --顯示等級/show level
-C.HorizontalArrow = false --橫向箭頭/horizontal red arrow at right
+C.HorizontalArrow = true --橫向箭頭/horizontal red arrow at right
 C.HideArrow = false  --隱藏箭頭/hide arrow
 
 --number style additional config
@@ -61,20 +61,13 @@ C.plateaura = false
 C.auranum = 5 --圖示數量
 C.auraiconsize = 18 --圖示大小
 C.myfiltertype = "whitelist" --自身施放/show aura cast by player
-C.otherfiltertype = "whitelist"  --他人施放/show aura cast by other
+C.otherfiltertype = "none"  --他人施放/show aura cast by other
 
 -- "whitelist": show only list/白名單：只顯示列表中
 -- "blacklist": show only unlist/黑名單：只顯示列表外
 -- "none": do not show anything/不顯示任何光環
 
 C.WhiteList = {
-	--[166646] = true, -- 御風而行(test)
-	--BUFF
-	--[209859] = true, -- 激勵(mythic+)
-	--[226510] = true, -- 膿血(mythic+)
-	
-	-- DEBUFF
-	
 	-- CC
 	[25046]  = true, -- 奧流之術
 	

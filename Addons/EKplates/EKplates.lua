@@ -831,10 +831,8 @@ local function UpdateSelectionHighlight(unitFrame)
 	local unit = unitFrame.unit
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 		unitFrame.redarrow:Show()
-		unitFrame.healthBar.bd:SetBackdropBorderColor(1, 1, 1)
 	else
 		unitFrame.redarrow:Hide()
-		unitFrame.healthBar.bd:SetBackdropBorderColor(0, 0, 0)
 	end
 
 	if not C.HorizontalArrow then
@@ -855,7 +853,11 @@ local function UpdateSelectionHighlight(unitFrame)
 		end	
 	else	--橫向箭頭，在boss mod友方目標隱藏名字的時候會有點蠢
 		if not C.numberstyle then 
-			unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
+			if UnitIsPlayer(unit) and UnitReaction(unit, 'player') >= 5 and not UnitIsUnit(unit, "player") then
+				unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", -15, 8)
+			else
+				unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
+			end
 		else
 			unitFrame.redarrow:SetPoint("LEFT", unitFrame.name, "RIGHT", 0, 0)
 		end
@@ -1077,7 +1079,7 @@ end
 function NamePlates_UpdateNamePlateOptions()
 	-- Called at VARIABLES_LOADED and by "Larger Nameplates" interface options checkbox
 	local baseNamePlateWidth = 96
-	local baseNamePlateHeight = 30
+	local baseNamePlateHeight = 28
 	local horizontalScale = tonumber(GetCVar("NamePlateHorizontalScale"))
 	C_NamePlate.SetNamePlateFriendlySize(math.floor(baseNamePlateWidth * horizontalScale), baseNamePlateHeight)
 	C_NamePlate.SetNamePlateEnemySize(baseNamePlateWidth, baseNamePlateHeight)
@@ -1219,8 +1221,8 @@ local function OnNamePlateCreated(namePlate)
 		namePlate.UnitFrame.healthBar.value:SetText("Value")
 		
 		namePlate.UnitFrame.name = createtext(namePlate.UnitFrame, "OVERLAY", G.fontsize-4, G.fontflag, "CENTER")
-		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -3)
-		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -13)
+		namePlate.UnitFrame.name:SetPoint("TOPLEFT", namePlate.UnitFrame, "TOPLEFT", 5, -1)
+		namePlate.UnitFrame.name:SetPoint("BOTTOMRIGHT", namePlate.UnitFrame, "TOPRIGHT", -5, -11)
 		namePlate.UnitFrame.name:SetIndentedWordWrap(false)
 		namePlate.UnitFrame.name:SetTextColor(1,1,1)
 		namePlate.UnitFrame.name:SetText("Name")

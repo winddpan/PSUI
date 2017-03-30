@@ -583,7 +583,7 @@ class "DropDownList"
 		}
 
 		__Doc__[[the icon to be displayed on the dropDownMenuButton]]
-		property "Icon" { Type = String }
+		property "Icon" { Type = String + Number }
 
 		__Doc__[[the sub pop-up menu for the dropDownMenuButton]]
 		property "DropDownList" {  }

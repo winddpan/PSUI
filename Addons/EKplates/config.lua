@@ -158,7 +158,7 @@ C.ShowPower = {
 
 --[[ BOSS MOD: Show Important Aura Icon on Friendly Nameplates ]]--
 
-C.boss_mod = true
+C.boss_mod = false
 C.boss_mod_iconscale = 2
 C.boss_mod_hidename = false --隱藏玩家名稱/hide player name
 

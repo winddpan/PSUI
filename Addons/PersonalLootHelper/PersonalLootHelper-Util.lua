@@ -1,9 +1,9 @@
 local PLH_LONG_ADDON_NAME_PREFIX = '<' .. PLH_LONG_ADDON_NAME .. '> '
 local PLH_SHORT_ADDON_NAME_PREFIX = '<' .. PLH_SHORT_ADDON_NAME .. '> '
-local PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
-	  PLH_ITEM_LEVEL_PATTERN = PLH_ITEM_LEVEL_PATTERN:gsub('%%d', '(%%d+)')
-local PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
-	  PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')
+PLH_ITEM_LEVEL_PATTERN = _G.ITEM_LEVEL
+PLH_ITEM_LEVEL_PATTERN = PLH_ITEM_LEVEL_PATTERN:gsub('%%d', '(%%d+)')  -- 'Item Level (%d+)'
+PLH_RELIC_TOOLTIP_TYPE_PATTERN = _G.RELIC_TOOLTIP_TYPE
+PLH_RELIC_TOOLTIP_TYPE_PATTERN = PLH_RELIC_TOOLTIP_TYPE_PATTERN:gsub('%%s', '(.+)')  -- '(.+) Artifact Relic'
 	  
 local tooltip
 
@@ -85,7 +85,6 @@ function PLH_GetRelicType(item)
 		tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
 		tooltip:ClearLines()
 		tooltip:SetHyperlink(item)
-		local t = tooltip.leftside[2]:GetText()
 
 		local index = 1
 		local t
@@ -104,6 +103,7 @@ function PLH_GetRelicType(item)
 	return relicType
 end
 
+--[[
 function PLH_IsBoundToPlayer(item)
 	local isBoundToPlayer = false
 	
@@ -132,6 +132,7 @@ function PLH_IsBoundToPlayer(item)
 	end
 	return isBoundToPlayer
 end
+]]--
 
 function PLH_GetRealILVL(item)
 	local realILVL = nil

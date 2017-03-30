@@ -1,5 +1,5 @@
 --======================================================================--
--- Copyright (c) 2011-2016 WangXH <kurapica125@outlook.com>             --
+-- Copyright (c) 2011-2017 WangXH <kurapica125@outlook.com>             --
 --                                                                      --
 -- Permission is hereby granted, free of charge, to any person          --
 -- obtaining a copy of this software and associated Documentation       --
@@ -37,8 +37,8 @@
 -- Author           :   kurapica125@outlook.com                         --
 -- URL              :   http://github.com/kurapica/PLoop                --
 -- Create Date      :   2011/02/03                                      --
--- Last Update Date :   2017/02/26                                      --
--- Version          :   r170                                            --
+-- Last Update Date :   2017/03/29                                      --
+-- Version          :   r174                                            --
 --======================================================================--
 
 ------------------------------------------------------
@@ -96,6 +96,13 @@ do
 
     -- Import env field
     IMPORT_ENV_FIELD    = "__PLOOP_IMPORT_ENV"
+
+    -- Special __index table filed
+    INDEX_TABLE_FIELD   = "__PLOOP_INDEX_TABLE"
+
+    -- Struct Special Index
+    STRT_START_VALID    = 10001
+    STRT_START_INIT     = 20001
 
     -- Attribute System
     ATTRIBUTE_INSTALLED = false
@@ -373,7 +380,7 @@ do
 
     --  ValidateFlags
     function ValidateFlags(checkValue, targetValue)
-        if not targetValue then return false end
+        if not targetValue or checkValue > targetValue then return false end
         targetValue = targetValue % (2 * checkValue)
         return (targetValue - targetValue % checkValue) == checkValue
     end
@@ -381,6 +388,13 @@ do
     function TurnOnFlags(checkValue, targetValue)
         if not ValidateFlags(checkValue, targetValue) then
             return checkValue + (targetValue or 0)
+        end
+        return targetValue
+    end
+
+    function TurnOffFlags(checkValue, targetValue)
+        if ValidateFlags(checkValue, targetValue) then
+            return targetValue - checkValue
         end
         return targetValue
     end
@@ -484,7 +498,14 @@ do
                 elseif iType == TYPE_CLASS or iType == TYPE_INTERFACE then
                     if iType == TYPE_CLASS then
                         -- Meta-method
-                        if _KeyMeta[key] then return info.MetaTable[_KeyMeta[key]] end
+                        if _KeyMeta[key] then
+                            local v = info.MetaTable[_KeyMeta[key]]
+                            if key == "__index" and type(v) == "table" and getmetatable(v) == nil then
+                                return CloneObj(v, true)
+                            else
+                                return v
+                            end
+                        end
 
                         if key == "Super" then
                             info = _NSInfo[info.SuperClass]
@@ -667,7 +688,14 @@ do
                 elseif iType == TYPE_CLASS or iType == TYPE_INTERFACE then
                     if iType == TYPE_CLASS then
                         -- Meta-method
-                        if _KeyMeta[key] then return info.MetaTable[_KeyMeta[key]] end
+                        if _KeyMeta[key] then
+                            local v = info.MetaTable[_KeyMeta[key]]
+                            if key == "__index" and type(v) == "table" and getmetatable(v) == nil then
+                                return CloneObj(v, true)
+                            else
+                                return v
+                            end
+                        end
 
                         if key == "Super" then
                             info = _NSInfo[info.SuperClass]
@@ -865,7 +893,12 @@ do
             if ret then
                 return ret
             elseif _KeyMeta[key] then
-                return info.MetaTable[_KeyMeta[key]]
+                local v = info.MetaTable[_KeyMeta[key]]
+                if key == "__index" and type(v) == "table" and getmetatable(v) == nil then
+                    return CloneObj(v, true)
+                else
+                    return v
+                end
             else
                 ret = info.Cache[key] or info.Method and info.Method[key]
                 if type(ret) == "function" then return ret end
@@ -1045,7 +1078,7 @@ do
         local flag, ret
 
         if iType == TYPE_STRUCT then
-            flag, ret = pcall(ValidateStruct, oType, value, onlyValidate)
+            flag, ret = pcall(info.RawValidate, info, value, onlyValidate)
 
             if flag then if onlyValidate then return value else return ret end end
 
@@ -1106,7 +1139,7 @@ do
         local flag, ret
 
         if iType == TYPE_STRUCT then
-            flag, ret = pcall(ValidateStruct, oType, value, onlyValidate)
+            flag, ret = pcall(info.RawValidate, info, value, onlyValidate)
 
             if flag then if onlyValidate then return value else return ret end end
         elseif iType == TYPE_ENUM then
@@ -1480,7 +1513,9 @@ do
                 tinsert(gHeader, "name")
             end
 
-            gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            if #gHeader > 0 then
+                gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            end
             _PropGetBuilder[propToken] = loadInEnv(tblconcat(gbody, "\n"), tostring(propToken))
             CACHE_TABLE(gHeader)
             CACHE_TABLE(gbody)
@@ -1642,6 +1677,7 @@ do
                     if ValidateFlags(FLAG_SET_DEFAULT, propToken) then
                         tinsert(gHeader, "default")
                         tinsert(gbody, [[if old == nil then old = default end]])
+                        tinsert(gbody, [[if value == nil then value = default end]])
                     end
 
                     tinsert(gbody, [[if old == value then return end]])
@@ -1682,7 +1718,9 @@ do
                 tinsert(gHeader, "name")
             end
 
-            gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            if #gHeader > 0 then
+                gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            end
             _PropSetBuilder[propToken] = loadInEnv(tblconcat(gbody, "\n"), tostring(propToken))
             CACHE_TABLE(gHeader)
             CACHE_TABLE(gbody)
@@ -1693,10 +1731,18 @@ do
         return rs
     end
 
+    -- Feature Token For class & interface
+    FLAG_HAS_METHOD       = 2^0
+    FLAG_HAS_PROPERTY     = 2^1
+    FLAG_HAS_EVENT        = 2^2
+
     function RefreshCache(ns)
         local info              = _NSInfo[ns]
         local cache             = CACHE_TABLE()
         local cache4Interface   = CACHE_TABLE()
+        local iCache            = CACHE_TABLE()
+        local iToken            = 0
+        local installDispose    = false
 
         if info.SuperClass then CloneInterfaceCache(cache4Interface, _NSInfo[info.SuperClass].Cache4Interface, cache) end
         if info.ExtendInterface then
@@ -1714,29 +1760,62 @@ do
         end
         if cache then CACHE_TABLE(cache) end
 
-        -- Cache for all features
-        local iCache            = CACHE_TABLE()
+        if info.SuperClass then
+            local sinfo = _NSInfo[info.SuperClass]
+            CloneWithOverride(iCache, sinfo.Cache)
 
-        if info.SuperClass then CloneWithOverride(iCache, _NSInfo[info.SuperClass].Cache) end
-        if info.ExtendInterface then for _, IF in ipairs(info.ExtendInterface) do CloneWithoutOverride(iCache, _NSInfo[IF].Cache) end end
+            if sinfo.Cache[DISPOSE_METHOD] then installDispose = true end
+
+            if ValidateFlags(FLAG_HAS_METHOD, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_METHOD, iToken) end
+            if ValidateFlags(FLAG_HAS_PROPERTY, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_PROPERTY, iToken) end
+            if ValidateFlags(FLAG_HAS_EVENT, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_EVENT, iToken) end
+        end
+
+        if info.ExtendInterface then
+            for _, IF in ipairs(info.ExtendInterface) do
+                local sinfo = _NSInfo[IF]
+                CloneWithoutOverride(iCache, sinfo.Cache)
+
+                if sinfo[DISPOSE_METHOD] then installDispose = true end
+
+                if ValidateFlags(FLAG_HAS_METHOD, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_METHOD, iToken) end
+                if ValidateFlags(FLAG_HAS_PROPERTY, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_PROPERTY, iToken) end
+                if ValidateFlags(FLAG_HAS_EVENT, sinfo.FeatureToken) then iToken = TurnOnFlags(FLAG_HAS_EVENT, iToken) end
+            end
+        end
 
         -- Cache for event
-        if info.Event then CloneWithOverride(iCache, info.Event) end
+        if info.Event then
+            CloneWithOverride(iCache, info.Event)
+            iToken = TurnOnFlags(FLAG_HAS_EVENT, iToken)
+        end
 
         -- Cache for Method
         if info.Method then
+            local hasNoStatic = false
             for key, value in pairs(info.Method) do
                 -- No static methods
                 if not (info.FeatureModifier and ValidateFlags(MD_STATIC_FEATURE, info.FeatureModifier[key])) then
+                    hasNoStatic = true
                     iCache[key] = value
                 end
             end
+            if hasNoStatic then iToken = TurnOnFlags(FLAG_HAS_METHOD, iToken) end
+        end
+
+        -- Cache the Dispose
+        if info.Type == TYPE_CLASS and (info[DISPOSE_METHOD] or installDispose) then
+            iCache[DISPOSE_METHOD] = DisposeObject
+            iToken = TurnOnFlags(FLAG_HAS_METHOD, iToken)
         end
 
         -- Cache for Property
         -- Validate the properties
         if info.Property then
-            local autoProp = ValidateFlags(MD_AUTO_PROPERTY, info.Modifier)
+            local autoProp      = ValidateFlags(MD_AUTO_PROPERTY, info.Modifier)
+            local hasNoStatic   = false
+            local newEvent      = false
+            local newMethod     = false
             for name, prop in pairs(info.Property) do
                 if prop.Predefined then
                     local set = prop.Predefined
@@ -1934,7 +2013,7 @@ do
                     end
 
                     -- Validate the Event
-                    if type(prop.Event) == "string" then
+                    if type(prop.Event) == "string" and not prop.IsStatic then
                         local evt = iCache[prop.Event]
                         if getmetatable(evt) then
                             prop.Event = evt
@@ -1946,9 +2025,13 @@ do
                             info.Event[ename] = evt
                             iCache[ename] = evt
                             prop.Event = evt
+
+                            newEvent = true
                         else
                             prop.Event = nil
                         end
+                    else
+                        prop.Event = nil
                     end
 
                     -- Validate the Handler
@@ -2041,6 +2124,8 @@ do
                             iCache[getName] = info.Method[getName]
                             iCache[setName] = info.Method[setName]
 
+                            newMethod = true
+
                             prop.GetMethod = getName
                             prop.SetMethod = setName
 
@@ -2051,10 +2136,14 @@ do
                         end
                     end
                 end
+                if not prop.IsStatic then hasNoStatic = true end
             end
 
             --- self property
             CloneWithOverride(iCache, info.Property, true)
+            if hasNoStatic then iToken = TurnOnFlags(FLAG_HAS_PROPERTY, iToken) end
+            if newEvent then iToken = TurnOnFlags(FLAG_HAS_EVENT, iToken) end
+            if newMethod then iToken = TurnOnFlags(FLAG_HAS_METHOD, iToken) end
         end
 
         -- AutoCache
@@ -2064,20 +2153,7 @@ do
 
         -- Simple Class Check(No Constructor, No Property)
         if info.Type == TYPE_CLASS then
-            local isSimpleClass = true
-
-            if info.Constructor or info.Property or (info.SuperClass and not _NSInfo[info.SuperClass].IsSimpleClass) then
-                isSimpleClass = false
-            elseif info.ExtendInterface then
-                for _, IF in ipairs(info.ExtendInterface) do
-                    if _NSInfo[IF].Property then
-                        isSimpleClass = false
-                        break
-                    end
-                end
-            end
-
-            info.IsSimpleClass = isSimpleClass or nil
+            info.IsSimpleClass = (not (info.Constructor or ValidateFlags(FLAG_HAS_PROPERTY, iToken) or (info.SuperClass and not _NSInfo[info.SuperClass].IsSimpleClass))) and true or nil
         end
 
         -- One-required method interface check
@@ -2121,6 +2197,7 @@ do
         -- Reset the cache
         cache = info.Cache
         info.Cache = iCache
+        info.FeatureToken = iToken
         if cache then CACHE_TABLE(cache) end
 
         -- Regenerate MetaTable
@@ -2195,7 +2272,7 @@ do
         else
             info.SubType = STRUCT_TYPE_CUSTOM
 
-            if info.Default ~= nil and not pcall(ValidateStruct, info.Owner, info.Default) then
+            if info.Default ~= nil and not pcall(info.RawValidate, info, info.Default) then
                 info.Default = nil
             end
 
@@ -2204,6 +2281,60 @@ do
             info.ArrayElement = nil
             if cache then CACHE_TABLE(cache) end
         end
+
+        if info.BaseStruct and _NSInfo[info.BaseStruct].SubType ~= info.SubType then
+            info.BaseStruct = nil
+        end
+
+        -- Save validator and initializer
+        local i = STRT_START_VALID
+        while info[i] do info[i] = nil i = i + 1 end
+        i = STRT_START_INIT
+        while info[i] do info[i] = nil i = i + 1 end
+
+        if info.BaseStruct then
+            local binfo = _NSInfo[info.BaseStruct]
+
+            i = STRT_START_VALID
+            while binfo[i] do info[i] = binfo[i] i = i + 1 end
+            info[i] = info.Validator
+
+            i = STRT_START_INIT
+            while binfo[i] do info[i] = binfo[i] i = i + 1 end
+            info[i] = info.Initializer
+        else
+            info[STRT_START_VALID] = info.Validator
+            info[STRT_START_INIT]  = info.Initializer
+        end
+
+        -- Cache methods
+        if info.Method or (info.BaseStruct and _NSInfo[info.BaseStruct].Cache) then
+            local cache = CACHE_TABLE()
+            if info.BaseStruct and _NSInfo[info.BaseStruct].Cache then
+                for k, v in pairs(_NSInfo[info.BaseStruct].Cache) do
+                    cache[k] = v
+                end
+            end
+
+            if info.Method then
+                for k, v in pairs(info.Method) do
+                    if not(info.FeatureModifier and ValidateFlags(MD_STATIC_FEATURE, info.FeatureModifier[k])) then
+                        cache[k] = v
+                    end
+                end
+            end
+
+            if not next(cache) then CACHE_TABLE(cache) cache = nil end
+            local temp = info.Cache
+            info.Cache = cache
+            if temp then CACHE_TABLE(temp) end
+        else
+            local temp = info.Cache
+            info.Cache = nil
+            if temp then CACHE_TABLE(temp) end
+        end
+
+        info.RawValidate = SAVE_MEMORY and ValidateStruct or GenerateRawValidate(info)
     end
 end
 
@@ -2476,7 +2607,7 @@ do
         elseif _KeyMeta[key] and info.Type == TYPE_CLASS then
             -- Meta-method
             if ValidateFlags(MD_SEALED_FEATURE, info.Modifier) then return error(("%s is sealed, can't set the meta-method."):format(tostring(info.Owner))) end
-            isMeta = true
+            isMeta = key
             rkey = _KeyMeta[key]
             storage = info.MetaTable
             oldValue = storage[rkey]
@@ -2493,7 +2624,7 @@ do
             storage = info.Method
         end
 
-        if ATTRIBUTE_INSTALLED then
+        if ATTRIBUTE_INSTALLED and not (isMeta == "__index" and type(value) == "table") then
             local ok, ret = pcall(ConsumePreparedAttributes, value, isConstructor and AttributeTargets.Constructor or AttributeTargets.Method, info.Owner, key)
             if not ok then error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
             storage[rkey] = ret or value
@@ -2730,14 +2861,31 @@ do
 
         -- Check if is array element type
         if tonumber(key) then
-            if info[0] then return error("The array's element type is already set.") end
-            if info[1] then return error("The struct has member settings.") end
-
-            if IsNameSpace(value) and _NSInfo[value].Type then
-                info[0] = value
-            else
+            if not (IsNameSpace(value) and _NSInfo[value].Type) then
                 return error("The array element's type is not valid.")
             end
+
+            if info[0] then
+                local pass = false
+                if info[0] == value then
+                    pass = true
+                elseif Reflector.IsStruct(value) then
+                    local base = __Base__:GetStructAttribute(value)
+                    while base and base ~= info[0] do base = __Base__:GetStructAttribute(base) end
+                    if base == info[0] then pass = true end
+                elseif Reflector.IsClass(value) then
+                    if Reflector.IsInterface(info[0]) and Reflector.IsExtendedInterface(value, info[0]) then pass = true end
+                    if Reflector.IsClass(info[0]) and Reflector.IsSuperClass(value, info[0]) then pass = true end
+                elseif Reflector.IsInterface(value) then
+                    if Reflector.IsInterface(info[0]) and Reflector.IsExtendedInterface(value, info[0]) then pass = true end
+                end
+
+                if not pass then return error("The array's element type is already set.") end
+            elseif info[1] then
+                return error("The struct has member settings.")
+            end
+
+            info[0] = value
         else
             if info[0] then return error("The struct is an element arry type.") end
 
@@ -2771,7 +2919,9 @@ do
         elseif key == STRUCT_INIT_METHOD and info.Type == TYPE_STRUCT and type(value) ~= "function" then
             return error(("'%s' must be a function as the initializer."):format(key))
         elseif _KeyMeta[key] and type(value) ~= "function" and info.Type == TYPE_CLASS then
-            return error(("'%s' must be a function as meta-method."):format(key))
+            if not (key == "__index" and type(value) == "table") then
+                return error(("'%s' must be a function as meta-method."):format(key))
+            end
         end
 
         -- Save feature
@@ -2820,7 +2970,9 @@ do
                     return SaveStructMember(info, key, value)
                 end
             elseif vType == "table" then
-                if info.Type == TYPE_CLASS or info.Type == TYPE_INTERFACE then
+                if info.Type == TYPE_CLASS and key == "__index" then
+                    return SaveMethod(info, key, value)
+                elseif info.Type == TYPE_CLASS or info.Type == TYPE_INTERFACE then
                     return SaveProperty(info, key, value)
                 elseif info.Type == TYPE_STRUCT then
                     return SaveStructMember(info, key, value)
@@ -3336,7 +3488,6 @@ do
         __call = "__call",          -- a()
         __gc = "__gc",              -- dispose a
         __tostring = "__tostring",  -- tostring(a)
-        __exist = "__exist",        -- ClassName(...)   -- return object if existed
         __idiv = "__idiv",          -- // floor division
         __band = "__band",          -- & bitwise and
         __bor = "__bor",            -- | bitwise or
@@ -3344,6 +3495,9 @@ do
         __bnot = "__bnot",          -- ~ bitwise unary not
         __shl = "__shl",            -- << bitwise left shift
         __shr = "__shr",            -- >> bitwise right shift
+        -- Ploop only meta-methods
+        __exist = "__exist",        -- return object if existed
+        __new = "__new",            -- create the object table by itself(so not provided by the system)
     }
 
     --------------------------------------------------
@@ -3452,7 +3606,12 @@ do
             -- Check meta-methods
             if _KeyMeta[key] then
                 value = info.MetaTable[_KeyMeta[key]]
-                if value then return value end
+                if type(value) == "table" and getmetatable(value) == nil then
+                    if value ~= rawget(self, INDEX_TABLE_FIELD) then
+                        value = CloneObj(value, true)
+                    end
+                end
+                return value
             end
 
             -- Check Base
@@ -3504,6 +3663,10 @@ do
             if _KeyWord4ClsEnv:GetKeyword(self, key) then error(("'%s' is a keyword."):format(key), 2) end
 
             if key == info.Name or key == DISPOSE_METHOD or _KeyMeta[key] or (type(key) == "string" and type(value) == "function") then
+                if key == "__index" and type(value) == "table" then
+                    rawset(self, INDEX_TABLE_FIELD, value)
+                end
+
                 local ok, msg = pcall(SaveFeature, info, key, value)
                 if not ok then error(msg:match("%d+:%s*(.-)$") or msg, 2) end
                 return
@@ -3542,10 +3705,6 @@ do
 
     function Class_Index(self, key)
         local info = _NSInfo[getmetatable(self)]
-
-        -- Dispose Method
-        if key == "Dispose" then return DisposeObject end
-
         local Cache = info.Cache
 
         local oper = Cache[key]
@@ -3631,7 +3790,13 @@ do
 
         -- Custom index metametods
         oper = info.MetaTable.___index
-        if oper then return oper(self, key) end
+        if oper then
+            if type(oper) == "function" then
+                return oper(self, key)
+            elseif type(oper) == "table" then
+                return oper[key]
+            end
+        end
     end
 
     function Class_NewIndex(self, key, value)
@@ -3692,6 +3857,9 @@ do
                             end
                         end
 
+                        -- Check new value
+                        if value == nil then value = default end
+
                         -- Check old value
                         local old = rawget(container, operTar)
                         if old == nil then old = default end
@@ -3733,21 +3901,40 @@ do
 
     _MetaIndexBuilder = {}
 
-    FLAG_INDEX_AUTOCACHE = 2^0
-    FLAG_INDEX_METAINDEX = 2^1
+    FLAG_HAS_AUTOCACHE    = 2^3
+    FLAG_HAS_INDEXFUNC    = 2^4
+    FLAG_HAS_INDEXTBL     = 2^5
+    FLAG_HAS_NEWINDEX     = 2^6
+    FLAG_HAS_ENOBJATTR    = 2^7
+    FLAG_HAS_NOAUTOSET    = 2^8
 
     function GenerateMetaIndex(info)
-        local metaToken = 0
-        local upValues = CACHE_TABLE()
+        local metaToken = info.FeatureToken or 0
 
-        tinsert(upValues, info.Cache)
-
-        if info.AutoCache then
-            metaToken = TurnOnFlags(FLAG_INDEX_AUTOCACHE, metaToken)
+        if info.AutoCache and ValidateFlags(FLAG_HAS_METHOD, metaToken) then
+            metaToken = TurnOnFlags(FLAG_HAS_AUTOCACHE, metaToken)
         end
 
         if info.MetaTable.___index then
-            metaToken = TurnOnFlags(FLAG_INDEX_METAINDEX, metaToken)
+            if type(info.MetaTable.___index) == "function" then
+                metaToken = TurnOnFlags(FLAG_HAS_INDEXFUNC, metaToken)
+            else
+                metaToken = TurnOnFlags(FLAG_HAS_INDEXTBL, metaToken)
+            end
+        end
+
+        -- Check if no need to generate the __index meta-method
+        if metaToken == 0 then return nil end
+        if metaToken == FLAG_HAS_METHOD then return info.Cache end
+        if metaToken == FLAG_HAS_INDEXFUNC or metaToken == FLAG_HAS_INDEXTBL then return info.MetaTable.___index end
+
+        local upValues  = CACHE_TABLE()
+
+        if ValidateFlags(FLAG_HAS_METHOD, metaToken) or ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+            tinsert(upValues, info.Cache)
+        end
+
+        if ValidateFlags(FLAG_HAS_INDEXFUNC, metaToken) or ValidateFlags(FLAG_HAS_INDEXTBL, metaToken) then
             tinsert(upValues, info.MetaTable.___index)
         end
 
@@ -3756,43 +3943,65 @@ do
             local gHeader = CACHE_TABLE()
             local gbody = CACHE_TABLE()
 
-            tinsert(gHeader, "Cache")
-
             tinsert(gbody, "") -- Remain for closure values
             tinsert(gbody, [[return function(self, key)]])
 
-            tinsert(gbody, [[if key == "Dispose" then return DisposeObject end]])
+            if ValidateFlags(FLAG_HAS_METHOD, metaToken) or ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                tinsert(gHeader, "Cache")
 
-            tinsert(gbody, [[local oper = Cache[key] ]])
-            tinsert(gbody, [[if oper then]])
+                tinsert(gbody, [[local oper = Cache[key] ]])
+                tinsert(gbody, [[if oper then]])
 
-            -- Method
-            tinsert(gbody, [[if type(oper) == "function" then]])
-            if ValidateFlags(FLAG_INDEX_AUTOCACHE, metaToken) then
-                tinsert(gbody, [[rawset(self, key, oper)]])
+                -- Method
+                if ValidateFlags(FLAG_HAS_METHOD, metaToken) then
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                        tinsert(gbody, [[if type(oper) == "function" then]])
+                    end
+                    if ValidateFlags(FLAG_HAS_AUTOCACHE, metaToken) then
+                        tinsert(gbody, [[    rawset(self, key, oper)]])
+                    end
+                        tinsert(gbody, [[    return oper]])
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                        tinsert(gbody, [[end]])
+                    end
+                end
+
+                -- Event
+                if ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                        tinsert(gbody, [[if getmetatable(oper) then]])
+                    end
+                        tinsert(gbody, [[    local handler = rawget(oper, self)]])
+                        tinsert(gbody, [[    if not handler then handler = EventHandler(oper, self) end]])
+                        tinsert(gbody, [[    return handler]])
+
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                        tinsert(gbody, [[end]])
+                    end
+                end
+
+                -- Property
+                if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                    tinsert(gbody, [[return oper.RawGet(self)]])
+                end
+
+                tinsert(gbody, [[end]])
             end
-            tinsert(gbody, [[return oper]])
 
-            -- Event
-            tinsert(gbody, [[elseif getmetatable(oper) then]])
-            tinsert(gbody, [[local handler = rawget(oper, self)]])
-            tinsert(gbody, [[if not handler then handler = EventHandler(oper, self) end]])
-            tinsert(gbody, [[return handler]])
-
-            -- Property
-            tinsert(gbody, [[else return oper.RawGet(self) end]])
-
-            tinsert(gbody, [[end]])
-
-            if ValidateFlags(FLAG_INDEX_METAINDEX, metaToken) then
+            if ValidateFlags(FLAG_HAS_INDEXFUNC, metaToken) then
                 tinsert(gHeader, "metaIndex")
                 tinsert(gbody, [[return metaIndex(self, key)]])
+            elseif ValidateFlags(FLAG_HAS_INDEXTBL, metaToken) then
+                tinsert(gHeader, "metaIndex")
+                tinsert(gbody, [[return metaIndex[key] ]])
             end
 
             tinsert(gbody, [[end]])
 
-            gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
-            _MetaIndexBuilder[metaToken] = loadInEnv(tblconcat(gbody, "\n"), tostring(metaToken))
+            if #gHeader > 0 then
+                gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            end
+            _MetaIndexBuilder[metaToken] = loadInEnv(tblconcat(gbody, "\n"), "Class_Index_"..tostring(metaToken))
             CACHE_TABLE(gHeader)
             CACHE_TABLE(gbody)
         end
@@ -3804,73 +4013,93 @@ do
 
     _MetaNewIndexBuilder = {}
 
-    FLAG_NEWIDX_ENOBJATTR = 2^0
-    FLAG_NEWIDX_METANEWIDX = 2^1
-    FLAG_NEWINDEX_NOAUTOSET = 2^2
-
     function GenerateMetaNewIndex(info)
-        local metaToken = 0
-        local upValues = CACHE_TABLE()
-
-        tinsert(upValues, info.Cache)
+        local metaToken = TurnOffFlags(FLAG_HAS_METHOD, info.FeatureToken or 0)
 
         if info.EnableObjMethodAttr then
-            metaToken = TurnOnFlags(FLAG_NEWIDX_ENOBJATTR, metaToken)
+            metaToken = TurnOnFlags(FLAG_HAS_ENOBJATTR, metaToken)
         end
 
         if info.MetaTable.___newindex then
-            metaToken = TurnOnFlags(FLAG_NEWIDX_METANEWIDX, metaToken)
-            tinsert(upValues, info.MetaTable.___newindex)
+            metaToken = TurnOnFlags(FLAG_HAS_NEWINDEX, metaToken)
         end
 
         if info.NoAutoSet then
-            metaToken = TurnOnFlags(FLAG_NEWINDEX_NOAUTOSET, metaToken)
+            metaToken = TurnOnFlags(FLAG_HAS_NOAUTOSET, metaToken)
+        end
+
+        if metaToken == 0 then return nil end
+        if metaToken == FLAG_HAS_NEWINDEX then return info.MetaTable.___newindex end
+
+        local upValues = CACHE_TABLE()
+
+        if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+            tinsert(upValues, info.Cache)
+        end
+
+        if ValidateFlags(FLAG_HAS_NEWINDEX, metaToken) then
+            tinsert(upValues, info.MetaTable.___newindex)
         end
 
         -- Building
         if not _MetaNewIndexBuilder[metaToken] then
             local gHeader = CACHE_TABLE()
-            local gbody = CACHE_TABLE()
-
-            tinsert(gHeader, "Cache")
+            local gbody   = CACHE_TABLE()
 
             tinsert(gbody, "") -- Remain for closure values
             tinsert(gbody, [[return function(self, key, value)]])
 
-            tinsert(gbody, [[local oper = Cache[key] ]])
-
-            if ValidateFlags(FLAG_NEWIDX_ENOBJATTR, metaToken) then
+            if ValidateFlags(FLAG_HAS_ENOBJATTR, metaToken) then
                 -- Object method
                 tinsert(gbody, [[if type(value) == "function" and HasPreparedAttribute() then]])
-                tinsert(gbody, [[local ok, ret = pcall(ConsumePreparedAttributes, value, AttributeTargets.ObjectMethod, self, key)]])
-                tinsert(gbody, [[if not ok then error(strtrim(ret:match(":%d+:%s*(.-)$") or ret), 2) end]])
-                tinsert(gbody, [[value = ret or value]])
+                tinsert(gbody, [[    local ok, ret = pcall(ConsumePreparedAttributes, value, AttributeTargets.ObjectMethod, self, key)]])
+                tinsert(gbody, [[    if not ok then error(strtrim(ret:match(":%d+:%s*(.-)$") or ret), 2) end]])
+                tinsert(gbody, [[    value = ret or value]])
                 tinsert(gbody, [[end]])
             end
 
-            tinsert(gbody, [[if type(oper) == "table" then]])
+            if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) or ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                tinsert(gHeader, "Cache")
+                tinsert(gbody, [[local oper = Cache[key] ]])
 
-            -- Event
-            tinsert(gbody, [[if getmetatable(oper) then]])
-                tinsert(gbody, [[local handler = rawget(oper, self)]])
-                tinsert(gbody, [[if not handler then]])
-                tinsert(gbody, [[if value == nil then return end]])
-                tinsert(gbody, [[handler = EventHandler(oper, self)]])
+                tinsert(gbody, [[if type(oper) == "table" then]])
+
+                -- Event
+                if ValidateFlags(FLAG_HAS_EVENT, metaToken) then
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                        tinsert(gbody, [[if getmetatable(oper) then]])
+                    end
+                            tinsert(gbody, [[local handler = rawget(oper, self)]])
+                            tinsert(gbody, [[if not handler then]])
+                            tinsert(gbody, [[    if value == nil then return end]])
+                            tinsert(gbody, [[    handler = EventHandler(oper, self)]])
+                            tinsert(gbody, [[end]])
+                            tinsert(gbody, [[if value == nil or type(value) == "function" then]])
+                            tinsert(gbody, [[    handler.Handler = value]])
+                            tinsert(gbody, [[    return]])
+                            tinsert(gbody, [[elseif type(value) == "table" then]])
+                            tinsert(gbody, [[    return handler:Copy(value)]])
+                            tinsert(gbody, [[else]])
+                            tinsert(gbody, [[    error("Can't set this value to the event handler.", 2)]])
+                            tinsert(gbody, [[end]])
+
+                    if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                        tinsert(gbody, [[end]])
+                    end
+                end
+
+                -- Property
+                if ValidateFlags(FLAG_HAS_PROPERTY, metaToken) then
+                    tinsert(gbody, [[return oper.RawSet(self, value)]])
+                end
+
                 tinsert(gbody, [[end]])
-                tinsert(gbody, [[if value == nil or type(value) == "function" then]])
-                tinsert(gbody, [[handler.Handler = value return]])
-                tinsert(gbody, [[elseif type(value) == "table" then return handler:Copy(value)]])
-                tinsert(gbody, [[else error("Can't set this value to the event handler.", 2) end]])
+            end
 
-            -- Property
-            tinsert(gbody, [[else return oper.RawSet(self, value) end]])
-
-            tinsert(gbody, [[end]])
-
-            if ValidateFlags(FLAG_NEWIDX_METANEWIDX, metaToken) then
+            if ValidateFlags(FLAG_HAS_NEWINDEX, metaToken) then
                 tinsert(gHeader, "metaNewIndex")
                 tinsert(gbody, [[return metaNewIndex(self, key, value)]])
-            elseif not ValidateFlags(FLAG_NEWINDEX_NOAUTOSET, metaToken) then
+            elseif not ValidateFlags(FLAG_HAS_NOAUTOSET, metaToken) then
                 tinsert(gbody, [[rawset(self, key, value)]])
             else
                 tinsert(gbody, [[error("The object is readonly.", 2)]])
@@ -3878,8 +4107,10 @@ do
 
             tinsert(gbody, [[end]])
 
-            gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
-            _MetaNewIndexBuilder[metaToken] = loadInEnv(tblconcat(gbody, "\n"), tostring(metaToken))
+            if #gHeader > 0 then
+                gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            end
+            _MetaNewIndexBuilder[metaToken] = loadInEnv(tblconcat(gbody, "\n"), "Class_NewIndex_"..tostring(metaToken))
             CACHE_TABLE(gHeader)
             CACHE_TABLE(gbody)
         end
@@ -3982,16 +4213,30 @@ do
         end
 
         -- Check if this class has __exist so no need to create again.
-        if info.MetaTable.__exist then
-            local ok, obj = pcall(info.MetaTable.__exist, ...)
-
+        local meta = info.MetaTable.__exist
+        if meta then
+            local ok, obj = pcall(meta, ...)
             if ok and getmetatable(obj) == info.Owner then return obj end
         end
 
         -- Create new object
         local obj
 
-        if select('#', ...) == 1 then
+        -- Create new table as the object(for some special using, its provided by the class)
+        meta = info.MetaTable.__new
+        if meta then
+            local ok, ret = pcall(meta, ...)
+            if ok and type(ret) == "table" then
+                ok, ret = pcall(setmetatable, ret, info.MetaTable)
+                if ok then
+                    obj = ret
+                    Class1Obj(info, obj, ...)
+                end
+            end
+        end
+
+        -- Check for simple class
+        if not obj and select('#', ...) == 1 then
             -- Save memory cost for simple class
             local init = ...
             if type(init) == "table" and getmetatable(init) == nil then
@@ -4010,15 +4255,15 @@ do
                     end
                     if noConflict then
                         obj = setmetatable(init, info.MetaTable)
-
                         Class1Obj(info, obj)
                     end
                 end
             end
         end
+
+        -- Default creation
         if not obj then
             obj = setmetatable({}, info.MetaTable)
-
             Class1Obj(info, obj, ...)
         end
 
@@ -4257,7 +4502,7 @@ do
     _KeyWord4StrtEnv = _KeywordAccessor()
 
     STRUCT_TYPE_MEMBER = "MEMBER"
-    STRUCT_TYPE_ARRAY = "ARRAY"
+    STRUCT_TYPE_ARRAY  = "ARRAY"
     STRUCT_TYPE_CUSTOM = "CUSTOM"
 
     -- metatable for struct's env
@@ -4370,112 +4615,304 @@ do
     end
 
     -- Some struct object may ref to each others, that would crash the validation
-    _ValidatedCache = setmetatable({}, {
-        __index= function(self, k) local v = setmetatable({}, WEAK_ALL) rawset(self, k, v) return v end,
-        __mode = "k",
-    })
+    _ValidatedCache = setmetatable({}, { __index= function(self, k) local v = setmetatable({}, WEAK_ALL) rawset(self, k, v) return v end, __mode = "k" })
 
-    function ValidateStruct(strt, value, onlyValidate)
-        local info = _NSInfo[strt]
-        local sType = info.SubType
-        local tValidatedCache = _ValidatedCache[running() or 0]
+    function ValidateStruct(info, value, onlyValidate)
+        local sType  = info.SubType
+        local vCache = _ValidatedCache[running() or 0]
 
         if sType ~= STRUCT_TYPE_CUSTOM then
-            if tValidatedCache[value] then return value end  -- No twice validation for one table
+            if vCache[value] then return value end  -- No twice validation for one table
 
-            if type(value) ~= "table" then wipe(tValidatedCache) return error(("%s must be a table, got %s."):format("%s", type(value))) end
-            if getmetatable(value) ~= nil then wipe(tValidatedCache) return error(("%s must be a table without meta-table."):format("%s")) end
+            if type(value) ~= "table" then wipe(vCache) return error(("%s must be a table, got %s."):format("%s", type(value))) end
+            if getmetatable(value) ~= nil then wipe(vCache) return error(("%s must be a table without meta-table."):format("%s")) end
 
-            if not tValidatedCache[1] then tValidatedCache[1] = value end
-            tValidatedCache[value] = true
+            if not vCache[1] then vCache[1] = value end
+            vCache[value] = true
 
-            if sType == STRUCT_TYPE_MEMBER and info.Members then
-                for _, mem in ipairs(info.Members) do
-                    local name = mem.Name
-                    local default = mem.Default
-                    local val = value[name]
+            if sType == STRUCT_TYPE_MEMBER then
+                local flag
+                if onlyValidate then
+                    for _, mem in ipairs(info.Members) do
+                        local name = mem.Name
+                        local val = value[name]
 
-                    if val == nil then
-                        if default ~= nil then
-                            if not onlyValidate then
-                                -- Deep clone to make sure no change on default value
-                                val = CloneObj(default, true)
-                            end
-                        elseif mem.Require then
-                            wipe(tValidatedCache)
-                            return error(("%s.%s can't be nil."):format("%s", name))
-                        end
-                    else
-                        local flag
-                        flag, val = pcall(Validate4Type, mem.Type, val, name, nil, nil, onlyValidate)
-                        if not flag then
-                            wipe(tValidatedCache)
-                            return error(strtrim(val:match(":%d+:%s*(.-)$") or val))
+                        if val == nil then
+                            if mem.Default == nil and mem.Require then wipe(vCache) return error(("%s.%s can't be nil."):format("%s", name)) end
+                        else
+                            flag, val = pcall(Validate4Type, mem.Type, val, name, nil, nil, onlyValidate)
+                            if not flag then wipe(vCache) return error(strtrim(val:match(":%d+:%s*(.-)$") or val)) end
                         end
                     end
+                else
+                    for _, mem in ipairs(info.Members) do
+                        local name = mem.Name
+                        local val = value[name]
 
-                    if not onlyValidate then value[name] = val end
+                        if val == nil then
+                            local default = mem.Default
+                            if default ~= nil then
+                                -- Deep clone to make sure no change on default value
+                                val = CloneObj(default, true)
+                            elseif mem.Require then
+                                wipe(vCache)
+                                return error(("%s.%s can't be nil."):format("%s", name))
+                            end
+                        else
+                            flag, val = pcall(Validate4Type, mem.Type, val, name, nil, nil, onlyValidate)
+                            if not flag then wipe(vCache) return error(strtrim(val:match(":%d+:%s*(.-)$") or val)) end
+                        end
+
+                        value[name] = val
+                    end
                 end
             elseif sType == STRUCT_TYPE_ARRAY then
                 local ele = info.ArrayElement
 
-                if ele then
+                if onlyValidate then
                     for i, v in ipairs(value) do
                         local flag, ret = pcall(Validate4Type, ele, v, "Element", nil, nil, onlyValidate)
-
-                        if flag then
-                            if not onlyValidate then value[i] = ret end
-                        else
-                            wipe(tValidatedCache)
-                            return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret):gsub("%%s[_%w]+", "%%s["..i.."]"))
-                        end
+                        if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret):gsub("%%s[_%w]+", "%%s["..i.."]")) end
+                    end
+                else
+                    for i, v in ipairs(value) do
+                        local flag, ret = pcall(Validate4Type, ele, v, "Element", nil, nil, onlyValidate)
+                        if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret):gsub("%%s[_%w]+", "%%s["..i.."]")) end
+                        value[i] = ret
                     end
                 end
             end
-        elseif info.BaseStruct then
-            -- Validate with the base struct
-            if onlyValidate then
-                ValidateStruct(info.BaseStruct, value, onlyValidate)
-            else
-                value = ValidateStruct(info.BaseStruct, value, onlyValidate)
+        end
+
+        -- Call Validator
+        local i = STRT_START_VALID
+
+        while info[i] do
+            local flag, ret = pcall(info[i], value)
+            if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+            i = i + 1
+        end
+
+        if not onlyValidate then
+            i = STRT_START_INIT
+
+            while info[i] do
+                local flag, ret = pcall(info[i], value)
+                if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+                if sType == STRUCT_TYPE_CUSTOM and ret ~= nil then value = ret end
+                i = i + 1
+            end
+
+            if info.Cache and type(value) == "table" then
+                for k, v in pairs(info.Cache) do
+                    if value[k] == nil then value[k] = v end
+                end
             end
         end
 
-        if info.Validator then
-            local flag, ret = pcall(info.Validator, value)
-
-            if not flag then
-                wipe(tValidatedCache)
-                return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret))
-            end
-        end
-
-        if not onlyValidate and info.Initializer then
-            local flag, ret = pcall(info.Initializer, value)
-
-            if not flag then
-                wipe(tValidatedCache)
-                return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret))
-            end
-
-            if sType == STRUCT_TYPE_CUSTOM and ret ~= nil then value = ret end
-        end
-
-        if value and tValidatedCache[1] == value then wipe(tValidatedCache) end
+        if sType ~= STRUCT_TYPE_CUSTOM and vCache[1] == value then wipe(vCache) end
 
         return value
     end
 
-    function CopyStructMethods(info, obj)
-        if info.Method and type(obj) == "table" then
-            for k, v in pairs(info.Method) do
-                if obj[k] == nil and not(info.FeatureModifier and ValidateFlags(MD_STATIC_FEATURE, info.FeatureModifier[k])) then
-                    obj[k] = v
-                end
+    FLAG_STRT_CUSTOM    = 2^0
+    FLAG_STRT_MEMBER    = 2^1
+    FLAG_STRT_ARRAY     = 2^2
+    FLAG_STRT_SVALID    = 2^3
+    FLAG_STRT_MVALID    = 2^4
+    FLAG_STRT_SINIT     = 2^5
+    FLAG_STRT_MINIT     = 2^6
+    FLAG_STRT_METHOD    = 2^7
+
+    _RawValidateBuilder = {}
+
+    function GenerateRawValidate(info)
+        local sToken    = 0
+        local upValues  = CACHE_TABLE()
+
+        if info.SubType == STRUCT_TYPE_CUSTOM then
+            sToken = TurnOnFlags(FLAG_STRT_CUSTOM, sToken)
+        elseif info.SubType == STRUCT_TYPE_MEMBER then
+            sToken = TurnOnFlags(FLAG_STRT_MEMBER, sToken)
+        else
+            sToken = TurnOnFlags(FLAG_STRT_ARRAY, sToken)
+        end
+
+        if info[STRT_START_VALID] then
+            if info[STRT_START_VALID + 1] then
+                local i = STRT_START_VALID + 1
+                while info[i + 1] do i = i + 1 end
+                sToken = TurnOnFlags(FLAG_STRT_MVALID, sToken)
+                tinsert(upValues, i)
+            else
+                sToken = TurnOnFlags(FLAG_STRT_SVALID, sToken)
             end
         end
 
-        return obj
+        if info[STRT_START_INIT] then
+            if info[STRT_START_INIT + 1] then
+                local i = STRT_START_INIT + 1
+                while info[i + 1] do i = i + 1 end
+                sToken = TurnOnFlags(FLAG_STRT_MINIT, sToken)
+                tinsert(upValues, i)
+            else
+                sToken = TurnOnFlags(FLAG_STRT_SINIT, sToken)
+            end
+        end
+
+        if info.Cache then
+            sToken = TurnOnFlags(FLAG_STRT_METHOD, sToken)
+        end
+
+        -- Building
+        if not _RawValidateBuilder[sToken] then
+            local gHeader = CACHE_TABLE()
+            local gbody   = CACHE_TABLE()
+
+            tinsert(gbody, "") -- Remain for closure values
+            tinsert(gbody, [[return function(info, value, onlyValidate)]])
+
+            if ValidateFlags(FLAG_STRT_MEMBER, sToken) or ValidateFlags(FLAG_STRT_ARRAY, sToken) then
+                tinsert(gbody, [[
+                    local vCache = _ValidatedCache[running() or 0]
+                    if vCache[value] then return value end
+                    if type(value) ~= "table" then wipe(vCache) return error(("%s must be a table, got %s."):format("%s", type(value))) end
+                    if getmetatable(value) ~= nil then wipe(vCache) return error(("%s must be a table without meta-table."):format("%s")) end
+
+                    if not vCache[1] then vCache[1] = value end
+                    vCache[value] = true
+                ]])
+            end
+
+            -- Validation for member and array
+            if ValidateFlags(FLAG_STRT_MEMBER, sToken) then
+                tinsert(gbody, [[
+                    local flag
+                    if onlyValidate then
+                        for _, mem in ipairs(info.Members) do
+                            local name = mem.Name
+                            local val = value[name]
+
+                            if val == nil then
+                                if mem.Default == nil and mem.Require then wipe(vCache) return error(("%s.%s can't be nil."):format("%s", name)) end
+                            else
+                                flag, val = pcall(Validate4Type, mem.Type, val, name, nil, nil, onlyValidate)
+                                if not flag then wipe(vCache) return error(strtrim(val:match(":%d+:%s*(.-)$") or val)) end
+                            end
+                        end
+                    else
+                        for _, mem in ipairs(info.Members) do
+                            local name = mem.Name
+                            local val = value[name]
+
+                            if val == nil then
+                                local default = mem.Default
+                                if default ~= nil then
+                                    -- Deep clone to make sure no change on default value
+                                    val = CloneObj(default, true)
+                                elseif mem.Require then
+                                    wipe(vCache)
+                                    return error(("%s.%s can't be nil."):format("%s", name))
+                                end
+                            else
+                                flag, val = pcall(Validate4Type, mem.Type, val, name, nil, nil, onlyValidate)
+                                if not flag then wipe(vCache) return error(strtrim(val:match(":%d+:%s*(.-)$") or val)) end
+                            end
+
+                            value[name] = val
+                        end
+                    end
+                ]])
+            elseif ValidateFlags(FLAG_STRT_ARRAY, sToken) then
+                tinsert(gbody, [[
+                    local ele = info.ArrayElement
+                    if onlyValidate then
+                        for i, v in ipairs(value) do
+                            local flag, ret = pcall(Validate4Type, ele, v, "Element", nil, nil, onlyValidate)
+                            if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret):gsub("%%s[_%w]+", "%%s["..i.."]")) end
+                        end
+                    else
+                        for i, v in ipairs(value) do
+                            local flag, ret = pcall(Validate4Type, ele, v, "Element", nil, nil, onlyValidate)
+                            if not flag then wipe(vCache) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret):gsub("%%s[_%w]+", "%%s["..i.."]")) end
+                            value[i] = ret
+                        end
+                    end
+                ]])
+            end
+
+            -- Custom Validation
+            if ValidateFlags(FLAG_STRT_SVALID, sToken) then
+                tinsert(gbody, [[
+                    local flag, ret = pcall(info[]]..STRT_START_VALID..[[], value)
+                    if not flag then wipe(_ValidatedCache[running() or 0]) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+                ]])
+            elseif ValidateFlags(FLAG_STRT_MVALID, sToken) then
+                tinsert(gHeader, "nvalidator")
+                tinsert(gbody, [[
+                    for i = ]] .. STRT_START_VALID .. [[, nvalidator do
+                        local flag, ret = pcall(info[i], value)
+                        if not flag then wipe(_ValidatedCache[running() or 0]) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+                    end
+                ]])
+            end
+
+            if ValidateFlags(FLAG_STRT_SINIT, sToken) or ValidateFlags(FLAG_STRT_MINIT, sToken) or ValidateFlags(FLAG_STRT_METHOD, sToken) then
+                tinsert(gbody, [[if not onlyValidate then]])
+
+                -- Custom Initializer
+                if ValidateFlags(FLAG_STRT_SINIT, sToken) then
+                    tinsert(gbody, [[
+                        local flag, ret = pcall(info[]].. STRT_START_INIT ..[[], value)
+                        if not flag then wipe(_ValidatedCache[running() or 0]) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+                    ]])
+                    if ValidateFlags(FLAG_STRT_CUSTOM, sToken) then
+                        tinsert(gbody, [[if ret ~= nil then value = ret end]])
+                    end
+                elseif ValidateFlags(FLAG_STRT_MINIT, sToken) then
+                    tinsert(gHeader, "ninitializer")
+                    tinsert(gbody, [[
+                        for i = ]] .. STRT_START_INIT .. [[, ninitializer do
+                            local flag, ret = pcall(info[i], value)
+                            if not flag then wipe(_ValidatedCache[running() or 0]) return error(strtrim(ret:match(":%d+:%s*(.-)$") or ret)) end
+                    ]])
+                    if ValidateFlags(FLAG_STRT_CUSTOM, sToken) then
+                        tinsert(gbody, [[if ret ~= nil then value = ret end]])
+                    end
+                    tinsert(gbody, [[end]])
+                end
+
+                if ValidateFlags(FLAG_STRT_METHOD, sToken) then
+                    tinsert(gbody, [[
+                        if type(value) == "table" then
+                            for k, v in pairs(info.Cache) do
+                                if value[k] == nil then value[k] = v end
+                            end
+                        end
+                    ]])
+                end
+
+                tinsert(gbody, [[end]])
+            end
+
+            if ValidateFlags(FLAG_STRT_MEMBER, sToken) or ValidateFlags(FLAG_STRT_ARRAY, sToken) then
+                tinsert(gbody, [[if vCache[1] == value then wipe(vCache) end]])
+            end
+
+            tinsert(gbody, [[return value]])
+            tinsert(gbody, [[end]])
+
+            if #gHeader > 0 then
+                gbody[1] = "local " .. tblconcat(gHeader, ",") .. "=..."
+            end
+            _RawValidateBuilder[sToken] = loadInEnv(tblconcat(gbody, "\n"), "Struct_Validate_"..tostring(sToken))
+            CACHE_TABLE(gHeader)
+            CACHE_TABLE(gbody)
+        end
+
+        local rs = _RawValidateBuilder[sToken](unpack(upValues))
+        CACHE_TABLE(upValues)
+        return rs
     end
 
     function Struct2Obj(info, ...)
@@ -4488,10 +4925,8 @@ do
         if not ( count == 1 and type(initTable) == "table" and getmetatable(initTable) == nil ) then initTable = nil end
 
         if initTable then
-            local ok, value = pcall(ValidateStruct, strt, initTable)
-
-            if ok then return CopyStructMethods(info, value) end
-
+            local ok, value = pcall(info.RawValidate, info, initTable)
+            if ok then return value end
             initErrMsg = value
         end
 
@@ -4501,44 +4936,32 @@ do
 
             if info.Members then for i, n in ipairs(info.Members) do ret[n.Name] = select(i, ...) end end
 
-            local ok, value = pcall(ValidateStruct, strt, ret)
+            local ok, value = pcall(info.RawValidate, info, ret)
+            if ok then return value end
+            value = initErrMsg or value
+            value = strtrim(value:match(":%d+:%s*(.-)$") or value)
+            value = value:gsub("%%s%.", ""):gsub("%%s", "")
 
-            if ok then
-                return CopyStructMethods(info, value)
-            else
-                value = initErrMsg or value
-                value = strtrim(value:match(":%d+:%s*(.-)$") or value)
-                value = value:gsub("%%s%.", ""):gsub("%%s", "")
-
-                local args = ""
-                for i, n in ipairs(info.Members) do
-                    if i == 1 then args = n.Name else args = args..", "..n.Name end
-                end
-                --if args:find("%[") then args = args.."]" end
-                error(("Usage : %s(%s) - %s"):format(tostring(strt), args, value), 3)
-            end
+            local args = ""
+            for i, n in ipairs(info.Members) do if i == 1 then args = n.Name else args = args..", "..n.Name end end
+            error(("Usage : %s(%s) - %s"):format(tostring(strt), args, value), 3)
         elseif info.SubType == STRUCT_TYPE_ARRAY then
             local ret = {}
 
             for i = 1, select('#', ...) do ret[i] = select(i, ...) end
 
-            local ok, value = pcall(ValidateStruct, strt, ret)
+            local ok, value = pcall(info.RawValidate, info, ret)
+            if ok then return value end
 
-            if ok then
-                return CopyStructMethods(info, value)
-            else
-                value = initErrMsg or value
-                value = strtrim(value:match(":%d+:%s*(.-)$") or value)
-                value = value:gsub("%%s%.", ""):gsub("%%s", "")
-                error(("Usage : %s(...) - %s"):format(tostring(strt), value), 3)
-            end
+            value = initErrMsg or value
+            value = strtrim(value:match(":%d+:%s*(.-)$") or value)
+            value = value:gsub("%%s%.", ""):gsub("%%s", "")
+            error(("Usage : %s(...) - %s"):format(tostring(strt), value), 3)
         else
             -- For custom struct
-            local ok, value = pcall(ValidateStruct, strt, (...))
-
-            if not ok then error(strtrim(value:match(":%d+:%s*(.-)$") or value):gsub("%%s", "[".. info.Name .."]"), 3) end
-
-            return value
+            local ok, value = pcall(info.RawValidate, info, (...))
+            if ok then return value end
+            error(strtrim(value:match(":%d+:%s*(.-)$") or value):gsub("%%s", "[".. info.Name .."]"), 3)
         end
     end
 
@@ -4570,7 +4993,9 @@ do
         else
             -- Clear the defintions
             for i = #info, 0, -1 do info[i] = nil end
+            info.BaseStruct = nil
         end
+        info.RawValidate = ValidateStruct
 
         -- Clear Attribute
         if ATTRIBUTE_INSTALLED then
@@ -4741,7 +5166,7 @@ do
 
     struct "Callable" {
         function (value)
-            if type(value) == "string" then return ValidateStruct(Lambda, value, true) end
+            if type(value) == "string" then return _NSInfo[Lambda]:RawValidate(value, true) end
             assert(Reflector.IsCallable(value), "%s isn't callable.")
         end,
         [STRUCT_INIT_METHOD] = function(value)
@@ -6089,7 +6514,9 @@ do
             __call = function(self, cache)
                 if cache then
                     for attr in pairs(cache) do
-                        if getmetatable(attr) then attr:Dispose() end
+                        if getmetatable(attr) then
+                            DisposeObject(attr)
+                        end
                     end
                     wipe(cache)
                     tinsert(self, cache)
@@ -6102,7 +6529,7 @@ do
         function DisposeAttributes(config)
             if type(config) ~= "table" then return end
             if getmetatable(config) then
-                return config:Dispose()
+                return DisposeObject(config)
             else
                 for _, attr in pairs(config) do DisposeAttributes(attr) end
                 return wipe(config)
@@ -6234,25 +6661,18 @@ do
                         -- ok, ret = pcall(config.ApplyAttribute, config, arg1, arg2, arg3, arg4)
                         ret = config.ApplyAttribute(config, arg1, arg2, arg3, arg4)
 
-                        --if not ok then
-                        --    print(ret)
+                        if usage and not usage.Inherited and usage.RunOnce then
+                            DisposeObject(config)
+                            config = nil
+                        end
 
-                        --    config:Dispose()
-                        --    config = nil
-                        --else
-                            if usage and not usage.Inherited and usage.RunOnce then
-                                config:Dispose()
-                                config = nil
+                        if isMethod then
+                            -- The method may be wrapped in the apply operation
+                            if ret and ret ~= target and type(ret) == "function" then
+                                target = ret
+                                arg1 = target
                             end
-
-                            if isMethod then
-                                -- The method may be wrapped in the apply operation
-                                if ret and ret ~= target and type(ret) == "function" then
-                                    target = ret
-                                    arg1 = target
-                                end
-                            end
-                        --end
+                        end
                     else
                         hasAfter = true
                     end
@@ -6263,25 +6683,19 @@ do
                         local usage = GetAttributeUsage(getmetatable(config[i]))
 
                         if not halt or (not atLast and usage and usage.BeforeDefinition) or (atLast and (not usage or not usage.BeforeDefinition)) then
-                            --ok, ret = pcall(config[i].ApplyAttribute, config[i], arg1, arg2, arg3, arg4)
                             ret = config[i].ApplyAttribute(config[i], arg1, arg2, arg3, arg4)
 
-                            --if not ok then
-                            --    tremove(config, i):Dispose()
-                            --    print(ret)
-                            --else
-                                if usage and not usage.Inherited and usage.RunOnce then
-                                    tremove(config, i):Dispose()
-                                end
+                            if usage and not usage.Inherited and usage.RunOnce then
+                                DisposeObject(tremove(config, i))
+                            end
 
-                                if isMethod then
-                                    -- The method may be wrapped in the apply operation
-                                    if ret and ret ~= target and type(ret) == "function" then
-                                        target = ret
-                                        arg1 = target
-                                    end
+                            if isMethod then
+                                -- The method may be wrapped in the apply operation
+                                if ret and ret ~= target and type(ret) == "function" then
+                                    target = ret
+                                    arg1 = target
                                 end
-                            --end
+                            end
                         else
                             hasAfter = true
                         end
@@ -6318,7 +6732,7 @@ do
 
         function ClearPreparedAttributes(noDispose)
             local prepared = _PreparedAttributes()
-            if not noDispose then for _, attr in ipairs(prepared) do attr:Dispose() end end
+            if not noDispose then for _, attr in ipairs(prepared) do DisposeObject(attr) end end
             wipe(prepared)
         end
 
@@ -6427,12 +6841,12 @@ do
                         if getmetatable(pconfig) then
                             if not ValidateAttributeUsable(prepared, pconfig) then
                                 SaveTargetAttributes(target, targetType, nil)
-                                pconfig:Dispose()
+                                DisposeObject(pconfig)
                             end
                         else
                             for i = #pconfig, 1, -1 do
                                 if not ValidateAttributeUsable(prepared, pconfig[i]) then
-                                    tremove(pconfig, i):Dispose()
+                                    DisposeObject(tremove(pconfig, i))
                                 end
                             end
 
@@ -7310,7 +7724,7 @@ do
                 overLoads.HasSelf = true
                 if overLoads.TargetType == AttributeTargets.Method then
                     if Reflector.IsInterface(overLoads.Owner) and IsFinalFeature(overLoads.Owner) then overLoads.HasSelf = false end
-                    if overLoads.Name == "__exist" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
+                    if overLoads.Name == "__exist" or overLoads.Name == "__new" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
                 end
             end
 
@@ -7424,7 +7838,7 @@ do
                 overLoads.HasSelf = true
                 if overLoads.TargetType == AttributeTargets.Method then
                     if Reflector.IsInterface(overLoads.Owner) and IsFinalFeature(overLoads.Owner) then overLoads.HasSelf = false end
-                    if overLoads.Name == "__exist" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
+                    if overLoads.Name == "__exist" or overLoads.Name == "__new" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
                 end
             end
 
@@ -7467,7 +7881,7 @@ do
                 overLoads.HasSelf = true
                 if overLoads.TargetType == AttributeTargets.Method then
                     if Reflector.IsInterface(overLoads.Owner) and IsFinalFeature(overLoads.Owner) then overLoads.HasSelf = false end
-                    if overLoads.Name == "__exist" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
+                    if overLoads.Name == "__exist" or overLoads.Name == "__new" or __Static__:IsMethodAttributeDefined(overLoads.Owner, overLoads.Name) then overLoads.HasSelf = false end
                 end
             end
 
@@ -7825,7 +8239,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Interface + AttributeTargets.Method + AttributeTargets.Property + AttributeTargets.Member, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Require__" (function(_ENV)
         extend "IAttribute"
 
@@ -7912,7 +8326,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Property, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Synthesize__" (function(_ENV)
         extend "IAttribute"
 
@@ -7958,7 +8372,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Property, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Event__" (function(_ENV)
         extend "IAttribute"
 
@@ -7997,7 +8411,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Property, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Handler__" (function(_ENV)
         extend "IAttribute"
 
@@ -8032,7 +8446,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Struct + AttributeTargets.Enum + AttributeTargets.Property + AttributeTargets.Member, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Default__" (function(_ENV)
         extend "IAttribute"
 
@@ -8114,8 +8528,7 @@ do
         end
     end)
 
-    __Default__( "Assign" )
-    __Flags__()
+    __Flags__() __Default__( "Assign" )
     enum "Setter" {
         Assign = 0, -- set directly
         "Clone",    -- Clone struct or object of ICloneable
@@ -8125,8 +8538,7 @@ do
         "Weak",     -- Weak value
     }
 
-    __Default__( "Origin" )
-    __Flags__()
+    __Flags__() __Default__( "Origin" )
     enum "Getter" {
         Origin = 0,
         "Clone",
@@ -8134,7 +8546,7 @@ do
     }
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Property, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Setter__" (function(_ENV)
         extend "IAttribute"
 
@@ -8189,7 +8601,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Property, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Getter__" (function(_ENV)
         extend "IAttribute"
 
@@ -8240,7 +8652,7 @@ do
     end)
 
     __AttributeUsage__{RunOnce = true, BeforeDefinition = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__Doc__" (function(_ENV)
         extend "IAttribute"
 
@@ -8437,8 +8849,8 @@ do
         end
     end)
 
-    __AttributeUsage__{AttributeTarget = AttributeTargets.Struct, RunOnce = true}
-    __Sealed__() __Unique__()
+    __AttributeUsage__{AttributeTarget = AttributeTargets.Struct, RunOnce = true, BeforeDefinition = true}
+    __Sealed__()
     class "__Base__" (function(_ENV)
         extend "IAttribute"
         doc "__Base__" [[Give the struct a base struct type, so the value must match the base struct type before validate it.]]
@@ -8454,11 +8866,21 @@ do
         ------------------------------------------------------
         function ApplyAttribute(self, target, targetType)
             if self.Base then
-                assert(_NSInfo[target].SubType == STRUCT_TYPE_CUSTOM and
-                        _NSInfo[self.Base].SubType == STRUCT_TYPE_CUSTOM,
-                        "System.__Base__ attribute can only be applied to custom struct type.")
+                local info = _NSInfo[target]
+                local binfo= _NSInfo[self.Base]
 
-                _NSInfo[target].BaseStruct = self.Base
+                info.SubType = binfo.SubType
+
+                if info.SubType == STRUCT_TYPE_MEMBER then
+                    -- Copy the members
+                    for i, mem in ipairs(binfo.Members) do
+                        info[i] = CloneObj(mem)
+                    end
+                elseif info.SubType == STRUCT_TYPE_ARRAY then
+                    info[0] = binfo.ArrayElement
+                end
+
+                info.BaseStruct = self.Base
             end
         end
 
@@ -8489,7 +8911,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Class, RunOnce = true, BeforeDefinition = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__ObjMethodAttr__" (function(_ENV)
         extend "IAttribute"
 
@@ -8548,7 +8970,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Class, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__WeakObject__" (function(_ENV)
         extend "IAttribute"
         doc "__WeakObject__" [[Mark the class' object as weak tables.]]
@@ -8584,7 +9006,7 @@ do
     end)
 
     __AttributeUsage__{AttributeTarget = AttributeTargets.Event, RunOnce = true}
-    __Sealed__() __Unique__()
+    __Sealed__()
     class "__EventChangeHandler__" (function(_ENV)
         extend "IAttribute"
         doc "__EventChangeHandler__" [[Assign a method to handle the event handler's changing.]]

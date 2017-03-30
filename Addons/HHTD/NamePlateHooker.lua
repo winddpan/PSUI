@@ -3,7 +3,7 @@ H.H.T.D. World of Warcraft Add-on
 Copyright (c) 2009-2017 by John Wellesz (Archarodim@teaser.fr)
 All rights reserved
 
-Version 2.4.4
+Version 2.4.5
 
 In World of Warcraft healers have to die. This is a cruel truth that you're
 taught very early in the game. This add-on helps you influence this unfortunate
@@ -53,6 +53,10 @@ NPH:SetDefaultModuleState( false );
 
 
 local LAST_TEXTURE_UPDATE = 0;
+local Marker_Textures = {
+    ["default"] = {"Interface\\AddOns\\"..ADDON_NAME.."\\Artwork\\healers_icons.tga", -1, 0},
+    ["minimal"] = {"Interface\\AddOns\\"..ADDON_NAME.."\\Artwork\\healers_icons_minimal.tga", -1, -5},
+};
 
 -- upvalues {{{
 local GetCVarBool           = _G.GetCVarBool;
@@ -86,6 +90,7 @@ function NPH:OnInitialize() -- {{{
             marker_Xoffset = 0,
             marker_Yoffset = 0,
             marker_VCa = 1,
+            marker_textureID = "default",
         },
     })
 end -- }}}
@@ -148,6 +153,17 @@ function NPH:GetOptions () -- {{{
                     type = 'header',
                     name = L["OPT_NPH_MARKER_SETTINGS"],
                     order = 15,
+                },
+                marker_textureID = {
+                    type = 'select',
+                    name = L["OPT_NPH_MARKER_THEME"],
+                    desc = L["OPT_NPH_MARKER_THEME_DESC"],
+                    values = {["default"] = L["OPT_NPH_MARKER_THEME_DEFAULT"], ["minimal"] = L["OPT_NPH_MARKER_THEME_MINIMAL"]},
+                    order = 17,
+                    set = function (info, value)
+                        HHTD:SetHandler(self, info, value);
+                        self:UpdateTextures();
+                    end,
                 },
                 marker_Scale = {
                     type = "range",
@@ -540,12 +556,17 @@ do
     local assert = _G.assert;
     local unpack = _G.unpack;
 
-    local function SetTextureParams(t) -- MUL
+    local function SetTextureParams(plateAdditions) -- MUL
         local profile = NPH.db.global;
+        local t, f = PlateAdditions.texture, PlateAdditions.rankFont;
+
+        t:SetTexture(Marker_Textures[profile.marker_textureID][1]);
 
         t:SetSize(64 * profile.marker_Scale, 64 * profile.marker_Scale);
         t:SetPoint("BOTTOM", Plate, "TOP", profile.marker_Xoffset, profile.marker_Yoffset);
         t:SetAlpha(profile.marker_VCa);
+        f:SetAlpha(profile.marker_VCa);
+        f:SetPoint("CENTER", t, "CENTER", -Marker_Textures[profile.marker_textureID][2] * profile.marker_Scale, -Marker_Textures[profile.marker_textureID][3] * profile.marker_Scale);
     end
 
     local function getIconCoords (x, y)
@@ -589,14 +610,12 @@ do
 
     end
 
-    local function MakeFontString(symbol) -- ONCE
+    local function MakeFontString() -- ONCE
         local f = Plate:CreateFontString();
         f:SetFont(SmallFontName, 12.2, "THICKOUTLINE, MONOCHROME");
         
         f:SetTextColor(1, 1, 1, 1);
         
-        f:SetPoint("CENTER", symbol, "CENTER", 1, 0);
-
         return f;
     end
 
@@ -629,7 +648,7 @@ do
         if not PlateAdditions.textureUpdate or PlateAdditions.textureUpdate < LAST_TEXTURE_UPDATE then
             --self:Debug(INFO, 'Updating texture');
 
-            SetTextureParams(PlateAdditions.texture);
+            SetTextureParams(PlateAdditions);
 
             PlateAdditions.textureUpdate = GetTime();
         end
@@ -637,18 +656,14 @@ do
     end
 
     local function AddElements () -- ONCEx
-        local texture  = Plate:CreateTexture();
-        texture:SetTexture("Interface\\AddOns\\"..ADDON_NAME.."\\Artwork\\healers_icons.tga");
-        AdjustTexCoord(texture);
-        SetTextureParams(texture);
         
-        local rankFont = MakeFontString(texture);
+        PlateAdditions.texture, PlateAdditions.rankFont = Plate:CreateTexture(), MakeFontString();
 
-        PlateAdditions.texture = texture;
+        SetTextureParams(PlateAdditions);
+
         PlateAdditions.texture:Show();
         PlateAdditions.IsShown = true; -- set it as soon as we show something
 
-        PlateAdditions.rankFont = rankFont;
         SetRank();
        
         PlateAdditions.rankFont:Show();
@@ -716,6 +731,7 @@ do
             PlateAdditions = plate.HHTD.NPH;
 
             AddElements();
+            AdjustTexCoord(PlateAdditions.texture);
 
         elseif not PlateAdditions.IsShown then
 

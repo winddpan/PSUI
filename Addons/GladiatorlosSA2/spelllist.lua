@@ -57,7 +57,8 @@
 			[29166] = "innervate",
 			[194223] = "celestialAlignment",
 			[200851] = "rageOfSleeper",
-			[203727] = "thorns",
+			[203727] = "thorns", -- (Resto)
+			[236696] = "thorns", -- (Feral)
 			[163505] = "rakeStun",
 
 			-- Hunter (Aura Applied)
@@ -85,7 +86,8 @@
 			[122278] = "dampenHarm",
 			[122783] = "diffuseMagic",
 			[115203] = "fortifyingBrew", --Fortifying Brew (Brewmaster)
-			[201318] = "fortifyingBrew", --Fortifying Elixir (PvP Talent)
+			[201318] = "fortifyingBrew", --Fortifying Brew (Windwalker PvP Talent)
+			[243435] = "fortifyingBrew", --Fortifying Brew (Mistweaver)
 			[115176] = "zenMeditation", -- Zen Meditation (Brewmaster)
 			[201325] = "zenMoment", --Zen Moment (PvP Talent)
 			[116849] = "lifeCocoon",
@@ -200,8 +202,9 @@
 			[51690] = "killingSpreeDown",		--Killing Spree
 			[118038] = "dieByTheSwordDown",		--Die by the Sword
 			[108271] = "astralShiftDown",		--Astral Shift
-			[201318] = "fortifyingBrewDown",	--Fortifying Elixir (PvP Talent)
+			[201318] = "fortifyingBrewDown",	--Fortifying Brew (Windwalker PvP talent)
 			[115203] = "fortifyingBrewDown",	--Fortifying Brew (Brewmaster)
+			[243435] = "fortifyingBrewDown",	--Fortifying Brew (Mistweaver)
 			[115176] = "zenMeditationDown",		--Zen Meditation (Brewmaster)
 			[122470] = "karmaDown",				--Touch of Karma
 			--[125174] = "karmaDown",				--Touch of Karma (Test)
@@ -242,7 +245,8 @@
 			[194249] = "voidFormDown",			--Voidform
 			[218413] = "voidFormDown",			--Voidform
 			[15286] = "vampiricEmbraceDown",	--Vampiric Embrace
-			[203727] = "thornsDown",			--Thorns
+			[203727] = "thornsDown",			--Thorns (Resto)
+			[236696] = "thornsDown",			--Thorns (Feral)
 			[209584] = "zenFocusTeaDown",		--Zen Focus Tea
 			[216890] = "SpellReflectionDown", 	-- Arms/Fury
 			[152279] = "BreathOfSindragosaDown",--Breath of Sindragosa
@@ -523,9 +527,10 @@
 			[203651] = "overgrowth",
 			[201664] = "demoRoar",
 			[208253] = "essenceOfGhanir",
-			[132469] = "typhoon",
+			[61391] = "typhoon",
 			[5215] = "prowl",
 			[22570] = "maim",
+			[236026] = "maim",
 			
 			-- Hunter (Cast Success)
 			[147362] = "counterShot",

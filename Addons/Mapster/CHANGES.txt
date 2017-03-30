@@ -1,12 +1,18 @@
-tag d2dd13b468be29d57704e4a9b20abd57d1808841 1.7.4.1
+tag afc631929d75e7595229304b42ac04ca15d664ea 1.7.5
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Wed Feb 1 06:42:15 2017 +0100
+Date:	Tue Mar 28 10:58:27 2017 +0200
 
-Tag as 1.7.4.1
+Tag as 1.7.5
 
-commit d2d9636f07a1155bb164f117900197490aeba3c6
+commit c855b3dd7eaac98b21457f3d4ee17325164b533a
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Oct 26 14:46:37 2016 +0200
+Date:   Tue Mar 28 10:58:17 2017 +0200
 
-    Prevent errors when the player position is unavailable in dungeons
+    Update TOC for 7.2
+
+commit 70fbdfa7595923530acc0f8cd5b1dd447ed82f02
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Thu Mar 16 11:26:49 2017 +0100
+
+    Update FogClear for 7.2 Broken Shore changes
 

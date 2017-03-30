@@ -2,7 +2,8 @@
   local cfg = ns.cfg
   local lib = ns.lib
   local oUF = ns.oUF or oUF
-  
+  local _G = _G
+	
   local class = select(2, UnitClass("player"))
   -- compatibility with older versions cfg
   
@@ -71,6 +72,7 @@
 		lib.gen_alt_powerbar(self)
 	end
     lib.gen_InfoIcons(self)
+	lib.gen_CombatIcon(self)
     lib.gen_specificpower(self)
     lib.gen_combat_feedback(self)
     lib.gen_swing_timer(self)
@@ -97,6 +99,7 @@
     lib.createAuras(self)
     lib.gen_ppstrings(self)
 	lib.gen_combat_feedback(self)
+	lib.gen_CombatIcon(self)
     if cfg.oUF.settings.ghost_target then lib.gen_faketarget(self) end
 	self:SetSize(self.width,self.height)
 	--self.Auras.onlyShowPlayer = true
@@ -146,6 +149,7 @@
     if cfg.oUF.castbar.focus.enable then lib.gen_castbar(self) end
     --lib.createAuras(self)
 	lib.createDebuffs(self) 
+	lib.gen_CombatIcon(self)
 	self:SetSize(self.width,self.height)
   end
   

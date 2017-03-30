@@ -3,7 +3,7 @@
   local oUF = ns.oUF or oUF
   local lib = ns.lib
   local lib_raid = CreateFrame("Frame")  
-    
+  
   -----------------------------
   -- local variables
   -----------------------------

@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Notes: Simple Map Mod
 ## Notes-zhCN: 简单实用的地图模块
 ## Notes-frFR: Simples modifications de la carte.
@@ -6,7 +6,7 @@
 ## Author: Nevcairiel
 ## SavedVariables: MapsterDB
 ## X-Category: Map
-## Version: 1.7.4.1
+## Version: 1.7.5
 ## X-License: All rights reserved.
 
 ## OptionalDeps: Ace3

@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Version: 2.0
 ## Title: oUF |cffffffffmono|r
 ## Notes: oUF layout
@@ -15,6 +15,7 @@ embeds\PartyPets.xml
 
 embeds\MonkHarmonyBar.lua
 embeds\TotemBar.lua
+embeds\Combat.lua
 
 cfg.lua
 ..\!mCFG\mCFG_layer.lua

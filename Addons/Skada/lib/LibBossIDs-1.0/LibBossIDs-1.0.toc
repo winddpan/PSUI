@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70200
 ## Version: @project-revision@
 
 ## Title: Lib: BossIDs-1.0

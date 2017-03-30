@@ -120,7 +120,7 @@ local function SetupOptions()
 						get = function(info) return db.profile.enabled end,
 						order = 10
 					},
-					itemLevelChoice = {
+					--[[itemLevelChoice = {
 						name = "Item Level To Display:",
 						desc = "Whether to show relic item level or weapon gain",
 						type = "select",
@@ -129,7 +129,7 @@ local function SetupOptions()
 						get = function(info) return invItemLevelOptions[db.profile.itemLevelDisplay] end,
 						order = 15,
 						values = locItemLevelOptions
-					},
+					},]]
 					itemTooltipHeader = {
 						name = "Artifact Item Tooltips",
 						type = "header",
@@ -228,9 +228,10 @@ local function DecorateArtifact(self)
 	if type(link) == 'string' and db.profile.enabled == true then
 		local _, itemID, _, relic1, relic2, relic3, _, _, _, _, _, upgradeID = strsplit(':', link)
 
+		if DEBUG ~=0 then print(format('ItemID: %s',itemID)) end
 		if nil == itemID or '' == itemID then return end  -- If there's no itemID we can't do anything
 
-		if upgradeID == '256' and nil ~= RelicSlotsByArtifact[tonumber(itemID)] then
+		if (upgradeID == '256' or upgradeID == '16777472') and nil ~= RelicSlotsByArtifact[tonumber(itemID)] then
 			--It's a recognized artifact item
 
 			-- Check options to see what to display
@@ -265,10 +266,10 @@ local function DecorateArtifact(self)
 						if nil == relicType then relicType = "???" end
 						
 						local itemLevel = gemLevel
-						if invItemLevelOptions[db.profile.itemLevelDisplay] == 2 then
+						--[[if invItemLevelOptions[db.profile.itemLevelDisplay] == 2 then
 							local artifactLevelGain = C_ArtifactUI.GetItemLevelIncreaseProvidedByRelic(gemLink)
 							itemLevel = "+" .. artifactLevelGain
-						end
+						end]]
 
 						self:AddDoubleLine(format('|cffffd400 (%s) %s|r', itemLevel or '???', gemLink or '???'), 
 							format('|cff00ff00(%s)',relicType), 0, 1, 0, 0, 1, 0)

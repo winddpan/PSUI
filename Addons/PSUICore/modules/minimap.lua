@@ -1,4 +1,5 @@
 ﻿local addon, ns = ...
+local _G = _G
 
 -- Config
 local font = "Fonts\\ARIALN.TTF"
@@ -65,8 +66,6 @@ end)
 
 -- Hiding ugly things
 local dummy = function() end
-local _G = getfenv(0)
-_G = _G
 
 local frames = {
     "GameTimeFrame",

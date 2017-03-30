@@ -30,17 +30,17 @@ if (GetLocale() == "zhCN") then
 	L["RepeatOptions"] = "重复信息设置"
 	L["chatLinesLimit"] = "重复信息缓存行数"
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20。"
-	L["stringDifferenceLimit"] = "重复信息区分度"
-	L["stringDifferenceLimitTooltips"] = "重复信息判定标准，范围0%至100%。对于同一个人的发言，0%为只过滤完全相同的内容，100%为过滤任意内容。提高设定值会提高相似信息的过滤效果但会提高误处理几率。默认值10%"
 	L["MultiLines"] = "多行喊话过滤"
 	L["MultiLinesTooltip"] = "重复过滤器现在也会过滤同一个人在短时间内的多行信息，这有助于减少各类宏的刷屏但同时也会过滤掉诸如dps统计的各插件通告"
 	L["AlsoFilterGroup"] = "同时过滤小队团队"
 	L["AlsoFilterGroupTooltips"] = "过滤器现在也会过滤小队团队中的发言，启用后你可能错过团队中有用的信息"
 	L["UseWithCare"] = "危险设置"
 	L["EnableAdvancedConfig"] = "启用高级选项"
-	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你已经知道危险性，请继续..."
+	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你只是点着玩请取消。如果你已经知道危险性，请继续..."
 	L["WhisperWhitelistMode"] = "密语白名单模式"
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
+	L["Aggressive"] = "额外过滤器"
+	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合，默认不开启。"
 --BlackwordList
 	L["BlackwordList"] = "黑名单关键词"
 	L["AddBlackWordTitle"] = "添加新黑名单关键词"
@@ -82,8 +82,6 @@ if (GetLocale() == "zhCN") then
 --AchievementFilter
 	L["GotAchievement"] = "[%s]获得了成就%s！"
 	L["And"] = "、"
---Version
-	L["ThisIsATestVersion"] = "您更新到一个测试版本。"
 
 -----------------------------------------------------------------------
 -- zhTW -- NEED HELP
@@ -115,17 +113,17 @@ elseif (GetLocale() == "zhTW") then
 	L["RepeatOptions"] = "重复信息设置"
 	L["chatLinesLimit"] = "重复信息缓存行数"
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20"
-	L["stringDifferenceLimit"] = "重复信息区分度"
-	L["stringDifferenceLimitTooltips"] = "重复信息判定标准，范围0%至100%。对于同一个人的发言，0%为只过滤完全相同的内容，100%为过滤任意内容。提高设定值会提高相似信息的过滤效果但会提高误处理几率。默认值10%"
 	L["MultiLines"] = "多行喊话过滤"
 	L["MultiLinesTooltip"] = "重复过滤器现在也会过滤同一个人在短时间内的多行信息，这有助于减少各类宏的刷屏但同时也会过滤掉诸如dps统计的各插件通告"
 	L["AlsoFilterGroup"] = "同时过滤小队团队"
 	L["AlsoFilterGroupTooltips"] = "过滤器现在也会过滤小队团队中的发言，启用后你可能错过团队中有用的信息"
 	L["UseWithCare"] = "危险设置"
 	L["EnableAdvancedConfig"] = "启用高级选项"
-	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你已经知道危险性，请继续..."
+	L["AdvancedWarningText"] = "不要随意更改任何你不清楚的设置，不然你很有可能会把ECF玩坏！如果你只是点着玩请取消。如果你已经知道危险性，请继续..."
 	L["WhisperWhitelistMode"] = "密語白名單模式"
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
+	L["Aggressive"] = "额外过滤器"
+	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合，默认不开启。"
 --BlackwordList
 	L["BlackwordList"] = "黑名单關鍵詞"
 	L["AddBlackWordTitle"] = "添加新黑名單關鍵詞"
@@ -167,9 +165,6 @@ elseif (GetLocale() == "zhTW") then
 --AchievementFilter
 	L["GotAchievement"] = "[%s]獲得了成就%s！"
 	L["And"] = "、"
---Version
-	L["ThisIsATestVersion"] = "您更新到一个测试版本。"
-
 -----------------------------------------------------------------------
 -- Default -- NEED HELP
 -----------------------------------------------------------------------
@@ -199,8 +194,6 @@ else
 	L["RepeatOptions"] = "Repeat Options"
 	L["chatLinesLimit"] = "Repeat message cache lines"
 	L["chatLinesLimitTooltips"] = "Repeat message lines. Please change it to suit your message amount. Increase it will consume more memory. Set 0 to disable Repeat Filter. Default 20."
-	L["stringDifferenceLimit"] = "Repeat message Difference"
-	L["stringDifferenceLimitTooltips"] = "Message difference limit. Ranging from 0% to 100%. For the same sender, 0% will only filter the same message while 100% will filter any message. Increase it will filter more similar messages but also some unwanted ones. Default 10%."
 	L["MultiLines"] = "MultiLines"
 	L["MultiLinesTooltip"] = "Filtered msg that is sent from the same person and in less than 1 sec. This may reduce chat spam but also remove report from addons."
 	L["AlsoFilterGroup"] = "AlsoFilterGroup"
@@ -210,6 +203,8 @@ else
 	L["AdvancedWarningText"] = "Please do NOT change any options that you don't understand, or you may mess ECF up. If you DO know the risk, you may continue..."
 	L["WhisperWhitelistMode"] = "Whisper Whitelist Mode"
 	L["WhisperWhitelistModeTooltip"] = "Filter all whisper unless it's from guild/group/raid/friends or you have just whisper them|n|cffE2252DUse with care!"
+	L["Aggressive"] = "Aggressive Filters"
+	L["AggressiveTooltip"] = "Some aggressive but effective Filters. Disable by default."
 --BlackwordList
 	L["BlackwordList"] = "BlackWordList"
 	L["AddBlackWordTitle"] = "Add Blackword"
@@ -251,8 +246,6 @@ else
 --AchievementFilter
 	L["GotAchievement"] = "[%s]have earned the achievement%s!"
 	L["And"] = ", "
---Version
-	L["ThisIsATestVersion"] = "You have updated to a test version. "
 end
 
 ecf.L = L

@@ -245,27 +245,34 @@ function GSA:OnOptionCreate()
 								name = L["Arena"],
 								desc = L["Alert only works in arena"],
 								disabled = function() return gsadb.all end,
-								order = 2,
+								order = 4,
 							},
-							NewLine1 = {
-								type= 'description',
+--							NewLine1 = {
+--								type= 'description',
+--								order = 3,
+--								name= '',
+--							},
+							disablelargebg = {
+								type = 'toggle',
+								name = L["DisableLargeBG"],
+								desc = L["DisableLargeBGDesc"],
+								disabled = function() return not gsadb.battleground or gsadb.all end,
 								order = 3,
-								name= '',
 							},
 							battleground = {
 								type = 'toggle',
 								name = L["Battleground"],
 								desc = L["Alert only works in BG"],
 								disabled = function() return gsadb.all end,
-								order = 4,
+								order = 2,
 							},
-							field = {
-								type = 'toggle',
-								name = L["World"],
-								desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
-								disabled = function() return gsadb.all end,
-								order = 5,
-							}
+--							field = {
+--								type = 'toggle',
+--								name = L["World"],
+--								desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
+--								disabled = function() return gsadb.all end,
+--								order = 5,
+--							}
 						},
 					},
 					voice = {
@@ -276,8 +283,8 @@ function GSA:OnOptionCreate()
 						args = {
 							path = {
 								type = 'select',
-								name = L["Default / Female voice"], -- added to 2.3
-								desc = L["Select the default voice pack of the alert"], -- added to 2.3
+								name = L["Default / Female voice"],
+								desc = L["Select the default voice pack of the alert"],
 								values = self.GSA_LANGUAGE,
 								order = 1,
 							},
@@ -463,7 +470,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 7,
-								args = listOption({102560,102543,102558,33891,61336,22812,1850,69369,102342,102351,155835,29166,194223,200851,203727,163505},"auraApplied"),
+								args = listOption({102560,102543,102558,33891,61336,22812,1850,69369,102342,102351,155835,29166,194223,200851,203727,236696,163505},"auraApplied"),
 							},
 							hunter = { -- AuraApplied
 								type = 'group',
@@ -484,7 +491,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF00FF96Monk|r"],
 								order = 10,
-								args = listOption({201318,115203,122278,122783,115176,201325,116849,152173,216113,197908,209584},"auraApplied"),
+								args = listOption({243435,201318,115203,122278,122783,115176,201325,116849,152173,216113,197908,209584},"auraApplied"),
 							},
 							paladin = { -- AuraApplied
 								type = 'group',
@@ -569,7 +576,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({102560,102543,102558,33891,117679,200851,203727},"auraRemoved"), 
+								args = listOption({102560,102543,102558,33891,117679,200851,203727,236696},"auraRemoved"), 
 							},
 							hunter = { -- AuraRemoved
 								type = 'group',
@@ -590,7 +597,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF00FF96Monk|r"],
 								order = 9,
-								args = listOption({201318,115203,115176,201325,122470,216113,116849,209584},"auraRemoved"),
+								args = listOption({243435,201318,115203,115176,201325,122470,216113,116849,209584},"auraRemoved"),
 							},
 							paladin = { -- AuraRemoved
 								type = 'group',
@@ -825,7 +832,7 @@ function GSA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 70,
-								args = listOption({102280,740,108238,99,5211,102359,102417,102383,49376,16979,102416,102401,203651,201664,208253,132469,5215,22570},"castSuccess"),
+								args = listOption({102280,740,108238,99,5211,102359,102417,102383,49376,16979,102416,102401,203651,201664,208253,61391,5215,236026,22570},"castSuccess"),
 							},
 							hunter = { -- CastSuccess
 								type = 'group',

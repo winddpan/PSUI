@@ -50,7 +50,7 @@ class "TotemBar"
 				self:GetChild("Icon").TexturePath = value
 				if value then self:GetChild("Icon"):SetTexCoord(0.1, 0.9, 0.1, 0.9) end
 			end,
-			Type = String,
+			Type = String + Number,
 		}
 
 		local function UpdateTooltip(self)
@@ -178,7 +178,7 @@ class "SecureTotemBar"
 				self:GetChild("Icon").TexturePath = value
 				if value then self:GetChild("Icon"):SetTexCoord(0.1, 0.9, 0.1, 0.9) end
 			end,
-			Type = String,
+			Type = String + Number,
 		}
 
 		local function UpdateTooltip(self)

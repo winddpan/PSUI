@@ -854,7 +854,10 @@ local function UpdateSelectionHighlight(unitFrame)
 	else	--橫向箭頭，在boss mod友方目標隱藏名字的時候會有點蠢
 		if not C.numberstyle then 
 			if UnitIsPlayer(unit) and UnitReaction(unit, 'player') >= 5 and not UnitIsUnit(unit, "player") then
-				unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", -15, 8)
+				local width = unitFrame.name:GetWidth();
+				local fontWidth = unitFrame.name:GetStringWidth()
+				local x = floor(-(width - fontWidth) / 2 - 6)
+				unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", x, 8)
 			else
 				unitFrame.redarrow:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
 			end

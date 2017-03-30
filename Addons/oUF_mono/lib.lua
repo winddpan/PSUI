@@ -3,6 +3,7 @@
   local cast = ns.cast
   local oUF = ns.oUF or oUF
   local lib = CreateFrame("Frame")  
+  local _G = _G
 
   -----------------------------
   -- local variables
@@ -975,16 +976,26 @@
     f:Tag(lfdi, '[mono:LFD]')
   end
   --gen combat and leader icons
-  lib.gen_InfoIcons = function(f)
+  lib.gen_CombatIcon = function(f)
     local h = CreateFrame("Frame",nil,f)
     h:SetAllPoints(f.Health)
     h:SetFrameLevel(10)
     --combat icon
-    if f.mystyle == 'player' then
-		f.Combat = h:CreateTexture(nil, 'OVERLAY')
-		f.Combat:SetSize(20,20)
-		f.Combat:SetPoint('TOPRIGHT', 3, 9)
+    if f.mystyle == 'player' or f.mystyle == 'target' or f.mystyle == 'focus' then
+		f.CCombat = h:CreateTexture(nil, 'OVERLAY')
+		f.CCombat:SetSize(20,20)
+		if f.mystyle == 'player' then
+			f.CCombat:SetPoint('TOPRIGHT', 3, 10)
+		else 
+			f.CCombat:SetPoint('TOPLEFT', -2, 10)
+		end
     end
+  end
+  --gen combat and leader icons
+  lib.gen_InfoIcons = function(f)
+    local h = CreateFrame("Frame",nil,f)
+    h:SetAllPoints(f.Health)
+    h:SetFrameLevel(10)
     --Leader icon
     local li = h:CreateTexture(nil, "OVERLAY")
     li:SetPoint("TOPLEFT", f, 0, 6)

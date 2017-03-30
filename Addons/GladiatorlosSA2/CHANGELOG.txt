@@ -1,3 +1,16 @@
+- version 1.14.3
+
+General
+* Updated to 7.2.
+
+Druid
+* Fixed Typhoon.
+* Fixed Thorns for Feral druids.
+* Fixed Enraged Maim.
+
+Monk
+* Added Fortifying Brew for Mistweavers.
+===============================================
 - version 1.14.2
 
 General

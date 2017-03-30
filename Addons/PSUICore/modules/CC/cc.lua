@@ -9,7 +9,7 @@
 local AddonName, Addon = ...
 local Timer = {}; Addon.Timer = Timer
 local timers = {}
-
+local _G = _G
 
 --local bindings!
 local Config = Addon.Config --pull in the addon table

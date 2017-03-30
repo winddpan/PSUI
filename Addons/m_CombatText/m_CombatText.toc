@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Notes: Scrolling combat text
 ## Title: mono|cffffffffCombatText|r
 ## Author: Monolit

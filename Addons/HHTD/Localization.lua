@@ -3,7 +3,7 @@ H.H.T.D. World of Warcraft Add-on
 Copyright (c) 2009-2017 by John Wellesz (Archarodim@teaser.fr)
 All rights reserved
 
-Version 2.4.4
+Version 2.4.5
 
 In World of Warcraft healers have to die. This is a cruel truth that you're
 taught very early in the game. This add-on helps you influence this unfortunate
@@ -134,6 +134,10 @@ L["OPT_NPH_MARKER_HIDDEN_WOW_SETTINGS"] = "Hidden WoW settings"
 L["OPT_NPH_MARKER_SCALE"] = "Markers' scaling"
 L["OPT_NPH_MARKER_SCALE_DESC"] = "Multiply markers' size by # i.e. 1 = normal size, 0.5 = half size, 2 = double size, etc..."
 L["OPT_NPH_MARKER_SETTINGS"] = "Markers' settings"
+L["OPT_NPH_MARKER_THEME"] = "Markers' theme"
+L["OPT_NPH_MARKER_THEME_DEFAULT"] = "Default"
+L["OPT_NPH_MARKER_THEME_DESC"] = "Select between the available markers' themes"
+L["OPT_NPH_MARKER_THEME_MINIMAL"] = "Minimalist"
 L["OPT_NPH_MARKER_WOW_SETTINGS"] = "WoW settings"
 L["OPT_NPH_MARKER_X_OFFSET"] = "Horizontal offset"
 L["OPT_NPH_MARKER_X_OFFSET_DESC"] = "Move markers horizontally"
@@ -308,6 +312,10 @@ L["OPT_NPH_MARKER_HIDDEN_WOW_SETTINGS"] = "Réglages WoW cachés"
 L["OPT_NPH_MARKER_SCALE"] = "Échelle des marqueurs"
 L["OPT_NPH_MARKER_SCALE_DESC"] = "Change la taille des marqueurs en y appliquant un multiplicateur"
 L["OPT_NPH_MARKER_SETTINGS"] = "Réglages des marqueurs"
+L["OPT_NPH_MARKER_THEME"] = "Thème des marqueurs"
+L["OPT_NPH_MARKER_THEME_DEFAULT"] = "Standard"
+L["OPT_NPH_MARKER_THEME_DESC"] = "Choisissez parmi les thèmes de marqueurs disponibles"
+L["OPT_NPH_MARKER_THEME_MINIMAL"] = "Minimaliste"
 L["OPT_NPH_MARKER_WOW_SETTINGS"] = "Réglages WoW"
 L["OPT_NPH_MARKER_X_OFFSET"] = "Offset horizontale"
 L["OPT_NPH_MARKER_X_OFFSET_DESC"] = "Déplacer les marqueurs horizontalement"
@@ -665,7 +673,7 @@ do
     if L then
 L["ACTIVE"] = "활성화!"
 L["Announcer"] = "알림"
-L["Announcer_DESC"] = "이 모듈은 대화창 알림과 소리 경보를 관리할 수 있습니다."
+L["Announcer_DESC"] = "이 모듈은 대화창 알림과 소리 경보를 관리할 수 있습니다"
 L["AUTO_RAID_PARTY_INSTANCE"] = "자동: 공격대 경보 / 공격대 / 인스턴스 / 파티"
 L["CHAT_POST_ANNOUNCE_FEATURE_NOT_CONFIGURED"] = "공격대 메시지로 알리기가 설정되어 있지 않습니다. /HHTDG를 입력하세요."
 L["CHAT_POST_ANNOUNCE_TOO_SOON_WAIT"] = "잠깐! 기다리세요. (알림 속도 설정을 참조하세요.)"
@@ -1083,6 +1091,8 @@ L["OPT_SOUNDS"] = "音效警報"
 L["OPT_SOUNDS_DESC"] = "當滑鼠滑過或目標為敵方治療時 HHTD 播放特定的音效。"
 L["OPT_STRICTGUIDPVE"] = "精確 PvE 檢測"
 L["OPT_STRICTGUIDPVE_DESC"] = "當多個NPC的名字相同時，HHTD只會加上一個紅十字在真實的治療者上，而不是所有人。"
+L["OPT_SWAPSYMBOLS"] = "對調友方/敵方的標記"
+L["OPT_SWAPSYMBOLS_DESC"] = "友方和敵方所使用的標記互相調換"
 L["OPT_TESTONTARGET"] = "在當前目標測試 HHTD 狀態"
 L["OPT_TESTONTARGET_DESC"] = "將標記當前目標為治療者來測試發生了什麼。"
 L["OPT_TESTONTARGET_ENOTARGET"] = "需要一個目標"

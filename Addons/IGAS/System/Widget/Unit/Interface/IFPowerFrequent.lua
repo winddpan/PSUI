@@ -18,6 +18,7 @@ function _IFPowerFrequentUnitList:OnUnitListChanged()
 	self:RegisterEvent("UNIT_POWER_BAR_HIDE")
 	self:RegisterEvent("UNIT_DISPLAYPOWER")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 	self.OnUnitListChanged = nil
 end
@@ -57,7 +58,7 @@ function _IFPowerFrequentUnitList:ParseEvent(event, unit, type)
 				obj:SetUnitPower(value, max)
 			end
 		end
-	elseif event == "PLAYER_ENTERING_WORLD" then
+	elseif event == "PLAYER_ENTERING_WORLD" or event == "GROUP_ROSTER_UPDATE" then
 		for unit in self:GetIterator() do
 			local powerType = UnitPowerType(unit)
 

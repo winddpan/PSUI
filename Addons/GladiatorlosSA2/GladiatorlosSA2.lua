@@ -6,7 +6,7 @@
  local LSM = LibStub("LibSharedMedia-3.0")
  local self, GSA, PlaySoundFile = GladiatorlosSA, GladiatorlosSA, PlaySoundFile
  local GSA_TEXT = "|cff69CCF0GladiatorlosSA2|r (|cffFFF569/gsa|r)"
- local GSA_VERSION = "|cffFF7D0A v1.14.2 |r(|cFF00FF967.1.5 Legion|r)"
+ local GSA_VERSION = "|cffFF7D0A v1.14.3 |r(|cFF00FF967.2.0 Legion|r)"
  local GSA_AUTHOR = " "
  local gsadb
  local soundz,sourcetype,sourceuid,desttype,destuid = {},{},{},{},{}
@@ -369,22 +369,22 @@
 	--The following section is to disable alerts for aura applications (such as dispel protection) from your team onto theirs. IDs should be identical to the ones below.
 	-- 87204 = Vampiric Embrace || 196364 = Unstable Affliction || 207171 = Remorseless Winter || 1330 = Garrote - Silence || 1833 = Cheap Shot || 6770 = Sap || 3355 = Freezing Trap || 212332 = Smash (DK Abomination) || 212337 = Powerful Smash (DK Abomination) || 91800 = Gnaw (DK Ghoul) || 91797 = Monstrous Blow (DK Ghoul) || 163505 = Druid Rake Stun
 		if spellID == 87204 or spellID == 196364 or spellID == 207171 or spellID == 1330 or spellID == 1833 or spellID == 6770 or spellID == 3355 or spellID == 212332 or spellID == 212337 or spellID == 91800 or spellID == 91797 or spellID == 163505 then return end
-		self:PlaySpell("auraApplied", spellID, sourceGUID, destGUID)
+			--if (MapID == 40 or InstanceMapID == 4710) and gsadb.disablelargebg then return end
+				self:PlaySpell("auraApplied", spellID, sourceGUID, destGUID)
 	elseif (event == "SPELL_AURA_APPLIED" and (desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] or desttype[COMBATLOG_FILTER_ME]) and (not gsadb.aonlyTF or destuid.target or destuid.focus) and not gsadb.auraApplied) then
 	--The following section is to enable alerts for aura applications (such as dispel protection) onto your team from theirs. IDs should be identical to the ones below.
 		if spellID == 87204 or spellID == 196364 or spellID == 207171 or spellID == 1330 or spellID == 1833 or spellID == 6770 or spellID == 3355 or spellID == 212332 or spellID == 212337 or spellID == 91800 or spellID == 91797 or spellID == 163505 then
-			self:PlaySpell("auraApplied", spellID, sourceGUID, destGUID)
+			--if (MapID == 40 or InstanceMapID == 4710) and gsadb.disablelargebg then return end
+				self:PlaySpell("auraApplied", spellID, sourceGUID, destGUID)
 		end
 	elseif (event == "SPELL_AURA_REMOVED" and desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.ronlyTF or destuid.target or destuid.focus) and not gsadb.auraRemoved) then
-		self:PlaySpell("auraRemoved", spellID, sourceGUID, destGUID)
+			--if (MapID == 40 or InstanceMapID == 4710) and gsadb.disablelargebg then return end
+			self:PlaySpell("auraRemoved", spellID, sourceGUID, destGUID)
 	elseif (event == "SPELL_CAST_START" and sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.conlyTF or sourceuid.target or sourceuid.focus) and not gsadb.castStart) then
-		self:PlaySpell("castStart", spellID, sourceGUID, destGUID)
---	elseif (event == "SPELL_MISSED" and sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.conlyTF or sourceuid.target or sourceuid.focus) and not gsadb.auraApplied) then
---		if spellID == 122470 then
---			self:PlaySpell("auraApplied", spellID, sourceGUID,destGUID)
---		end
---	--	--	Dirty fix attempt for Touch of Karma logic. Reverted, for now.
+			--if (MapID == 40 or InstanceMapID == 4710) and gsadb.disablelargebg then return end
+			self:PlaySpell("castStart", spellID, sourceGUID, destGUID)
 	elseif (event == "SPELL_CAST_SUCCESS" and sourcetype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and (not gsadb.sonlyTF or sourceuid.target or sourceuid.focus) and not gsadb.castSuccess) then
+			--if (MapID == 40 or InstanceMapID == 4710) and gsadb.disablelargebg then return end
 		if self:Throttle(tostring(spellID).."default", 0.05) then return end
 		if gsadb.class and currentZoneType == "arena" then
 			if spellID == 42292 or spellID == 208683 or spellID == 195710 then
@@ -392,17 +392,6 @@
 					if c then 
 					self:PlaySound(c);
 				end
-				-- Below code is a WIP. Struggling to get the Variable + Static extention.
-	--		elseif spellID == 59752 then -- Every Man Class Callout
-	--			local c = self:ArenaClass(SourceGUID)
-	--				if c then
-	--				self:PlaySound(tostring(c).."EveryMan"); -- NEW FIX, NOT TESTED YET
-	--			end	
-	--		elseif spellID == 7744 then -- Will of the Forsaken Class Callout
-	--			local e = self:ArenaClass(SourceGUID).."WotF"
-	--				if e then
-	--				self:PlaySound(e);
-	--			end
 			else 
 				self:PlaySpell("castSuccess", spellID, sourceGUID, destGUID)
 			end

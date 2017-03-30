@@ -51,7 +51,7 @@ L["General"] = true
 L["General options"] = "General Options"
 L["Enable area"] = "Enabled Locations"
 L["Anywhere"] = true
-L["Alert works anywhere"] = "Alerts occur anywhere"
+L["Alert works anywhere"] = "Alerts occur anywhere and everywhere."
 L["Arena"] = "Arenas"
 L["Alert only works in arena"] = "Alerts occur in arenas"
 L["Battleground"] = "Battlegrounds"
@@ -160,3 +160,6 @@ L["PurgeDesc"] = "Generic alert for hybrid class (AND WARLOCKS. D:< ) purges tha
 
 L["FriendlyInterrupted"] = "Ally Lockout Alert"
 L["FriendlyInterruptedDesc"] = "Disable the alert that occurs when an enemy successfully interrupts you or an ally which locks them out of casting.|n|n(Plays the Blizzard 'Quest Failed' sound effect.)"
+
+L["DisableLargeBG"] = "Except 40-man BGs"
+L["DisableLargeBGDesc"] = "If checked, GSA will not trigger alerts while in Alterac Valley or Isle of Conquest.|n|nYou're welcome."

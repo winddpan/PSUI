@@ -1,4 +1,4 @@
-﻿## Interface: 70100
+## Interface: 70200
 ## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
@@ -32,6 +32,7 @@ modules\poison_alert.lua
 modules\EasyChannel.lua
 modules\HideOrderHallBar.lua
 modules\safequeue.lua
+modules\SkadaPlus.lua
 
 automation\buystack.lua
 automation\durability.lua

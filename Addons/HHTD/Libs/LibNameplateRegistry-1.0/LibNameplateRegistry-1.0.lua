@@ -43,7 +43,11 @@ This file was last updated on @file-date-iso@ by @file-author@
 --
 
 -- Library framework {{{
-local MAJOR, MINOR = "LibNameplateRegistry-1.0", 18
+local MAJOR, MINOR = "LibNameplateRegistry-1.0", 19
+
+-- used to be set using debug packager tags but they've been broken ever since the new wowace.com...
+-- see: https://www.curseforge.com/forums/wow-sites/wow-sites-feedback/185461-curse-keyword-substitution-not-applied-for
+local DEBUG = false;
 
 if not LibStub then
     error(MAJOR .. " requires LibStub");
@@ -160,7 +164,7 @@ local CurrentTarget             = false;
 local HasTarget                 = false;
 
 --@debug@
-local callbacks_consisistency_check = {}; -- XXX
+local callbacks_consisistency_check = {};
 --@end-debug@
 --}}}
 
@@ -245,7 +249,9 @@ function (t, plateFrame)
                 return false;
             end
             --@debug@
-            Debug(INFO, 'cached a new plateFrame part:', regionName, 'unit name is:', Frame_Children_Cache[plateFrame][1].name:GetText());
+            if DEBUG then
+                Debug(INFO, 'cached a new plateFrame part:', regionName, 'unit name is:', Frame_Children_Cache[plateFrame][1].name:GetText());
+            end
             --@end-debug@
             return t[regionName];
         end
@@ -271,8 +277,10 @@ function LNR_Private:GetUnitTokenFromPlate (frame)
     end
 
     --@debug@
-    if frame ~= GetNamePlateForUnit(unitToken) then
-        Debug(ERROR, 'INCONSISTENCY detected in .unitToken metadata');
+    if DEBUG then
+        if frame ~= GetNamePlateForUnit(unitToken) then
+            Debug(ERROR, 'INCONSISTENCY detected in .unitToken metadata');
+        end
     end
     --@end-debug@
 
@@ -402,13 +410,9 @@ do
     local ShownPlateCount = 0;
     function LNR_Private:DebugTests()
 
-        --Debug(INFO2, 'DebugTests() called');
-        -- check displayed plates
         local count = 0; local names = {};
         for frame in pairs(ActivePlates_per_frame) do
             count = count + 1;
-            --table.insert(names, PlateRegistry_per_frame[frame].name);
-            --table.insert(names, '['.. PlateRegistry_per_frame[frame].type .. ']' .. ', ');
         end
 
         if count ~= ShownPlateCount then
@@ -471,14 +475,16 @@ do
         end
 
         --@debug@
-        if not callbacks_consisistency_check[namePlateFrameBase] then
-            callbacks_consisistency_check[namePlateFrameBase] = 1;
-        else
-            callbacks_consisistency_check[namePlateFrameBase] = callbacks_consisistency_check[namePlateFrameBase] + 1;
-        end
+        if DEBUG then
+            if not callbacks_consisistency_check[namePlateFrameBase] then
+                callbacks_consisistency_check[namePlateFrameBase] = 1;
+            else
+                callbacks_consisistency_check[namePlateFrameBase] = callbacks_consisistency_check[namePlateFrameBase] + 1;
+            end
 
-        if callbacks_consisistency_check[namePlateFrameBase] ~= 1 then
-            Debug(ERROR, 'PlateADDED/REMOVED sync broken:', callbacks_consisistency_check[namePlateFrameBase]);
+            if callbacks_consisistency_check[namePlateFrameBase] ~= 1 then
+                Debug(ERROR, 'PlateADDED/REMOVED sync broken:', callbacks_consisistency_check[namePlateFrameBase]);
+            end
         end
         --@end-debug@
 
@@ -530,18 +536,23 @@ do
         end
 
         --@debug@
-        if not namePlateFrameBase:IsVisible() then
-            Debug(ERROR, 'nameplate was already hidden on NAME_PLATE_UNIT_REMOVED', namePlateUnitToken, namePlateFrameBase:GetName());
+        if DEBUG then
+            if not namePlateFrameBase:IsVisible() then
+                Debug(ERROR, 'nameplate was already hidden on NAME_PLATE_UNIT_REMOVED', namePlateUnitToken, namePlateFrameBase:GetName());
+                -- observeed to happen several times on 2016-08-14
+            end
         end
 
         --Debug(INFO2, 'NAME_PLATE_UNIT_REMOVED', 'unitToken:', namePlateUnitToken, 'is visible?', namePlateFrameBase:IsVisible());
         --@end-debug@
 
         --@debug@
-        if not callbacks_consisistency_check[namePlateFrameBase] then
-            callbacks_consisistency_check[namePlateFrameBase] = 0;
-        else
-            callbacks_consisistency_check[namePlateFrameBase] = callbacks_consisistency_check[namePlateFrameBase] - 1;
+        if DEBUG then
+            if not callbacks_consisistency_check[namePlateFrameBase] then
+                callbacks_consisistency_check[namePlateFrameBase] = 0;
+            else
+                callbacks_consisistency_check[namePlateFrameBase] = callbacks_consisistency_check[namePlateFrameBase] - 1;
+            end
         end
         --@end-debug@
 
@@ -607,7 +618,9 @@ function LNR_Private:UPDATE_MOUSEOVER_UNIT()
             end
 
             --@debug@
-            Debug(INFO, "UPDATE_MOUSEOVER_UNIT", UnitReaction('mouseover', 'player'), UnitPlayerControlled('mouseover'), '*' ,LNR_Private.RawGetPlateType(mouseoverNameplate));
+            if DEBUG then
+                Debug(INFO, "UPDATE_MOUSEOVER_UNIT", UnitReaction('mouseover', 'player'), UnitPlayerControlled('mouseover'), '*' ,LNR_Private.RawGetPlateType(mouseoverNameplate));
+            end
             --@end-debug@
 
             data = ActivePlates_per_frame[mouseoverNameplate]
@@ -889,8 +902,10 @@ function LNR_Private.Ticker()
     TimerDivisor = TimerDivisor % 101 + 1;
 
     --@debug@
-    if TimerDivisor % 10 == 0 then
-        LNR_Private:DebugTests()
+    if DEBUG then
+        if TimerDivisor % 10 == 0 then
+            LNR_Private:DebugTests()
+        end
     end
     --@end-debug@
     
@@ -950,24 +965,26 @@ function LNR_Private:Enable() -- {{{
 
 
     --@debug@
-    -- Enable timer execution
-    C_Timer.After(0.1, self.Ticker);
-    Debug(INFO, "Ticker set!");
+    if DEBUG then
+        -- Enable timer execution
+        C_Timer.After(0.1, self.Ticker);
+        Debug(INFO, "Ticker set!");
 
-    local tCountTest = {1,2}
-    local function tCount(t)
-        local count = 0
+        local tCountTest = {1,2}
+        local function tCount(t)
+            local count = 0
 
-        for i in pairs(t) do
-            count = count + 1
-        end
+            for i in pairs(t) do
+                count = count + 1
+            end
 
-        return count
+            return count
+        end 
+        -- assert that our state is clean
+        assert(tCount(tCountTest) == 2, 'tCount test failure');
+        assert(tCount(ActivePlates_per_frame) == tCount(ActivePlateFrames_per_unitToken), 'uncleaned state: count mismatch');
+        assert(tCount(ActivePlates_per_frame) == 0, 'uncleaned state: old data exists: '..tCount(ActivePlates_per_frame));
     end 
-    -- assert that our state is clean
-    assert(tCount(tCountTest) == 2, 'tCount test failure');
-    assert(tCount(ActivePlates_per_frame) == tCount(ActivePlateFrames_per_unitToken), 'uncleaned state: count mismatch');
-    assert(tCount(ActivePlates_per_frame) == 0, 'uncleaned state: old data exists: '..tCount(ActivePlates_per_frame));
     --@end-debug@
 
     local function findPlateUnitToken(plate, tokenID) -- only to be called on shown namePlates
@@ -1021,7 +1038,9 @@ function LNR_Private:Disable() -- {{{
     end
 
     --@debug@
-    twipe(callbacks_consisistency_check);
+    if DEBUG then
+        twipe(callbacks_consisistency_check);
+    end
     --@end-debug@
 
     self.EventFrame:UnregisterAllEvents();
@@ -1039,7 +1058,9 @@ end
 function LNR_Public:Quit(reason)
 
     --@debug@
-    print("|cFFFF0000", MAJOR, MINOR, "Quitting|r", "(", reason, ")");
+    if DEBUG then
+        print("|cFFFF0000", MAJOR, MINOR, "Quitting|r", "(", reason, ")");
+    end
     --@end-debug@
 
     Debug(WARNING, "Quit called", debugstack(1,2,0));

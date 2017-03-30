@@ -1,6 +1,6 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: LiteBag
-## Version: 7.1.5
+## Version: 7.2.2
 ## Author: Xodiv of Proudmoore
 ## Email: mib@post.com
 ## SavedVariablesPerCharacter: LiteBag_OptionsDB

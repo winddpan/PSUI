@@ -14,6 +14,8 @@ _EquipSetTemplate = "_EquipSet[%q] = %d\n"
 
 _EquipSetMap = {}
 
+GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
+
 -- Event handler
 function OnEnable(self)
 	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
@@ -37,14 +39,13 @@ end
 
 function UpdateEquipmentSet()
 	local str = "for i in pairs(_EquipSet) do _EquipSet[i] = nil end\n"
-	local index = 1
 
 	wipe(_EquipSetMap)
 
-	while GetEquipmentSetInfo(index) do
-		str = str.._EquipSetTemplate:format(GetEquipmentSetInfo(index), index)
-		_EquipSetMap[GetEquipmentSetInfo(index)] = index
-		index = index + 1
+	for _, id in pairs(C_EquipmentSet.GetEquipmentSetIDs()) do
+		local name = GetEquipmentSetInfo(id)
+		str = str.._EquipSetTemplate:format(name, id)
+		_EquipSetMap[name] = id
 	end
 
 	if str ~= "" then
@@ -84,13 +85,7 @@ handler = ActionTypeHandler {
 
 -- Overwrite methods
 function handler:PickupAction(target)
-	local index = 1
-	while GetEquipmentSetInfo(index) do
-		if GetEquipmentSetInfo(index) == target then
-			return PickupEquipmentSet(index)
-		end
-		index = index + 1
-	end
+	return _EquipSetMap[target] and C_EquipmentSet.PickupEquipmentSet(_EquipSetMap[target])
 end
 
 function handler:GetActionText()
@@ -113,7 +108,9 @@ function handler:IsActivedAction()
 end
 
 function handler:SetTooltip(GameTooltip)
-	GameTooltip:SetEquipmentSet(self.ActionTarget)
+	if _EquipSetMap[self.ActionTarget] then
+		GameTooltip:SetEquipmentSet(_EquipSetMap[self.ActionTarget])
+	end
 end
 
 -- Expand IFActionHandler

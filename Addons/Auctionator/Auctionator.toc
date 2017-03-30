@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: Auctionator
 ## Version: 4.0.16
 ## Author: Borjamacare, Zirco

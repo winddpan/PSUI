@@ -208,6 +208,8 @@ Filger_Spells = {
 			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
 			
+			{spellID = 225736, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- 天赋-敏锐
 			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
 			

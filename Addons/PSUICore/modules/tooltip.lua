@@ -13,6 +13,7 @@
   ---------------------------------------------
 
   local cfg = {}
+  local _G = _G
 
   cfg.pos   = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
   cfg.scale = 1

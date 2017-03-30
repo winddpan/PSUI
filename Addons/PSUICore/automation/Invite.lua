@@ -2,6 +2,7 @@ local accept_invites = false
 local whisper_invite = true
 local whisper_invite_word = "123"
 local whisper_reset_word = "reset"
+local _G = _G
 
 -- Accept invites from guild or friend list 
 if accept_invites then

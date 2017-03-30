@@ -287,13 +287,13 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED(timeStamp, subEvent, _, _, sourceName
 
 		-- Announce interrupt
                 local name = sourceName or '?'
-		self:AnnounceInterrupt(config.own, string.format('%s 打断了 -> %s%s 的 %s', name, GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
+		self:AnnounceInterrupt(config.own, string.format('%s 打断了 → %s%s 的 %s', name, GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
 	elseif bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 then
 		-- If own is off for this config, return
 		if config.own == 'off' then return end
 
 		-- Announce interrupt
-		self:AnnounceInterrupt(config.own, string.format('我的 %s 打断了 -> %s%s 的 %s', sourceName or '?', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
+		self:AnnounceInterrupt(config.own, string.format('打断了 → %s%s 的 %s', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
 	else
 		-- If other is off for this config, return
 		if config.other == 'off' then return end
@@ -308,7 +308,7 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED(timeStamp, subEvent, _, _, sourceName
 				name = '|c' .. RAID_CLASS_COLORS[classFileName or 'PRIEST'].colorStr .. name .. '|r'
 			end
 
-			self:AnnounceInterrupt(config.other, string.format('%s 打断了 -> %s%s 的 %s', name, GetRaidIconString(raidIcon, config.other), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOther)
+			self:AnnounceInterrupt(config.other, string.format('%s 打断了 → %s%s 的 %s', name, GetRaidIconString(raidIcon, config.other), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOther)
 		end
 	end
 end
@@ -347,7 +347,7 @@ end
 
 -- Print a line with own and other modes in config
 function frame:PrintMode(mode, config)
-	self:Printf('|cFF20E020%s|r modes: own -> |cFF20E020%s|r, other -> |cFF20E020%s|r', mode, config.own, config.other)
+	self:Printf('|cFF20E020%s|r modes: own → |cFF20E020%s|r, other → |cFF20E020%s|r', mode, config.own, config.other)
 end
 
 -- Update config with the modes from own and other

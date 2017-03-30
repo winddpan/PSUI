@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70200
 ## X-BigfootType: 2
 ## X-BigfootDesc: 敌人使用重要技能、控制技能、打断技能、复活、徽章、以及自己打断成功都会有语音提示。
 ## Title: GladiatorlosSA_zhCN(Yike_Xia)

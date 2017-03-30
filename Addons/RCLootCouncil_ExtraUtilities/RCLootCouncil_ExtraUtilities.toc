@@ -1,0 +1,12 @@
+## Author: Potdisc
+## Interface: 70200
+## Notes: An RCLootCouncil module for more advanced utilities.
+## Title: RCLootCouncil - Extra Utilities
+## Version: 0.4.0
+## Dependencies: RCLootCouncil
+
+Locale\Locales.xml
+Libs\LibItemUpgradeInfo-1.0\Core.lua
+
+votingUtils.lua
+options.lua

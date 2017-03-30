@@ -182,7 +182,7 @@ elseif player_class=="ROGUE"then
 		aoe.spell[5374]=true          -- 毁伤
 		aoe.spell[27576]=5374          -- 副手毁伤
 		aoe.spell[192660]=true          -- 毒药池
-
+		aoe.spell[192434]=true          -- 暗影伏击
 	end
 end
 

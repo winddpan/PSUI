@@ -11,6 +11,18 @@ COMBAT_TEXT_PARRY = "Parry";
 COMBAT_TEXT_REFLECT = "Reflect";
 COMBAT_TEXT_RESIST = "Resist";
 
+
+local customLossControlFrame = function()
+	LossOfControlFrame:ClearAllPoints()
+	LossOfControlFrame:SetPoint("CENTER",UIParent,"CENTER",0,200)
+	LossOfControlFrame:SetScale(0.8)
+end
+local f = CreateFrame"Frame"
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:SetScript("OnEvent", function() customLossControlFrame() end)
+
+
+--[[
 setfenv(WorldMapFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
 setfenv(FriendsFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
 
@@ -22,9 +34,9 @@ ParentalControls:SetScript("OnEvent", function(self, event, addon)
 		elseif addon == "Blizzard_AchievementUI" then
 				setfenv(AchievementFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
 				setfenv(AchievementFrame_OnHide, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
-		--[[elseif addon == "Blizzard_TalentUI" then
-				setfenv(PlayerTalentFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
-				setfenv(PlayerTalentFrame_OnHide, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))]]
+		--elseif addon == "Blizzard_TalentUI" then
+		--		setfenv(PlayerTalentFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
+		--		setfenv(PlayerTalentFrame_OnHide, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
 		end
 end)
 
@@ -34,11 +46,4 @@ function SendAddonMessageToRaid(pre, msg)
 	if GetRealNumRaidMembers() == 0 or GetRealNumPartyMembers() == 0 then return end
 	SendAddonMessage(pre, msg, "RAID")
 end
-
-local customLossControlFrame = function()
-	LossOfControlFrame:ClearAllPoints() LossOfControlFrame:SetPoint("CENTER",UIParent,"CENTER",0,200)
-	LossOfControlFrame:SetScale(0.8)
-end
-local f = CreateFrame"Frame"
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:SetScript("OnEvent", function() customLossControlFrame() end)
+]]

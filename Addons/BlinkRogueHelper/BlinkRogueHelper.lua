@@ -30,11 +30,18 @@ function BlinkRogueHelperFrame_OnLoad()
 	BlinkRogueHelper_Register();
 	BubbleTextString:SetTextHeight(BlinkRogueHelper_FontSizePixel);
 	BubbleTextString:SetFont("Interface\\AddOns\\BlinkRogueHelper\\Fonts\\font.ttf", BlinkRogueHelper_FontSizePixel, "OUTLINE");
-	BlinkRogueHelper_Enabled = 1;
+	BlinkRogueHelper_Enabled = 0;
+	
+	if select(2, UnitClass("player")) == "ROGUE" then 
+		BlinkRogueHelper_Enabled = 1;
+	elseif select(2, UnitClass("player")) == "DRUID" then 
+		BlinkRogueHelper_Enabled = 1;
+	end
+ 
 end
 
 function BlinkRogueHelperFrame_OnEvent(event)
-	if event == "UNIT_POWER_FREQUENT" and BlinkRogueHelper_Enabled == 1 then
+	if BlinkRogueHelper_Enabled == 1  and event == "UNIT_POWER_FREQUENT" then
 		local mana = UnitPower("player", 3)
 		local cp = UnitPower('player', 4)
 		

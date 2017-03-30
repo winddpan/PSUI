@@ -162,3 +162,6 @@ L["PurgeDesc"] = true
 
 L["FriendlyInterrupted"] = true
 L["FriendlyInterruptedDesc"] = true
+
+L["DisableLargeBG"] = true
+L["DisableLargeBGDesc"] = true

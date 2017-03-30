@@ -1715,7 +1715,7 @@ interface "IFActionHandler"
 	__Optional__() property "Text" { Type = String }
 
 	__Doc__[[The action's icon path, used to refresh the action count as a trigger]]
-	__Optional__() property "Icon" { Type = String }
+	__Optional__() property "Icon" { Type = String + Number }
 
 	__Doc__[[Whether the action is in range, used to refresh the action count as a trigger]]
 	__Optional__() property "InRange" { Type = BooleanNil_01 }

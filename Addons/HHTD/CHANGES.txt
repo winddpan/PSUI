@@ -1,40 +1,32 @@
-tag 44622cb3642ad1e8ffa9228a38c2f4584213abf1 2.4.4
+tag 7ec757b842de614642811e6a546553cf3d76fb77 2.4.5
 Author:	Archarodim <archarodim@teaser.fr>
-Date:	Mon Jan 23 01:54:47 2017 +0100
+Date:	Tue Mar 28 10:20:22 2017 +0200
 
-Tagging as 2.4.4
+Tagging as 2.4.5
 
-commit a3478fd069dc52214f69a548086af3456f956b06
+commit 69d5ef830728fa1e54d79bafda2900fabe276c50
 Author: Archarodim <archarodim@teaser.fr>
-Date:   Mon Jan 23 01:39:17 2017 +0100
+Date:   Tue Mar 28 10:20:05 2017 +0200
 
-    ... give another chance to wowace packager which cannot localization properly
-    
-    A line finishing by a new line got mangled...
+    Update change log for 2.4.5 release
 
-commit 99e9637ef7454e7aad2022ff5f65b7693118f295
+commit 0968acd636c1b4648da11ba85133eeae3809a330
 Author: Archarodim <archarodim@teaser.fr>
-Date:   Mon Jan 23 01:19:27 2017 +0100
+Date:   Tue Mar 28 10:07:37 2017 +0200
 
-    fix pkgmeta.yaml again
+    TOC to 70200
 
-commit a89b1aff59cb2150fffbf1ce4c14f2a55f1e2418
+commit 8f18e2ce2b8e008ed1e1703f72d9d4125d932d8d
 Author: Archarodim <archarodim@teaser.fr>
-Date:   Mon Jan 23 01:14:14 2017 +0100
+Date:   Sun Feb 26 00:48:36 2017 +0100
 
-    fix pkgmeta.yaml
+    - Add minimal theme for markers created by Mark Sutton
+    - A new option is available in the NamePlate Hooker option tab
+    - Link rank alpha to symbol alpha
 
-commit 55ab1cc5acc6990d2fa2d3afbdb345fe8ea308fd
+commit 62ffce0175fd0fd7d180598ce499de17343d477f
 Author: Archarodim <archarodim@teaser.fr>
-Date:   Mon Jan 23 01:05:43 2017 +0100
+Date:   Mon Jan 23 02:14:19 2017 +0100
 
-    Do not disable oldName completely, just turn it off persistently.
-    
-    This allows to keep per-character enable/disable settings of the old add-on intact.
-
-commit 011a157c64d1a48ba2e404cdbdf84da1716c5f2b
-Author: Archarodim <archarodim@teaser.fr>
-Date:   Mon Jan 23 01:00:44 2017 +0100
-
-    update embedded libraries repository URLs
+    fix changelog path in pkgmeta.yaml
 

@@ -14,6 +14,7 @@ function _IFHealthFrequentUnitList:OnUnitListChanged()
 	self:RegisterEvent("UNIT_HEALTH_FREQUENT")
 	self:RegisterEvent("UNIT_MAXHEALTH")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 	self.OnUnitListChanged = nil
 end
@@ -26,7 +27,7 @@ function _IFHealthFrequentUnitList:ParseEvent(event, unit)
 		for obj in self:GetIterator(unit) do
 			obj:SetUnitHealth(value, max)
 		end
-	elseif event == "PLAYER_ENTERING_WORLD" then
+	elseif event == "PLAYER_ENTERING_WORLD" or event == "GROUP_ROSTER_UPDATE" then
 		for unit in self:GetIterator() do
 			local max = UnitHealthMax(unit)
 			local value = UnitIsConnected(unit) and UnitHealth(unit) or UnitHealthMax(unit)

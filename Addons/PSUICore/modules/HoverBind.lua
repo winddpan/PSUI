@@ -1,11 +1,11 @@
 local bind, localmacros = CreateFrame("Frame", "DuffedUIHoverBind", UIParent), 0
+local _G = _G
 
 -- SLASH COMMAND
 SlashCmdList.MOUSEOVERBIND = function()
 	if InCombatLockdown() then print("不能在战斗中绑定快捷键！") return end
 	if not bind.loaded then
 		local find = string.find
-		local _G = getfenv(0)
 
 		bind:SetFrameStrata("DIALOG")
 		bind:EnableMouse(true)

@@ -1,3 +1,5 @@
+local _G = _G
+
 local function bossexists()
 	for i = 1, MAX_BOSS_FRAMES do
 		if UnitExists("boss"..i) then

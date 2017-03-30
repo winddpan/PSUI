@@ -1,7 +1,7 @@
 -- Some UTF-8 symbols that will be auto-changed
 local UTF8Symbols = {['·']='',['＠']='',['＃']='',['％']='',['／']='',['＆']='',['＊']='',
-	['－']='',['＋']='',['｜']='',['～']='',['　']='',['，']='',['。']='',['、']='',
-	['？']='',['！']='',['：']='',['；']='',['￥']='',['＝']='',['——']='',['……']='',['‖']='',
+	['－']='',['＋']='',['｜']='',['～']='',['　']='',['，']='',['。']='',['、']='',['｛']='',['｝']='',
+	['？']='',['！']='',['：']='',['；']='',['￥']='',['＝']='',['—']='',['…']='',['‖']='',
 	['【']='',['】']='',['『']='',['』']='',['《']='',['》']='',['（']='',['）']='',['〔']='',
 	['〕']='',['〈']='',['〉']='',['＇']='',['＂']='',['’']='',['‘']='',['“']='',['”']='',
 	['１']='1',['２']='2',['３']='3',['４']='4',['５']='5',['６']='6',['７']='7',['８']='8',
@@ -10,7 +10,7 @@ local UTF8Symbols = {['·']='',['＠']='',['＃']='',['％']='',['／']='',['＆
 	['Ｆ']='F',['Ｇ']='G',['Ｈ']='H',['Ｉ']='I',['Ｊ']='J',['Ｋ']='K',['Ｌ']='L',['Ｍ']='M',
 	['Ｎ']='N',['Ｏ']='O',['Ｐ']='P',['Ｑ']='Q',['Ｒ']='R',['Ｓ']='S',['Ｔ']='T',['Ｕ']='U',
 	['Ｖ']='V',['Ｗ']='W',['Ｘ']='X',['Ｙ']='Y',['Ｚ']='Z'}
-local RaidAlertTagList = {"%*%*.+%*%*", "EUI:.+施放了", "EUI:.+中断", "EUI:.+就绪", "EUI_RaidCD", "PS 死亡: .+>", "|Hspell.+ => ", "受伤源自 |Hspell.+ %(总计%): ", "Fatality:.+> %d", "已打断.*|Hspell"}  -- RaidAlert Tag
+local RaidAlertTagList = {"%*%*.+%*%*", "EUI:.+施放了", "EUI:.+中断", "EUI:.+就绪", "EUI_RaidCD", "PS 死亡: .+>", "|Hspell.+ => ", "受伤源自 |Hspell.+ %(总计%): ", "Fatality:.+> %d", "已打断.*|Hspell", "打断→%[.+%]"}  -- RaidAlert Tag
 local QuestReportTagList = {"任务进度提示%s?[:：]", "%(任务完成%)", "<大脚组队提示>", "%[接受任务%]", "<大脚团队提示>", "进度:.+: %d+/%d+", "接受任务: ?%[%d+%]", "【网%.易%.有%.爱】", "任务%[%d+%]%[.+%] 已完成!"} -- QuestReport Tag
 local filterCharList = "[|@!/<>\"`'_#&;:~\\]" -- work on any blackWord
 local filterCharListRegex = "[%(%)%.%%%+%-%*%?%[%]%$%^={}]" -- won't work on regex blackWord, but works on others
@@ -27,11 +27,6 @@ local gsub, select, ipairs, pairs, next, strsub, format, tonumber, strmatch, tco
 local Ambiguate, band, BNGetNumFriends, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo, ChatTypeInfo, GetCurrencyLink, GetFriendInfo, GetGuildInfo, GetItemInfo, GetNumFriends, GetPlayerInfoByGUID, GetTime = Ambiguate, bit.band, BNGetNumFriends, BNGetNumFriendGameAccounts, BNGetFriendGameAccountInfo, ChatTypeInfo, GetCurrencyLink, GetFriendInfo, GetGuildInfo, GetItemInfo, GetNumFriends, GetPlayerInfoByGUID, GetTime -- BLZ
 
 local ECF = LibStub("AceAddon-3.0"):NewAddon("EnhancedChatFilter", "AceConsole-3.0")
-local version = GetAddOnMetadata("EnhancedChatFilter", "Version") -- "7.1.5-2b"
-local versionParent = strmatch(version,"^([%d%.%-]+)") -- "7.1.5-2"
-local versionType = strmatch(version,"([ab])%d*$") or "r" -- "b"
-local versionMsg = {}
-versionMsg["7.1.5-3"] = "添加了次级关键词功能，欢迎测试./." -- Use actual number in case I forgot to change msg when release
 
 --Bit Mask for blackword type
 local regexBit, lesserBit = 1, 2
@@ -59,13 +54,11 @@ local defaults = {
 		enableQRF = false, -- Quest/Group Report Filter
 		enableDSS = true, -- Spec spell Filter
 		enableMSF = false, -- Monster Say Filter
+		enableAggressive = false, -- Aggressive Filter
 		chatLinesLimit = 20, -- also enable repeatFilter
-		stringDifferenceLimit = 0.1, -- in repeatFilter
 		multiLine = false, -- MultiLines, in RepeatFilter
 		repeatFilterGroup = true, -- repeatFilter enabled in group and raid
 		blackWordList = {},
-		regexToggle = false,
-		lesserToggle = false,
 		lesserBlackWordThreshold = 3, -- in lesserBlackWord
 		blackWordFilterGroup = false, -- blackWord enabled in group and raid
 		lootType = "ITEMS", -- loot filter type
@@ -77,7 +70,6 @@ local defaults = {
 		},
 		advancedConfig = false, -- show advancedConfig
 		debugMode = false,
-		lastVersion = "",
 	}
 }
 
@@ -104,10 +96,10 @@ end
 local function StringHash(text)
 	local counter, len = 1, #text
 	for i = 1, len, 3 do
-	counter = fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
-		(strbyte(text,i)*16776193) +
-		((strbyte(text,i+1) or (len-i+256))*8372226) +
-		((strbyte(text,i+2) or (len-i+256))*3932164)
+		counter = fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
+			(strbyte(text,i)*16776193) +
+			((strbyte(text,i+1) or (len-i+256))*8372226) +
+			((strbyte(text,i+2) or (len-i+256))*3932164)
 	end
 	return fmod(counter, 4294967291) -- 2^32 - 5: Prime (and different from the prime in the loop)
 end
@@ -115,12 +107,7 @@ end
 --Convert old config to new one
 function ECF:convert()
 	for key,v in pairs(config.blackWordList) do
-		if(type(v) == "number") then -- remove in next release
-			config.blackWordList[key] = {
-				regex = band(v,1) ~= 0,
-				lesser = band(v,2) ~= 0,
-			}
-		elseif(type(v) ~= "table") then
+		if(type(v) ~= "table") then
 			config.blackWordList[key] = {
 				regex = v == "regex",
 				lesser = false,
@@ -132,17 +119,6 @@ function ECF:convert()
 			if key ~= key2 and strfind(key,key2) then config.blackWordList[key] = nil;break end
 		end
 		if(checkBlacklist(key,v.regex)) then config.blackWordList[key] = nil end
-	end
-end
-
-function ECF:VersionMsg()
-	if config.lastVersion ~= versionParent then
-		config.lastVersion = versionParent
-		local msg = versionMsg[versionParent]
-		if msg and msg ~= "" then
-			if (versionType ~= "r") then msg = L["ThisIsATestVersion"]..msg end
-			ECF:Print(msg)
-		end
 	end
 end
 
@@ -168,7 +144,6 @@ function ECF:OnInitialize()
 	icon:Register("Enhanced Chat Filter", ecfLDB, config.minimap)
 	ECF:convert()
 	ShowFriends()
-	ECF:VersionMsg()
 end
 
 --------------- Slash Command ---------------
@@ -189,6 +164,7 @@ end
 local highlightIsLesser, blackWordHighlight = false, ""
 local lootHighlight = {}
 local stringIO = "" -- blackWord input
+local regexToggle, lesserToggle = false, false
 
 local colorT = {} -- used in lootFilter
 for i=0, 4 do
@@ -205,7 +181,7 @@ end
 
 local options = {
 	type = "group",
-	name = "EnhancedChatFilter "..version,
+	name = "EnhancedChatFilter "..GetAddOnMetadata("EnhancedChatFilter", "Version"),
 	get = function(info) return config[info[#info]] end,
 	set = function(info, value) config[info[#info]] = value end,
 	disabled = function() return not config.enableFilter end,
@@ -273,52 +249,45 @@ local options = {
 					desc = L["MonsterSayFilterTooltip"],
 					order = 16,
 				},
+				enableAggressive = {
+					type = "toggle",
+					name = L["Aggressive"],
+					desc = L["AggressiveTooltip"],
+					order = 17,
+				},
 				line2 = {
 					type = "header",
 					name = L["RepeatOptions"],
-					order = 20,
+					order = 40,
 				},
 				chatLinesLimit = {
 					type = "range",
 					name = L["chatLinesLimit"],
 					desc = L["chatLinesLimitTooltips"],
-					order = 21,
+					order = 41,
 					min = 0,
 					max = 100,
 					step = 1,
 					bigStep = 5,
 				},
-				stringDifferenceLimit = {
-					type = "range",
-					name = L["stringDifferenceLimit"],
-					desc = L["stringDifferenceLimitTooltips"],
-					order = 22,
-					min = 0,
-					max = 1,
-					step = 0.01,
-					bigStep = 0.1,
-					isPercent = true,
-					disabled = function() return config.chatLinesLimit == 0 end,
-					hidden = function() return not config.advancedConfig end,
-				},
 				multiLine = {
 					type = "toggle",
 					name = L["MultiLines"],
 					desc = L["MultiLinesTooltip"],
-					order = 23,
+					order = 42,
 					disabled = function() return config.chatLinesLimit == 0 end,
 				},
 				repeatFilterGroup = {
 					type = "toggle",
 					name = L["AlsoFilterGroup"],
 					desc = L["AlsoFilterGroupTooltips"],
-					order = 24,
+					order = 43,
 					disabled = function() return config.chatLinesLimit == 0 end,
 				},
 				line3 = {
 					type = "header",
 					name = L["UseWithCare"],
-					order = 30,
+					order = 60,
 				},
 				AdvancedWarning = {
 					type = "execute",
@@ -333,14 +302,14 @@ local options = {
 					type = "toggle",
 					name = L["WhisperWhitelistMode"],
 					desc = L["WhisperWhitelistModeTooltip"],
-					order = 31,
+					order = 61,
 					hidden = function() return not config.advancedConfig end,
 				},
 				debugMode = {
 					type = "toggle",
 					name = "DebugMode",
 					desc = "For test only",
-					order = 32,
+					order = 62,
 					hidden = function() return not config.advancedConfig end,
 				},
 			},
@@ -356,7 +325,7 @@ local options = {
 					order = 1,
 					get = nil,
 					set = function(_,value)
-						ECF:AddBlackWord(value, config.regexToggle, config.lesserToggle)
+						ECF:AddBlackWord(value, regexToggle, lesserToggle)
 					end,
 					width = "full",
 				},
@@ -364,13 +333,18 @@ local options = {
 					type = "toggle",
 					name = L["Regex"],
 					desc = L["RegexTooltip"],
+					get = function() return regexToggle end,
+					set = function(_,value) regexToggle = value end,
 					order = 2,
 				},
 				lesserToggle = {
 					type = "toggle",
 					name = L["LesserBlackWord"],
 					desc = L["LesserBlackWordTooltip"],
+					get = function() return lesserToggle end,
+					set = function(_,value) lesserToggle = value end,
 					order = 3,
+					hidden = function() return not config.advancedConfig end,
 				},
 				line1 = {
 					type = "header",
@@ -391,6 +365,7 @@ local options = {
 					min = 2,
 					max = 5,
 					step = 1,
+					hidden = function() return not config.advancedConfig end,
 				},
 				line2 = {
 					type = "header",
@@ -403,7 +378,7 @@ local options = {
 					order = 21,
 					get = function() return stringIO end,
 					set = function(_,value) stringIO = value end,
-					width = "double",
+					width = "full",
 				},
 				import = {
 					type = "execute",
@@ -419,7 +394,7 @@ local options = {
 						for _, blacklist in ipairs(newBlackList) do
 							if (blacklist ~= nil) then
 								local imNewWord, imTypeWord = strsplit(",",blacklist)
-								ECF:AddBlackWord(imNewWord, ECF:UnMaskType(imTypeWord))
+								if imTypeWord then ECF:AddBlackWord(imNewWord, ECF:UnMaskType(imTypeWord)) end
 							end
 						end
 						stringIO = ""
@@ -600,7 +575,7 @@ LibStub("AceConfigDialog-3.0"):AddToBlizOptions("EnhancedChatFilter", "EnhancedC
 if GetCVar("profanityFilter")~="0" then SetCVar("profanityFilter", "0") end
 
 -------------------------------------- Filters ------------------------------------
---Update allowWisper list whenever login/friendlist updates
+--Update friends whenever login/friendlist updates
 local friends, allowWisper = {}, {}
 local friendFrame = CreateFrame("Frame")
 friendFrame:RegisterEvent("FRIENDLIST_UPDATE")
@@ -609,8 +584,8 @@ friendFrame:SetScript("OnEvent", function(self)
 	friends = {}
 	--Add WoW friends
 	for i = 1, GetNumFriends() do
-		local n = GetFriendInfo(i)
-		if n then friends[Ambiguate(n, "none")] = true end
+		local name = GetFriendInfo(i)
+		if name then friends[Ambiguate(name, "none")] = true end
 	end
 	--And battlenet friends
 	for i = 1, select(2, BNGetNumFriends()) do
@@ -629,18 +604,18 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", addToAllowWisper)
 
 --stringDifference for repeatFilter, ranged from 0 to 1, while 0 is absolutely the same
 --This function is not utf8 awared, currently not nessesary
-local function stringDifference(sA, sB)
+local function stringDifference(sA, sB) -- arrays of byte
 	local len_a, len_b = #sA, #sB
-	local templast, temp = {}, {}
-	for j=0, len_b do templast[j+1] = j end
+	local last, this = {}, {}
+	for j=0, len_b do last[j+1] = j end
 	for i=1, len_a do
-		temp[1] = i
+		this[1] = i
 		for j=1, len_b do
-			temp[j+1] = (sA[i] == sB[j]) and templast[j] or (min(templast[j+1], temp[j], templast[j]) + 1)
+			this[j+1] = (sA[i] == sB[j]) and last[j] or (min(last[j+1], this[j], last[j]) + 1)
 		end
-		for j=0, len_b do templast[j+1]=temp[j+1] end
+		for j=0, len_b do last[j+1]=this[j+1] end
 	end
-	return temp[len_b+1]/max(len_a,len_b)
+	return this[len_b+1]/max(len_a,len_b)
 end
 
 local chatLines = {}
@@ -670,11 +645,13 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 
 	if config.debugMode then print(format("RAWMsg: %s: %s",trimmedPlayer,msg)) end
 
-	-- remove utf-8 chars
-	local filterString = utf8replace(msg, UTF8Symbols)
-	-- remove color/hypelink/raidicon/space/symbols
-	filterString = filterString:upper():gsub("|C[0-9A-F]+",""):gsub("|H[^|]+|H",""):gsub("|H|R",""):gsub("{RT%d}",""):gsub("%s", ""):gsub(filterCharList, "")
+	-- remove color/hypelink
+	local filterString = msg:upper():gsub("|C[0-9A-F]+",""):gsub("|H[^|]+|H",""):gsub("|H|R","")
+	local oriLen = #filterString
+	-- remove utf-8 chars/raidicon/space/symbols
+	filterString = utf8replace(filterString, UTF8Symbols):gsub("{RT%d}",""):gsub("%s", ""):gsub(filterCharList, "")
 	local newfilterString = filterString:gsub(filterCharListRegex, "")
+	local annoying = (oriLen - #newfilterString) / oriLen
 
 	if(config.enableWisper and Event == 1) then --Whisper Whitelist Mode, only whisper
 		--Don't filter players that are from same guild/raid/party or who you have whispered
@@ -691,11 +668,19 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 		return true
 	end
 
+	if(Event <= 3) then --AggressiveFilter
+		if (config.enableAggressive and annoying >= 0.25 and annoying <= 0.8 and oriLen >= 30) then -- Annoying
+			if config.debugMode then print("Trigger: Annoying: "..annoying) end
+			filterResult = true
+			return true
+		end
+	end
+
 	if(Event <= (config.blackWordFilterGroup and 4 or 3)) then --blackWord Filter, whisper/yell/say/channel and party/raid(optional)
 		local count = 0
-		for keyWord,v in pairs(config.blackWordList) do
+		for keyWord,ty in pairs(config.blackWordList) do
 			local currentString
-			if (not v.regex) then -- if it is not regex, filter most symbols
+			if (not ty.regex) then -- if it is not regex, filter most symbols
 				keyWord = keyWord:upper()
 				currentString = newfilterString
 			else
@@ -703,7 +688,7 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 			end
 			--Check blackList
 			if (strfind(currentString,keyWord)) then
-				if (v.lesser) then count = count + 1
+				if (ty.lesser) then count = count + 1
 				else
 					if config.debugMode then print("Trigger: Keyword: "..keyWord) end
 					filterResult = true
@@ -750,7 +735,7 @@ local function ECFfilter(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID)
 		for i=1, chatLinesSize do
 			--if there is not much difference between msgs, filter it
 			--(optional) if someone sends msgs within 0.6s, filter it
-			if (chatLines[i].Sender == msgtable.Sender and ((config.multiLine and (msgtable.Time - chatLines[i].Time) < 0.600) or stringDifference(chatLines[i].Msg,msgtable.Msg) <= config.stringDifferenceLimit)) then
+			if (chatLines[i].Sender == msgtable.Sender and ((config.multiLine and (msgtable.Time - chatLines[i].Time) < 0.600) or stringDifference(chatLines[i].Msg,msgtable.Msg) <= 0.1)) then
 				tremove(chatLines, i)
 				if config.debugMode then print("Trigger: Repeat Filter") end
 				filterResult = true
@@ -849,7 +834,7 @@ local function achievementFilter(self, event, msg, _, _, _, _, _, _, _, _, _, _,
 	if (not achievementID) then return end
 	achievementID = tonumber(achievementID)
 	local _,class,_,_,_,name,server = GetPlayerInfoByGUID(guid)
-	if (not name) then return end -- GetPlayerInfoByGUID sometimes returns nil for valid guid
+	if (not name) then return end -- check nil
 	if (server ~= "" and server ~= GetRealmName()) then name = name.."-"..server end
 	if config.debugMode then print(format("Achievement: event:%s, name:%s, class:%s",event,name,class)) end
 	achievements[achievementID] = achievements[achievementID] or {timeout = GetTime() + 0.5}
@@ -865,7 +850,7 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD_ACHIEVEMENT", achievementFilter)
 local function lootitemfilter(self,_,msg)
 	if (not config.enableFilter) then return end
 	local itemID = tonumber(strmatch(msg, "|Hitem:(%d+)"))
-	if(not itemID) then return end
+	if(not itemID) then return end -- pet cages don't have 'item'
 	if(config.lootItemFilterList[itemID]) then return true end
 	if(select(3,GetItemInfo(itemID)) < config.lootQualityMin) then return true end -- ItemQuality is in ascending order
 end

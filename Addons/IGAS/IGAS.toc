@@ -1,7 +1,7 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: [Lib] IGAS
 ## Author: kurapica.igas@gmail.com
-## Version: v137
+## Version: v139
 ## Notes: In-game addon system
 ## URL: http://github.com/kurapica/IGAS
 ## Dependencies: PLoop

@@ -465,102 +465,104 @@ if Filger_Spells and Filger_Spells["ALL"] then
 	end
 end
 
-if Filger_Spells and Filger_Spells[class] then
-	for index in pairs(Filger_Spells) do
-		if index ~= class then
-			Filger_Spells[index] = nil
+function Filger:Init()
+	if Filger_Spells and Filger_Spells[class] then
+		for index in pairs(Filger_Spells) do
+			if index ~= class then
+				Filger_Spells[index] = nil
+			end
 		end
-	end
 
-	local idx = {}
-	for i = 1, #Filger_Spells[class], 1 do
-		local jdx = {}
-		local data = Filger_Spells[class][i]
+		local idx = {}
+		for i = 1, #Filger_Spells[class], 1 do
+			local jdx = {}
+			local data = Filger_Spells[class][i]
 
-		for j = 1, #data, 1 do
-			local spn
-			if data[j].spellID then
-				spn = GetSpellInfo(data[j].spellID)
-			else
-				local slotLink = GetInventoryItemLink("player", data[j].slotID)
-				if slotLink then
-					spn = GetItemInfo(slotLink)
+			for j = 1, #data, 1 do
+				local spn
+				if data[j].spellID then
+					spn = GetSpellInfo(data[j].spellID)
+				else
+					local slotLink = GetInventoryItemLink("player", data[j].slotID)
+					if slotLink then
+						spn = GetItemInfo(slotLink)
+					end
+				end
+				if not spn and not data[j].slotID then
+					print("|cffff0000WARNING: spell/slot ID ["..(data[j].spellID or data[j].slotID or "UNKNOWN").."] no longer exists! Report this to Shestak.|r")
+					table.insert(jdx, j)
 				end
 			end
-			if not spn and not data[j].slotID then
-				print("|cffff0000WARNING: spell/slot ID ["..(data[j].spellID or data[j].slotID or "UNKNOWN").."] no longer exists! Report this to Shestak.|r")
-				table.insert(jdx, j)
+
+			for _, v in ipairs(jdx) do
+				table.remove(data, v)
+			end
+
+			if #data == 0 then
+				print("|cffff0000WARNING: section ["..data.Name.."] is empty! Report this to Shestak.|r")
+				table.insert(idx, i)
 			end
 		end
 
-		for _, v in ipairs(jdx) do
-			table.remove(data, v)
+		for _, v in ipairs(idx) do
+			table.remove(Filger_Spells[class], v)
 		end
 
-		if #data == 0 then
-			print("|cffff0000WARNING: section ["..data.Name.."] is empty! Report this to Shestak.|r")
-			table.insert(idx, i)
-		end
-	end
+		for i = 1, #Filger_Spells[class], 1 do
+			local data = Filger_Spells[class][i]
+			
+			local movebar = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name.."Movebar", UIParent)
+			movebar:Hide()
+			movebar:SetFrameLevel(10)
+			movebar:EnableMouse(true)
+			movebar:SetMovable(true)
+			movebar:RegisterForDrag("LeftButton")
+			movebar:SetScript("OnDragStart", function(self) self:StartMoving() end)
+			movebar:SetScript("OnDragStop", function(self)
+				self:StopMovingOrSizing()
+				--local AnchorF, _, AnchorT, ax, ay = self:GetPoint()
+				--ShestakUI_FilgerDB[data.Name] = {AnchorF, "UIParent", AnchorT, ax, ay}
+			end)
+			movebar:SetBackdrop({  bgFile = "Interface\\Buttons\\WHITE8x8" , })
+			movebar:SetBackdropColor(0, 1, 0, 0.5)
+			movebar:SetSize(data.IconSize or 37, data.IconSize or 37)
+			movebar.Position = data.Position or "CENTER"
+			movebar:SetPoint(unpack(data.Position))
+			
+			movebar.text = movebar:CreateFontString(nil, "OVERLAY")
+			movebar.text:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
+			movebar.text:SetPoint("CENTER")
+			movebar.text:SetText(data.Name)
+			
+			local frame = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name, UIParent)
+			frame.Id = i
+			frame.Name = data.Name
+			frame.Direction = data.Direction or "DOWN"
+			frame.IconSide = data.IconSide or "LEFT"
+			frame.NumPerLine = data.NumPerLine		-- 注册换行
+			frame.Mode = data.Mode or "ICON"
+			frame.enable = data.enable or "ON"
+			frame.Interval = data.Interval * Misc.mult or 3 * Misc.mult
+			frame:SetAlpha(data.Alpha or 1)
+			frame.IconSize = data.IconSize or 37
+			frame.BarWidth = data.BarWidth or 186
+			frame.Position = data.Position or "CENTER"
+			--frame:SetPoint(unpack(data.Position))
 
-	for _, v in ipairs(idx) do
-		table.remove(Filger_Spells[class], v)
-	end
-
-	for i = 1, #Filger_Spells[class], 1 do
-		local data = Filger_Spells[class][i]
-		
-		local movebar = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name.."Movebar", UIParent)
-		movebar:Hide()
-		movebar:SetFrameLevel(10)
-		movebar:EnableMouse(true)
-		movebar:SetMovable(true)
-		movebar:RegisterForDrag("LeftButton")
-		movebar:SetScript("OnDragStart", function(self) self:StartMoving() end)
-		movebar:SetScript("OnDragStop", function(self)
-			self:StopMovingOrSizing()
-			--local AnchorF, _, AnchorT, ax, ay = self:GetPoint()
-			--ShestakUI_FilgerDB[data.Name] = {AnchorF, "UIParent", AnchorT, ax, ay}
-		end)
-		movebar:SetBackdrop({  bgFile = "Interface\\Buttons\\WHITE8x8" , })
-		movebar:SetBackdropColor(0, 1, 0, 0.5)
-		movebar:SetSize(data.IconSize or 37, data.IconSize or 37)
-		movebar.Position = data.Position or "CENTER"
-		movebar:SetPoint(unpack(data.Position))
-		
-		movebar.text = movebar:CreateFontString(nil, "OVERLAY")
-		movebar.text:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
-		movebar.text:SetPoint("CENTER")
-		movebar.text:SetText(data.Name)
-		
-		local frame = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name, UIParent)
-		frame.Id = i
-		frame.Name = data.Name
-		frame.Direction = data.Direction or "DOWN"
-		frame.IconSide = data.IconSide or "LEFT"
-		frame.NumPerLine = data.NumPerLine		-- 注册换行
-		frame.Mode = data.Mode or "ICON"
-		frame.enable = data.enable or "ON"
-		frame.Interval = data.Interval * Misc.mult or 3 * Misc.mult
-		frame:SetAlpha(data.Alpha or 1)
-		frame.IconSize = data.IconSize or 37
-		frame.BarWidth = data.BarWidth or 186
-		frame.Position = data.Position or "CENTER"
-		--frame:SetPoint(unpack(data.Position))
-
-		for j = 1, #Filger_Spells[class][i], 1 do
-			local data = Filger_Spells[class][i][j]
-			if data.filter == "CD" then
-				frame:RegisterEvent("SPELL_UPDATE_COOLDOWN")
-				break
+			for j = 1, #Filger_Spells[class][i], 1 do
+				local data = Filger_Spells[class][i][j]
+				if data.filter == "CD" then
+					frame:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+					break
+				end
 			end
+			frame:RegisterEvent("UNIT_AURA")
+			frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
+			frame:RegisterEvent("PLAYER_TARGET_CHANGED")
+			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+			frame:SetScript("OnEvent", Filger.OnEvent)
+			frame.movebar = movebar
 		end
-		frame:RegisterEvent("UNIT_AURA")
-		frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
-		frame:RegisterEvent("PLAYER_TARGET_CHANGED")
-		frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-		frame:SetScript("OnEvent", Filger.OnEvent)
-		frame.movebar = movebar
 	end
 end
 
@@ -613,3 +615,10 @@ SlashCmdList["FilgerTest"] = function(msg)
 end
 SLASH_FilgerTest1 = "/sf"
 SLASH_FilgerTest2 = "/filger"
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:SetScript("OnEvent", function()
+	Filger:Init() 
+	f:UnregisterEvent("PLAYER_ENTERING_WORLD") 
+end)

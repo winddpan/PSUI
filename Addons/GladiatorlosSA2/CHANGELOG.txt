@@ -1,3 +1,9 @@
+- version 1.14.3a
+
+General
+* Fixed the World alert option.
+* Removed the (not functional) 40-Man BG toggle option.
+===============================================
 - version 1.14.3
 
 General

@@ -39,8 +39,31 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170401 - 1.29
+	Fixed bugs that were sometimes causing PLH to not properly cache equipped items for all players in the group
+		note: commented out extra call to PLH_InspectNextGroupMember in the outer loop portion of PLH_InspectNextGroupMember
+		note: Separated PLH_wait into multiple methods to eliminate concurrency issues
+		note: reduced DELAY_BETWEEN_INSPECTIONS from 3 to 1 (seconds)
+	
+20170331 - 1.28
+	Fixed new bug with 7.2 that was sometimes preventing PLH from activating when reloading UI or entering an instance
+		note: added ZONE_CHANGED_NEW_AREA and PLAYER_ENTERING_WORLD in Initialize()
+
+	Added sorting of names by ilvl when more than one person can use an item
+		note: in GetNames
+		
+	note: reduced NUM_EXPECTED_RELICS_110 from 3 to 2 so we reduce inspect retries; many people (in lfr at least) still don't have 3
+	note: increased MAX_INSPECT_LOOPS from 3 to 4
+	
+20170329 - 1.27
+	Increased inspect attempts back to 5; this may have been causing some characters' gear to not be fully inspected and thus missing recommendations
+	
+	Minor additional error checking
+		note: additional nil check in AskForRolls()
+
 20170328 - 1.26
 	Bug fixes to "coordinate rolls" mode - sometimes trades were being ignored
+		note: removed extra spaces in ProcessWhisper, added nil check for description in CheckForRolls
 	
 20170328 - 1.25
 	Added eligibility check for class-restricted gear (ex: tier)
@@ -377,15 +400,15 @@ local DEFAULT_HIGHLIGHT_SIZE = 20
 local TRADE_MESSAGE = 'TRADE'  -- added some hardcording in ProcessWhisper for various way people may offer to trade items; customize text there if needed (ex: foreign languages)
 local DELAY_BETWEEN_ROLLS = 4 -- in seconds
 local UNHIGHLIGHT_DELAY = 105  -- in seconds
-local DELAY_BETWEEN_INSPECTIONS = 3  -- in seconds
-local MAX_INSPECT_LOOPS = 3    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
+local DELAY_BETWEEN_INSPECTIONS = 1  -- in seconds
+local MAX_INSPECT_LOOPS = 4    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 local NUM_EXPECTED_ITEMS = 15 -- number of items we expect each person to have equipped (based on having something in every gear) plus 3 relics
 	-- slot; if we've cached fewer than that amount of items for a character, we'll include that character in additional
 	-- inspect loops.
 --local MAX_INSPECT_RETRIES = 2  -- maximum # of times to retry calling NotifyInspect for a specific character if we don't get an INSPECT_READY
-local NUM_EXPECTED_RELICS_110 = 3
+local NUM_EXPECTED_RELICS_110 = 2
 local NUM_EXPECTED_RELICS_101 = 1
-local MAX_INSPECTS_PER_CHARACTER = 3
+local MAX_INSPECTS_PER_CHARACTER = 5
 local MAX_NAMES_TO_SHOW = 4
 local PLH_RELICSLOT = 1000  -- for indexing relics in groupInfoCache
 
@@ -1442,7 +1465,7 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName, current
 				spec = groupInfoCache[characterName]['Spec']
 				characterLevel = groupInfoCache[characterName]['Level']
 			else
-				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!!')
+				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!! for ' .. characterName)
 				return false  -- should never reach here, but if we do it means we're not looking up the player or anyone in cache
 			end
 			
@@ -1707,6 +1730,15 @@ local function IsPlayerInUpgradeList(list)
 	return false
 end
 
+-- creates a copy of the table
+local function ShallowCopy(t)
+	local t2 = {}
+	for k, v in pairs(t) do
+		t2[k] = v
+	end
+	return t2
+end
+
 -- returns the names from the given array, with 'and others' if array size > limit
 local function GetNames(namelist, limit)
 	local names = ''
@@ -1715,20 +1747,50 @@ local function GetNames(namelist, limit)
 			limit = #namelist
 		end
 		if namelist[1] ~= nil then
-			names = namelist[1]
-			local maxnames = min(#namelist, limit)
+			-- sort the array by ilvl first
+			local sortedNamelist = namelist
+			if #namelist > 1 then
+				local copiedNamelist = ShallowCopy(namelist)  -- we will destroy elements in the list while sorting, so copy it
+				sortedNamelist = {}
+				local lowestILVL
+				local lowestIndex
+				local ilvl
+				local i = 1
+				local size = #copiedNamelist
+				while i <= size do
+					lowestILVL = 1000000
+					lowestIndex = 1  -- we could be sorting a list without ilvls, in which case just keep the same order
+					for j = 1, #copiedNamelist do
+						if copiedNamelist[j] ~= nil then
+							ilvl = string.match(copiedNamelist[j], '(%d+)')
+							if ilvl ~= nil then
+								ilvl = tonumber(ilvl)
+								if ilvl < lowestILVL then
+									lowestILVL = ilvl
+									lowestIndex = j
+								end
+							end
+						end
+					end
+					table.insert(sortedNamelist, table.remove(copiedNamelist, lowestIndex))
+					i = i + 1
+				end
+			end
+		
+			names = sortedNamelist[1]
+			local maxnames = min(#sortedNamelist, limit)
 			for i = 2, maxnames do
-				if #namelist == 2 then
+				if #sortedNamelist == 2 then
 					names = names .. ' '
 				else
 					names = names .. ', '
 				end
-				if i == #namelist then -- last person
+				if i == #sortedNamelist then -- last person
 					names = names .. 'and '
 				end
-				names = names .. namelist[i]
+				names = names .. sortedNamelist[i]
 			end
-			if #namelist > limit then
+			if #sortedNamelist > limit then
 				names = names .. ', and others'
 			end
 		end
@@ -1932,7 +1994,7 @@ local function AskForRolls()
 		if fullItemInfo[FII_REAL_ILVL] ~= nil then
 			description = description .. fullItemInfo[FII_REAL_ILVL] .. " "
 		end
-		if fullItemInfo[FII_IS_RELIC] then
+		if fullItemInfo[FII_IS_RELIC] and fullItemInfo[FII_RELIC_TYPE] ~= nil then
 			description = description .. fullItemInfo[FII_RELIC_TYPE] .. " Relic"
 		else
 			if fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_ARMOR then
@@ -2158,7 +2220,7 @@ local function UpdateGroupInfoCache(unit)
 	local name = PLH_GetUnitNameWithRealm(unit)
 
 	if name ~= nil then
---		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
+		PLH_SendDebugMessage('   Updating GroupInfoCache for ' .. name .. ', inspectIndex = ' .. inspectIndex)
 		local characterDetails
 		if groupInfoCache[name] == nil then
 			characterDetails = {}
@@ -2246,7 +2308,7 @@ local function InspectGroupMember(characterName)
 			if UnitIsVisible(characterName) then
 				NotifyInspect(characterName)
 				notifyInspectName = characterName
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+				PLH_wait2(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
 				return true
 			else
 				PLH_SendDebugMessage('   ' .. characterName .. ' out of range for inspect')
@@ -2323,7 +2385,6 @@ function PLH_InspectNextGroupMember()
 --				if inspectCount >= MAX_INSPECTS_PER_CHARACTER then
 --					PLH_SendDebugMessage('Discontinuing inspections for ' .. fullname .. ' due to max inspect limit')
 --				end
-				
 				if inspectCount < MAX_INSPECTS_PER_CHARACTER and (numCachedItems < expectedItemCount or numCachedRelics < expectedRelicCount) then  -- if we've already cached 15 or more items, don't bother refreshing
 					queuedAnInspection = InspectGroupMember(characterName)
 				end
@@ -2344,8 +2405,8 @@ function PLH_InspectNextGroupMember()
 				-- the inspectIndex counter so the next element that gets picked up when we come back into PLH_InspectNextGroupMember
 				-- is the 2nd
 			inspectLoop = inspectLoop + 1
-			if queuedAnInspection then  -- if we just queued someone for inspection, wait before we start the new loop
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+			if queuedAnInspection then
+				-- if we just queued someone for inspection, we don't need to do anything else to start the new loop since InspectGroupMember will call PLH_InspectNextGroupMember()
 			else  -- otherwise start the new loop immediately
 				PLH_InspectNextGroupMember()
 			end
@@ -2430,13 +2491,17 @@ local function Disable()
 end
 
 local function EnableOrDisable()
+	PLH_SendDebugMessage('Entering EnableOrDisable()')
 	local shouldBeEnabled = IsPersonalLoot()
 	if not isEnabled and shouldBeEnabled then	
+		PLH_SendDebugMessage('...Enabling PLH')
 		Enable()
 	elseif isEnabled and not shouldBeEnabled then
+		PLH_SendDebugMessage('...Disabling PLH')
 		Disable()
 	end
 	if isEnabled then 
+		PLH_SendDebugMessage('...Calling PopulateGroupInfoCache()')
 		PopulateGroupInfoCache()
 	end
 end
@@ -2545,6 +2610,8 @@ local function Initialize(self, event, addonName, ...)
 			rosterUpdatedEventFrame = CreateFrame('Frame')
 			rosterUpdatedEventFrame:SetScript('OnEvent', RosterUpdatedEvent)
 			rosterUpdatedEventFrame:RegisterEvent('GROUP_ROSTER_UPDATE')
+			rosterUpdatedEventFrame:RegisterEvent('ZONE_CHANGED_NEW_AREA')
+			rosterUpdatedEventFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 			
 			groupMemberInfoChangedEventFrame = CreateFrame('Frame')
 			groupMemberInfoChangedEventFrame:SetScript('OnEvent', GroupMemberInfoChangedEvent)
@@ -2615,6 +2682,7 @@ function PLH_RefreshCache()
 	groupInfoCache = {}
 	PopulateGroupInfoCache()
 end
+
 --[[
 function PLH_TestItems(characterIndex)
 	if characterIndex == nil then
@@ -2681,148 +2749,6 @@ function PLH_TestItems(characterIndex)
 				end
 			end
 		end
-	end
-end
-
-function PLH_TestRelic(relic, item)
-	local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(relic)
-	print('name ', name)
-	print('class ', class)  -- 'Gem'
---	print('iLevel ', iLevel)  -- gives wrong value
-	print('subclass ', subclass)  -- 'Artifact Relic'
---	print('equipSlot ', equipSlot)  -- nil
-	print('real ilvl is ', PLH_GetRealILVL(relic))  -- correct
-	print('IsEquippableItem	is ', IsEquippableItem(relic))  -- false, so we'll need to change where we do this check!
-	print('IsArtifactRelicItem is ', IsArtifactRelicItem(relic))  -- true; can add this where we check isEquippable
-	
-	local gemname, gemlink = GetItemGem(item, 1)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 2)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 3)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
---	local slotId, texture, checkRelic = GetInventorySlotInfo("MainHandSlot")
---	print('checkRelic1 ', checkRelic)  -- false
-	
---	local slotId, texture, checkRelic = GetInventorySlotInfo("RangedSlot")
---	print('checkRelic2 ', checkRelic)  -- invalid slot error
-
-	-- following method not found even though it's in API docs
---	local gem1, gem2, gem3 = GetInventoryItemGems(INVSLOT_RANGED)	--18
---	local gem1, gem2, gem3 = GetInventoryItemGems(18)	--18
---	print('gem1 ', gem1)
---	print('gem2 ', gem2)
---	print('gem3 ', gem3)
-end
-]]--
---[[
-*********************************************************
-Code from BlizzBugsSuck.lua to resolve known blizzard bug when opening interface options
-*********************************************************
-]]--
--- Fix InterfaceOptionsFrame_OpenToCategory not actually opening the category (and not even scrolling to it)
--- Confirmed still broken in 6.2.2.20490 (6.2.2a)
---[[
-local doNotRun = false
-
-do
-	local function get_panel_name(panel)
-		local tp = type(panel)
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		if tp == "string" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p.name == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel
-					end
-				end
-			end
-		elseif tp == "table" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel.name
-					end
-				end
-			end
-		end
-	end
-
-	local function InterfaceOptionsFrame_OpenToCategory_Fix(panel)
-		if doNotRun or InCombatLockdown() then return end
-		local panelName = get_panel_name(panel)
-		if not panelName then return end -- if its not part of our list return early
-		local noncollapsedHeaders = {}
-		local shownpanels = 0
-		local mypanel
-		local t = {}
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		for i = 1, #cat do
-			local panel = cat[i]
-			if not panel.parent or noncollapsedHeaders[panel.parent] then
-				if panel.name == panelName then
-					panel.collapsed = true
-					t.element = panel
-					InterfaceOptionsListButton_ToggleSubCategories(t)
-					noncollapsedHeaders[panel.name] = true
-					mypanel = shownpanels + 1
-				end
-				if not panel.collapsed then
-					noncollapsedHeaders[panel.name] = true
-				end
-				shownpanels = shownpanels + 1
-			end
-		end
-		local Smin, Smax = InterfaceOptionsFrameAddOnsListScrollBar:GetMinMaxValues()
-		if shownpanels > 15 and Smin < Smax then
-			local val = (Smax/(shownpanels-15))*(mypanel-2)
-			InterfaceOptionsFrameAddOnsListScrollBar:SetValue(val)
-		end
-		doNotRun = true
-		InterfaceOptionsFrame_OpenToCategory(panel)
-		doNotRun = false
-	end
-
-	hooksecurefunc("InterfaceOptionsFrame_OpenToCategory", InterfaceOptionsFrame_OpenToCategory_Fix)
-end
-]]--
-
---[[
--- following only returns for some items (notably trinkets), and only returns spec IDs relevant to the player
-function PrintItemSpecInfo(item)
-	specs = {}
-	results = GetItemSpecInfo(item, specs)
-	print('results is ', results)
-	print('#results is ', #results)
-	print('#specs is ', #specs)
-	for i = 1, #results do
-		print(results[i])
-	end
-	for i = 1, #specs do
-		print(results[i])
-	end
-	for key, value in pairs(results) do
-		print('key = ', key)
-		print('value = ', value)
-	end
-	for key, value in pairs(specs) do
-		print('key2 = ', key)
-		print('value2 = ', value)
 	end
 end
 ]]--

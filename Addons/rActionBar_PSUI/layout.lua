@@ -65,7 +65,8 @@ local bar1 = {
   buttonWidth     = 40,
   buttonHeight    = 40,
   buttonMargin    = 0,
-  numCols         = 12,
+  numCols         = 10,
+  numButtons	  = 10,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -83,7 +84,8 @@ local bar2 = {
   buttonWidth     = 40,
   buttonHeight    = 40,
   buttonMargin    = 0,
-  numCols         = 12,
+  numCols         = 10,
+  numButtons	  = 10,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }

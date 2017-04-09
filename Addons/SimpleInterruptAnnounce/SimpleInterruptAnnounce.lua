@@ -286,14 +286,14 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED(timeStamp, subEvent, _, _, sourceName
 		if config.own == 'off' then return end
 
 		-- Announce interrupt
-                local name = sourceName or '?'
-		self:AnnounceInterrupt(config.own, string.format('%s 打断了 → %s%s 的 %s', name, GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
+		self:AnnounceInterrupt(config.own, string.format('打断了 → %s%s 的 %s', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
 	elseif bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 then
 		-- If own is off for this config, return
 		if config.own == 'off' then return end
 
 		-- Announce interrupt
-		self:AnnounceInterrupt(config.own, string.format('打断了 → %s%s 的 %s', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
+		local name = sourceName or '?'
+		self:AnnounceInterrupt(config.own, string.format('%s 打断了 → %s%s 的 %s', name, GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(extraSpellID)), cfg.soundOwn)
 	else
 		-- If other is off for this config, return
 		if config.other == 'off' then return end

@@ -31,6 +31,11 @@ function L:GetButtonList(buttonName,numButtons)
     if not button then break end
     table.insert(buttonList, button)
   end
+  for i=numButtons+1, NUM_ACTIONBAR_BUTTONS do
+      local button = _G[buttonName..i]
+	  if not button then break end
+	  button:ClearAllPoints()
+  end
   return buttonList
 end
 

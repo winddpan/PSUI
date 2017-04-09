@@ -20,6 +20,25 @@ local ArtifactBySpec = invertTable(addon.Artifacts)
 
 local DEBUG = 0
 
+--Potential 7.2 Hack
+local t_threshold = 1.0
+local itemRefLinkInfo = {'',0}
+local xSetHyperlink = ItemRefTooltip.SetHyperlink
+ItemRefTooltip.SetHyperlink = function(self, link, ...)
+	itemRefLinkInfo[1] = link 
+	itemRefLinkInfo[2] = GetTime()
+	xSetHyperlink(self, link, ...)
+end
+
+local GameLinkInfo = {'',0}
+local function gHack(self, unit, slot) 
+	local link = GetInventoryItemLink(unit, slot)
+	GameLinkInfo[1] = link 
+	GameLinkInfo[2] = GetTime()
+end
+hooksecurefunc(GameTooltip,'SetInventoryItem', gHack)
+--
+
 local options, optionsFrame, db
 
 local modifierPressed = 0
@@ -228,8 +247,31 @@ local function DecorateArtifact(self)
 	if type(link) == 'string' and db.profile.enabled == true then
 		local _, itemID, _, relic1, relic2, relic3, _, _, _, _, _, upgradeID = strsplit(':', link)
 
-		if DEBUG ~=0 then print(format('ItemID: %s',itemID)) end
-		if nil == itemID or '' == itemID then return end  -- If there's no itemID we can't do anything
+		if nil == itemID or '' == itemID then 
+			if self:GetName() == "ItemRefTooltip" and itemRefLinkInfo[1] ~= nil and itemRefLinkInfo[1] ~= '' then
+				local tc = GetTime()
+				local tdelta = tc-itemRefLinkInfo[2]
+				local _, itemRefID, _, IRrelic1, IRrelic2, IRrelic3, _, _, _, _, _, IRupgradeID = strsplit(':', itemRefLinkInfo[1])
+				if nil ~= itemRefID and '' ~= itemRefID then 
+					if tdelta < t_threshold then
+						link,itemID,relic1,relic2,relic3,upgradeID = itemRefLinkInfo[1],itemRefID,IRrelic1,IRrelic2,IRrelic3,IRupgradeID
+					else
+						self:AddLine(format('|cffff0000%s|r', "Double click link to reload and view relic info"), 1, 1, 1, true)
+					end
+				end
+			elseif self:GetName() == "GameTooltip" and GameLinkInfo[1] ~= nil and GameLinkInfo[1] ~= '' then
+				local tc = GetTime()
+				local tdelta = tc-GameLinkInfo[2]
+				local _, gID, _, grelic1, grelic2, grelic3, _, _, _, _, _, gupgradeID = strsplit(':', GameLinkInfo[1])
+				if nil ~= gID and '' ~= gID then 
+					if tdelta < t_threshold then
+						link,itemID,relic1,relic2,relic3,upgradeID = GameLinkInfo[1],gID,grelic1,grelic2,grelic3,gupgradeID
+					else
+						self:AddLine(format('|cffff0000%s|r', "RelicInspector Error: Sadness"), 1, 1, 1, true)
+					end
+				end
+			end
+		end  
 
 		if (upgradeID == '256' or upgradeID == '16777472') and nil ~= RelicSlotsByArtifact[tonumber(itemID)] then
 			--It's a recognized artifact item
@@ -258,6 +300,7 @@ local function DecorateArtifact(self)
 			local relics = {relic1,relic2,relic3}
 			for i = 1,#relics do 
 				if '' ~= relics[i] then
+					if DEBUG ~=0 then print(format('Found a Relic: %s',relics[i])) end
 					local name, gemLink = GetItemGem(link,i)
 					if type(gemLink) == 'string' then
 						--Display the gem name, item level, and relic type

@@ -247,18 +247,18 @@ function GSA:OnOptionCreate()
 								disabled = function() return gsadb.all end,
 								order = 4,
 							},
---							NewLine1 = {
---								type= 'description',
---								order = 3,
---								name= '',
---							},
-							disablelargebg = {
-								type = 'toggle',
-								name = L["DisableLargeBG"],
-								desc = L["DisableLargeBGDesc"],
-								disabled = function() return not gsadb.battleground or gsadb.all end,
+							NewLine1 = {
+								type= 'description',
 								order = 3,
+								name= '',
 							},
+--							disablelargebg = {
+--								type = 'toggle',
+--								name = L["DisableLargeBG"],
+--								desc = L["DisableLargeBGDesc"],
+--								disabled = function() return not gsadb.battleground or gsadb.all end,
+--								order = 3,
+--							},
 							battleground = {
 								type = 'toggle',
 								name = L["Battleground"],
@@ -266,13 +266,13 @@ function GSA:OnOptionCreate()
 								disabled = function() return gsadb.all end,
 								order = 2,
 							},
---							field = {
---								type = 'toggle',
---								name = L["World"],
---								desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
---								disabled = function() return gsadb.all end,
---								order = 5,
---							}
+							field = {
+								type = 'toggle',
+								name = L["World"],
+								desc = L["Alert works anywhere else then anena, BG, dungeon instance"],
+								disabled = function() return gsadb.all end,
+								order = 5,
+							}
 						},
 					},
 					voice = {

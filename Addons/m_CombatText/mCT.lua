@@ -96,13 +96,13 @@ mCTi:SetScript("OnEvent", function(self, event, subev, arg2, arg3)
 				end
 			else
 				if(info.arg2) then
-					msg = msg..floor(arg2)
+					msg = msg..SVal(floor(arg2))
 				end
 				if(info.arg3) then
 					if (subev=="HEAL" or subev=="HEAL_CRIT" or subev=="PERIODIC_HEAL") then
 						msg = msg..SVal(arg3) 
 					else
-						msg = msg..arg3
+						msg = msg..SVal(arg3) 
 					end
 				end
 			end

@@ -2,15 +2,30 @@
 
 local IconSize = 36
 local Filger_Settings = {
-	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- "P_BUFF_ICON"
-	player_proc_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, -40},	-- "P_PROC_ICON"
-	target_buff_icon = {"CENTER", UIParent, "CENTER", 171, 16},
-	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 150, 40},	-- "T_DEBUFF_ICON"
-	innner_cooldown = { "TOPRIGHT", UIParent, "CENTER", -310, -248 },   -- 内置CD
+	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- P_BUFF_ICON
+	player_proc_icon = {"TOPRIGHT", UIParent, "CENTER", -200, -4},		-- P_PROC_ICON
+	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 150, 0},	-- T_DEBUFF_ICON
+	trinket = {"TOPRIGHT", "oUF_monoPlayerFrame", "TOPLEFT", -3, 2},  	-- Trinket
+	cooldown = {"BOTTOMLEFT", UIParent, "CENTER", -306, -247},   		-- Cooldown
 }
 
 Filger_Spells = {
-	["ALL"] = {},
+	["ALL"] = {
+	{
+			Name = "Trinket",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = 1,
+			Alpha = 1,
+			IconSize = 39,
+			Position = {unpack(Filger_Settings.trinket)},
+			
+			{spellID = 7744, unitID = "7744", caster = "player", filter = "CD"},
+			{spellID = 195710, unitID = "7744", caster = "player", filter = "CD"},
+			{spellID = 214027, unitID = "7744", caster = "player", filter = "CD"},
+
+		},
+	},
 	["DEATHKNIGHT"] = {
 		{
 			Name = "SP",
@@ -255,7 +270,6 @@ Filger_Spells = {
 			{spellID = 2818, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 200803, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Crippling Poison
-			{spellID = 3409, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 198097, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Wound Poison
 			{spellID = 8680, unitID = "target", caster = "player", filter = "DEBUFF"},

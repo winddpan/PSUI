@@ -2,7 +2,7 @@
 ## Title: RelicInspector
 ## Notes: Displays artifact weapon relics in the tooltip
 ## Author: Thoralie
-## Version: 1.11.6
+## Version: 1.11.7
 ## SavedVariables: RelicInspectorDB
 
 Libs\LibStub\LibStub.lua

@@ -354,7 +354,7 @@
   --gen castbar
   lib.gen_castbar = function(f)
     local s = CreateFrame("StatusBar", "oUF_monoCastbar"..f.mystyle, f)
-    s:SetSize(f.width-(f.height/1.5-12),f.height/1.2+2)
+    s:SetSize(ceil(f.width-(f.height/1.5-13)),ceil(f.height/1.2+2))
     s:SetStatusBarTexture(cfg.oUF.media.statusbar)
     s:SetStatusBarColor(unpack(cfg.oUF.castbar.color.normal),1)
     s:SetFrameLevel(9)

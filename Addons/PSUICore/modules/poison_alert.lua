@@ -10,6 +10,8 @@ bar:SetPoint("CENTER", UIParent, "CENTER", 0, -200)
 bar:SetWidth(40)
 bar:SetHeight(40)
 bar:SetFrameStrata("HIGH")
+bar:SetFrameLevel(0)
+
 icon = bar:CreateTexture("$parentIcon", "BORDER")
 icon:SetPoint("TOPLEFT", 2, -2)
 icon:SetPoint("BOTTOMRIGHT", -2 , 2)

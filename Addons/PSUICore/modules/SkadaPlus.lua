@@ -21,9 +21,9 @@ local function HookFormatNumber()
         if number then
             if self.db.profile.numberformat == 1 then
                 if number > 100000000 then
-                    return ("%02.2fE"):format(number / 100000000)
+                    return ("%02.2f亿"):format(number / 100000000)
                 end
-                return ("%02.2fW"):format(number / 10000)
+                return ("%02.2f万"):format(number / 10000)
             else
                 return math.floor(number)
             end

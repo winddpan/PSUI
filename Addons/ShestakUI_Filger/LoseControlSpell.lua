@@ -438,14 +438,14 @@ for oi,ov in pairs(orders) do
 	end
 end
 
-local focus_position = {"LEFT",UIParent,"CENTER", 222, 196}	
-local target_position = {"CENTER", UIParent, "CENTER", 100, -110}
-local target_buff_position = {"CENTER", UIParent, "CENTER", 171, 16}
+local focus_position = {"BOTTOMLEFT", "oUF_monoFocusFrame", "TOPLEFT", -2, 2}	
+local target_position = {"CENTER", UIParent, "CENTER", 117, -140}
+local target_buff_position = {"TOPLEFT", UIParent, "CENTER", 150, -4}
 
 local targetCC = {
 	Name = "LoseControl_Target",
 	Direction = "RIGHT", Interval = 0,
-	Mode = "ICON", IconSize = 46,
+	Mode = "ICON", IconSize = 44,
 	Position = {unpack(target_position)},
 }
 local focusCC =  {
@@ -475,4 +475,7 @@ for i,spell in pairs(orderedSpellIds) do
 	end
 end
 
-Filger_Spells["ALL"] = {targetCC, focusCC, targetBuff}
+local AllSpells = Filger_Spells["ALL"] or {}
+table.insert(AllSpells, targetCC)
+table.insert(AllSpells, focusCC)
+table.insert(AllSpells, targetBuff)

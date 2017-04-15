@@ -676,8 +676,8 @@
 	a.showBuffType = true
 	a:SetPoint('BOTTOMLEFT', f, 'TOPLEFT', 1.5, 4)
 	a:SetSize((a.size+a.spacing)*7, (a.size+a.spacing)*2)
-	a.numBuffs = 14
-	a.numDebuffs = 15
+	a.numBuffs = 7
+	a.numDebuffs = 14
 	if f.mystyle=="focus" then
 	--a:SetScale((1-f:GetScale())+1)
 	  --a:SetScale((1-cfg.oUF.frames.focus.scale)+1)

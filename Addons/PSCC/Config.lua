@@ -18,7 +18,7 @@ local defaults = {
 	--what font to use
 	fontFace = function()
 		--return _G['STANDARD_TEXT_FONT']
-		return "Interface\\AddOns\\PSUICore\\media\\number.ttf"
+		return "Interface\\AddOns\\PSCC\\media\\number.ttf"
 	end,
 
 	--the base font size to use at a scale of 1
@@ -29,6 +29,10 @@ local defaults = {
 
 	--the minimum number of seconds a cooldown's duration must be to display text
 	minDuration = 2.1,
+
+	activateDuration = 4,
+	
+	minActivateDuration = 30.1,
 
 	--the minimum number of seconds a cooldown must be to display in the expiring format
 	expiringDuration = 5,

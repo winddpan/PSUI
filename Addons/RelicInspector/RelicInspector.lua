@@ -266,8 +266,6 @@ local function DecorateArtifact(self)
 				if nil ~= gID and '' ~= gID then 
 					if tdelta < t_threshold then
 						link,itemID,relic1,relic2,relic3,upgradeID = GameLinkInfo[1],gID,grelic1,grelic2,grelic3,gupgradeID
-					else
-						self:AddLine(format('|cffff0000%s|r', "RelicInspector Error: Sadness"), 1, 1, 1, true)
 					end
 				end
 			end

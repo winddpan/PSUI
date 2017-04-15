@@ -127,6 +127,7 @@ function Filger:DisplayActives()
 		if not bar then
 			bar = CreateFrame("Frame", "FilgerAnchor"..id.."Frame"..index, self)
 			bar:SetScale(1)
+			bar:SetFrameStrata("Medium")
 			SetTemplate(bar, 0)
 
 			if index == 1 then

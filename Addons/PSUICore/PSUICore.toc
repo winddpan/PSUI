@@ -3,12 +3,11 @@
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
-## Version: 2.2
+## Version: 2.3
 ## OptionalDeps:Skada, DBM-Core, Aurora
 
 info\info.xml
 lib\libs.xml
-modules\CC\cc.xml
 
 core.lua
 slashcmd.lua
@@ -16,23 +15,7 @@ slashcmd.lua
 panel\lib.lua
 panel\core.lua
 
-modules\combat_notification.lua
-modules\minimap.lua
-modules\tooltip.lua
-modules\chatbar.lua
-modules\blizzardfix.lua
-modules\JPack.lua
-modules\bags.lua
-modules\HoverBind.lua
-modules\xp_bar.lua
-modules\ObjectiveTrackerMover.lua
-modules\SimpleChannel.lua
-##modules\rougehelper.lua
-modules\poison_alert.lua
-modules\EasyChannel.lua
-modules\HideOrderHallBar.lua
-modules\safequeue.lua
-modules\SkadaPlus.lua
+modules\modules.xml
 
 automation\buystack.lua
 automation\durability.lua

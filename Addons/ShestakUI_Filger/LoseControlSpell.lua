@@ -231,6 +231,7 @@ local spellIds = {
 	[5116]   = "Snare",			-- Concussive Shot
 	[13810]  = "Snare",			-- Ice Trap 2
 	[19263]  = "Immune",		-- Deterrence
+	[186265]  = "Immune",		-- Deterrence
 
 	----------------
 	-- Hunter Pets

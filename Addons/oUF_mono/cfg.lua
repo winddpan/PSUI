@@ -93,7 +93,7 @@
 		},
 		raid = {						-- Raid frames configuration
 			["enable"] = true,			
-			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 25, -200},
+			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 25, -205},
 			
 			["party"] = false, 								-- show party as 5 men raid group
 			["raid5"] = false, 								-- show raid frame for 5 (or less) men raid group
@@ -105,7 +105,7 @@
 				["scale"] = 1.5, 														-- MT size relatively to unit size
 			},
 			["width"] = 115, 								-- raid unit width
-			["height"] = 26, 								-- raid unit height
+			["height"] = 27, 								-- raid unit height
 			["spacing"] = 5, 								-- spacing between units
 			["name_length"] = 4, 							-- number of letters to display
 			["font_size"] = 12, 							-- font size for names / hp values

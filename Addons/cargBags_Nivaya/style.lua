@@ -58,6 +58,7 @@ local QuickSort;
 do
 	local func = function(v1, v2)
 		if (v1 == nil) or (v2 == nil) then return (v1 and true or false) end
+		if (v1[1] == nil) or (v2[1] == nil) then return (v1[1] and true or false) end
 		if v1[1] == -1 or v2[1] == -1 then
 			return v1[1] > v2[1] -- empty slots last
 		elseif v1[2] ~= v2[2] then

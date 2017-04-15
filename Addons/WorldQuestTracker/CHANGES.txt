@@ -1,7 +1,7 @@
-changeset:   125:e79e4d8941df
-tag:         v7.2.0.125-release
+changeset:   127:6b20573daa20
+tag:         v7.2.0.127-release
 user:        Tercio
-date:        Tue Apr 04 11:39:36 2017 -0300
-summary:     - ticket #353: "quests on broken shore should by pass filters".
+date:        Wed Apr 12 13:24:44 2017 -0300
+summary:     - fix for ticket #368: invasion quests won't filter correctly on resource filtering.
 
 

@@ -1,3 +1,8 @@
+### v0.4.1
+---
+##### Bugfixes
++ *Fixed a bug related to bonus rolls.*
+
 ### v0.4.0
 ---
 * **Column Width**

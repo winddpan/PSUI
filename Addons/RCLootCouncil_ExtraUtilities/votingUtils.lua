@@ -224,6 +224,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
 
          elseif command == "EUBonusRoll" then
             local name, type, link = unpack(data)
+            if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
             self.votingFrame:Update()

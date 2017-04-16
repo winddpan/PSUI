@@ -201,6 +201,22 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
+			
+			-- SP
+			{spellID = 214802, unitID = "player", caster = "player", filter = "BUFF"},	--铁花爆击
+			{spellID = 214807, unitID = "player", caster = "player", filter = "BUFF"},	--铁花精通
+			{spellID = 214803, unitID = "player", caster = "player", filter = "BUFF"},	--铁花急速
+
+			{spellID = 225726, unitID = "player", caster = "player", filter = "BUFF"},	--焦镜暴击
+			{spellID = 225729, unitID = "player", caster = "player", filter = "BUFF"},	--焦镜精通
+			{spellID = 225730, unitID = "player", caster = "player", filter = "BUFF"},  --焦镜急速
+			
+			{spellID = 225736, unitID = "player", caster = "player", filter = "BUFF"},	--回归打击
+
+			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
+
 
 			-- 敏锐终结技buff
 			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
@@ -214,17 +230,6 @@ Filger_Spells = {
 			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- SP
-			{spellID = 214802, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 214807, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 214803, unitID = "player", caster = "player", filter = "BUFF"},
-
-			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
-			
-			{spellID = 225736, unitID = "player", caster = "player", filter = "BUFF"},
-
 			-- 天赋-敏锐
 			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
 			

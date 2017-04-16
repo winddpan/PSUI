@@ -5,6 +5,10 @@ local Activate = {}
 Activate.id = 'activate'
 Addon.Activate = Activate
 
+local function OnAnimInFinished(self)
+	C_Timer.After(duration, self:GetParent().FadeOut)
+end
+
 function Activate:Setup(cooldown)
 	if self:Get(cooldown) then
 		return
@@ -18,15 +22,13 @@ function Activate:Setup(cooldown)
 	overlay:SetFrameLevel(overlay:GetFrameLevel() + 5)
 	overlay:SetPoint('TOPLEFT', button, 'TOPLEFT', -width * 0.2, height * 0.2)
 	overlay:SetPoint('BOTTOMRIGHT', button, 'BOTTOMRIGHT', width * 0.2, -height * 0.2)
-	overlay.animIn:HookScript('OnFinished', self.OnFinish)
+	
+	overlay.FadeOut = function() 
+		overlay.animIn:Stop()
+		overlay.animOut:Play()
+	end
+	overlay.animIn:HookScript('OnFinished', OnAnimInFinished)
 	cooldown.ccActivate = overlay
-end
-
-function Activate:OnFinish()
-	C_Timer.After(duration, function() 
-		self:Stop()
-		self:GetParent().animOut:Play()
-	end)
 end
 
 function Activate:Run(cooldown)

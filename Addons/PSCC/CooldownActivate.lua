@@ -56,12 +56,8 @@ function Timer.Start(cooldown, start, duration, enable, forceShowDrawEdge, modRa
 		return
 	end
 
-	local isButton = false
 	local button = cooldown:GetParent()
-	if button:GetName() then
-		isButton = string.find(button:GetName(), "^[ActionButton]%d") or string.find(button:GetName(), "^[MultiBar].*")
-		isButton = button:GetAlpha() > 0 and isButton
-	end
+	local isButton = button and button:IsShown() and button:GetAlpha() > 0 and button:GetName() and (string.find(button:GetName(), "^[ActionButton]%d") or string.find(button:GetName(), "^[MultiBar].*"))
 	if not isButton then
 		unusedCooldown[cooldown] = true
 		return 

@@ -17,7 +17,6 @@ local filterCharListRegex = "[%(%)%.%%%+%-%*%?%[%]%$%^={}]" -- won't work on reg
 
 -- ECF
 local _, ecf = ...
-local utf8replace = ecf.utf8replace -- utf8.lua
 local L = ecf.L -- locales.lua
 
 local config
@@ -72,6 +71,48 @@ local defaults = {
 		debugMode = false,
 	}
 }
+--------------- Common Functions from Elsewhere ---------------
+-- utf8 functions are taken from utf8replace from @Phanx @Pastamancer
+local function utf8charbytes(s, i)
+	local c = strbyte(s, i or 1)
+	-- determine bytes needed for character, based on RFC 3629
+	if c > 0 and c <= 127 then
+		return 1
+	elseif c >= 194 and c <= 223 then
+		return 2
+	elseif c >= 224 and c <= 239 then
+		return 3
+	elseif c >= 240 and c <= 244 then
+		return 4
+	end
+end
+
+-- replace UTF-8 characters based on a mapping table
+local function utf8replace(s, mapping)
+	local pos = 1
+	local t = {}
+
+	while pos <= #s do
+		local charbytes = utf8charbytes(s, pos)
+		local c = strsub(s, pos, pos + charbytes - 1)
+		t[#t+1] = (mapping[c] or c)
+		pos = pos + charbytes
+	end
+
+	return tconcat(t)
+end
+
+--http://www.wowwiki.com/USERAPI_StringHash
+local function StringHash(text)
+	local counter, len = 1, #text
+	for i = 1, len, 3 do
+		counter = fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
+			(strbyte(text,i)*16776193) +
+			((strbyte(text,i+1) or (len-i+256))*8372226) +
+			((strbyte(text,i+2) or (len-i+256))*3932164)
+	end
+	return fmod(counter, 4294967291) -- 2^32 - 5: Prime (and different from the prime in the loop)
+end
 
 --------------- Common Functions in ECF ---------------
 --Make sure that blackWord won't be filtered by filterCharList and utf-8 list
@@ -92,28 +133,8 @@ local function SendMessage(event, msg)
 	end
 end
 
---http://www.wowwiki.com/USERAPI_StringHash
-local function StringHash(text)
-	local counter, len = 1, #text
-	for i = 1, len, 3 do
-		counter = fmod(counter*8161, 4294967279) +  -- 2^32 - 17: Prime!
-			(strbyte(text,i)*16776193) +
-			((strbyte(text,i+1) or (len-i+256))*8372226) +
-			((strbyte(text,i+2) or (len-i+256))*3932164)
-	end
-	return fmod(counter, 4294967291) -- 2^32 - 5: Prime (and different from the prime in the loop)
-end
-
 --Convert old config to new one
 function ECF:convert()
-	for key,v in pairs(config.blackWordList) do
-		if(type(v) ~= "table") then
-			config.blackWordList[key] = {
-				regex = v == "regex",
-				lesser = false,
-			}
-		end
-	end
 	for key,v in pairs(config.blackWordList) do
 		for key2 in pairs(config.blackWordList) do
 			if key ~= key2 and strfind(key,key2) then config.blackWordList[key] = nil;break end
@@ -203,10 +224,26 @@ local options = {
 			order = 2,
 			disabled = false,
 		},
+		debugMode = {
+			type = "toggle",
+			name = "DebugMode",
+			desc = "For test only",
+			order = 3,
+			hidden = function() return not config.advancedConfig end,
+		},
+		AdvancedWarning = {
+			type = "execute",
+			name = L["EnableAdvancedConfig"],
+			confirm = true,
+			confirmText = L["AdvancedWarningText"],
+			func = function() config.advancedConfig = true end,
+			hidden = function() return config.advancedConfig end,
+			order = 9,
+		},
 		ToggleTab = {
 			type = "group",
 			name = L["General"],
-			order = 3,
+			order = 10,
 			args = {
 				line1 = {
 					type = "header",
@@ -255,6 +292,13 @@ local options = {
 					desc = L["AggressiveTooltip"],
 					order = 17,
 				},
+				enableWisper = {
+					type = "toggle",
+					name = L["WhisperWhitelistMode"],
+					desc = L["WhisperWhitelistModeTooltip"],
+					order = 18,
+					hidden = function() return not config.advancedConfig end,
+				},
 				line2 = {
 					type = "header",
 					name = L["RepeatOptions"],
@@ -284,40 +328,12 @@ local options = {
 					order = 43,
 					disabled = function() return config.chatLinesLimit == 0 end,
 				},
-				line3 = {
-					type = "header",
-					name = L["UseWithCare"],
-					order = 60,
-				},
-				AdvancedWarning = {
-					type = "execute",
-					name = L["EnableAdvancedConfig"],
-					confirm = true,
-					confirmText = L["AdvancedWarningText"],
-					func = function() config.advancedConfig = true end,
-					hidden = function() return config.advancedConfig end,
-					order = -1,
-				},
-				enableWisper = {
-					type = "toggle",
-					name = L["WhisperWhitelistMode"],
-					desc = L["WhisperWhitelistModeTooltip"],
-					order = 61,
-					hidden = function() return not config.advancedConfig end,
-				},
-				debugMode = {
-					type = "toggle",
-					name = "DebugMode",
-					desc = "For test only",
-					order = 62,
-					hidden = function() return not config.advancedConfig end,
-				},
 			},
 		},
 		blackListTab = {
 			type = "group",
 			name = L["BlackwordList"],
-			order = 4,
+			order = 11,
 			args = {
 				blackword = {
 					type = "input",
@@ -448,6 +464,7 @@ local options = {
 						for key,v in pairs(config.blackWordList) do if v.lesser then blacklistname[key] = key end end
 						return blacklistname
 					end,
+					hidden = function() return not config.advancedConfig end,
 				},
 				DeleteButton = {
 					type = "execute",
@@ -473,7 +490,7 @@ local options = {
 		lootFilter = {
 			type = "group",
 			name = L["LootFilter"],
-			order = 5,
+			order = 12,
 			args = {
 				addItem = {
 					type = "input",
@@ -501,7 +518,7 @@ local options = {
 					type = "select",
 					name = _G["TYPE"],
 					order = 2,
-					values = {["ITEMS"] = ITEMS, ["CURRENCY"] = CURRENCY},
+					values = {["ITEMS"] = _G["ITEMS"], ["CURRENCY"] = _G["CURRENCY"]},
 				},
 				DeleteButton = {
 					type = "execute",
@@ -555,17 +572,6 @@ local options = {
 				},
 			},
 		},
-		FAQTab = {
-			type = "group",
-			name = L["FAQ"],
-			order = 6,
-			args = {
-				FAQText = {
-					type = "description",
-					name = L["FAQText"],
-				},
-			},
-		},
 	},
 }
 LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("EnhancedChatFilter", options)
@@ -574,7 +580,7 @@ LibStub("AceConfigDialog-3.0"):AddToBlizOptions("EnhancedChatFilter", "EnhancedC
 --Disable profanityFilter
 if GetCVar("profanityFilter")~="0" then SetCVar("profanityFilter", "0") end
 
--------------------------------------- Filters ------------------------------------
+--------------- Filters ---------------
 --Update friends whenever login/friendlist updates
 local friends, allowWisper = {}, {}
 local friendFrame = CreateFrame("Frame")
@@ -748,10 +754,25 @@ end
 for event in pairs(chatChannel) do ChatFrame_AddMessageEventFilter(event, ECFfilter) end
 
 --MonsterSayFilter
+local MSFOffQuestT = {[42880] = true} -- 42880: Meeting their Quota
+local MSFOffQuestFlag = false
+
+local QuestAf = CreateFrame("Frame")
+QuestAf:RegisterEvent("QUEST_ACCEPTED")
+QuestAf:SetScript("OnEvent", function(self,_,_,questId)
+	if MSFOffQuestT[questId] then MSFOffQuestFlag = true end
+end)
+
+local QuestRf = CreateFrame("Frame")
+QuestRf:RegisterEvent("QUEST_REMOVED") -- Fires when turn in or leave quest zone, but cant get questId when turn in
+QuestRf:SetScript("OnEvent", function(self,_,questId)
+	if MSFOffQuestT[questId] then MSFOffQuestFlag = false end
+end)
+
 local monsterLines = {}
 
 local function monsterFilter(self,_,msg)
-	if (not config.enableFilter or not config.enableMSF) then return end
+	if (not config.enableFilter or not config.enableMSF or MSFOffQuestFlag) then return end
 
 	local monsterLinesSize = #monsterLines
 	monsterLines[monsterLinesSize+1] = msg
@@ -836,7 +857,6 @@ local function achievementFilter(self, event, msg, _, _, _, _, _, _, _, _, _, _,
 	local _,class,_,_,_,name,server = GetPlayerInfoByGUID(guid)
 	if (not name) then return end -- check nil
 	if (server ~= "" and server ~= GetRealmName()) then name = name.."-"..server end
-	if config.debugMode then print(format("Achievement: event:%s, name:%s, class:%s",event,name,class)) end
 	achievements[achievementID] = achievements[achievementID] or {timeout = GetTime() + 0.5}
 	achievements[achievementID][event] = achievements[achievementID][event] or {}
 	achievements[achievementID][event][name] = class
@@ -847,18 +867,18 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", achievementFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD_ACHIEVEMENT", achievementFilter)
 
 -- LootFilter
-local function lootitemfilter(self,_,msg)
+local function lootItemFilter(self,_,msg)
 	if (not config.enableFilter) then return end
 	local itemID = tonumber(strmatch(msg, "|Hitem:(%d+)"))
 	if(not itemID) then return end -- pet cages don't have 'item'
 	if(config.lootItemFilterList[itemID]) then return true end
 	if(select(3,GetItemInfo(itemID)) < config.lootQualityMin) then return true end -- ItemQuality is in ascending order
 end
-ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", lootitemfilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", lootItemFilter)
 
-local function lootcurrecyfilter(self,_,msg)
+local function lootCurrecyFilter(self,_,msg)
 	if (not config.enableFilter) then return end
 	local currencyID = tonumber(strmatch(msg, "|Hcurrency:(%d+)"))
 	if(config.lootCurrencyFilterList[currencyID]) then return true end
 end
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CURRENCY", lootcurrecyfilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_CURRENCY", lootCurrecyFilter)

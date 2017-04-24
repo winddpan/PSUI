@@ -93,7 +93,7 @@
 		},
 		raid = {						-- Raid frames configuration
 			["enable"] = true,			
-			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 25, -205},
+			["position"] = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -225},
 			
 			["party"] = false, 								-- show party as 5 men raid group
 			["raid5"] = false, 								-- show raid frame for 5 (or less) men raid group

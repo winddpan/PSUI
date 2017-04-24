@@ -38,7 +38,7 @@
       hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", AdjustSetPoint) 
 	  local gbtn = _G["GarrisonLandingPageMinimapButton"]
 	  gbtn:ClearAllPoints()
-	  gbtn:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -25, 25) 
+	  gbtn:SetPoint("TOPLEFT", Minimap.mnMap, "TOPLEFT", -25, 25) 
 	  gbtn:SetScale(.78)
     end
     if not InCombatLockdown() then

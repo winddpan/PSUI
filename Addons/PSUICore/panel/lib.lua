@@ -3,7 +3,7 @@ local lib = CreateFrame("Frame")
 
 local glow = "Interface\\addons\\PSUICore\\media\\glow.tga"
 local WHITE8x8 =  "Interface\\Buttons\\WHITE8x8"
-local panels,k   = {},0
+local panels   = {}
 ----------------------------------------------------------------------------------------------------------------------------
 ------	move func
 ----------------------------------------------------------------------------------------------------------------------------
@@ -87,24 +87,24 @@ end
 ------	Createpanel func
 ----------------------------------------------------------------------------------------------------------------------------
 lib.Createpanel = function(name,width,heigth,parent,strata,texture,inset,color,backdropc,framelevel) 
-	panels[k] = CreateFrame("Frame",name,parent) 
-    panels[k]:SetWidth(width)
-	panels[k]:SetHeight(heigth)
-	panels[k]:SetFrameStrata(strata)
-	panels[k]:SetFrameLevel(0)
-	panels[k]:SetBackdrop({ 
+	panels[name] = CreateFrame("Frame",name,parent) 
+    panels[name]:SetWidth(width)
+	panels[name]:SetHeight(heigth)
+	panels[name]:SetFrameStrata(strata)
+	panels[name]:SetFrameLevel(0)
+	panels[name]:SetBackdrop({ 
 		bgFile = WHITE8x8,
 		insets = {left = inset,right = inset,top = inset,bottom = inset}, 
 		edgeFile = glow, edgeSize = inset,})
 		
-	panels.bg = panels[k]:CreateTexture(nil, "PARENT")
+	panels.bg = panels[name]:CreateTexture(nil, "PARENT")
 	panels.bg:ClearAllPoints()
-	panels.bg:SetPoint("TOPLEFT", panels[k], "TOPLEFT", 3, -3);
-	panels.bg:SetPoint("BOTTOMRIGHT", panels[k], "BOTTOMRIGHT", -3, 3);
+	panels.bg:SetPoint("TOPLEFT", panels[name], "TOPLEFT", 3, -3);
+	panels.bg:SetPoint("BOTTOMRIGHT", panels[name], "BOTTOMRIGHT", -3, 3);
 	panels.bg:SetColorTexture(.1,.1,.1,0.5)
 	
-	panels[k]:SetBackdropColor(unpack(backdropc))
-	panels[k]:SetBackdropBorderColor(unpack(color))
+	panels[name]:SetBackdropColor(unpack(backdropc))
+	panels[name]:SetBackdropBorderColor(unpack(color))
 end
 
 lib.CreateButton = function(tag,movetag,direction,clickcolor,lock)

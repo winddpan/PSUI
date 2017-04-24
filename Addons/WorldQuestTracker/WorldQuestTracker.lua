@@ -1337,7 +1337,7 @@ if (symbol_1K) then
 else
 	function WorldQuestTracker.ToK (numero)
 		if (numero > 999999) then
-			return format ("%.2f", numero/1000000) .. "M"
+			return format ("%.1f", numero/1000000) .. "M"
 		elseif (numero > 99999) then
 			return floor (numero/1000) .. "K"
 		elseif (numero > 999) then
@@ -1630,6 +1630,20 @@ function WorldQuestTracker.RewardIsArtifactPower (itemLink)
 	if (text and text:match ("|cFFE6CC80")) then
 		local power = GameTooltipFrameTextLeft3:GetText()
 		if (power) then
+		
+			if (power:find (SECOND_NUMBER)) then
+				local n = power:match (" %d%.%d ")
+				n = tonumber (n)
+				if (not n) then
+					n = power:match (" %d ")
+					n = tonumber (n)
+				end
+				if (n) then
+					n = n * 1000000
+					return true, n or 0
+				end
+			end
+
 			if (WorldQuestTracker.GameLocale == "frFR") then
 				power = power:gsub ("%s", ""):gsub ("%p", ""):match ("%d+")
 			else
@@ -1644,6 +1658,20 @@ function WorldQuestTracker.RewardIsArtifactPower (itemLink)
 	if (text2 and text2:match ("|cFFE6CC80")) then
 		local power = GameTooltipFrameTextLeft4:GetText()
 		if (power) then
+		
+			if (power:find (SECOND_NUMBER)) then
+				local n = power:match (" %d%.%d ")
+				n = tonumber (n)
+				if (not n) then
+					n = power:match (" %d ")
+					n = tonumber (n)
+				end
+				if (n) then
+					n = n * 1000000
+					return true, n or 0
+				end
+			end
+		
 			if (WorldQuestTracker.GameLocale == "frFR") then
 				power = power:gsub ("%s", ""):gsub ("%p", ""):match ("%d+")
 			else
@@ -8695,9 +8723,12 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 											widget.isArtifact = true
 											if (artifactPower >= 1000) then
 												if (artifactPower > 999999) then
-													widget.amountText:SetText (format ("%.1fM", artifactPower/1000000))
+													--widget.amountText:SetText (format ("%.1fM", artifactPower/1000000))
+													widget.amountText:SetText (WorldQuestTracker.ToK (artifactPower))
+													
 												elseif (artifactPower > 9999) then
-													widget.amountText:SetText (format ("%.0fK", artifactPower/1000))
+													--widget.amountText:SetText (format ("%.0fK", artifactPower/1000))
+													widget.amountText:SetText (WorldQuestTracker.ToK (artifactPower))
 												else
 													widget.amountText:SetText (format ("%.1fK", artifactPower/1000))
 												end

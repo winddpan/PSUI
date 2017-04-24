@@ -1,9 +1,9 @@
 local SCALE			= 1
-local WIDTH 		= 140
+local WIDTH 		= Minimap.mnMap:GetWidth()
 local HEIGHT 		= 5
 local _, CLASS 		= UnitClass("player")
 local COLOR			= CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[CLASS] or RAID_CLASS_COLORS[CLASS]
-local POSITION		= {"TOP", Minimap, "BOTTOM", 0, -4}
+local POSITION		= {"TOP", Minimap.mnMap, "BOTTOM", 0, -4}
 local OFFSET		= -HEIGHT-1
 local TEXTURE 		= "Interface\\AddOns\\\PSUICore\\media\\statusbar.tga"
 

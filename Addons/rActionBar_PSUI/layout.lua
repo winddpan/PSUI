@@ -8,6 +8,11 @@ local A, L = ...
 -- Fader
 -----------------------------
 
+local MainBarButtonCount = 12
+if GetUnitName("player") == "名字起得好" or GetUnitName("player") == "天降正义"  or GetUnitName("player") == "五葉" then
+	MainBarButtonCount = 10
+end
+
 local fader = {
   fadeInAlpha = 1,
   fadeInDuration = 0.1,
@@ -65,8 +70,8 @@ local bar1 = {
   buttonWidth     = 40,
   buttonHeight    = 40,
   buttonMargin    = 0,
-  numCols         = 10,
-  numButtons	  = 10,
+  numCols         = MainBarButtonCount,
+  numButtons	  = MainBarButtonCount,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -84,8 +89,8 @@ local bar2 = {
   buttonWidth     = 40,
   buttonHeight    = 40,
   buttonMargin    = 0,
-  numCols         = 10,
-  numButtons	  = 10,
+  numCols         = MainBarButtonCount,
+  numButtons	  = MainBarButtonCount,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }

@@ -5,23 +5,56 @@ local _G = _G
 local font = "Fonts\\ARIALN.TTF"
 local Scale = 1				-- Minimap scale
 local ClassColorBorder = false	-- Should border around minimap be classcolored? Enabling it disables color settings below
-local r, g, b, a = 0, 0, 0, .7	-- Border colors and alhpa. More info: http://www.wowwiki.com/API_Frame_SetBackdropColor
-local BGThickness = 1           -- Border thickness in pixels
 local zoneTextYOffset = 10		-- Zone text position
+local Size = 220
+local rawMinimap = Minimap
+local Minimap = Minimap
 
 -- Shape, location and scale
-function GetMinimapShape() return "SQUARE" end
-Minimap:ClearAllPoints()
-Minimap:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 25, -25)
-MinimapCluster:SetScale(Scale)
---Minimap:SetFrameStrata("BACKGROUND")
-Minimap:SetFrameLevel(10)
+MinimapCluster:SetScale(1)
+MinimapCluster:ClearAllPoints()
+MinimapCluster:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 25, min(0, -25 + floor(Size/7.5)))
+MinimapCluster:EnableMouse(false)
+MinimapCluster:SetClampedToScreen(false)
+MinimapCluster:SetSize(Size*Scale, Size*Scale)
 
-Shadow = CreateFrame("Frame", nil, Minimap)
-Shadow:SetPoint("TOPLEFT",  -3, 3)
-Shadow:SetPoint("BOTTOMRIGHT", 3, -3)
-Shadow:SetBackdrop({edgeFile = "Interface\\addons\\PSUICore\\media\\glow.tga", edgeSize = 3})
-Shadow:SetBackdropBorderColor(0, 0, 0, 1)
+Minimap:SetClampedToScreen(false)
+Minimap:SetSize(Size*Scale, Size*Scale)
+Minimap:SetMaskTexture[[Interface\AddOns\PSUICore\media\rectangle]]
+Minimap:SetHitRectInsets(0, 0, 34*Scale, 34*Scale)
+--Minimap:SetFrameStrata("BACKGROUND")
+Minimap:ClearAllPoints()
+Minimap:SetAllPoints(MinimapCluster)
+Minimap:SetFrameLevel(2)
+
+function GetMinimapShape() return "SQUARE" end
+
+Minimap.mnMap = CreateFrame("Frame", nil, Minimap)
+Minimap.mnMap:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 0, -(floor(Size/7.5)*Scale))
+Minimap.mnMap:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 0, (floor(Size/7.5)*Scale))
+Minimap.mnMap:SetBackdrop({
+	bgFile = [[Interface/Buttons/WHITE8X8]],
+	tiled = false,
+	insets = {left = 0, right = 0, top = 0, bottom = 0}
+})
+Minimap.mnMap:SetBackdropColor(0, 0, 0, .75)
+Minimap.mnMap:SetFrameLevel(0)
+Minimap.mnMap:SetFrameStrata("BACKGROUND")
+
+Minimap.mnMap.Shadow = CreateFrame("Frame", nil, Minimap.mnMap)
+Minimap.mnMap.Shadow:SetPoint("TOPLEFT", Minimap.mnMap, "TOPLEFT", -3, 3)
+Minimap.mnMap.Shadow:SetPoint("BOTTOMRIGHT", Minimap.mnMap, "BOTTOMRIGHT", 3, -3)
+Minimap.mnMap.Shadow:SetBackdrop({edgeFile = [[Interface\AddOns\PSUICore\media\glow]], edgeSize = 3})
+Minimap.mnMap.Shadow:SetBackdropBorderColor(0, 0, 0, 1)
+
+-- Background
+if(ClassColorBorder==true) then
+    local _, class = UnitClass("player")
+    local t = RAID_CLASS_COLORS[class]
+    Minimap.mnMap:SetBackdropColor(t.r, t.g, t.b, a)
+else
+    Minimap.mnMap:SetBackdropColor(0, 0, 0, .75)
+end
 
 -- Mask texture hint => addon will work with Carbonite
 local hint = CreateFrame("Frame")
@@ -29,7 +62,7 @@ local total = 0
 local SetTextureTrick = function(self, elapsed)
     total = total + elapsed
     if(total > 2) then
-        Minimap:SetMaskTexture("Interface\\Buttons\\WHITE8X8")
+        --Minimap:SetMaskTexture("Interface\\Buttons\\WHITE8X8")
         hint:SetScript("OnUpdate", nil)
     end
 end
@@ -38,21 +71,6 @@ hint:RegisterEvent("PLAYER_LOGIN")
 hint:SetScript("OnEvent", function()
     hint:SetScript("OnUpdate", SetTextureTrick)
 end)
-
--- Background
-Minimap:SetBackdrop({bgFile = "Interface\\ChatFrame\\ChatFrameBackground", insets = {
-    top = -BGThickness,
-    left = -BGThickness,
-    bottom = -BGThickness,
-    right = -BGThickness
-}})
-if(ClassColorBorder==true) then
-    local _, class = UnitClass("player")
-    local t = RAID_CLASS_COLORS[class]
-    Minimap:SetBackdropColor(t.r, t.g, t.b, a)
-else
-    Minimap:SetBackdropColor(r, g, b, a)
-end
 
 -- Mousewheel zoom
 Minimap:EnableMouseWheel(true)
@@ -89,6 +107,8 @@ for i in pairs(frames) do
     _G[frames[i]].Show = dummy
 end
 MinimapCluster:EnableMouse(false)
+
+Minimap = Minimap.mnMap
 
 -- Tracking
 MiniMapTrackingBackground:SetAlpha(0)
@@ -139,6 +159,47 @@ StreamingIcon:ClearAllPoints()
 StreamingIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 8, 8)
 StreamingIcon:SetScale(0.8)
 end
+
+
+-- Clock
+if not IsAddOnLoaded("Blizzard_TimeManager") then
+	LoadAddOn("Blizzard_TimeManager")
+end
+local clockFrame, clockTime = TimeManagerClockButton:GetRegions()
+clockFrame:Hide()
+clockTime:SetFont(font, 12, "THINOUTLINE")
+clockTime:SetTextColor(1,1,1)
+TimeManagerClockButton:SetPoint("BOTTOM", Minimap, "BOTTOM", 0, -8)
+TimeManagerClockButton:SetScript("OnClick", function(_,btn)
+ 	if btn == "LeftButton" then
+		TimeManager_Toggle()
+	end 
+	if btn == "RightButton" then
+		if not CalendarFrame then
+			LoadAddOn("Blizzard_Calendar")
+		end
+		Calendar_Toggle()
+	end
+end)
+	
+-- Zone text
+local zoneTextFrame = CreateFrame("Frame", nil, UIParent)
+zoneTextFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 0, zoneTextYOffset)
+zoneTextFrame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 0, zoneTextYOffset)
+zoneTextFrame:SetHeight(19)
+zoneTextFrame:SetAlpha(0)
+MinimapZoneText:SetParent(zoneTextFrame)
+MinimapZoneText:ClearAllPoints()
+MinimapZoneText:SetPoint("LEFT", 2, 1)
+MinimapZoneText:SetPoint("RIGHT", -2, 1)
+MinimapZoneText:SetFont(font, 12, "THINOUTLINE")
+Minimap:SetScript("OnEnter", function(self)
+	UIFrameFadeIn(zoneTextFrame, 0.3, 0, 1)
+end)
+Minimap:SetScript("OnLeave", function(self)
+	UIFrameFadeOut(zoneTextFrame, 0.3, 1, 0)
+end)
+
 
 -- Creating right click menu
 local menuFrame = CreateFrame("Frame", "m_MinimapRightClickMenu", UIParent, "UIDropDownMenuTemplate")
@@ -216,6 +277,8 @@ local menuList = {
 	end},]]
 }
 
+Minimap = rawMinimap
+
 -- Click func
 Minimap:SetScript("OnMouseUp", function(_, btn)
     if(btn=="MiddleButton") then
@@ -236,41 +299,3 @@ Minimap:SetScript("OnMouseUp", function(_, btn)
 	end
 end) 
 
--- Clock
-if not IsAddOnLoaded("Blizzard_TimeManager") then
-	LoadAddOn("Blizzard_TimeManager")
-end
-local clockFrame, clockTime = TimeManagerClockButton:GetRegions()
-clockFrame:Hide()
-clockTime:SetFont(font, 12, "THINOUTLINE")
-clockTime:SetTextColor(1,1,1)
-TimeManagerClockButton:SetPoint("BOTTOM", Minimap, "BOTTOM", 0, -8)
-TimeManagerClockButton:SetScript("OnClick", function(_,btn)
- 	if btn == "LeftButton" then
-		TimeManager_Toggle()
-	end 
-	if btn == "RightButton" then
-		if not CalendarFrame then
-			LoadAddOn("Blizzard_Calendar")
-		end
-		Calendar_Toggle()
-	end
-end)
-	
--- Zone text
-local zoneTextFrame = CreateFrame("Frame", nil, UIParent)
-zoneTextFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 0, zoneTextYOffset)
-zoneTextFrame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 0, zoneTextYOffset)
-zoneTextFrame:SetHeight(19)
-zoneTextFrame:SetAlpha(0)
-MinimapZoneText:SetParent(zoneTextFrame)
-MinimapZoneText:ClearAllPoints()
-MinimapZoneText:SetPoint("LEFT", 2, 1)
-MinimapZoneText:SetPoint("RIGHT", -2, 1)
-MinimapZoneText:SetFont(font, 12, "THINOUTLINE")
-Minimap:SetScript("OnEnter", function(self)
-	UIFrameFadeIn(zoneTextFrame, 0.3, 0, 1)
-end)
-Minimap:SetScript("OnLeave", function(self)
-	UIFrameFadeOut(zoneTextFrame, 0.3, 1, 0)
-end)

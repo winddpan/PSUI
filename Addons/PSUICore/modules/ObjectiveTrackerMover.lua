@@ -11,23 +11,17 @@
   local ObjectiveTrackerFrame = ObjectiveTrackerFrame
 
   local frame = CreateFrame("Frame")
-  
-  local cfg = {}
-  cfg.y = -75
- 
+  local pos = {"TOPRIGHT", UIParent, "TOPRIGHT", -80, -325}
+  local pa1,paf,pa2,px,py = unpack(pos)
+
   -----------------------------
   -- FUNCTIONS
   -----------------------------
 
   local function AdjustSetPoint(self,...)
     local a1,af,a2,x,y = ...
-    if a1 and af == "MinimapCluster" and y ~= cfg.y then    
-      if not InCombatLockdown() then
-        self:SetPoint(a1,af,a2,x,cfg.y)
-      else
-        frame.point = {a1,af,a2,x,cfg.y}
-        frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-      end      
+    if a1 and af == "MinimapCluster" and y ~= py or x ~= px then 
+		self:SetPoint(unpack(pos))     
     end
   end 
 
@@ -36,6 +30,7 @@
     if event == "PLAYER_LOGIN" then
       self.point = {ObjectiveTrackerFrame:GetPoint()}      
       hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", AdjustSetPoint) 
+	  
 	  local gbtn = _G["GarrisonLandingPageMinimapButton"]
 	  gbtn:ClearAllPoints()
 	  gbtn:SetPoint("TOPLEFT", Minimap.mnMap, "TOPLEFT", -25, 25) 

@@ -10,24 +10,21 @@ local Size = 220
 local rawMinimap = Minimap
 local Minimap = Minimap
 
+function GetMinimapShape() return "SQUARE" end
+
 -- Shape, location and scale
 MinimapCluster:SetScale(1)
-MinimapCluster:ClearAllPoints()
-MinimapCluster:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 25, min(0, -25 + floor(Size/7.5)))
 MinimapCluster:EnableMouse(false)
 MinimapCluster:SetClampedToScreen(false)
-MinimapCluster:SetSize(Size*Scale, Size*Scale)
 
 Minimap:SetClampedToScreen(false)
 Minimap:SetSize(Size*Scale, Size*Scale)
 Minimap:SetMaskTexture[[Interface\AddOns\PSUICore\media\rectangle]]
 Minimap:SetHitRectInsets(0, 0, 34*Scale, 34*Scale)
---Minimap:SetFrameStrata("BACKGROUND")
+Minimap:SetClampedToScreen(false)
 Minimap:ClearAllPoints()
-Minimap:SetAllPoints(MinimapCluster)
-Minimap:SetFrameLevel(2)
+Minimap:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 25, min(0, -25 + floor(Size/7.5)))
 
-function GetMinimapShape() return "SQUARE" end
 
 Minimap.mnMap = CreateFrame("Frame", nil, Minimap)
 Minimap.mnMap:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 0, -(floor(Size/7.5)*Scale))

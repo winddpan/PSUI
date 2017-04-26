@@ -52,6 +52,7 @@ f:SetPoint(POSITION[1], POSITION[2], POSITION[3], POSITION[4], POSITION[5])
 f:SetWidth(WIDTH)
 f:SetHeight(HEIGHT)
 f:SetScale(SCALE)
+f:SetFrameStrata(Minimap:GetFrameStrata())
 
 f.shadow = CreateFrame("Frame", nil, f)
 f.shadow:SetBackdrop({edgeFile = "Interface\\addons\\PSUICore\\media\\glow.tga", edgeSize = 3,

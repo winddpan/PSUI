@@ -11,7 +11,7 @@ local Filger_Settings = {
 
 Filger_Spells = {
 	["ALL"] = {
-	{
+		{
 			Name = "Trinket",
 			Direction = "LEFT",
 			Mode = "ICON",
@@ -83,8 +83,11 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
+			
+			-- 溃烂之伤
+			{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
 			{spellID = 195181, unitID = "player", caster = "player", filter = "BUFF"},
-
 		},
 		{
 			Name = "DEBUFF",
@@ -95,7 +98,6 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
 				{spellID = 196782, unitID = "target", caster = "player", filter = "DEBUFF"},
 				{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
 
 				--灵魂收割
 				{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},

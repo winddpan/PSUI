@@ -2,8 +2,10 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WorldQuestTrackerAddon", "itIT")
 if not L then return end 
 
 L["S_APOWER_AVAILABLE"] = "Disponibile"
+L["S_APOWER_DOWNVALUE"] = "Le Missioni con %s scadono dopo il completamento della ricerca artefatto."
 L["S_APOWER_NEXTLEVEL"] = "Prox Livello"
 L["S_ENABLED"] = "Abilitato"
+L["S_ERROR_NOTIMELEFT"] = "E' scaduto il tempo per questa missione."
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
@@ -44,6 +46,7 @@ L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Legata all'Account"
 L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clicca per maggiori info"
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Richiede Attenzione"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Ricompense Odierne"
+L["S_OVERALL"] = "Totale"
 L["S_PARTY"] = "Gruppo"
 L["S_PARTY_PLAYERSWITH"] = "Giocatori nel gruppo Con WQT:"
 L["S_PARTY_PLAYERSWITHOUT"] = "Giocatori nel gruppo Senza WQT:"

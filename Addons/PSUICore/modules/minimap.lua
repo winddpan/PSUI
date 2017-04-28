@@ -1,4 +1,5 @@
 ﻿local addon, ns = ...
+local mediapath = "interface\\addons\\"..addon.."\\media\\"
 local _G = _G
 
 -- Config
@@ -137,8 +138,8 @@ GuildInstanceDifficulty:SetFrameStrata("LOW")
 
 -- Mail icon
 MiniMapMailFrame:ClearAllPoints()
-MiniMapMailFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 2, -6)
---MiniMapMailIcon:SetTexture(cfg.media.mail_icon)
+MiniMapMailFrame:SetPoint("BOTTOMLEFT", Minimap, 20, -7)
+MiniMapMailIcon:SetTexture(mediapath.."mail")
 
 -- Invites Icon
 GameTimeCalendarInvitesTexture:ClearAllPoints()

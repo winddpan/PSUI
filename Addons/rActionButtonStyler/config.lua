@@ -17,7 +17,7 @@
   -----------------------------
 
   cfg.textures = {
-    normal            = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss",
+    normal            = "Interface\\AddOns\\rActionButtonStyler\\media\\blank",
     flash             = "Interface\\AddOns\\rActionButtonStyler\\media\\flash",
     hover             = "Interface\\AddOns\\rActionButtonStyler\\media\\hover",
     pushed            = "Interface\\AddOns\\rActionButtonStyler\\media\\pushed",

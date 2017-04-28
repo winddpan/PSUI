@@ -1,0 +1,11 @@
+## Interface: 70200
+## Title: PSCooldownIcons
+## Notes: CooldownIcons
+## Author: Winddpan
+## Version: 1.0
+## OptionalDeps:OmniCC
+
+ActivationStyle.lua
+Settings.lua
+Spells.lua
+Core.lua

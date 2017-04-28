@@ -3,7 +3,16 @@
 -----------------------------
 
 local A, L = ...
-if L.isMine then return end
+L.MyNames = {"名字起得好", "天降正义", "五葉"}
+L.isMine = false
+
+for _, name in pairs(L.MyNames) do
+	if GetUnitName("player") == name then
+		L.isMine = true
+		break
+	end
+end
+if not L.isMine then return end
 
 -----------------------------
 -- Fader
@@ -60,16 +69,16 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 60 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 0 },
   frameScale      = 1,
-  framePadding    = 2,
-  buttonWidth     = 40,
-  buttonHeight    = 40,
+  framePadding    = 1,
+  buttonWidth     = 36,
+  buttonHeight    = 36,
   buttonMargin    = 0,
   numCols         = 12,
   numButtons	  = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
+  fader           = fader,
 }
 --create
 rActionBar:CreateActionBar1(A, bar1)
@@ -79,14 +88,14 @@ rActionBar:CreateActionBar1(A, bar1)
 -----------------------------
 
 local bar2 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 100 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 70 },
   frameScale      = 1,
   framePadding    = 2,
-  buttonWidth     = 40,
-  buttonHeight    = 40,
+  buttonWidth     = 44,
+  buttonHeight    = 44,
   buttonMargin    = 0,
-  numCols         = 12,
-  numButtons	  = 12,
+  numCols         = 10,
+  numButtons	  = 10,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -230,13 +239,13 @@ rActionBar:CreatePetBar(A, petbar)
 -----------------------------
 
 local extrabar = {
-  framePoint      = { "RIGHT", A.."Bar2", "BOTTOMLEFT", 0, 0 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 40 },
   frameScale      = 1,
   framePadding    = 2,
   buttonWidth     = 44,
   buttonHeight    = 44,
   buttonMargin    = 0,
-  numCols         = 1,
+  numCols         = 0,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }

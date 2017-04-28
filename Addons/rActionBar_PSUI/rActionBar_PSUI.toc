@@ -4,5 +4,6 @@
 ## Notes: rActionBar layout
 ## RequiredDeps: rActionBar
 
+layout_mine.lua
 layout.lua
 cooldown_fix.lua

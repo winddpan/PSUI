@@ -27,7 +27,7 @@
     bgFile = bgfile,
     edgeFile = edgefile,
     tile = false,
-    tileSize = 32,
+    tileSize = 0,
     edgeSize = cfg.background.inset,
     insets = {
       left = cfg.background.inset,
@@ -108,6 +108,18 @@
       bu.bg:SetPoint("TOPLEFT", bu, "TOPLEFT", -inset, inset)
       bu.bg:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", inset, -inset)
       bu.bg:SetFrameLevel(bu:GetFrameLevel()-1)
+	
+	  local F = bu.bg
+	  local ins = cfg.background.inset - 1
+	  F.Border = CreateFrame("Frame", nil, F)
+      F.Border:SetPoint("TOPLEFT", F, "TOPLEFT", ins, -ins)
+      F.Border:SetPoint("BOTTOMRIGHT", F, "BOTTOMRIGHT", -ins, ins)
+	  F.Border:SetBackdrop({ 
+		edgeFile = "Interface\\Buttons\\WHITE8x8" , edgeSize = 1,
+	  })
+	  F.Border:SetBackdropBorderColor(0, 0, 0, 1)
+	  F.Border:SetFrameLevel(F:GetFrameLevel() + 1)
+
       if cfg.background.classcolored then
         cfg.background.backgroundcolor = classcolor
         cfg.background.shadowcolor = classcolor

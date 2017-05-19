@@ -40,13 +40,13 @@
 	frames = {			-- unit frames settings
 		PPHeight = 12,
 		player = {						-- Player's frame
-			["position"] = {"CENTER","UIParent","CENTER", -200, -260},		
+			["position"] = {"RIGHT", UIParent, "BOTTOM", -150, 280},		
 			["width"] = 208,
 			["height"] = 20,
 			["scale"] = 1,
 		},
 		target = {						-- Target's frame
-			["position"] = {"CENTER","UIParent","CENTER", 200, -260},	
+			["position"] = {"LEFT", UIParent, "BOTTOM", 150, 280},	
 			["width"] = 208,
 			["height"] = 20,
 			["scale"] = 1,
@@ -69,7 +69,7 @@
 			["enable"] = true,			-- Focus target + target of focus target
 			--["position"] = {"TOPLEFT", "oUF_monoPlayerFrame", "BOTTOMLEFT", 0, -39},
 			--["target_position"] = {"TOPLEFT", "oUF_monoTargetFrame", "BOTTOMLEFT", 0, -42},
-			["position"] = {"CENTER","UIParent","CENTER", 300, 160},	
+			["position"] = {"RIGHT", "oUF_monoTargetFrame", "RIGHT", 0, 400},	
 			["width"] = 150,
 			["height"] = 28,
 			["scale"] = 1,

@@ -6,7 +6,7 @@
  local LSM = LibStub("LibSharedMedia-3.0")
  local self, GSA, PlaySoundFile = GladiatorlosSA, GladiatorlosSA, PlaySoundFile
  local GSA_TEXT = "|cff69CCF0GladiatorlosSA2|r (|cffFFF569/gsa|r)"
- local GSA_VERSION = "|cffFF7D0A v1.14.3a |r(|cFF00FF967.2.0 Legion|r)"
+ local GSA_VERSION = "|cffFF7D0A v1.15 |r(|cFF00FF967.2.0 Legion|r)"
  local GSA_AUTHOR = " "
  local gsadb
  local soundz,sourcetype,sourceuid,desttype,destuid = {},{},{},{},{}
@@ -71,6 +71,7 @@
 		all = false,
 		arena = true,
 		battleground = true,
+		disablelargebg = false,
 		field = true,
 		path = GSA_LOCALEPATH[GetLocale()] or "GladiatorlosSA2\\Voice_enUS",
 		path_male = GSA_LOCALEPATH[GetLocale()] or "GladiatorlosSA2\\Voice_enUS",
@@ -145,6 +146,19 @@
 		forbearanceDown = false,
 		mageShield = false,
 		strikeOfTheWindlord = false,
+		
+		_PHgreaterFade = false,
+		_PHgreaterFadeDown = false,
+		_PHfaerieSwarm = false,
+		_PHringOfPeace = false,
+		_PHcallObserver = false,
+		_PHdarkglare = false,
+		_PHinnerFocus = false,
+		_PHinnerFocusDown = false,
+		_PHmarkOfAluneth = false,
+		_PHebonbolt = false,
+		_PHthalkiel = false,
+		_PHashamanesFrenzy = false,
 		
 		
 		genderVoice = false,
@@ -308,10 +322,22 @@
  end
 
  function GladiatorlosSA:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
+	--Disable By Location
 	local _,currentZoneType = IsInInstance()
+	local _,isBigBG = GetInstanceInfo(mapID)
+--	if (not ((currentZoneType == "none" and gsadb.field) or ((currentZoneType == "pvp" and gsadb.battleground) and ((isBigBG == "30" or "628") and gsadb.disablelargebg)) or (currentZoneType == "arena" and gsadb.arena) or gsadb.all)) then
 	if (not ((currentZoneType == "none" and gsadb.field) or (currentZoneType == "pvp" and gsadb.battleground) or (currentZoneType == "arena" and gsadb.arena) or gsadb.all)) then
 		return
 	end
+	--Disable If Large Battleground
+--	local _,isBigBG = GetInstanceInfo(mapID)
+--		if ((isBigBG == "30" or "628") and gsadb.disablelargebg) then
+--		return
+--	end
+	--testlines Disable If Not Flagged In World
+--	local _,flaggedPvP = UnitIsPVP("player")
+--	if ((flaggedPvP == "1") and gsadb.onlyflagged and currentZoneType == "none") then
+--	end
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName= select ( 1 , ... );
 	if not GSA_EVENT[event] then return end
 

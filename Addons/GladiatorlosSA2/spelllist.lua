@@ -102,8 +102,6 @@
 			-- Paladin (Aura Applied)
 			[1022] = "handOfProtection", 
 			[1044] = "handOfFreedom",
-			[6940] = "sacrifice",		-- Blessing of Sacrifice
-			[199448] = "sacrifice",		-- Blessing of Sacrifice (Ultimate Sacrifice PvP Talent)
 			[642] = "divineShield", 
 			[31884] = "avengingWrath", -- Protection/Retribution
 			[31842] = "avengingWrath", -- Holy
@@ -119,6 +117,7 @@
 			[228049] = "forgottenQueens",
 			[182496] = "unbreakableWill",
 			[216331] = "AvengingCrusader",
+			[210294] = "divineFavor",
 			
 			-- Priest (Aura Applied)
 			[33206] = "painSuppression",
@@ -135,6 +134,8 @@
 			[194249] = "voidForm",
 			[218413] = "voidForm",
 			[15286] = "vampiricEmbrace",
+			[213602] = "_PHgreaterFade",
+			[196762] = "_PHinnerFocus",
 
 			-- Rogue (Aura Applied)
 			[185313] = "shadowDance",
@@ -255,6 +256,8 @@
 			[216331] = "AvengingCrusaderDown",	-- Avenging Crusader
 			[215769] = "redeemerDown",			-- Spirit of the Redeemer (Priest pretend death talent)
 			[236273] = "duelDown",				-- Duel (Warrior PvP Talent)
+			[213602] = "_PHgreaterFadeDown",	-- Greater Fade
+			[196762] = "_PHinnerFocusDown",		-- Inner Focus 
 			},
 		castStart = {					-- cast start [spellid] = ".mp3 file name",
 		--GENERAL
@@ -320,6 +323,8 @@
 			[203286] = "greaterPyro",
 			[199786] = "glacialSpike",
 			[113724] = "ringOfFrost",
+			[224968] = "_PHmarkOfAluneth",
+			[214634] = "_PHebonbolt",
 			
 			-- Monk (Spell Casting)
 			[205406] = "sheilunsGift",
@@ -368,6 +373,7 @@
 			[116858] = "chaosBolt",
 			[6358] = "seduction",
 			[115268] = "seduction",
+			[211714] = "_PHthalkiel",
 
 			-- Warrior (Spell Casting)
 				--None! :D
@@ -531,6 +537,8 @@
 			[5215] = "prowl",
 			[22570] = "maim",
 			[236026] = "maim",
+			[209749] = "_PHfaerieSwarm",
+			[210722] = "_PHashamanesFrenzy",
 			
 			-- Hunter (Cast Success)
 			[147362] = "counterShot",
@@ -589,6 +597,7 @@
 			[122470] = "touchOfKarma",
 			[209525] = "soothingMist",
 			[205320] = "strikeOfTheWindlord",
+			[116844] = "_PHringOfPeace",
 			
 			-- Paladin (Cast Success)
 			[96231] = "rebuke",
@@ -599,6 +608,8 @@
 			[210220] = "holyWrath",
 			[210256] = "sanctuary",
 			[633] = "layOnHands",
+			[6940] = "sacrifice",		-- Blessing of Sacrifice
+			[199448] = "sacrifice",		-- Blessing of Sacrifice (Ultimate Sacrifice PvP Talent)
 			
 			-- Priest (Cast Success)
 			[8122] = "fear4", 		-- Psychic Scream
@@ -684,6 +695,8 @@
 			[115770] = "felLash",
 			[6360] = "felLash",
 			[1122] = "summonInfernal",
+			[201996] = "_PHcallObserver",
+			[205180] = "_PHdarkglare",
 
 			-- Warrior (Cast Success)
 			[97462] = "commandingShout",
@@ -741,10 +754,3 @@
 		},
 	}
 end
-
---NOTES
---Things to add:
---Holy priest [Greater Fade] & down
---Monk [Ring of Peace]
---Balance druid [Faerie Swarm]
---

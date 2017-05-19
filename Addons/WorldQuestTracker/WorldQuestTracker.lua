@@ -142,6 +142,7 @@ local default_config = {
 			equipment = true,
 			trade_skill = true,
 		},
+		disable_world_map_widgets = false,
 		worldmap_widgets = {
 			textsize = 9,
 			scale = 1,
@@ -1322,9 +1323,11 @@ end
 if (symbol_1K) then
 	function WorldQuestTracker.ToK (numero)
 		if (numero > 99999999) then
+			--return format ("%.2f", numero/100000000) .. symbol_1B
 			return format ("%.2f", numero/100000000) .. symbol_1B
 		elseif (numero > 999999) then
-			return format ("%.2f", numero/10000) .. symbol_10K
+			--print ("--", numero, format ("%d", numero/10000))
+			return format ("%d", numero/10000) .. symbol_10K
 		elseif (numero > 99999) then
 			return floor (numero/10000) .. symbol_10K
 		elseif (numero > 9999) then
@@ -1622,7 +1625,139 @@ function WorldQuestTracker.RewardRealItemLevel (questID)
 end
 
 -- �rtifact ~artifact
+
+function WorldQuestTracker.RewardIsArtifactPowerKorean (itemLink) -- thanks @yuk6196 on curseforge
+
+	GameTooltipFrame:SetOwner (WorldFrame, "ANCHOR_NONE")
+	GameTooltipFrame:SetHyperlink (itemLink)
+	local text = GameTooltipFrameTextLeft1:GetText()
+
+	if (text and text:match ("|cFFE6CC80")) then
+		local power = GameTooltipFrameTextLeft3:GetText()
+		if (power) then
+			local n = tonumber (power:gsub ("%p", ""):match ("%d+"))
+			if (power:find (SECOND_NUMBER)) then
+			        n = n * 10000
+                        elseif (power:find (THIRD_NUMBER)) then
+				n = n * 100000000
+			elseif (power:find (FOURTH_NUMBER)) then
+				n = n * 1000000000000
+			end
+			return true, n or 0
+		end
+	end
+
+	local text2 = GameTooltipFrameTextLeft2:GetText()
+	if (text2 and text2:match ("|cFFE6CC80")) then
+		local power = GameTooltipFrameTextLeft4:GetText()
+		if (power) then
+			local n = tonumber (power:gsub ("%p", ""):match ("%d+"))
+			if (power:find (SECOND_NUMBER)) then
+			        n = n * 10000
+                        elseif (power:find (THIRD_NUMBER)) then
+				n = n * 100000000
+			elseif (power:find (FOURTH_NUMBER)) then
+				n = n * 1000000000000
+			end
+			return true, n or 0
+		end
+	end
+end
+
+function WorldQuestTracker.RewardIsArtifactPowerGerman (itemLink) -- thanks @Superanuki on curseforge
+
+	local w1, w2, w3, w4 = "Millionen", "Million", "%d,%d", "([^,]+),([^,]+)" --works for German
+
+	if (WorldQuestTracker.GameLocale == "ptBR") then
+		w1, w2, w3, w4 = "milh", "milh", "%d.%d", "([^,]+).([^,]+)"
+	elseif (WorldQuestTracker.GameLocale == "frFR") then
+		w1, w2, w3, w4 = "million", "million", "%d,%d", "([^,]+),([^,]+)"
+	end
+
+	GameTooltipFrame:SetOwner (WorldFrame, "ANCHOR_NONE")
+	GameTooltipFrame:SetHyperlink (itemLink)
+	local text = GameTooltipFrameTextLeft1:GetText()
+	
+	if (text and text:match ("|cFFE6CC80")) then
+		local power = GameTooltipFrameTextLeft3:GetText()
+		if (power) then
+			if (power:find (w1) or power:find (w2)) then
+
+				local n=power:match(w3)
+				if n then 
+					local one,two=n:match(w4) n=one.."."..two 
+				end
+				n = tonumber (n)
+				if (not n) then
+					n = power:match (" %d ")
+					n = tonumber (n)
+					n=n..".0"
+					n = tonumber (n)
+				end
+				
+				if (n) then
+					n = n * 1000000
+					return true, n or 0
+				end
+			end
+			
+			if (WorldQuestTracker.GameLocale == "frFR") then
+				power = power:gsub ("%s", ""):gsub ("%p", ""):match ("%d+")
+			else
+				power = power:gsub ("%p", ""):match ("%d+")
+			end
+			
+			power = tonumber (power)
+			return true, power or 0
+		end
+	end
+	
+	local text2 = GameTooltipFrameTextLeft2:GetText()
+	if (text2 and text2:match ("|cFFE6CC80")) then
+		local power = GameTooltipFrameTextLeft4:GetText()
+		if (power) then
+		
+			if (power:find (w1) or power:find (w2)) then
+				local n=power:match(w3)
+				
+				if n then 
+					local one,two=n:match(w4) n=one.."."..two 
+				end
+				n = tonumber (n)
+				if (not n) then
+					n = power:match (" %d ")
+					n = tonumber (n)
+					n=n..".0"
+					n = tonumber (n)
+				end
+				
+				if (n) then
+					n = n * 1000000
+					return true, n or 0
+				end
+			end
+			
+			if (WorldQuestTracker.GameLocale == "frFR") then
+				power = power:gsub ("%s", ""):gsub ("%p", ""):match ("%d+")
+			else
+				power = power:gsub ("%p", ""):match ("%d+")
+			end
+			
+			power = tonumber (power)
+			return true, power or 0
+		end
+	end
+end
+
 function WorldQuestTracker.RewardIsArtifactPower (itemLink)
+
+	if (WorldQuestTracker.GameLocale == "koKR") then
+		return WorldQuestTracker.RewardIsArtifactPowerKorean (itemLink)
+	
+	elseif (WorldQuestTracker.GameLocale == "deDE" or WorldQuestTracker.GameLocale == "ptBR" or WorldQuestTracker.GameLocale == "frFR") then
+		return WorldQuestTracker.RewardIsArtifactPowerGerman (itemLink)
+	end
+
 	GameTooltipFrame:SetOwner (WorldFrame, "ANCHOR_NONE")
 	GameTooltipFrame:SetHyperlink (itemLink)
 
@@ -1649,6 +1784,7 @@ function WorldQuestTracker.RewardIsArtifactPower (itemLink)
 			else
 				power = power:gsub ("%p", ""):match ("%d+")
 			end
+			
 			power = tonumber (power)
 			return true, power or 0
 		end
@@ -2810,12 +2946,24 @@ function WorldQuestTracker.SetupWorldQuestButton (self, worldQuestType, rarity, 
 						self.Texture:SetTexture (texture)
 					end
 					
-					if (artifactPower >= 1000) then
-						self.flagText:SetText (format ("%.1fK", artifactPower/1000))
+					--if (artifactPower >= 1000) then
+					--	self.flagText:SetText (format ("%.1fK", artifactPower/1000))
 						--self.flagText:SetText (comma_value (artifactPower))
+					--else
+					--	self.flagText:SetText (artifactPower)
+					--end
+					
+					if (artifactPower >= 1000) then
+						if (artifactPower > 999999) then -- 1M
+							self.flagText:SetText (WorldQuestTracker.ToK (artifactPower))
+						elseif (artifactPower > 9999) then
+							self.flagText:SetText (WorldQuestTracker.ToK (artifactPower))
+						else
+							self.flagText:SetText (format ("%.1fK", artifactPower/1000))
+						end
 					else
 						self.flagText:SetText (artifactPower)
-					end
+					end					
 
 					self.isArtifact = true
 					self.IconTexture = texture
@@ -3160,6 +3308,12 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 					elseif (value == "scale") then
 						if (WorldQuestTrackerAddon.GetCurrentZoneType() == "world") then
 							WorldQuestTracker.UpdateWorldQuestsOnWorldMap()
+						end
+					elseif (value == "disable_world_map_widgets") then
+						WorldQuestTracker.db.profile.disable_world_map_widgets = value2
+						if (WorldQuestTrackerAddon.GetCurrentZoneType() == "world") then
+							WorldQuestTracker.UpdateWorldQuestsOnWorldMap()
+							GameCooltip:Close()
 						end
 					end
 					return
@@ -4507,6 +4661,8 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				GameCooltip:AddMenu (2, options_on_click, "tracker_scale", 1.2)
 				GameCooltip:AddLine (format (L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"], "1.3"), "", 2)
 				GameCooltip:AddMenu (2, options_on_click, "tracker_scale", 1.3)
+				GameCooltip:AddLine (format (L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"], "1.5"), "", 2)
+				GameCooltip:AddMenu (2, options_on_click, "tracker_scale", 1.5)
 				
 				--
 				GameCooltip:AddLine ("$div", nil, 2, nil, -5, -11)
@@ -4577,6 +4733,16 @@ hooksecurefunc ("ToggleWorldMap", function (self)
 				--World Map Config
 				GameCooltip:AddLine (L["S_MAPBAR_OPTIONSMENU_WORLDMAPCONFIG"])
 				GameCooltip:AddIcon ([[Interface\Worldmap\UI-World-Icon]], 1, 1, IconSize, IconSize)
+
+				GameCooltip:AddLine ("Disable Icons on World Map", "", 2)
+				if (WorldQuestTracker.db.profile.disable_world_map_widgets) then
+					GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
+				else
+					GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
+				end
+				GameCooltip:AddMenu (2, options_on_click, "world_map_config", "disable_world_map_widgets", not WorldQuestTracker.db.profile.disable_world_map_widgets)
+				GameCooltip:AddLine ("$div", nil, 2, nil, -7, -14)
+				
 				
 				GameCooltip:AddLine ("Small Text Size", "", 2)
 				GameCooltip:AddMenu (2, options_on_click, "world_map_config", "textsize", 9)
@@ -8259,8 +8425,9 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap (noCache, showFade, isQue
 		end
 		return
 		
-	--elseif () then
-	--	return
+	elseif (WorldQuestTracker.db.profile.disable_world_map_widgets) then
+		WorldQuestTracker.HideWorldQuestsOnWorldMap()
+		return
 	end
 	
 	WorldQuestTracker.RefreshStatusBar()

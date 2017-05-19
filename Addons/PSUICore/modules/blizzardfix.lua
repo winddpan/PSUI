@@ -21,10 +21,10 @@ local f = CreateFrame"Frame"
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function() customLossControlFrame() end)
 
-
 --[[
 setfenv(WorldMapFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
 setfenv(FriendsFrame_OnShow, setmetatable({UpdateMicroButtons = function() end}, {__index = _G}))
+
 
 local ParentalControls = CreateFrame("Frame")
 ParentalControls:RegisterEvent("ADDON_LOADED")

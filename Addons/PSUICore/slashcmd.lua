@@ -53,4 +53,4 @@ SlashCmdList["CmdHelp"] = function() ShowHelp() end
 SLASH_CmdHelp1 = "/psui"
 SLASH_CmdHelp2 = "/ps"
 
-SetScreen()
+--SetScreen()

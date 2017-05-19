@@ -440,8 +440,8 @@ for oi,ov in pairs(orders) do
 end
 
 local focus_position = {"BOTTOMLEFT", "oUF_monoFocusFrame", "TOPLEFT", -2, 2}	
-local target_position = {"CENTER", UIParent, "CENTER", 117, -140}
-local target_buff_position = {"TOPLEFT", UIParent, "CENTER", 150, -4}
+local target_position = {"BOTTOMLEFT", "oUF_monoTargetFrame", "TOPLEFT", -2, 100}
+local target_buff_position = {"TOPLEFT", UIParent, "CENTER", 200, -4}
 
 local targetCC = {
 	Name = "LoseControl_Target",

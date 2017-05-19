@@ -6,13 +6,14 @@ local _G = getfenv(0)
 local math = _G.math
 local string = _G.string
 local table = _G.table
+local debugstack = _G.debugstack
 local hooksecurefunc = _G.hooksecurefunc
--- local issecurevariable = _G.issecurevariable
 local next = _G.next
 local pairs = _G.pairs
 local pcall = _G.pcall
 local print = _G.print
 local select = _G.select
+local setmetatable = _G.setmetatable
 local tonumber = _G.tonumber
 local type = _G.type
 local unpack = _G.unpack
@@ -94,6 +95,7 @@ local CFG = {}
 local DEFAULTS = {
 	version = "",
 	growth_direction = "DOWN",
+	skin = "Default",
 	point = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -12},
 	max_active_toasts = 12,
 	sfx_enabled = true,
@@ -150,7 +152,43 @@ local DEFAULTS = {
 	}
 }
 
-local F = {} -- F for Functions
+local SKINS = {
+	Default = {
+		func = function() end
+	},
+	num = 1,
+}
+
+SKINS.handler = SKINS.Default.func
+
+local _F, F = {}, {} -- private, proxy
+setmetatable(F, {
+	__index = function(_, k)
+		return _F[k]
+	end,
+	__newindex = function(_, k, v)
+		if type(v) ~= "function" then
+			return
+		end
+
+		if k ~= "SkinToast" then
+			if not _F[k] then
+				_F[k] = v
+			end
+		else
+			local name = debugstack(2, 2, 0):match("[Aa.]?[Dd.]?[Dd.]?[Oo.]?[Nn.][Ss.]?\\(.+)\\")
+
+			if name then
+				name = name:gsub("_", " "):gsub("[^%w%s]", "")
+			else
+				name = "Skin"..(SKINS.num + 1)
+			end
+
+			_F:CreateSkin(name, function(...) v(_, ...) end)
+		end
+	end,
+})
+
 _G[addonName] = {
 	[1] = F,
 }
@@ -302,17 +340,37 @@ end
 -- UTILS --
 -----------
 
+local function FlushToastsCache()
+	table.wipe(queuedToasts)
+
+	for _ = 1, #activeToasts do
+		activeToasts[1]:Click("RightButton")
+	end
+
+	table.wipe(abilityToasts)
+	table.wipe(achievementToasts)
+	table.wipe(followerToasts)
+	table.wipe(itemToasts)
+	table.wipe(miscToasts)
+	table.wipe(missonToasts)
+	table.wipe(scenarioToasts)
+	table.wipe(textsToAnimate)
+
+	toastCounter = 0
+end
+
 local function ParseLink(link)
 	if not link or link == "[]" or link == "" then
 		return
 	end
 
-	local name
-	link, name = string.match(link, "|H(.+)|h%[(.+)%]|h")
+	local temp, name = string.match(link, "|H(.+)|h%[(.+)%]|h")
+	link = temp or link
+
 	local linkTable = {string.split(":", link)}
 
 	if linkTable[1] ~= "item" then
-		return link, linkTable[1], name
+		return linkTable[1], link, link, name
 	end
 
 	if linkTable[12] ~= "" then
@@ -321,7 +379,7 @@ local function ParseLink(link)
 		table.remove(linkTable, 15 + (tonumber(linkTable[14]) or 0))
 	end
 
-	return table.concat(linkTable, ":"), linkTable[1], name
+	return linkTable[1], table.concat(linkTable, ":"), link, name
 end
 
 local function DumpToasts()
@@ -342,39 +400,41 @@ local function IsItemAnUpgrade(itemLink)
 	local itemLevel = _G.GetDetailedItemLevelInfo(itemLink)
 	local slot1, slot2 = unpack(EQUIP_SLOTS[itemEquipLoc] or {})
 
-	if slot1 then
-		local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
+	if itemLevel then
+		if slot1 then
+			local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
 
-		if itemLinkInSlot1 then
-			local itemLevelInSlot1 = _G.GetDetailedItemLevelInfo(itemLinkInSlot1)
+			if itemLinkInSlot1 then
+				local itemLevelInSlot1 = _G.GetDetailedItemLevelInfo(itemLinkInSlot1)
 
-			if itemLevel > itemLevelInSlot1 then
-				return true
-			end
-		else
-			-- Make sure that slot is empty
-			if not _G.GetInventoryItemID("player", slot1) then
-				return true
-			end
-		end
-	end
-
-	if slot2 then
-		local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or _G.CanDualWield()
-
-		if isSlot2Equippable then
-			local itemLinkInSlot2 = _G.GetInventoryItemLink("player", slot2)
-
-			if itemLinkInSlot2 then
-				local itemLevelInSlot2 = _G.GetDetailedItemLevelInfo(itemLinkInSlot2)
-
-				if itemLevel > itemLevelInSlot2 then
+				if itemLevelInSlot1 and itemLevel > itemLevelInSlot1 then
 					return true
 				end
 			else
 				-- Make sure that slot is empty
-				if not _G.GetInventoryItemID("player", slot2) then
+				if not _G.GetInventoryItemID("player", slot1) then
 					return true
+				end
+			end
+		end
+
+		if slot2 then
+			local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or _G.CanDualWield()
+
+			if isSlot2Equippable then
+				local itemLinkInSlot2 = _G.GetInventoryItemLink("player", slot2)
+
+				if itemLinkInSlot2 then
+					local itemLevelInSlot2 = _G.GetDetailedItemLevelInfo(itemLinkInSlot2)
+
+					if itemLevelInSlot2 and itemLevel > itemLevelInSlot2 then
+						return true
+					end
+				else
+					-- Make sure that slot is empty
+					if not _G.GetInventoryItemID("player", slot2) then
+						return true
+					end
 				end
 			end
 		end
@@ -474,7 +534,7 @@ local function SpawnToast(toast, isDND)
 
 	table.insert(activeToasts, toast)
 
-	F:SkinToast(toast, toast.type)
+	SKINS.handler(toast, toast.type)
 
 	toast:Show()
 
@@ -522,6 +582,7 @@ local function ResetToast(toast)
 	toast.dnd = nil
 	toast.chat = nil
 	toast.link = nil
+	toast.tooltipLink = nil
 	toast.event = nil
 	toast.itemCount = nil
 	toast.soundFile = nil
@@ -716,7 +777,7 @@ local function ToastButton_OnClick(self, button)
 				end
 			elseif self.type == "misc" then
 				if self.link then
-					if string.sub(self.link, 1, 18) == "transmogappearance" then
+					if string.find(self.link, "transmog") then
 						if not _G.CollectionsJournal then
 							_G.CollectionsJournal_LoadUI()
 						end
@@ -798,7 +859,7 @@ local function ToastButton_OnEnter(self)
 			else
 				_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
 				_G.GameTooltip:SetPoint(p, self, rP, x, y)
-				_G.GameTooltip:SetHyperlink(self.link)
+				_G.GameTooltip:SetHyperlink(self.tooltipLink or self.link)
 				_G.GameTooltip:Show()
 			end
 		end
@@ -1862,9 +1923,9 @@ do
 	local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
-				link = ParseLink(link)
+				local _, sanitizedLink, originalLink = ParseLink(link)
 
-				local toast, isQueued = GetToastToUpdate(link, "item", event)
+				local toast, isQueued = GetToastToUpdate(sanitizedLink, "item", event)
 				local isUpdated = true
 
 				if not toast then
@@ -1873,7 +1934,7 @@ do
 				end
 
 				if not isUpdated then
-					local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+					local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(originalLink)
 
 					if quality >= CFG.type.loot_special.threshold and quality <= 5 then
 						local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
@@ -1941,9 +2002,10 @@ do
 						toast.Border:SetVertexColor(color.r, color.g, color.b)
 						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 						toast.Icon:SetTexture(icon)
-						toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
+						toast.UpgradeIcon:SetShown(IsItemAnUpgrade(originalLink))
 						toast.itemCount = quantity
-						toast.link = link
+						toast.tooltipLink = originalLink
+						toast.link = sanitizedLink
 						toast.soundFile = soundFile
 						toast.event = event
 
@@ -2154,11 +2216,13 @@ end
 
 do
 	local function Toast_SetUp(event, link, quantity)
-		if GetToastToUpdate(link, "item") then
+		local linkType, sanitizedLink, originalLink = ParseLink(link)
+
+		if GetToastToUpdate(sanitizedLink, "item") then
 			return
 		end
 
-		local toast, isQueued = GetToastToUpdate(link, "item", event)
+		local toast, isQueued = GetToastToUpdate(sanitizedLink, "item", event)
 		local isUpdated = true
 
 		if not toast then
@@ -2169,12 +2233,12 @@ do
 		if not isUpdated then
 			local name, quality, icon, _
 
-			if string.find(link, "battlepet:") then
-				local _, speciesID, _, breedQuality, _ = string.split(":", link)
+			if linkType == "battlepet" then
+				local _, speciesID, _, breedQuality, _ = string.split(":", originalLink)
 				name, icon = _G.C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				quality = tonumber(breedQuality)
 			else
-				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(originalLink)
 			end
 
 			if quality >= CFG.type.loot_common.threshold and quality <= 4 then
@@ -2187,7 +2251,8 @@ do
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 				toast.Icon:SetTexture(icon)
 				toast.itemCount = quantity
-				toast.link = link
+				toast.tooltipLink = originalLink
+				toast.link = sanitizedLink
 				toast.event = event
 				toast.chat = true
 
@@ -2245,7 +2310,6 @@ do
 			end
 		end
 
-		link = ParseLink(link)
 		quantity = tonumber(quantity) or 0
 
 		_G.C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, quantity) end)
@@ -2335,6 +2399,7 @@ do
 
 	function dispatcher:CHAT_MSG_CURRENCY(message)
 		local link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
+		local _
 
 		if not link then
 			quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
@@ -2344,7 +2409,7 @@ do
 			end
 		end
 
-		link = ParseLink(link)
+		_, link = ParseLink(link)
 		quantity = tonumber(quantity) or 0
 
 		Toast_SetUp(link, quantity)
@@ -2647,13 +2712,13 @@ do
 		return false
 	end
 
-	local function Toast_SetUp(sourceID, isAdded)
-		local _, _, _, icon, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	local function Toast_SetUp(sourceID, isAdded, attempt)
+		local _, _, _, icon, _, _, link = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 		local name
-		transmogLink, _, name = ParseLink(transmogLink)
+		_, link, _, name = ParseLink(link)
 
-		if not transmogLink then
-			return _G.C_Timer.After(0.25, function() Toast_SetUp(sourceID, isAdded) end)
+		if not link then
+			return attempt < 4 and _G.C_Timer.After(0.25, function() Toast_SetUp(sourceID, isAdded, attempt + 1) end)
 		end
 
 		local toast = GetToast("misc")
@@ -2670,29 +2735,35 @@ do
 		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
 		toast.Icon:SetTexture(icon)
 		toast.id = sourceID
-		toast.link = transmogLink
+		toast.link = link
 		toast.soundFile = "UI_DigsiteCompletion_Toast"
 
 		SpawnToast(toast, CFG.type.transmog.dnd)
 	end
 
-	function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
+	function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt)
 		local isKnown = IsAppearanceKnown(sourceID)
+		attempt = attempt or 1
 
-		if isKnown == false then
-			Toast_SetUp(sourceID, true)
-		elseif isKnown == nil then
-			_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp(sourceID, true, 1)
+			elseif isKnown == nil then
+				_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 
-	function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-		local isKnown = IsAppearanceKnown(sourceID)
+	function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt)
+		local isKnown = IsAppearanceKnown(sourceID, true)
+		attempt = attempt or 1
 
-		if isKnown == false then
-			Toast_SetUp(sourceID)
-		elseif isKnown == nil then
-			_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp(sourceID, nil, 1)
+			elseif isKnown == nil then
+				_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 
@@ -2713,10 +2784,10 @@ do
 		local source = _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID) and _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
 
 		-- added
-		Toast_SetUp(source.sourceID, true)
+		Toast_SetUp(source.sourceID, true, 1)
 
 		-- removed
-		Toast_SetUp(source.sourceID)
+		Toast_SetUp(source.sourceID, nil, 1)
 	end
 end
 
@@ -3257,10 +3328,6 @@ local function CreateProfile(name, base)
 		return false, "name_taken"
 	end
 
-	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
-
-	_G.LS_TOASTS_CFG.profile = name
-
 	if base and type(base) == "table" then
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(base)
 	elseif base and type(base) == "string" and _G.LS_TOASTS_CFG_GLOBAL[base] then
@@ -3268,10 +3335,6 @@ local function CreateProfile(name, base)
 	else
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
 	end
-
-	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
-
-	RefreshAllOptions()
 
 	return true
 end
@@ -3331,6 +3394,28 @@ local function ResetProfile(name)
 end
 
 local function ProfileDropDownButton_OnClick(self)
+	self.owner:SetValue(self.value)
+end
+
+------
+
+local function SetSkin(name)
+	if not name then
+		return false, "no_name"
+	elseif not SKINS[name] then
+		return false, "no_skin"
+	elseif name == "handler" or name == "num" then
+		return false, "invalid"
+	end
+
+	CFG.skin = name
+
+	SKINS.handler = SKINS[name].func
+
+	FlushToastsCache()
+end
+
+local function SkinDropDownButton_OnClick(self)
 	self.owner:SetValue(self.value)
 end
 
@@ -3480,9 +3565,40 @@ local function PopulateConfigPanels()
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 
 	divider = CreateConfigDivider(panel, {
-		text = L["PROFILES_TITLE"]
+		text = L["SKINS_TITLE"]
 	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
+
+	local skinDropdown = CreateConfigDropDownMenu(panel, {
+		name = "$parentSkinDropDown",
+		text = L["SKIN"],
+		init = function(self)
+			local info = _G.UIDropDownMenu_CreateInfo()
+
+			for k in pairs(SKINS) do
+				if k ~= "handler" and k ~= "num" then
+					info.text = k
+					info.func = SkinDropDownButton_OnClick
+					info.value = k
+					info.owner = self
+					info.checked = nil
+					_G.UIDropDownMenu_AddButton(info)
+				end
+			end
+		end,
+		get = function() return CFG.skin end,
+		set = function(self, value)
+			_G.UIDropDownMenu_SetSelectedValue(self, value)
+
+			SetSkin(value)
+		end
+	})
+	skinDropdown:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 3, -24)
+
+	divider = CreateConfigDivider(panel, {
+		text = L["PROFILES_TITLE"]
+	})
+	divider:SetPoint("TOP", skinDropdown, "BOTTOM", 0, -10)
 
 	local createProfileDialog = CreateConfigDialog(panel, {
 		name = "$parentNewProfileDialog",
@@ -3579,7 +3695,11 @@ local function PopulateConfigPanels()
 				editbox:SetText("")
 				editbox:ClearFocus()
 
-				CreateProfile(name, profileSelector:GetValue())
+				local isOK = CreateProfile(name, profileSelector:GetValue())
+
+				if isOK then
+					SetProfile(name)
+				end
 
 				createProfileDialog:Hide()
 			end
@@ -4006,36 +4126,7 @@ end
 -- PUBLIC --
 ------------
 
--- F:SkinToast
-
--- Parameters:
--- 	toast
--- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	function toast_F:SkinToast(toast, toastType) --[[body]] end
-
--- This function can be and should be overridden by your addon
--- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
-
-function F:SkinToast() end
-
 -- F:CreateProfile
-
--- Arguments:
--- 	name	- "string" - new profile's name
--- 	base	- "string" - if LS_TOASTS_CFG_GLOBAL[base] profile exists, it'll be used as a base for a new profile
---			- "table" - provided table will be used a base for a new profile
---			- "nil" - DEFAULTS table will be used as a base for a new profile
-
--- Returns:
--- created	- "boolean": true, false - if profile was successfully created
--- reason 	- "string": "no_name", "name_taken" - reason why profile wasn't created, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local created, reason = toast_F:CreateProfile("test_profile")
 
 function F:CreateProfile(name, base)
 	return CreateProfile(name, base)
@@ -4043,33 +4134,11 @@ end
 
 -- F:DeleteProfile
 
--- Arguments:
--- 	name	- "string" - profile's name you want to delete, can't be "Default"
-
--- Returns:
--- deleted	- "boolean": true, false - if profile was successfully deleted
--- reason 	- "string": "no_name", "default" - reason why profile wasn't deleted, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local deleted, reason = toast_F:DeleteProfile("test_profile")
-
 function F:DeleteProfile(name)
 	return DeleteProfile(name)
 end
 
 -- F:SetProfile
-
--- Arguments:
--- 	name	- "string" - profile's name you want to activate
-
--- Returns:
--- set		- "boolean": true, false - if profile was successfully activated
--- reason 	- "string": "no_name", "missing", "current" - reason why profile wasn't activated, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local set, reason = toast_F:SetProfile("test_profile")
 
 function F:SetProfile(name)
 	return SetProfile(name)
@@ -4077,19 +4146,36 @@ end
 
 -- F:ResetProfile
 
--- Arguments:
--- 	name	- "string" - profile's name you want to reset
-
--- Returns:
--- reset	- "boolean": true, false - if profile was successfully reset
--- reason 	- "string": "no_name", "missing" - reason why profile wasn't reset, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local reset, reason = toast_F:ResetProfile("test_profile")
-
 function F:ResetProfile(name)
 	return ResetProfile(name)
+end
+
+-- F:CreateSkin(name, func)
+
+function F:CreateSkin(name, func)
+	if not name then
+		return false, "no_name"
+	elseif not func then
+		return false, "no_func"
+	elseif type(func) ~= "function" then
+		return false, "func_invalid"
+	elseif SKINS[name] then
+		return false, "name_taken"
+	elseif name == "handler" or name == "num" then
+		return false, "name_prohibited"
+	end
+
+	SKINS[name] = {
+		func = func
+	}
+
+	SKINS.num = SKINS.num + 1
+end
+
+-- F:SetSkin(name)
+
+function F:SetSkin(name)
+	return SetSkin(name)
 end
 
 -------------
@@ -4113,7 +4199,7 @@ function dispatcher:ADDON_LOADED(arg)
 
 	if not _G.LS_TOASTS_CFG_GLOBAL then
 		_G.LS_TOASTS_CFG_GLOBAL = {
-			["Default"] = CopyTable(DEFAULTS)
+			Default = CopyTable(DEFAULTS)
 		}
 	else
 		if not _G.LS_TOASTS_CFG_GLOBAL.Default then
@@ -4161,6 +4247,12 @@ function dispatcher:PLAYER_LOGIN()
 			self:UnregisterEvent(event)
 		end
 	end)
+
+	if not SKINS[CFG.skin] then
+		CFG.skin = "Default"
+	end
+
+	SetSkin(CFG.skin)
 
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = L["LS_TOASTS"]

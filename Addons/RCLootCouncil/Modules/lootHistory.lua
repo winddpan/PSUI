@@ -1,7 +1,7 @@
--- Author      : Potdisc
--- Create Date : 8/6/2015
+--- lootHistory.lua	Adds the interface for displaying the collected loot history.
 -- DefaultModule
--- lootHistory.lua	Adds the interface for displaying the collected loot history
+-- @author Potdisc
+-- Create Date : 8/6/2015
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
 local LootHistory = addon:NewModule("RCLootHistory")
@@ -16,7 +16,7 @@ data[date][playerName] = {
 	}
 }
 ]]
-local selectedDate, selectedName, filterMenu, moreInfo
+local selectedDate, selectedName, filterMenu, moreInfo, moreInfoData
 local ROW_HEIGHT = 20;
 local NUM_ROWS = 15;
 
@@ -26,7 +26,7 @@ function LootHistory:OnInitialize()
 	self.exports = {
 		lua = 		{func = self.ExportLua, 		name = "Lua",					tip = L["Raw lua output. Doesn't work well with date selection."]},
 		csv = 		{func = self.ExportCSV,			name = "CSV",					tip = L["Standard .csv output."]},
-		tsv = 		{func = self.ExportTSV,			name = "TSV (Excel)",		tip = L["A tab delimited output for Excel. Might work with outher spreadsheets."]},
+		tsv = 		{func = self.ExportTSV,			name = "TSV (Excel)",		tip = L["A tab delimited output for Excel. Might work with other spreadsheets."]},
 		bbcode = 	{func = self.ExportBBCode,		name = "BBCode", 				tip = L["Simple BBCode output."]},
 		bbcodeSmf = {func = self.ExportBBCodeSMF, name = "BBCode SMF",			tip = L["BBCode export, tailored for SMF."],},
 		eqxml = 		{func = self.ExportEQXML,		name = "EQdkp-Plus XML",	tip = L["EQdkp-Plus XML output, tailored for Enjin import."]},
@@ -36,10 +36,10 @@ function LootHistory:OnInitialize()
 	scrollCols = {
 		{name = "",					width = ROW_HEIGHT, },			-- Class icon, should be same row as player
 		{name = L["Name"],		width = 100, 				},		-- Name of the player
-		{name = L["Time"],		width = 125, comparesort = self.DateTimeSort	},			-- Time of awarding
+		{name = L["Time"],		width = 125, comparesort = self.DateTimeSort, sort = "dsc",},			-- Time of awarding
 		{name = "",					width = ROW_HEIGHT, },			-- Item at index icon
 		{name = L["Item"],		width = 250, 				}, 	-- Item string
-		{name = L["Reason"],		width = 220, comparesort = self.ResponseSort, sort = "asc", sortnext = 2},	-- Response aka the text supplied to lootDB...response
+		{name = L["Reason"],		width = 220, comparesort = self.ResponseSort,  sortnext = 2},	-- Response aka the text supplied to lootDB...response
 		{name = "",					width = ROW_HEIGHT},				-- Delete button
 	}
 	filterMenu = CreateFrame("Frame", "RCLootCouncil_LootHistory_FilterMenu", UIParent, "Lib_UIDropDownMenuTemplate")
@@ -47,6 +47,16 @@ function LootHistory:OnInitialize()
 	--MoreInfo
 	self.moreInfo = CreateFrame( "GameTooltip", "RCLootHistoryMoreInfo", nil, "GameTooltipTemplate" )
 end
+
+local tierLookUpTable = { -- MapID to Tier text
+	[1530] = L["Tier 19"],
+}
+
+local difficultyLookupTable = {
+	[14] = L["tier_token_normal"],
+	[15] = L["tier_token_heroic"],
+	[16] = L["tier_token_mythic"],
+}
 
 function LootHistory:OnEnable()
 	addon:Debug("OnEnable()")
@@ -65,10 +75,13 @@ function LootHistory:OnDisable()
 	data = {}
 end
 
+--- Show the LootHistory frame.
 function LootHistory:Show()
+	moreInfoData = addon:GetLootDBStatistics()
 	self.frame:Show()
 end
 
+--- Hide the LootHistory frame.
 function LootHistory:Hide()
 	self.frame:Hide()
 	self.moreInfo:Hide()
@@ -345,7 +358,7 @@ function LootHistory:ImportHistory(import)
 		if lootDB[name] then -- We've registered the name, so check all the awards
 			for _, v in pairs(data) do
 				local found = false
-				for _, d in pairs(lootDB[name]) do
+				for _, d in pairs(lootDB[name]) do -- REVIEW This is currently ~O(#lootDB[name]^2). Could probably be improved.
 					-- Check if the time matches. If it does, we already have the data and can skip to the next
 					if d.time == v.time then found = true; break end
 				end
@@ -387,7 +400,8 @@ function LootHistory:GetWowheadLinkFromItemLink(link)
 end
 
 ---------------------------------------------------
--- Visauls
+-- Visuals.
+-- @section Visuals.
 ---------------------------------------------------
 function LootHistory:Update()
 	self.frame.st:SortData()
@@ -581,7 +595,7 @@ function LootHistory:GetFrame()
 	return f;
 end
 
-function LootHistory:UpdateMoreInfo(rowFrame, cellFrame, dat, cols, row, realrow, column, table, button, ...)
+function LootHistory:UpdateMoreInfo(rowFrame, cellFrame, dat, cols, row, realrow, column, tabel, button, ...)
 	if not dat then return end
 	local tip = self.moreInfo -- shortening
 	tip:SetOwner(self.frame, "ANCHOR_RIGHT")
@@ -601,7 +615,25 @@ function LootHistory:UpdateMoreInfo(rowFrame, cellFrame, dat, cols, row, realrow
 	tip:AddDoubleLine(L["Dropped by:"], data.boss or L["Unknown"], 1,1,1, 0.862745, 0.0784314, 0.235294)
 	tip:AddDoubleLine(L["From:"], data.instance or L["Unknown"], 1,1,1, 0.823529, 0.411765, 0.117647)
 	tip:AddDoubleLine(L["Votes"]..":", data.votes or L["Unknown"], 1,1,1, 1,1,1)
+	tip:AddLine(" ")
+	tip:AddLine(L["Tokens received"])
+	-- Add tier tokens
+	for name, v in pairs(moreInfoData[row.name].totals.tokens) do
+		if v.mapID and v.difficultyID and tierLookUpTable[v.mapID] then
+			tip:AddDoubleLine(tierLookUpTable[v.mapID].." "..difficultyLookupTable[v.difficultyID]..":", v.num, 1,1,1, 1,1,1)
+		end
+	end
+	tip:AddLine(" ")
+	tip:AddLine(L["Total awards"])
+	table.sort(moreInfoData[row.name].totals.responses, function(a,b) return type(a[4]) == "number" and type(b[4]) == "number" and a[4] < b[4] or false end)
+	for i, v in pairs(moreInfoData[row.name].totals.responses) do
+		local r,g,b 
+		if v[3] then r,g,b = unpack(v[3],1,3) end
+		tip:AddDoubleLine(v[1], v[2], r or 1, g or 1, b or 1, 1,1,1)
+	end
 	tip:AddDoubleLine(L["Total items won:"], numLootWon[row.name], 1,1,1, 0,1,0)
+
+
 
 	-- Debug stuff
 	if addon.debug then
@@ -609,8 +641,21 @@ function LootHistory:UpdateMoreInfo(rowFrame, cellFrame, dat, cols, row, realrow
 		tip:AddDoubleLine("ResponseID", tostring(data.responseID), 1,1,1, 1,1,1)
 		tip:AddDoubleLine("Response:", data.response, 1,1,1, 1,1,1)
 		tip:AddDoubleLine("isAwardReason:", tostring(data.isAwardReason), 1,1,1, 1,1,1)
-		tip:AddDoubleLine("color:", data.color and data.color[1]..", "..data.color[2]..", "..data.color[3] or "none", 1,1,1, 1,1,1)
+		local r,g,b
+		if data.color then r,g,b = unpack(data.color,1,3) end
+		tip:AddDoubleLine("color:", data.color and (r..", "..g..", "..b) or "none", 1,1,1, r,g,b)
 		tip:AddDoubleLine("DataIndex:", row.num, 1,1,1, 1,1,1)
+		tip:AddDoubleLine("difficultyID:", data.difficultyID, 1,1,1, 1,1,1)
+		tip:AddDoubleLine("mapID", data.mapID, 1,1,1, 1,1,1)
+		tip:AddDoubleLine("groupSize", data.groupSize, 1,1,1, 1,1,1)
+		tip:AddDoubleLine("tierToken", data.tierToken, 1,1,1, 1,1,1)
+		tip:AddLine(" ")
+		tip:AddLine("Total tokens won:")
+ 		for name, v in pairs(moreInfoData[row.name].totals.tokens) do
+ 			tip:AddDoubleLine(name, v.num, 1,1,1, 1,1,1)
+ 		end
+		tip:AddLine(" ")
+
 	end
 	tip:SetScale(db.UI.history.scale)
 	if moreInfo then
@@ -624,7 +669,8 @@ end
 
 
 ---------------------------------------------------
--- Dropdowns
+-- Dropdowns.
+-- @section Dropdowns.
 ---------------------------------------------------
 function LootHistory.FilterMenu(menu, level)
 	local info = Lib_UIDropDownMenu_CreateInfo()
@@ -685,9 +731,12 @@ end
 
 
 ---------------------------------------------------------------
--- Exports
+-- Exports.
+-- REVIEW A lot of optimizations can be done here.
+-- @section Exports.
 ---------------------------------------------------------------
--- Lua
+
+--- Lua
 function LootHistory:ExportLua()
 	local export = ""
 	for player, v in pairs(lootDB) do
@@ -718,7 +767,7 @@ function LootHistory:ExportLua()
 return export
 end
 
--- CSV with all stored data
+--- CSV with all stored data
 -- ~14 ms (74%) improvement by switching to table and concat
 function LootHistory:ExportCSV()
 	-- Add headers
@@ -753,7 +802,7 @@ function LootHistory:ExportCSV()
 	return ret
 end
 
--- TSV (Tab Seperated Values) for Excel
+--- TSV (Tab Seperated Values) for Excel
 -- Made specificly with excel in mind, but might work with other spreadsheets
 function LootHistory:ExportTSV()
 	-- Add headers
@@ -787,7 +836,7 @@ function LootHistory:ExportTSV()
 	return ret
 end
 
--- Simplified BBCode, as supported by CurseForge
+--- Simplified BBCode, as supported by CurseForge
 -- ~24 ms (84%) improvement by switching to table and concat
 function LootHistory:ExportBBCode()
 	local export = {}
@@ -813,7 +862,7 @@ function LootHistory:ExportBBCode()
 	return table.concat(export)
 end
 
--- BBCode, as supported by SMF
+--- BBCode, as supported by SMF
 function LootHistory:ExportBBCodeSMF()
 	local export = ""
 	for player, v in pairs(lootDB) do
@@ -833,7 +882,7 @@ function LootHistory:ExportBBCodeSMF()
 	return export
 end
 
--- EQdkp Plus XML, primarily for Enjin import
+--- EQdkp Plus XML, primarily for Enjin import
 function LootHistory:ExportEQXML()
 	local export = "<raidlog><head><export><name>EQdkp Plus XML</name><version>1.0</version></export>"
  		.."<tracker><name>RCLootCouncil</name><version>"..addon.version.."</version></tracker>"
@@ -914,7 +963,7 @@ function LootHistory:ExportHTML()
 	local export = "html test"
 end
 
--- Generates a serialized string containing the entire DB.
+--- Generates a serialized string containing the entire DB.
 -- For now it needs to be copied and pasted in another player's import field.
 function LootHistory:PlayerExport()
 	return self:EscapeItemLink(addon:Serialize(lootDB))

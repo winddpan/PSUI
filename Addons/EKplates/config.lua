@@ -36,7 +36,7 @@ C.CVAR = false  --舊版姓名板/do a cvar setting to turn nameplate work like 
 C.MinAlpha = 0.6 --非當前目標與遠距離姓名板的透明度/set fadeout for out range and non-target
 C.FriendlyClickThrough = true --友方姓名板點擊穿透/friendly nameplate click through
 C.EnemyClickThrough = false  --敵方姓名板點擊穿透/enemy nameplate click through
-C.SelectedScale = 1.15 --縮放當前目標的姓名板大小/scale select target nameplate
+C.SelectedScale = 1.1 --縮放當前目標的姓名板大小/scale select target nameplate
 
 C.friendlyCR = true --友方職業顏色/friendly class color
 C.enemyCR = true --敵方職業顏色/enemy class color

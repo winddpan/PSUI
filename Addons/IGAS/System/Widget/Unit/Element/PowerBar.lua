@@ -24,16 +24,7 @@ class "PowerBar"
 		if max then self:SetMinMaxValues(0, max) end
 		if power then
 			if self.Smoothing then
-				if not self._SmoothValueObj then
-					self._SmoothValueObj = SmoothValue()
-					self._SmoothValueObj.SmoothDelay = self.SmoothDelay
-					self._SmoothValueObj.Owner = self
-					self._SmoothValueObj.OnValueChanged = OnValueChanged
-
-					self:SetValue(power)
-				end
-
-				self._SmoothValueObj.RealValue = power
+				self.SmoothValue:SetValue(power, max)
 			else
 				self:SetValue(power)
 			end
@@ -47,7 +38,21 @@ class "PowerBar"
 	property "Smoothing" { Type = Boolean }
 
 	__Doc__[[The delay time for smoothing value changes]]
-	property "SmoothDelay" { Type = PositiveNumber, Default = 1 }
+	property "SmoothDelay" {
+		Type = PositiveNumber,
+		Set  = function(self, delay) self.SmoothValue.SmoothDelay = delay end,
+		Get  = function(self) return self.SmoothValue.SmoothDelay end,
+	}
+
+	property "SmoothValue" {
+		Set = false,
+		Default = function(self)
+			local obj = SmoothValue()
+			obj.Owner = self
+			obj.OnValueChanged = OnValueChanged
+			return obj
+		end,
+	}
 
 	------------------------------------------------------
 	-- Constructor
@@ -77,16 +82,7 @@ class "PowerBarFrequent"
 		if max then self:SetMinMaxValues(0, max) end
 		if power then
 			if self.Smoothing then
-				if not self._SmoothValueObj then
-					self._SmoothValueObj = SmoothValue()
-					self._SmoothValueObj.SmoothDelay = self.SmoothDelay
-					self._SmoothValueObj.Owner = self
-					self._SmoothValueObj.OnValueChanged = OnValueChanged
-
-					self:SetValue(power)
-				end
-
-				self._SmoothValueObj.RealValue = power
+				self.SmoothValue:SetValue(power, max)
 			else
 				self:SetValue(power)
 			end
@@ -100,7 +96,21 @@ class "PowerBarFrequent"
 	property "Smoothing" { Type = Boolean }
 
 	__Doc__[[The delay time for smoothing value changes]]
-	property "SmoothDelay" { Type = PositiveNumber, Default = 1 }
+	property "SmoothDelay" {
+		Type = PositiveNumber,
+		Set  = function(self, delay) self.SmoothValue.SmoothDelay = delay end,
+		Get  = function(self) return self.SmoothValue.SmoothDelay end,
+	}
+
+	property "SmoothValue" {
+		Set = false,
+		Default = function(self)
+			local obj = SmoothValue()
+			obj.Owner = self
+			obj.OnValueChanged = OnValueChanged
+			return obj
+		end,
+	}
 
 	------------------------------------------------------
 	-- Constructor

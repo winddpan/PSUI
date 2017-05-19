@@ -1,3 +1,18 @@
+2017/05/15 v144
+    1. Fix the unexpected unitframe hidden for raid panels.
+
+2017/05/06 v143
+    1. Fix possible error for smooth value system.
+
+2017/05/06 v142
+    1. Fix the smoothing performance for healthbar and powerbar.
+
+2017/05/02 v141
+    1. Force action button full refresh when unit aura changes.
+
+2017/04/29 v140
+    1. Fix the change of the smooth delay of healthbar and powerbar.
+
 2017/03/30 v139
     1. Fix for 7.2.0.
 

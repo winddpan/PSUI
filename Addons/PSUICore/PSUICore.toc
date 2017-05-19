@@ -16,6 +16,7 @@ panel\lib.lua
 panel\core.lua
 
 modules\modules.xml
+cc\cc.xml
 
 automation\buystack.lua
 automation\durability.lua

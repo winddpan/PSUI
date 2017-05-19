@@ -7,7 +7,13 @@ if not L then return end
 L[" is not active in this raid."] = "在当前团队中未启用。"
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = " 你现在是战利品分配者，RCLootCouncil正在管理分配。"
 L["&p was awarded with &i for &r!"] = "&p 获得了 &i 理由为 &r！"
+--Translation missing 
+-- L["A format to copy/paste to another player."] = ""
 L["A new session has begun, type '/rc open' to open the voting frame."] = "新的分配已经开始，输入 /rc open 开启投票界面。"
+--Translation missing 
+-- L["A tab delimited output for Excel. Might work with other spreadsheets."] = ""
+--Translation missing 
+-- L["A tab delimited output for Excel. Might work with outher spreadsheets."] = ""
 L["Abort"] = "中止"
 L["Accept Whispers"] = "接受密语"
 L["accept_whispers_desc"] = "允许玩家密语他们当前的物品给你, 由你来添加到分配界面."
@@ -49,6 +55,8 @@ L["Appearance"] = "外观"
 L["Append realm names"] = "附加服务器名"
 L["Are you sure you want to abort?"] = "确定要中止分配吗？"
 L["Are you sure you want to give #item to #player?"] = "确定将 %s 分配给 %s？"
+--Translation missing 
+-- L["Armor Token"] = ""
 L["Ask me every time I become Master Looter"] = "当成为战利品分配者时，总是询问我"
 L["Ask me when leader"] = "当为队长时，询问我"
 L["Auto Award"] = "自动分配"
@@ -88,6 +96,8 @@ L["Awards"] = "分配"
 L["Background"] = "背景"
 L["Background Color"] = "背景颜色"
 L["Banking"] = "收藏"
+--Translation missing 
+-- L["BBCode export, tailored for SMF."] = ""
 L["Border"] = "边框"
 L["Border Color"] = "边框颜色"
 L["Button"] = "按钮"
@@ -131,6 +141,8 @@ L["Check to have all frames minimize when entering combat"] = "勾选此项将�
 L["Choose timeout length in seconds"] = "选择超时时长(秒)"
 L["Choose when to use RCLootCouncil"] = "选择何时使用RCLootCouncil"
 L["Clear Loot History"] = "清除拾取历史"
+--Translation missing 
+-- L["Clear Selection"] = ""
 L["clear_loot_history_desc"] = "清除所有拾取历史记录。"
 L["Click to add note to send to the council."] = "点击添加要发送给议会的备注。"
 L["Click to expand/collapse more info"] = "点击 展开/折叠 更多信息"
@@ -160,6 +172,8 @@ L["Deselect responses to filter them"] = "取消选择回应以过滤它们"
 L["Diff"] = "提升"
 L["Disenchant"] = "分解"
 L["disenchant_desc"] = "当通过'分解'按钮分配物品时使用该理由"
+--Translation missing 
+-- L["Double click to delete this entry."] = ""
 L["DPS"] = "伤害输出"
 L["Dropped by:"] = "掉落自："
 L["Enable Loot History"] = "启用拾取历史"
@@ -167,6 +181,8 @@ L["Enable Timeout"] = "启用超时"
 L["enable_loot_history_desc"] = "启用历史记录。如果关闭，RCLootCouncil 将不会记录任何数据。"
 L["enable_timeout_desc"] = "勾选以启用拾取窗口的计时器"
 L["Enter your note:"] = "输入你的备注："
+--Translation missing 
+-- L["EQdkp-Plus XML output, tailored for Enjin import."] = ""
 L["Everyone have voted"] = "所有人都已投票"
 L["Export"] = "导出"
 L["Filter"] = "过滤"
@@ -202,6 +218,12 @@ L["Item has been awarded"] = "物品已经被分配"
 L["Item received and added from 'player'"] = "物品已收到，来自 %s。"
 L["Item(s) replaced:"] = "已被替换的物品："
 L["Items under consideration:"] = "在考虑中的物品："
+--Translation missing 
+-- L["Latest item(s) won"] = ""
+--Translation missing 
+-- L["leaderUsage_desc"] = ""
+--Translation missing 
+-- L["Length"] = ""
 L["Log"] = "记录"
 L["log_desc"] = "启用以在拾取历史中记录"
 L["Loot announced, waiting for answer"] = "拾取已发送，等待回应"
@@ -228,6 +250,12 @@ L["Minimize in combat"] = "战斗中最小化"
 L["Minor Upgrade"] = "较小提升"
 L["ML sees voting"] = "物品分配者可见投票"
 L["ml_sees_voting_desc"] = "允许物品分配者查看投票详情。"
+--Translation missing 
+-- L["Modules"] = ""
+--Translation missing 
+-- L["More Info"] = ""
+--Translation missing 
+-- L["more_info_desc"] = ""
 L["Multi Vote"] = "多选投票"
 L["multi_vote_desc"] = "允许多选投票，投票者可以投票给多个可拾取成员。"
 L["'n days' ago"] = "%s 前"
@@ -252,6 +280,8 @@ L["notes_desc"] = "允许可拾取成员向议会发送备注。"
 L["Now handles looting"] = "现在管理分配"
 L["Number of buttons"] = "按钮个数"
 L["Number of reasons"] = "理由个数"
+--Translation missing 
+-- L["Number of responses"] = ""
 L["number_of_buttons_desc"] = "滑动以改变按钮个数。"
 L["number_of_reasons_desc"] = "滑动以改变理由个数。"
 L["Observe"] = "观察"
@@ -259,6 +289,10 @@ L["observe_desc"] = "允许非议会成员查看投票界面，但他们并不�
 L["Officer"] = "官员"
 L["Offline or RCLootCouncil not installed"] = "离线或未安装RCLootCouncil"
 L["Offspec/Greed"] = "副天赋/贪婪"
+--Translation missing 
+-- L["Only use in raids"] = ""
+--Translation missing 
+-- L["onlyUseInRaids_desc"] = ""
 L["open"] = "开启"
 L["Open the Loot History"] = "打开拾取历史"
 L["open_the_loot_history_desc"] = "点击打开拾取历史。"
@@ -269,6 +303,8 @@ L["'player' has ended the session"] = "%s 结束了分配"
 L["Raid"] = "团队"
 L["Raid Warning"] = "团队警告"
 L["Rank"] = "会阶"
+--Translation missing 
+-- L["Raw lua output. Doesn't work well with date selection."] = ""
 L["RCLootCouncil Loot Frame"] = "RCLootCouncil 拾取界面"
 L["RCLootCouncil Loot History"] = "RCLootCouncil 拾取历史记录"
 L["RCLootCouncil Session Setup"] = "RCLootCouncil 分配设置"
@@ -313,9 +349,13 @@ L["Set the text on button 'number'"] = "设置第 %i 个按钮上的文本"
 L["Set the whisper keys for button i."] = "设置第 %d 个按钮的密语关键词"
 L["Silent Auto Pass"] = "静默自动放弃"
 L["silent_auto_pass_desc"] = "勾选以隐藏自动放弃信息"
+--Translation missing 
+-- L["Simple BBCode output."] = ""
 L["Skins"] = "皮肤"
 L["skins_description"] = "选择一个默认皮肤或自己创建一个。打开版本检查查看效果 ('/rc version')。"
 L["Something went wrong :'("] = "出现了一些问题"
+--Translation missing 
+-- L["Standard .csv output."] = ""
 L["Start"] = "开始"
 L["Status texts"] = "状态文字"
 L["Tank"] = "坦克"
@@ -333,10 +373,30 @@ L["The Master Looter doesn't allow votes for yourself."] = "战利品分配者�
 L["The session has ended."] = "分配已经结束。"
 L["This item"] = "这件物品"
 L["This item has been awarded"] = "这件物品已经被分配了"
+--Translation missing 
+-- L["Tier 19"] = ""
+--Translation missing 
+-- L["Tier 20"] = ""
+--Translation missing 
+-- L["Tier tokens received from here:"] = ""
+--Translation missing 
+-- L["tier_token_heroic"] = ""
+--Translation missing 
+-- L["tier_token_mythic"] = ""
+--Translation missing 
+-- L["tier_token_normal"] = ""
+--Translation missing 
+-- L["Time"] = ""
 L["Time left (num seconds)"] = "剩余时间：%d"
 L["Timeout"] = "超时"
+--Translation missing 
+-- L["Tokens received"] = ""
+--Translation missing 
+-- L["Total awards"] = ""
 L["Total items received:"] = "总计收到物品："
 L["Total items won:"] = "总计赢得物品："
+--Translation missing 
+-- L["Totals"] = ""
 L["tVersion_outdated_msg"] = "最新的RCLootCouncil版本是：%s"
 L["Unable to give 'item' to 'player' - (player offline, left group or instance?)"] = "无法将 %s 分配给 %s - (玩家离线，不在队伍中 或 在副本外？)"
 L["Unable to give out loot without the loot window open."] = "拾取窗口关闭时无法分配。"
@@ -349,6 +409,8 @@ L["Upper Quality Limit"] = "最高品质限定"
 L["upper_quality_limit_desc"] = [=[选择自动分配时物品的最高品质限定 (含此品质！).
 注意: 这将会更改物品分配界限。]=]
 L["Usage"] = "用法"
+--Translation missing 
+-- L["Usage Options"] = ""
 L["version"] = "版本"
 L["Version"] = "版本"
 L["Version Check"] = "版本检查"
@@ -379,6 +441,8 @@ L["Yes"] = "是"
 L["You are not allowed to see the Voting Frame right now."] = "你现在无法查看投票界面。"
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "由于暴雪的限定，你只能自动分配低于 %s 品质的物品给自己"
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "当你在队伍中且无不是战利品分配者时无法开启测试。"
+--Translation missing 
+-- L["You cannot start an empty session."] = ""
 L["You cannot use the menu when the session has ended."] = "你无法使用菜单，因为分配已经结束。"
 L["You cannot use this command without being the Master Looter"] = "你无法使用此命令，因为你不是战利品分配者"
 L["You can't start a loot session while in combat."] = "战斗中无法开始物品分配。"
@@ -386,3 +450,4 @@ L["You can't start a session before all items are loaded!"] = "在所有物品�
 L["You haven't set a council! You can edit your council by typing '/rc council'"] = "你还没有设定议会！你可以输入 '/rc council' 来进行编辑。"
 L["Your note:"] = "你的备注："
 L["You're already running a session."] = "你已经在进行物品分配了。"
+

@@ -17,6 +17,8 @@ local function Event(event, handler)
 end
 
 local function HookFormatNumber()
+	if not Skada then return end
+	
     Skada.FormatNumber = function(self, number)
         if number then
             if self.db.profile.numberformat == 1 then

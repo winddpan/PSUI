@@ -4,7 +4,7 @@ local IconSize = 36
 local Filger_Settings = {
 	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- P_BUFF_ICON
 	player_proc_icon = {"TOPRIGHT", UIParent, "CENTER", -200, -4},		-- P_PROC_ICON
-	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 150, 0},	-- T_DEBUFF_ICON
+	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 0},	-- T_DEBUFF_ICON
 	trinket = {"TOPRIGHT", "oUF_monoPlayerFrame", "TOPLEFT", -3, 2},  	-- Trinket
 	cooldown = {"BOTTOMLEFT", UIParent, "CENTER", -306, -247},   		-- Cooldown
 }
@@ -121,7 +121,7 @@ Filger_Spells = {
 			Mode = "ICON",
 			Interval = 2,
 			Alpha = 1,
-			IconSize = 37,
+			IconSize = 38,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 			
 			{spellID = 221630, unitID = "player", caster = "player", filter = "BUFF"},
@@ -201,7 +201,7 @@ Filger_Spells = {
 			Mode = "ICON",
 			Interval = 2,
 			Alpha = 1,
-			IconSize = 36,
+			IconSize = 38,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 			
 			-- SP
@@ -224,20 +224,35 @@ Filger_Spells = {
 			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 197498, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- 骰子6buff
-			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193356, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
-			
 			-- 天赋-敏锐
 			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			-- 披风
 			{spellID = 208693, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
 			{spellID = 228224, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
+				
+			-- 灌铅骰子
+			{spellID = 240837, unitID = "player", caster = "player", filter = "BUFF"},
+				
+			-- 必爆肩膀
+			{spellID = 235027, unitID = "player", caster = "player", filter = "BUFF"},
+		},
+		{
+			Name = "狂徒buff",
+			Direction = "LEFT",
+			Mode = "ICON",
+			Interval = -1,
+			Alpha = 1,
+			IconSize = 36,
+			Position = {"TOPRIGHT", UIParent, "CENTER", -200, -64},
+
+			-- 骰子6buff
+			{spellID = 193359, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193357, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193356, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199603, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 199600, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 193358, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -575,19 +590,19 @@ Filger_Spells = {
 			IconSize = IconSize,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 
+			-- 宠物顺劈
+			{spellID = 118455, unitID = "pet", caster = "all", filter = "BUFF"},
+
 			-- Deterrence
 			{spellID = 19263, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Rapid Fire
 			{spellID = 3045, unitID = "player", caster = "player", filter = "BUFF"},
 			-- The Beast Within
 			--WoD {spellID = 34471, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Focus Fire
-			{spellID = 82692, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Spirit Mend
 			{spellID = 90361, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Posthaste
 			{spellID = 118922, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177668, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 54216, unitID = "player", caster = "all", filter = "BUFF"},
 			{spellID = 53480, unitID = "player", caster = "all", filter = "BUFF"},
 
@@ -611,7 +626,6 @@ Filger_Spells = {
 			-- Lock and Load
 			--WoD {spellID = 56453, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Thrill of the Hunt
-			{spellID = 34720, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Frenzy
 			{spellID = 19615, unitID = "player", caster = "player", filter = "BUFF", absID = true},
 			-- Mend Pet
@@ -676,10 +690,6 @@ Filger_Spells = {
 			IconSize = IconSize,
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
 
-			-- Black Arrow
-			{spellID = 3674, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Explosive Shot
-			{spellID = 53301, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Narrow Escape
 			{spellID = 136634, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- 冰冻弹减速

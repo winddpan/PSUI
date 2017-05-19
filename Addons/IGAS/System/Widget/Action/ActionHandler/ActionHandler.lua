@@ -72,7 +72,7 @@ end
 
 function UNIT_AURA(self, unit)
 	if unit == "player" then
-		handler:Refresh(RefreshButtonState)
+		handler:Refresh()
 	end
 end
 

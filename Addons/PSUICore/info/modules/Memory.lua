@@ -97,7 +97,7 @@ if cfg.Memory == true then
 	if diminfo.AutoCollect == nil then diminfo.AutoCollect = true end
 
 	Stat:SetScript("OnMouseDown", function(self,btn)
-		if btn == "LeftButton" then
+		if btn == "LeftButton" or btn == "RightButton" then
 			RefreshMem(self)
 			local before = gcinfo()
 			collectgarbage("collect")
@@ -151,8 +151,8 @@ if cfg.Memory == true then
 			GameTooltip:AddLine(" ")
 			GameTooltip:AddDoubleLine(infoL["Default UI Memory Usage:"],formatMem(gcinfo() - Total),.6,.8,1,1,1,1)
 			GameTooltip:AddDoubleLine(infoL["Total Memory Usage:"],formatMem(collectgarbage'count'),.6,.8,1,1,1,1)
-			GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
-			GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
+			--GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
+			--GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
 			GameTooltip:Show()
 	end)
 
@@ -161,6 +161,7 @@ if cfg.Memory == true then
 	Update(Stat, 20)
 	
 	--自动回收内存
+	--[[
 	local eventcount = 0
 	local a = CreateFrame("Frame")
 	a:RegisterAllEvents()
@@ -168,10 +169,11 @@ if cfg.Memory == true then
 		if diminfo.AutoCollect == true then
 			eventcount = eventcount + 1
 			if InCombatLockdown() then return end
-			if eventcount > 6000 or event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then
+			if eventcount > 60000 or event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then
 				collectgarbage("collect")
 				eventcount = 0
 			end
 		end
 	end)
+	]]
 end

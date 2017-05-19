@@ -1,12 +1,7 @@
 ﻿local _, ns = ...
 local Misc = ns.Misc
-	Misc.back = Misc.Media.."HalBackground"
-	Misc.border = Misc.Media.."GlowTex"
-	Misc.barbg = Misc.Media.."Texture"
 
 local class = select(2, UnitClass("player"))
-local ClassColor = RAID_CLASS_COLORS[class]
-
 local colorTable = {
 	["DK"]		= {r = .77, g = .12, b = .23},
 	["DLY"]		= {r = 1, g = 0.49, b = .04},
@@ -21,13 +16,13 @@ local colorTable = {
 	["ZS"]		= {r = .78, g = .61, b = .43},
 	["Black"]	= {r = 0, g = 0, b = 0},
 	["Gray"]	= {r = .37, g = .3, b = .3},
-	["OWN"]		= RAID_CLASS_COLORS[class],
 	["Green"] = { r = 49/255, g = 213/255, b = 78/255},
+	["OWN"]		= RAID_CLASS_COLORS[class],
 }
 
 local function SetTemplate(Parent, Size)
 	local F = CreateFrame("Frame", nil, Parent)
-	F:SetFrameLevel(3)
+	F:SetFrameLevel(4)
 	F:SetPoint("TOPLEFT", -1 * Misc.mult, 1 * Misc.mult)
 	F:SetPoint("BOTTOMRIGHT", 1 * Misc.mult, -1 * Misc.mult)
 	F:SetBackdrop({
@@ -38,7 +33,7 @@ local function SetTemplate(Parent, Size)
 		edgeSize = 4 * Misc.mult,
 	})
 	F:SetBackdropColor(colorTable[Misc.modeback].r, colorTable[Misc.modeback].g, colorTable[Misc.modeback].b, .2)
-	F:SetBackdropBorderColor(colorTable[Misc.modeborder].r, colorTable[Misc.modeborder].g, colorTable[Misc.modeborder].b, 1)
+	F:SetBackdropBorderColor(colorTable[Misc.modeback].r, colorTable[Misc.modeback].g, colorTable[Misc.modeback].b, 1)
 	
 	F.Border = CreateFrame("Frame", nil, F)
     F.Border:SetPoint("TOPLEFT", 3, -3)
@@ -46,8 +41,8 @@ local function SetTemplate(Parent, Size)
     F.Border:SetBackdrop({ 
 		edgeFile = "Interface\\Buttons\\WHITE8x8" , edgeSize = 1,
 	 })
-    F.Border:SetBackdropBorderColor(49/255, 213/255, 78/255,1)
-    F.Border:SetFrameLevel(4)
+    F.Border:SetBackdropBorderColor(colorTable[Misc.modeborder].r, colorTable[Misc.modeborder].g, colorTable[Misc.modeborder].b, 1)
+    F.Border:SetFrameLevel(5)
 	
 	return F
 end

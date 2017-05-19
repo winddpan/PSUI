@@ -46,7 +46,7 @@
 	local text = hotkey:GetText()
 	if not text then return end
 
-	text = string.gsub(text, "CAPSLOCK", "CAP")
+	text = string.gsub(text, "Capslock", "CAP")
 	text = string.gsub(text, "SHIFT%-", "S")
 	text = string.gsub(text, "ALT%-", "A")
 	text = string.gsub(text, "CTRL%-", "C")
@@ -293,6 +293,13 @@
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]
     local nt  = _G[name.."NormalTexture2"]
+	local ho  = _G[name.."HotKey"]
+	--hotkey
+    ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
+	ho:ClearAllPoints()
+    ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
+    ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
+	
     nt:SetAllPoints(bu)
     --applying color
     nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
@@ -442,7 +449,9 @@
   ---------------------------------------
   -- CALL
   ---------------------------------------
+  init()
+  
+  --local a = CreateFrame("Frame")
+  --a:RegisterEvent("PLAYER_LOGIN")
+  --a:SetScript("OnEvent", init)
 
-  local a = CreateFrame("Frame")
-  a:RegisterEvent("PLAYER_LOGIN")
-  a:SetScript("OnEvent", init)

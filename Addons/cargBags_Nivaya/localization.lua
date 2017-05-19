@@ -46,6 +46,7 @@ cBnivL.bagCaptions = {
 	["cBniv_Quest"]			= AUCTION_CATEGORY_QUEST_ITEMS,
 	["cBniv_Consumables"]	= BAG_FILTER_CONSUMABLES,
 	["cBniv_Artifact"]      = ARTIFACT_POWER,
+	["cBniv_ArtifactPower"] = ARTIFACT_POWER,
 	["cBniv_TradeGoods"]	= BAG_FILTER_TRADE_GOODS,
 	["cBniv_BattlePet"]		= AUCTION_CATEGORY_BATTLE_PETS,
 	["cBniv_Bag"]			= INVENTORY_TOOLTIP,

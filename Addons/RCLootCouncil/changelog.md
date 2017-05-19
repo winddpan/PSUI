@@ -1,3 +1,32 @@
+### v2.3.2
+---
+* Added backwards compatibility for the latest updates for non-english clients.
+
+ *Note: This requires at least one v2.3.1+ award entry for each instance/difficulty.
+   The update happens upon logging in after upgrading to v2.3.2, and can be forced afterwards with "/rc updatehistory".*
+
+###### Bugfixes
+ + *Newest history additions didn't work well with very old history data.*
+
+
+### v2.3.1
+---
+* **History**
+ * The loot history is now enabled by default.
+ * Now tracks tier tokens received, group size and instanceMapIDs.
+ * Tier tokens received from the current instance is displayed under more info in the voting frame.
+ * All tier tokens are displayed in the loot history more info.
+
+   *Note: neither of these are backwards compatible with non-english clients, but will show up for all items awarded after this update.*
+ * Total awards are now displayed in the loot history.
+ * Loot History is now sorted by award time by default.
+ * Removed response text from voting frame more info to make it smaller.
+
+
+* Minor optimizations.
+
+* Fixed some spelling mistakes.
+
 ### v2.3.0
 ---
 * **Patch 7.2**

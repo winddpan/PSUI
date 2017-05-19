@@ -1,0 +1,9 @@
+## Interface: 70200
+## Title: PSCDIcons
+## Notes: CooldownIcons
+## Author: Winddpan
+## Version: 1.1
+
+activation.lua
+trackers.lua
+core.lua

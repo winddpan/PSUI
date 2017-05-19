@@ -413,6 +413,7 @@ class "SmoothValue"
 			self.NowDelay = delay
 
 			self.Value = (self.RealValue - self.OldValue) * (1 - delay / self.SmoothDelay) + self.OldValue
+			OnValueChanged(self, self.Value)
 		end
 
 		self.Processing = false
@@ -425,47 +426,52 @@ class "SmoothValue"
 	event "OnValueChanged"
 
 	------------------------------------------------------
-	-- Property
+	-- Method
 	------------------------------------------------------
-	__Doc__[[The real value of object]]
-	__Handler__( function(self, new, old)
+	function SetValue(self, value, max)
+		self.RealValue = value
+
 		if not self.Processing then
 			self.NowDelay = self.SmoothDelay
-			self.OldValue = self.Value
-			self.TargetValue = new
-
-			return ThreadCall(process, self)
+			self.OldValue = self.Value or 0
+			if self.OldValue > max then self.OldValue = max end
+			self.TargetValue = value
+			if value == self.OldValue then
+				self.Value = value
+				return OnValueChanged(self, value)
+			else
+				return ThreadCall(process, self)
+			end
 		else
 			if self.TargetValue > self.OldValue then
-				if new > self.TargetValue then
+				if value > self.TargetValue then
 					self.NowDelay = self.SmoothDelay
 					self.OldValue = self.Value
-					self.TargetValue = new
+					self.TargetValue = value
 				end
 			else
-				if new < self.TargetValue then
+				if value < self.TargetValue then
 					self.NowDelay = self.SmoothDelay
 					self.OldValue = self.Value
-					self.TargetValue = new
+					self.TargetValue = value
 				end
 			end
 		end
-	end)
-	property "RealValue" { Type = NumberNil }
+	end
 
-	__Doc__[[The smoothed value]]
-	__Event__ "OnValueChanged"
-	property "Value" { Type = Number }
-
+	------------------------------------------------------
+	-- Property
+	------------------------------------------------------
 	__Doc__[[The delay time for smoothing value changes]]
 	property "SmoothDelay" { Type = PositiveNumber, Default = 1 }
 
 	------------------------------------------------------
 	-- Constructor
 	------------------------------------------------------
-	__Arguments__{ }
 	function SmoothValue(self)
 		self.Processing = false
 		self.Disposed = false
+		self.OldValue = 0
+		self.Value = 0
 	end
 endclass "SmoothValue"

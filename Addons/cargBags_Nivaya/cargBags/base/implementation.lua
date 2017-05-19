@@ -388,7 +388,6 @@ function Implementation:UpdateSlot(bagID, slotID)
 			self:SetButton(bagID, slotID, button)
 			container:AddButton(button)
 		end
-
 		button:Update(item)
 	elseif(button) then
 		button.container:RemoveButton(button)

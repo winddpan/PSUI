@@ -507,6 +507,9 @@ do
 		if _HoverOnUnitFrame and _HoverOnUnitFrameLeaveSnippet and _HoverOnUnitFrame ~= self then
 			_HoverOnUnitFrame:UnregisterAutoHide()
 			control:RunFor(_HoverOnUnitFrame, _HoverOnUnitFrameLeaveSnippet)
+			if _HoverOnUnitFrame:GetAttribute("unit") then
+				_HoverOnUnitFrame:Show()
+			end
 		end
 
 		if _SetupSnippet[group] and _UnitMap[self] ~= unit then
@@ -532,6 +535,9 @@ do
 		if _HoverOnUnitFrame == self then
 			if _HoverOnUnitFrameLeaveSnippet then
 				_HoverOnUnitFrame:UnregisterAutoHide()
+				if _HoverOnUnitFrame:GetAttribute("unit") then
+					_HoverOnUnitFrame:Show()
+				end
 			end
 			_HoverOnUnitFrame = nil
 			_HoverOnUnitFrameLeaveSnippet = nil
@@ -550,6 +556,7 @@ do
 		end
 
 		if _HoverOnUnitFrameLeaveSnippet then
+			self:UnregisterAutoHide()
 			if self:GetAttribute("unit") then
 				self:Show()
 			end

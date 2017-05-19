@@ -1,0 +1,15 @@
+## Interface: 70100
+## Title: Barrels o' Easy
+## Notes: Marks the Barrels o' Fun Barrels
+## Version: 1.0.0
+## SavedVariables: BarrelsOEasyShowFrame, BarrelsOEasyX, BarrelsOEasyY, BarrelsOEasyFrom, BarrelsOEasyTo
+## X-Curse-Packaged-Version: v1.0.0
+## X-Curse-Project-Name: BarrelsOEasy
+## X-Curse-Project-ID: barrelsoeasy
+## X-Curse-Repository-ID: wow/barrelsoeasy/mainline
+
+## Author: seraph1m
+## eMail: seraph1m.6000@gmail.com
+## X-email: none
+
+BarrelsOEasy.lua

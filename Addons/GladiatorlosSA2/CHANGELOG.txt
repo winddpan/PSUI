@@ -1,3 +1,31 @@
+- version 1.15
+
+* NOTE: I am no longer recording text-to-speech files for this addon. While we work to get all existing voice files replaced by the new voice actor, a placeholder voice will record new additions. Because this voice DOES NOT match the existing one we're all familiar with, all abilities marked with (PH) below are disabled by default. Yes, I know it sucks not having consistency. Having crucial alerts is more important. If you don't like it, leave them off.
+
+Druid
+* (PH) Added Ashamane's Frenzy to Spell Success.
+* (PH) Added Faerie Swarm to Spell Success.
+
+Mage
+* (PH) Added Ebonbolt to Spell Casting.
+* (PH) Added Mark of Aluneth to Spell Casting.
+
+Monk
+* (PH) Added Ring of Peace.
+
+Paladin
+* Added Divine Favor to Buff Applied.
+* Moved Blessing of Sacrifice/Ultimate Sacrifice to Spell Success to stop double-alerts.
+
+Priest
+* (PH) Added Greater Fade (+Down) to Aura Applied/Removed.
+* (PH) Added Inner Focus (+Down) to Aura Applied/Removed.
+
+Warlock
+* (PH) Added Thal'kiel's Consumption to Spell Casting.
+* (PH) Added Call Observer to Cast Success.
+* (PH) Added Summon Darkglare to Cast Success.
+===============================================
 - version 1.14.3a
 
 General

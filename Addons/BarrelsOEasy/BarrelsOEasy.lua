@@ -61,7 +61,7 @@ local function ToggleFrame()
 		if FrameShown then
 			BOEIconFrame:Show();
 		else
-			print("Temporarily hiding the marker frame, type /boe hide to permanently disable it.");
+			print("Temporarily hiding the marker frame, type /boe hide to permanently disable it or /boe show to restore it.");
 			BOEIconFrame:Hide();
 		end
 	end
@@ -152,8 +152,13 @@ BarrelsFrame:SetScript("OnEvent", function(self,event,arg1,arg2)
 		if (arg1 and BarrelQuests[arg1]) or (arg2 and BarrelQuests[arg2]) then
 			IsOnWorldQuest = true;
 			
+			if IsInGroup() then
+				RaidNotice_AddMessage(RaidWarningFrame, "Warning, being in a group will cause BarrelsOEasy's marks to clear after each round.", ChatTypeInfo["SYSTEM"]);
+				DEFAULT_CHAT_FRAME:AddMessage("Warning, being in a group will cause BarrelsOEasy's marks to clear after each round.", 1.0, 0.0, 0.0, ChatTypeInfo["RAID_WARNING"], 5);
+			end
+			
 			if BarrelsOEasyShowMessageCount < 5 then
-				RaidNotice_AddMessage(RaidWarningFrame, "Please start the first round, so that the barrels can be marked after they stop moving.", ChatTypeInfo["RAID_WARNING"])
+				RaidNotice_AddMessage(RaidWarningFrame, "Please start the first round, so that the barrels can be marked after they stop moving.", ChatTypeInfo["RAID_WARNING"]);
 				BarrelsOEasyShowMessageCount = BarrelsOEasyShowMessageCount + 1;
 			end
 			 

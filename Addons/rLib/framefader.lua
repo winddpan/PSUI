@@ -110,13 +110,32 @@ function rLib:CreateFrameFader(frame, faderConfig)
   FrameHandler(frame)
 end
 
+local function OnEnterFrameHandler(self)
+  if not self.__faderParent then return end
+  
+  local frame = self.__faderParent
+  local mouseoverHandler = frame.mouseoverHandler
+  if not mouseoverHandler then
+	mouseoverHandler = CreateFrame("Frame", "mouseoverHandler", frame)
+	frame.mouseoverHandler = mouseoverHandler
+  end
+  
+  mouseoverHandler:SetScript("OnUpdate", function(s, e) 
+	OffFrameHandler(self)
+	if not IsMouseOverFrame(frame) then
+	  mouseoverHandler:SetScript("OnUpdate", nil)
+	end
+  end)
+end
+
 function rLib:CreateButtonFrameFader(frame, buttonList, faderConfig)
   rLib:CreateFrameFader(frame, faderConfig)
   for i, button in next, buttonList do
     if not button.__faderParent then
       button.__faderParent = frame
-      button:HookScript("OnEnter", OffFrameHandler)
-      button:HookScript("OnLeave", OffFrameHandler)
+      --button:HookScript("OnEnter", OffFrameHandler)
+      --button:HookScript("OnLeave", OffFrameHandler)
+	  button:HookScript("OnEnter", OnEnterFrameHandler)
     end
   end
 end

@@ -2,6 +2,21 @@ Check Voice_enUS for a full list of VO files.
 All files are .ogg unless specifically stated otherwise.
 Inactive files are still included. All VO new to GSA2 that ships with the addon are in this list.
 
+ADDED IN v1.15
+_PHgreaterFade
+_PHgreaterFadeDown
+_PHfaerieSwarm
+_PHringOfPeace
+_PHcallObserver
+_PHdarkglare
+_PHinnerFocus
+_PHinnerFocusDown
+_PHmarkOfAluneth
+_PHebonbolt
+_PHthalkiel
+_PHashmanesfrenzy
+divineFavor
+
 **REMOVED IN v.1.14.2**
 (These files are no longer in use and have been removed. They may return in the future depending on how addon and game development progress.)
 darkRegeneration

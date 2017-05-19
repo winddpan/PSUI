@@ -3,7 +3,7 @@
 -----------------------------
 
 local A, L = ...
-L.MyNames = {"名字起得好", "天降正义", "五葉"}
+L.MyNames = {"名字起得好", "五葉", "天降正义", "打得不错"}
 L.isMine = false
 
 for _, name in pairs(L.MyNames) do
@@ -239,13 +239,13 @@ rActionBar:CreatePetBar(A, petbar)
 -----------------------------
 
 local extrabar = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 40 },
+  framePoint      = { "RIGHT", A.."Bar2", "LEFT", 0, 0 },
   frameScale      = 1,
   framePadding    = 2,
-  buttonWidth     = 44,
-  buttonHeight    = 44,
+  buttonWidth     = 40,
+  buttonHeight    = 40,
   buttonMargin    = 0,
-  numCols         = 0,
+  numCols         = 1,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }

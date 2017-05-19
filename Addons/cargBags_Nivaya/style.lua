@@ -54,11 +54,40 @@ local GetNumFreeSlots = function(bagType)
 	return free, max
 end
 
+local invTypes = {
+	INVTYPE_HEAD        = 1,
+	INVTYPE_NECK        = 2,
+	INVTYPE_SHOULDER    = 3,
+	INVTYPE_CLOAK       = 4,
+	INVTYPE_CHEST       = 5,
+	INVTYPE_ROBE        = 5, -- Holiday chest
+	INVTYPE_BODY        = 6, -- Shirt
+	INVTYPE_TABARD      = 7,
+	INVTYPE_WRIST       = 8,
+	INVTYPE_HAND        = 9,
+	INVTYPE_WAIST       = 10,
+	INVTYPE_LEGS        = 11,
+	INVTYPE_FEET        = 12,
+	INVTYPE_FINGER      = 13,
+	INVTYPE_TRINKET     = 14,
+
+	INVTYPE_2HWEAPON    = 15,
+	INVTYPE_RANGED      = 16, -- Bows
+	INVTYPE_RANGEDRIGHT = 16, -- Wands, Guns, and Crossbows
+
+	INVTYPE_WEAPON      = 17, -- One-Hand
+	INVTYPE_WEAPONMAINHAND = 18,
+	INVTYPE_WEAPONOFFHAND = 19,
+	INVTYPE_SHIELD      = 20,
+	INVTYPE_HOLDABLE    = 21,
+
+	INVTYPE_BAG         = 25
+}
+	
 local QuickSort;
 do
 	local func = function(v1, v2)
 		if (v1 == nil) or (v2 == nil) then return (v1 and true or false) end
-		if (v1[1] == nil) or (v2[1] == nil) then return (v1[1] and true or false) end
 		if v1[1] == -1 or v2[1] == -1 then
 			return v1[1] > v2[1] -- empty slots last
 		elseif v1[2] ~= v2[2] then
@@ -68,6 +97,16 @@ do
 				return (v1[2] and true or false)
 			else
 				return false
+			end
+		elseif (v1[5] ~= "" and v2[5] ~= "") then
+			if  (v1[5] ~= v2[5]) then
+				if (not invTypes[v1[5]]) or (not invTypes[v2[5]]) then
+					--print(v2[5], invTypes[v2[5]])
+				else
+					return invTypes[v1[5]] < invTypes[v2[5]]
+				end
+			elseif (v1[6] ~= v2[6]) then
+				return v1[6] > v2[6]
 			end
 		elseif v1[1] ~= v2[1] then
 			return v1[1] > v2[1] -- group identical item ids
@@ -114,9 +153,9 @@ function MyContainer:OnContentsChanged(forced)
   	for i, button in pairs(self.buttons) do
 		local item = cbNivaya:GetItemInfo(button.bagID, button.slotID)
 		if item.link then
-			buttonIDs[i] = { item.id, item.rarity, button, item.count }
+			buttonIDs[i] = { item.id, item.rarity, button, item.count, item.equipLoc, item.level }
 		else
-			buttonIDs[i] = { -1, -2, button, -1 }
+			buttonIDs[i] = { -1, -2, button, -1, -1, -1 }
 		end
 	end
 	if ((tBank or tReagent) and cBnivCfg.SortBank) or (not (tBank or tReagent) and cBnivCfg.SortBags) then QuickSort(buttonIDs) end

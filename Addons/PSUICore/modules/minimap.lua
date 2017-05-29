@@ -18,7 +18,6 @@ MinimapCluster:SetScale(1)
 MinimapCluster:EnableMouse(false)
 MinimapCluster:SetClampedToScreen(false)
 
-Minimap:SetClampedToScreen(false)
 Minimap:SetSize(Size*Scale, Size*Scale)
 Minimap:SetMaskTexture[[Interface\AddOns\PSUICore\media\rectangle]]
 Minimap:SetHitRectInsets(0, 0, 34*Scale, 34*Scale)

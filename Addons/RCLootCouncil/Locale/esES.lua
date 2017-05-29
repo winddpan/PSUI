@@ -4,14 +4,13 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RCLootCouncil", "esES")
 if not L then return end
 
-L[" is not active in this raid."] = "No está activo en esta Banda"
+L[" is not active in this raid."] = "no está activo en esta banda."
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = "A partir de ahora eres el Maestro Despojador y RCLootCouncil maneja el reparto."
 L["&p was awarded with &i for &r!"] = "&p fue premiado con &i por &r!"
 L["A format to copy/paste to another player."] = "Establece un formato para copiar/pegar a otro jugador."
 L["A new session has begun, type '/rc open' to open the voting frame."] = "Una nueva sesion ha comenzado, escriba '/rc open' para abrir ventana de votación"
 L["A tab delimited output for Excel. Might work with other spreadsheets."] = "Un tabulador delimita una salida de Excel. Es posible que funcione con otra hoja de cálculo."
---Translation missing 
--- L["A tab delimited output for Excel. Might work with outher spreadsheets."] = ""
+L["A tab delimited output for Excel. Might work with outher spreadsheets."] = "Exportar como archivo separado por tabulaciones para Excel. Podría funcionar con otras herramientas de hojas de cálculo."
 L["Abort"] = "Cancelar"
 L["Accept Whispers"] = "Aceptar Susurros"
 L["accept_whispers_desc"] = "Permite a los jugadores susurrar su(s) objeto(s) actual (s) para que puedan tenerse en cuenta en la votación."
@@ -130,8 +129,7 @@ L["Check to have all frames minimize when entering combat"] = "Compruebe que tod
 L["Choose timeout length in seconds"] = "Elige el tiempo de espera en segundos"
 L["Choose when to use RCLootCouncil"] = "Elejir cuando usar RCLootCouncil"
 L["Clear Loot History"] = "Limpiar Historial de botin"
---Translation missing 
--- L["Clear Selection"] = ""
+L["Clear Selection"] = "Borrar selección"
 L["clear_loot_history_desc"] = "Eliminar historial de botin"
 L["Click to add note to send to the council."] = "Haga clic para agregar nota para enviar al consejo."
 L["Click to expand/collapse more info"] = "Hacer clic para abrir / cerrar mas info"
@@ -159,8 +157,7 @@ L["Deselect responses to filter them"] = "Anule la seleccion de respuestas para 
 L["Diff"] = "Diferente"
 L["Disenchant"] = "Desencantar"
 L["disenchant_desc"] = "Seleccionar para usar esta razon en la adjudicacion de un elemento a traves del boton 'Desencantar'"
---Translation missing 
--- L["Double click to delete this entry."] = ""
+L["Double click to delete this entry."] = "Doble click para borrar esta entrada."
 L["DPS"] = true
 L["Dropped by:"] = "Despojado de"
 L["Enable Loot History"] = "Activar historial de botin"
@@ -204,12 +201,9 @@ L["Item has been awarded"] = "El Articulo ha sido adjudicado"
 L["Item received and added from 'player'"] = "Articulo recibido y agregado desde %s."
 L["Item(s) replaced:"] = "Objeto/s sustituidos:"
 L["Items under consideration:"] = "Objetos en consideracion:"
---Translation missing 
--- L["Latest item(s) won"] = ""
---Translation missing 
--- L["leaderUsage_desc"] = ""
---Translation missing 
--- L["Length"] = ""
+L["Latest item(s) won"] = "Ultimo(s) objeto(s) repartidos"
+L["leaderUsage_desc"] = "Usar la misma configuración cuando se entra en una instancia como líder?"
+L["Length"] = "Duración"
 L["Log"] = "Registro"
 L["log_desc"] = "Permite incluir botin en el historial"
 L["Loot announced, waiting for answer"] = "Botin anunciado, esperando respuesta"
@@ -236,10 +230,8 @@ L["Minor Upgrade"] = "Mejora Menor"
 L["ML sees voting"] = "MS ve la votacion"
 L["ml_sees_voting_desc"] = "Permitir al Maestro Despojador ver quien vota por quien."
 L["Modules"] = "Modulos"
---Translation missing 
--- L["More Info"] = ""
---Translation missing 
--- L["more_info_desc"] = ""
+L["More Info"] = "Más información"
+L["more_info_desc"] = "Selecciona de cuántas de tus respuestas quieres ver los últimos objetos repartidos. Por ejemplo, seleccionando 2 (con las opciones por defecto) mostrará los últimos objetos de Especialización Principal y Especialización secundaria, junto con hace cuánto se repartieron."
 L["Multi Vote"] = "Multi Voto"
 L["multi_vote_desc"] = "Habilita votacion multiple, es decir, los votantes pueden votar a varios candidatos."
 L["'n days' ago"] = "hace %s dias"
@@ -264,8 +256,7 @@ L["notes_desc"] = "Posibilita a los candidatos enviar una nota al consejo junto 
 L["Now handles looting"] = "Maneja el loot desde ahora"
 L["Number of buttons"] = "Numero de botones"
 L["Number of reasons"] = "Numero de Motivos"
---Translation missing 
--- L["Number of responses"] = ""
+L["Number of responses"] = "Cantidad de respuestas"
 L["number_of_buttons_desc"] = "Desplazar para cambiar el numero de botones."
 L["number_of_reasons_desc"] = "Arrastrar para cambiar el número de motivos."
 L["Observe"] = "observar"
@@ -273,10 +264,8 @@ L["observe_desc"] = "Si se activa, los miembros del consejo no podran ver el mar
 L["Officer"] = "Oficial"
 L["Offline or RCLootCouncil not installed"] = "Desconectado o RCLootCouncil no instalado"
 L["Offspec/Greed"] = "Especializacion secundaria / Codicia"
---Translation missing 
--- L["Only use in raids"] = ""
---Translation missing 
--- L["onlyUseInRaids_desc"] = ""
+L["Only use in raids"] = "Sólo usar en bandas"
+L["onlyUseInRaids_desc"] = "Marcar para automáticamente desactivar RCLootCouncil en grupos que no sean de banda."
 L["open"] = "Abrir"
 L["Open the Loot History"] = "Abrir Hitorial de botin"
 L["open_the_loot_history_desc"] = "Pulsar para abrir historial de botin"
@@ -354,30 +343,20 @@ L["The Master Looter doesn't allow votes for yourself."] = "El Mastro de botin n
 L["The session has ended."] = "La sesion ha terminado."
 L["This item"] = "Este articulo"
 L["This item has been awarded"] = "Este artículo ha sido premiado"
---Translation missing 
--- L["Tier 19"] = ""
---Translation missing 
--- L["Tier 20"] = ""
---Translation missing 
--- L["Tier tokens received from here:"] = ""
---Translation missing 
--- L["tier_token_heroic"] = ""
---Translation missing 
--- L["tier_token_mythic"] = ""
---Translation missing 
--- L["tier_token_normal"] = ""
---Translation missing 
--- L["Time"] = ""
+L["Tier 19"] = true
+L["Tier 20"] = true
+L["Tier tokens received from here:"] = "Fichas de conjunto recibidas de aquí:"
+L["tier_token_heroic"] = "Heroico"
+L["tier_token_mythic"] = "Mítico"
+L["tier_token_normal"] = "Normal"
+L["Time"] = "Tiempo"
 L["Time left (num seconds)"] = "Tiempo restante: %d"
 L["Timeout"] = "Se acabó el tiempo"
---Translation missing 
--- L["Tokens received"] = ""
---Translation missing 
--- L["Total awards"] = ""
+L["Tokens received"] = "Fichas de conjunto recibidas"
+L["Total awards"] = "Total de objetos repartidos"
 L["Total items received:"] = "objetos recibidos en total:"
 L["Total items won:"] = "Total de objetos ganados:"
---Translation missing 
--- L["Totals"] = ""
+L["Totals"] = "Totales"
 L["tVersion_outdated_msg"] = "La version de prueba mas reciente de RCLootCouncil es: %s"
 L["Unable to give 'item' to 'player' - (player offline, left group or instance?)"] = "No entregar a %s de %s - ( Jugador desconectado, Fuera del grupo o banda )"
 L["Unable to give out loot without the loot window open."] = "Incapaz de dar a conocer el botin sin abrir ventana de botin"
@@ -390,8 +369,7 @@ L["Upper Quality Limit"] = "Limite Superior de Calidad"
 L["upper_quality_limit_desc"] = [=[Seleccionar la calidad mas alta de los objetos a repartir automaticamente (calidad seleccionada incluida)
 Nota: Esto sobrescribe el umbral normal de saqueo.]=]
 L["Usage"] = "Uso"
---Translation missing 
--- L["Usage Options"] = ""
+L["Usage Options"] = "Opciones de uso"
 L["version"] = "Version"
 L["Version"] = true
 L["Version Check"] = "Comprobar version"
@@ -422,8 +400,7 @@ L["Yes"] = "Sí"
 L["You are not allowed to see the Voting Frame right now."] = "No se le permite ver el Marco de votacion en este momento."
 L["You can only auto award items with a quality lower than 'quality' to yourself due to Blizaard restrictions"] = "Solo puede adjudicar premios automaticamente con una calidad inferior %s debido a restricciones de Blizaard"
 L["You cannot initiate a test while in a group without being the MasterLooter."] = "No puede iniciar una prueba de grupo si no es maestro despojador"
---Translation missing 
--- L["You cannot start an empty session."] = ""
+L["You cannot start an empty session."] = "No puedes iniciar una sesión vacía."
 L["You cannot use the menu when the session has ended."] = "No puede utilizar el menu cuando el reparto ha terminado."
 L["You cannot use this command without being the Master Looter"] = "No puede utilizar este comando sin ser el maestro despojador"
 L["You can't start a loot session while in combat."] = "No puede iniciar reparto de botin en combate"

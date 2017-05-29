@@ -15,7 +15,7 @@
   local cfg = {}
   local _G = _G
 
-  cfg.pos   = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
+  cfg.pos   = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 190 }
   cfg.scale = 1
   cfg.font = {}
   cfg.font.family = STANDARD_TEXT_FONT

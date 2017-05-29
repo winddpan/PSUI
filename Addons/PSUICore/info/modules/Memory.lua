@@ -63,9 +63,8 @@ if cfg.Memory == true then
 				return a[2] > b[2]
 			end
 		end)
-		--self:SetAllPoints(Text)
 	end
-
+	
 	local function RefreshText()
 		UpdateAddOnMemoryUsage()
 		tTotal = 0
@@ -74,7 +73,7 @@ if cfg.Memory == true then
 			tTotal = tTotal + tMem
 		end
 	end
-
+	
 	local function formatTotal(Total)
 		if Total >= 1024 then
 			return format(cfg.ColorClass and "%.1f"..init.Colored.."mb|r" or "%.1fmb", Total / 1024)
@@ -91,13 +90,13 @@ if cfg.Memory == true then
 			int = 5
 		end
 		Text:SetText(formatTotal(tTotal))
-		--Text:SetText(MEMORY_TEXT)
 	end
+
 
 	if diminfo.AutoCollect == nil then diminfo.AutoCollect = true end
 
 	Stat:SetScript("OnMouseDown", function(self,btn)
-		if btn == "LeftButton" or btn == "RightButton" then
+		if btn == "LeftButton" then
 			RefreshMem(self)
 			local before = gcinfo()
 			collectgarbage("collect")
@@ -112,7 +111,8 @@ if cfg.Memory == true then
 
 	Stat:SetScript("OnEnter", function(self)
 			RefreshMem(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 6);
+		
+			GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 10);
 			GameTooltip:ClearAllPoints()
 			GameTooltip:SetPoint("BOTTOM", self, "TOP", 0, 1)
 			GameTooltip:ClearLines()
@@ -148,11 +148,12 @@ if cfg.Memory == true then
 				end
 				GameTooltip:AddDoubleLine(format("%d %s (%s)",more,infoL["Hidden"],infoL["Shift"]),formatMem(moreMem),.6,.8,1,.6,.8,1)
 			end
+
 			GameTooltip:AddLine(" ")
 			GameTooltip:AddDoubleLine(infoL["Default UI Memory Usage:"],formatMem(gcinfo() - Total),.6,.8,1,1,1,1)
 			GameTooltip:AddDoubleLine(infoL["Total Memory Usage:"],formatMem(collectgarbage'count'),.6,.8,1,1,1,1)
-			--GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
-			--GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
+			GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
+			GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
 			GameTooltip:Show()
 	end)
 
@@ -161,7 +162,6 @@ if cfg.Memory == true then
 	Update(Stat, 20)
 	
 	--自动回收内存
-	--[[
 	local eventcount = 0
 	local a = CreateFrame("Frame")
 	a:RegisterAllEvents()
@@ -169,11 +169,10 @@ if cfg.Memory == true then
 		if diminfo.AutoCollect == true then
 			eventcount = eventcount + 1
 			if InCombatLockdown() then return end
-			if eventcount > 60000 or event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then
+			if eventcount > 6000 or event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then
 				collectgarbage("collect")
 				eventcount = 0
 			end
 		end
 	end)
-	]]
 end

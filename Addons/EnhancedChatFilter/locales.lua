@@ -1,10 +1,11 @@
 local _, ecf = ...
+local L = ecf.L
 
-local L = {}
+local locale = GetLocale()
 -----------------------------------------------------------------------
 -- zhCN
 -----------------------------------------------------------------------
-if (GetLocale() == "zhCN") then
+if (locale == "zhCN") then
 --Titles
 	L["MainFilter"] = "总开关"
 	L["MinimapIcon"] = "小地图图标"
@@ -40,6 +41,10 @@ if (GetLocale() == "zhCN") then
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 	L["Aggressive"] = "额外过滤器"
 	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合"
+	L["DebugWindow"] = "Debug"
+	L["DebugMode"] = "Debug模式"
+	L["DebugModeTooltips"] = "开启Debug模式，聊天信息会被记录并可以查看哪些信息被过滤。|n这将占用一定内存。"
+	L["ClearRecord"] = "清除聊天记录"
 --BlackwordList
 	L["BlackwordList"] = "黑名单关键词"
 	L["AddBlackWordTitle"] = "添加新黑名单关键词"
@@ -72,7 +77,7 @@ if (GetLocale() == "zhCN") then
 -- zhTW -- NEED HELP
 -- Contributors: 老虎007@NGA
 -----------------------------------------------------------------------
-elseif (GetLocale() == "zhTW") then
+elseif (locale == "zhTW") then
 --Titles
 	L["MainFilter"] = "總開關"
 	L["MinimapIcon"] = "小地圖圖標"
@@ -108,6 +113,10 @@ elseif (GetLocale() == "zhTW") then
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 	L["Aggressive"] = "额外过滤器"
 	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合"
+	L["DebugWindow"] = "Debug"
+	L["DebugMode"] = "Debug模式"
+	L["DebugModeTooltips"] = "开启Debug模式，聊天信息会被记录并可以查看哪些信息被过滤。|n这将占用一定内存。"
+	L["ClearRecord"] = "清除聊天记录"
 --BlackwordList
 	L["BlackwordList"] = "黑名单關鍵詞"
 	L["AddBlackWordTitle"] = "添加新黑名單關鍵詞"
@@ -163,7 +172,7 @@ else
 	L["MonsterSayFilterTooltip"] = "Use a repeat filter to reduce monster say msg in chat. This will not filter monster yell msg while it cast spells."
 	L["RepeatOptions"] = "Repeat Options"
 	L["chatLinesLimit"] = "Repeat message cache lines"
-	L["chatLinesLimitTooltips"] = "Repeat message lines. Please change it to suit your message amount. Increase it will consume more memory. Set 0 to disable Repeat Filter. Default 20."
+	L["chatLinesLimitTooltips"] = "Repeat message lines. Please change it to suit your message amount. Increase it will consume more memory and CPU. Set 0 to disable Repeat Filter. Default 20."
 	L["MultiLines"] = "MultiLines"
 	L["MultiLinesTooltip"] = "Filtered msg that is sent from the same person and in less than 1 sec. This may reduce chat spam but also remove report from addons."
 	L["AlsoFilterGroup"] = "AlsoFilterGroup"
@@ -174,6 +183,10 @@ else
 	L["WhisperWhitelistModeTooltip"] = "Filter all whisper unless it's from guild/group/raid/friends or you have just whisper them|n|cffE2252DUse with care!"
 	L["Aggressive"] = "Aggressive Filters"
 	L["AggressiveTooltip"] = "Some aggressive but effective Filters."
+	L["DebugWindow"] = "Debug"
+	L["DebugMode"] = "DebugMode"
+	L["DebugModeTooltips"] = "Enable debug mode. This will record chat msg and you can check whether they are filtered by ECF. This will consume some memory."
+	L["ClearRecord"] = "ClearRecord"
 --BlackwordList
 	L["BlackwordList"] = "BlackWordList"
 	L["AddBlackWordTitle"] = "Add Blackword"
@@ -202,8 +215,6 @@ else
 	L["GotAchievement"] = "[%s]have earned the achievement%s!"
 	L["And"] = ", "
 end
-
-ecf.L = L
 
 setmetatable(ecf.L, {__index=function(self, key)
 	return key

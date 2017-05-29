@@ -1,15 +1,17 @@
 ﻿if GetLocale() ~= "zhTW" then return end
 
 infoL = {
+	["Currency"] = "要塞資源",
 	["ON"] = "開啟",
-	["none"] = "無",
-
-	["Bags"] = "背包",
+	["New"] = "新",
+	["Mail"] = "郵件 !",
+	["No Mail"] = "無新郵件",
+	["Bags"] = "Bags",
 	["Total"] = "總計",
 	["Used"] = "使用",
 	["AutoSell junk"] = "自動販售灰色物品",
 	["Your vendor trash has been sold and you earned"] = "背包中的灰色物品售出獲得",
-	
+	["D"] = "Armor",
 	["Head"] = "頭部",
 	["Shoulder"] = "肩部",
 	["Chest"] = "胸部",
@@ -25,34 +27,44 @@ infoL = {
 	["Repair cost covered by G-Bank"] = "修理使用了公會銀行",
 	["Repair cost"] = "修理花費",
 	["Go farm newbie"] = "新手去賺錢先吧",
-
+	["none"] = "無裝備",
 	["My Coordinate"] = "我的座標",
 
 	["Friends list:"] = "好友列表:",
-
-	["Sorting"] = "排序",
-	["Sorting by:"] = "排序方式:",
-
+	["Friends"] = "Friends",
 	["Earned:"] = "獲得:",
 	["Spent:"] = "花費:",
 	["Deficit:"] = "虧損:",
 	["Profit:"] = "盈利:",
-
+	["Session"] = "本次登錄",
+	["Server"] = "伺服器",
+	["Character"] = "當前角色",
+	
+	["Guild"] = "Guild",
+	["No Guild"] = "沒人要",
 	["Current"] = "目前",
 	["Daily"] = "今天",
-
+	["Sorting"] = "排序",
+	["Sorting by:"] = "排序方式:",
+	
 	["Hidden"] = "隱藏",
-	["Shift"] = "Shift展開",
+	["Shift"] = "Shift展開",	
 	["Default UI Memory Usage:"] = "内建插件資源耗用:",
 	["Total Memory Usage:"] = "總資源耗用:",
-	["Garbage collected"] = "釋放內存",
-	["AutoCollect"] = "自動整理內存",
+	["Garbage collected"] = "釋放記憶體",
+	["AutoCollect"] = "自動整理記憶體暫存",
+
+	["No Talents"] = "無天賦",
+	["Active Talent"] = "當前天賦 : ",
+	["Talent"] = "天賦 : ",
+	["Primary Talent"] = "主天賦 : ",
+	["Secondary Talent"] = "副天賦 : ",
 	
 	["My Position"] = "我的位置",
 
 	["System"] = "系統",
-	["Latency"] = "延遲",
 	["Home"] = "本地",
+	["Latency"] = "延遲",
 	["Reload UI(on)"] = "|cff777777dim|rinfo[|cff00ff00System|r]:你可以在重載介面之後查看插件的CPU佔用,請重載介面!",
 	["Reload UI(off)"] = "|cff777777dim|rinfo[|cff00ff00System|r]:你可以在重載介面之後隱藏插件的CPU佔用顯示模塊,請重載介面!",
 }

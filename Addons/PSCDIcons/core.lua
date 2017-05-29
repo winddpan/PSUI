@@ -41,9 +41,10 @@ end
 
 function PSCD:OnEvent(event, unit)
 	if event ~= "SPELL_UPDATE_COOLDOWN" then
-		PSCD:CheckSpells(self)
+		--PSCD:CheckSpells(self)
 	end
 	
+	PSCD:CheckSpells(self)
 	PSCD:UpdateCD(self)
 end
 

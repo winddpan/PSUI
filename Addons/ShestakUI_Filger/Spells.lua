@@ -204,6 +204,9 @@ Filger_Spells = {
 			IconSize = 38,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 			
+			-- 巅峰敏捷
+			{spellID = 242584, unitID = "player", caster = "player", filter = "BUFF"},	--铁花爆击
+
 			-- SP
 			{spellID = 214802, unitID = "player", caster = "player", filter = "BUFF"},	--铁花爆击
 			{spellID = 214807, unitID = "player", caster = "player", filter = "BUFF"},	--铁花精通

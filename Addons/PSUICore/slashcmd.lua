@@ -1,6 +1,6 @@
 ﻿ShowHelp = function() 
 	print("PSUI命令帮助")
-	print("|cff3399ff/psui 命令帮助|r")
+	print("|cff3399ff/as 自动调整UI缩放|r")
 	print("|cff3399ff/rl 重载插件|r")
 	print("|cff3399ff/rc 团队准备检查|r")
 	print("|cff3399ff/hb 快速按键绑定|r")

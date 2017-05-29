@@ -2,8 +2,6 @@ local addon, ns = ...
 local lib = ns.lib
 local _G = _G
 
---local screenwidth = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x%d+")
---local screenhigh = string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")
 local bordercolor = {0,0,0,.95}
 local mainfont = "Fonts\\ARIALN.TTF"
 ----------------------------------------------------------------------------------------------------------------------------
@@ -16,14 +14,13 @@ Bottompanel:SetFrameLevel(0)
 Bottompanel:SetPoint("BOTTOM",UIParent,"BOTTOM", 0, -3)
 
 -------- Chat
-lib.Createpanel("ChatPanel",368,150,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.77}) 
+lib.Createpanel("ChatPanel",368,165,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.77}) 
 ChatPanel:SetFrameLevel(0)
 ChatPanel:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT", 7, 17)
 
 --------- DamageMeter
-lib.Createpanel("rightPanel2",250,150,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.5}) 
+lib.Createpanel("rightPanel2",270,165,UIParent,"BACKGROUND",nil,3,bordercolor,{0,0,0,.5}) 
 rightPanel2:SetFrameLevel(0)
---rightPanel2:SetPoint("BOTTOMRIGHT",UIParent,"BOTTOMRIGHT", -137, 17)
 rightPanel2:SetPoint("BOTTOMRIGHT",UIParent,"BOTTOMRIGHT", -7, 17)
 
 --------- extraActionbar

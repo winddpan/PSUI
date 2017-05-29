@@ -41,7 +41,7 @@ if cfg.System == true then
 			else
 				fpscolor = "|cffD80909"
 			end
-			Text:SetText(fpscolor..floor(GetFramerate()).."|r".."fps "..colorlatency(lat).."|r".."ms")
+			Text:SetText(fpscolor..floor(GetFramerate()).."|r".."Fps "..colorlatency(lat).."|r".."Ms")
 			int = 0.8
 		end
 	end
@@ -66,7 +66,7 @@ if cfg.System == true then
 	Stat:SetAllPoints(Text)
 	Stat:SetScript("OnEnter", function(self)
 		RefreshCput(self)
-		GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 6);
+		GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 10);
 		GameTooltip:ClearAllPoints()
 		GameTooltip:SetPoint("BOTTOM", self, "TOP", 0, 1)
 		GameTooltip:ClearLines()
@@ -78,36 +78,32 @@ if cfg.System == true then
 			maxAddOns = math.min(cfg.MaxAddOns, #Cput)
 		end
 
-		if GetCVar("scriptProfile") == "1" then
-			for i = 1, maxAddOns do
-				if Cput[i][3] then
-					local color = Cput[i][2]/Total*100 <= 1 and {0,1} -- 0 - 1
-					or Cput[i][2]/Total*100 <= 5 and {0.75,1} -- 1 - 5
-					or Cput[i][2]/Total*100 <= 10 and {1,1} -- 5 - 10
-					or Cput[i][2]/Total*100 <= 25 and {1,0.75} -- 10 - 25
-					or Cput[i][2]/Total*100 <= 50 and {1,0.5} -- 25 - 50
-					or {1,0.1} -- 50 +
-					GameTooltip:AddDoubleLine(Cput[i][1], format("%.2f%s", Cput[i][2]/Total*100," %"), 1, 1, 1, color[1], color[2], 0)						
-				end
+	if GetCVar("scriptProfile") == "1" then
+		for i = 1, maxAddOns do
+			if Cput[i][3] then
+				local color = Cput[i][2]/Total*100 <= 1 and {0,1} -- 0 - 1
+				or Cput[i][2]/Total*100 <= 5 and {0.75,1} -- 1 - 5
+				or Cput[i][2]/Total*100 <= 10 and {1,1} -- 5 - 10
+				or Cput[i][2]/Total*100 <= 25 and {1,0.75} -- 10 - 25
+				or Cput[i][2]/Total*100 <= 50 and {1,0.5} -- 25 - 50
+				or {1,0.1} -- 50 +
+				GameTooltip:AddDoubleLine(Cput[i][1], format("%.2f%s", Cput[i][2]/Total*100," %"), 1, 1, 1, color[1], color[2], 0)						
 			end
-			local more, moreCpuu = 0, 0
-			if not IsShiftKeyDown() then
-				for i = (cfg.MaxAddOns + 1), #Cput do
-					if Cput[i][3] then
-						more = more + 1
-						moreCpuu = moreCpuu + Cput[i][2]
-					end
-				end
-				GameTooltip:AddDoubleLine(format("%d %s (%s)",more,infoL["Hidden"],infoL["Shift"]),format("%.2f%s",moreCpuu/Total*100," %"),.6,.8,1,.6,.8,1)
-			end
-			GameTooltip:AddLine(" ")
 		end
-		--GameTooltip:AddLine(infoL["Latency"]..":",.6, .8, 1)
+		local more, moreCpuu = 0, 0
+		if not IsShiftKeyDown() then
+			for i = (cfg.MaxAddOns + 1), #Cput do
+				if Cput[i][3] then
+					more = more + 1
+					moreCpuu = moreCpuu + Cput[i][2]
+				end
+			end
+			GameTooltip:AddDoubleLine(format("%d %s (%s)",more,infoL["Hidden"],infoL["Shift"]),format("%.2f%s",moreCpuu/Total*100," %"),.6,.8,1,.6,.8,1)
+		end
+		GameTooltip:AddLine(" ")
+	end
 		local _, _, latencyHome, latencyWorld = GetNetStats()
-		--GameTooltip:AddDoubleLine(infoL["Home"]..":", format("%s%s",colorlatency(latencyHome).."|r","ms"), 1 , 1, 1, 1, 1, 1)
-		--GameTooltip:AddDoubleLine(CHANNEL_CATEGORY_WORLD..":", format("%s%s",colorlatency(latencyWorld).."|r","ms"), 1 , 1, 1, 1, 1, 1)
-		--GameTooltip:AddDoubleLine(infoL["Home"].."/"..CHANNEL_CATEGORY_WORLD..":",format("%s%s/%s%s",colorlatency(latencyHome).."|r","ms",colorlatency(latencyWorld).."|r","ms"), 1, 1, 1, 1, 1, 1)
-		GameTooltip:AddDoubleLine(infoL["Latency"]..":",format("%s%s(%s)/%s%s(%s)",colorlatency(latencyHome).."|r","ms",infoL["Home"],colorlatency(latencyWorld).."|r","ms",CHANNEL_CATEGORY_WORLD),.6, .8, 1, 1, 1, 1)
+		GameTooltip:AddDoubleLine(infoL["Latency"]..":",format("%s%s(%s)/%s%s(%s)",colorlatency(latencyHome).."|r","Ms",infoL["Home"],colorlatency(latencyWorld).."|r","Ms",CHANNEL_CATEGORY_WORLD),.6, .8, 1, 1, 1, 1)
 		GameTooltip:Show()
 	end)
 	Stat:SetScript("OnLeave", function() GameTooltip:Hide() end)

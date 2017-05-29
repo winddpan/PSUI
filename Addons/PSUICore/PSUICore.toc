@@ -3,30 +3,17 @@
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
-## Version: 2.3
+## Version: 2.4
 ## OptionalDeps:Skada, DBM-Core, Aurora
-
-info\info.xml
-lib\libs.xml
 
 core.lua
 slashcmd.lua
-
 panel\lib.lua
 panel\core.lua
 
-modules\modules.xml
+info\info.xml
+lib\libs.xml
 cc\cc.xml
-
-automation\buystack.lua
-automation\durability.lua
-automation\error_frame.lua
-automation\mail_get.lua
-automation\AutoRepair&Sell.lua
-automation\bg_hide_quest.lua
-automation\Invite.lua
-automation\auto_gearswap.lua
-automation\convenient.lua
-
-skin\StyleSkada.lua
-skin\StyleDBM.lua
+modules\modules.xml
+automation\automation.xml
+skin\skin.xml

@@ -83,7 +83,7 @@ if cfg.Time == true then
 	Stat:SetScript("OnEnter", function(self)
 		OnLoad = function(self) RequestRaidInfo() end
 		
-		GameTooltip:SetOwner(self, "ANCHOR_TOP", -20, 6)
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0, -10)
 		GameTooltip:ClearLines()
 		GameTooltip:AddLine(date'%A, %B %d',0,.6,1)
 		GameTooltip:AddLine(" ")
@@ -115,7 +115,8 @@ if cfg.Time == true then
 		local oneraid
 		for i = 1, GetNumSavedInstances() do
 			local name,_,reset,difficulty,locked,extended,_,isRaid,maxPlayers = GetSavedInstanceInfo(i)
-			if isRaid and (locked or extended) then
+			--if isRaid and (locked or extended) then
+			if (locked or extended) then
 				local tr,tg,tb,diff
 				if not oneraid then
 					GameTooltip:AddLine(" ")
@@ -133,6 +134,17 @@ if cfg.Time == true then
 			if extended then tr,tg,tb = 0.3,1,0.3 else tr,tg,tb = 1,1,1 end
 			if difficulty == 3 or difficulty == 4 then diff = "H" else diff = "N" end
 			GameTooltip:AddDoubleLine(name,fmttime(reset),1,1,1,tr,tg,tb)
+			end
+		end
+		local killbossnum = GetNumSavedWorldBosses()
+		GameTooltip:AddLine(" ")
+		if killbossnum == 0 then
+			GameTooltip:AddLine("本周還未擊殺世界首領", 1, 0.1, 0.1)
+		else
+			--GameTooltip:AddDoubleLine("您已经击杀的野外boss", "下次重置时间", 1, 1, 1, 1, 1, 1)
+			for i=1, killbossnum do
+				local name, _, reset = GetSavedWorldBossInfo(i)
+				GameTooltip:AddDoubleLine(name,"已擊殺", 1, 1, 1,tr,tg,tb)
 			end
 		end
 		GameTooltip:Show()

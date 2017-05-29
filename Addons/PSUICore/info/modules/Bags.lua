@@ -18,11 +18,11 @@ if cfg.Bags == true then
 			free, total = free + GetContainerNumFreeSlots(i), total + GetContainerNumSlots(i)
 		end
 		used = total - free
-		Text:SetText(cfg.ColorClass and "Bags: "..init.Colored..free or "Bags:"..free)
+		Text:SetText(cfg.ColorClass and init.Colored..infoL["Bags"]..": ".."|r"..free.. '/' ..total or infoL["Bags"]..":"..free)
 		self:SetAllPoints(Text)
 		Stat:SetScript("OnEnter", function()
 
-			GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 6);
+			GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 10);
 			GameTooltip:ClearAllPoints()
 			GameTooltip:SetPoint("BOTTOM", self, "TOP", 0, 1)
 			GameTooltip:ClearLines()
@@ -48,7 +48,8 @@ if cfg.Bags == true then
 			ToggleAllBags()
 		end
 	end)
-
+	
+	
 	local f = CreateFrame("Frame")
 	f:SetScript("OnEvent", function()
 		if diminfo.AutoSell == true then
@@ -56,7 +57,7 @@ if cfg.Bags == true then
 			for b = 0, 4 do
 				for s = 1, GetContainerNumSlots(b) do
 					local l = GetContainerItemLink(b, s)
-					if l then
+					if l and (select(11, GetItemInfo(l)) ~= nil) and (select(2, GetContainerItemInfo(b, s))~=nil) then
 						local p = select(11, GetItemInfo(l)) * select(2, GetContainerItemInfo(b, s))
 						if select(3, GetItemInfo(l)) == 0 and p > 0 then
 							UseContainerItem(b, s)

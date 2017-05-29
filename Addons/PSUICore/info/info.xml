@@ -7,12 +7,9 @@
 	<Script file="locale\taiwan.lua"/>
 	
 	<Script file="modules\Bags.lua"/>
-	<Script file="modules\Coords.lua"/>
 	<Script file="modules\Durability.lua"/>
 	<Script file="modules\Friends.lua"/>
-	<Script file="modules\Gold.lua"/>
 	<Script file="modules\Guild.lua"/>
-	<Script file="modules\Mail.lua"/>
 	<Script file="modules\Memory.lua"/>
 	<Script file="modules\Positions.lua"/>
 	<Script file="modules\Spec.lua"/>

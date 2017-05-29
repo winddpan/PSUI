@@ -29,7 +29,7 @@ Wähle oben einen Rang aus, um alle Mitglieder, dieses oder höheren Ranges, zum
 
 Klicke auf die Ränge auf der linken Seite, um einzelne Spieler dem Rat hinzuzufügen.
 
-Klicke auf den Reiter Aktueller Ra', um deine Auswahl zu sehen.]=]
+Klicke auf den Reiter Aktueller Rat, um deine Auswahl zu sehen.]=]
 L["All items"] = "Alle Gegenstände"
 L["All items has been awarded and  the loot session concluded"] = "Alle Gegenstände wurden vergeben und die Plündersitzung ist abgeschlossen."
 L["Alt click Looting"] = "Alt-Klick-Plündern"

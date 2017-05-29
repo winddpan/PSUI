@@ -322,7 +322,7 @@ function RCLootCouncil:OnEnable()
 	self:ActivateSkin(db.currentSkin)
 
 	if self.db.global.version and self:VersionCompare(self.db.global.version, self.version) then -- We've upgraded
-		if self:VersionCompare(self.db.global.version, "2.3.2") then -- Update lootDB with newest changes
+		if self:VersionCompare(self.db.global.version, "2.3.3") then -- Update lootDB with newest changes
 			-- delay it abit
 			self:ScheduleTimer("UpdateLootHistory", 5)
 		end
@@ -1519,7 +1519,10 @@ function RCLootCouncil:UnitIsUnit(unit1, unit2)
 	if strfind(unit2, "-", nil, true) ~= nil then
 		unit2 = Ambiguate(unit2, "short")
 	end
-	return UnitIsUnit(unit1, unit2)
+	-- v2.3.3 There's problems comparing non-ascii characters of different cases using UnitIsUnit()
+	-- I.e. UnitIsUnit("Potdisc", "potdisc") works, but UnitIsUnit("Æver", "æver") doesn't.
+	-- Since I can't find a way to ensure consistant returns from UnitName(), just lowercase units here before passing them.
+	return UnitIsUnit(unit1:lower(), unit2:lower())
 end
 
 --[[ NOTE I'm concerned about the UnitIsVisible() range thing with UnitName(),

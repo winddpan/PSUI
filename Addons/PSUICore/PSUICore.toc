@@ -4,7 +4,13 @@
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
 ## Version: 2.4
-## OptionalDeps:Skada, DBM-Core, Aurora
+## OptionalDeps:Skada, DBM-Core, BigWigs, Aurora
+## X-DBM-Timer-Skin: 1
+## X-DBM-Timer-Skin-Name: PSUICore
+## X-DBM-Timer-Skin-Textures: Interface\AddOns\PSUICore\media\statusbar2.tga
+## X-DBM-Timer-Skin-Texture-Names: PSUICore
+## X-DBM-Timer-Skin-Fonts: STANDARD_TEXT_FONT
+## X-DBM-Timer-Skin-Font-Names: PSUICore Font
 
 core.lua
 slashcmd.lua

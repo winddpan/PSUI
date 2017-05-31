@@ -2,7 +2,8 @@
 ## Author: winddpan
 ## Title: rActionBar_PSUI
 ## Notes: rActionBar layout
-## RequiredDeps: rActionBar, rActionButtonStyler
+## RequiredDeps: rActionBar
+## OptionalDeps: rActionButtonStyler
 
 layout_mine.lua
 layout.lua

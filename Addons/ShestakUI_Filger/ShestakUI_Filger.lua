@@ -2,23 +2,7 @@
 local Misc = ns.Misc
 
 local class = select(2, UnitClass("player"))
-local colorTable = {
-	["DK"]		= {r = .77, g = .12, b = .23},
-	["DLY"]		= {r = 1, g = 0.49, b = .04},
-	["LR"]		= {r = .67, g = .83, b = .45},
-	["FS"]		= {r = .41, g = .8, b = .94},
-	["WS"]		= {r = 0, g = 1, b = .59},
-	["QS"]		= {r = .96, g = .55, b = .73},
-	["MS"]		= {r = 1, g = 1, b = 1},
-	["DZ"]		= {r = 1, g = .96, b = .41},
-	["SM"]		= {r = 0, g = .44, b = .87},
-	["SS"]		= {r = .58, g = .51, b = .79},
-	["ZS"]		= {r = .78, g = .61, b = .43},
-	["Black"]	= {r = 0, g = 0, b = 0},
-	["Gray"]	= {r = .37, g = .3, b = .3},
-	["Green"] = { r = 49/255, g = 213/255, b = 78/255},
-	["OWN"]		= RAID_CLASS_COLORS[class],
-}
+local colorTable = Misc.Colors
 
 local function SetTemplate(Parent, Size)
 	local F = CreateFrame("Frame", nil, Parent)
@@ -41,8 +25,8 @@ local function SetTemplate(Parent, Size)
     F.Border:SetBackdrop({ 
 		edgeFile = "Interface\\Buttons\\WHITE8x8" , edgeSize = 1,
 	 })
-    F.Border:SetBackdropBorderColor(colorTable[Misc.modeborder].r, colorTable[Misc.modeborder].g, colorTable[Misc.modeborder].b, 1)
     F.Border:SetFrameLevel(5)
+	Parent.Border = F.Border
 	
 	return F
 end
@@ -323,6 +307,12 @@ function Filger:DisplayActives()
 		else
 			bar:Show()
 		end
+		if value.data.filter == "DEBUFF" then
+			bar.Border:SetBackdropBorderColor(colorTable[Misc.modeDebuffBorder].r, colorTable[Misc.modeDebuffBorder].g, colorTable[Misc.modeDebuffBorder].b, 1)
+		else
+			bar.Border:SetBackdropBorderColor(colorTable[Misc.modeBuffBorder].r, colorTable[Misc.modeBuffBorder].g, colorTable[Misc.modeBuffBorder].b, 1)
+		end
+
 		index = index + 1
 	end
 

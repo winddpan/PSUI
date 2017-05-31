@@ -14,6 +14,7 @@ local class = select(2, UnitClass("player"))
 local function SetTemplate(Parent)
 	local F = CreateFrame("Frame", nil, Parent)
 	F:SetFrameLevel(Parent:GetFrameLevel())
+
 	F:SetPoint("TOPLEFT", -1 * Misc.mult, 1 * Misc.mult)
 	F:SetPoint("BOTTOMRIGHT", 1 * Misc.mult, -1 * Misc.mult)
 	F:SetBackdrop({
@@ -32,10 +33,10 @@ local function SetTemplate(Parent)
     F.Border:SetBackdrop({ 
 		edgeFile = "Interface\\Buttons\\WHITE8x8" , edgeSize = 1,
 	})
-	--F.Border:SetBackdropBorderColor(0, 0, 0, 1)
-    F.Border:SetBackdropBorderColor(49/255, 213/255, 78/255, 1)
+	F.Border:SetBackdropBorderColor(0, 0, 0, 1)
+    --F.Border:SetBackdropBorderColor(49/255, 213/255, 78/255, 1)
     F.Border:SetFrameLevel(Parent:GetFrameLevel()+1)
-	
+
 	return F
 end
 

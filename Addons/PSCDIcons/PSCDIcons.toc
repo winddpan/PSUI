@@ -2,7 +2,7 @@
 ## Title: PSCDIcons
 ## Notes: CooldownIcons
 ## Author: Winddpan
-## Version: 1.1
+## Version: 1.2
 
 activation.lua
 trackers.lua

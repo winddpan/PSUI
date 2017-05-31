@@ -1,0 +1,30 @@
+tag d7a1ab38c6b1f81242cad46533289d1cf78fdfde v7.2.0-1
+Author:	elvador <reysptools@googlemail.com>
+Date:	Sat May 20 11:49:47 2017 +0200
+
+Tagging as v7.2.0-1
+
+commit 872189a0b65f5eccf6bbe224d2eb0bd88aeb9914
+Author: elvador <reysptools@googlemail.com>
+Date:   Sat May 20 11:49:19 2017 +0200
+
+    bump toc
+
+commit 77961f7a6e9f66ee8d27308a98363296653f77d5
+Author: elvador <reysptools@googlemail.com>
+Date:   Sat May 20 11:48:15 2017 +0200
+
+    fix README.md
+
+commit 349c1d1035bcfcee9003ed8aa635d84fc3de4438
+Author: elvador <reysptools@googlemail.com>
+Date:   Sat May 20 11:44:16 2017 +0200
+
+    Update the logic to determine the status of an item, should fix a lot of problems
+
+commit 5e697ec218a877efb2dd5df16e8cef400ad537c7
+Author: elvador <reysptools@googlemail.com>
+Date:   Thu Mar 9 16:35:07 2017 +0100
+
+    bump item level
+

@@ -203,10 +203,27 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 38,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
+							
+			-- 必爆肩膀
+			{spellID = 235027, unitID = "player", caster = "player", filter = "BUFF"},
+				
+			-- 灌铅骰子
+			{spellID = 240837, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			-- 巅峰敏捷
 			{spellID = 242584, unitID = "player", caster = "player", filter = "BUFF"},	--铁花爆击
 
+			-- 敏锐终结技buff
+			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 197498, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 天赋-敏锐
+			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
+			
+			-- 披风
+			{spellID = 208693, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
+			{spellID = 228224, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
+			
 			-- SP
 			{spellID = 214802, unitID = "player", caster = "player", filter = "BUFF"},	--铁花爆击
 			{spellID = 214807, unitID = "player", caster = "player", filter = "BUFF"},	--铁花精通
@@ -221,24 +238,6 @@ Filger_Spells = {
 			{spellID = 221796, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222517, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 222518, unitID = "player", caster = "player", filter = "BUFF"},
-
-
-			-- 敏锐终结技buff
-			{spellID = 197496, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 197498, unitID = "player", caster = "player", filter = "BUFF"},
-			
-			-- 天赋-敏锐
-			{spellID = 193538, unitID = "player", caster = "player", filter = "BUFF"},
-			
-			-- 披风
-			{spellID = 208693, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
-			{spellID = 228224, unitID = "player", caster = "player", filter = "BUFF", stack = 20},
-				
-			-- 灌铅骰子
-			{spellID = 240837, unitID = "player", caster = "player", filter = "BUFF"},
-				
-			-- 必爆肩膀
-			{spellID = 235027, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "狂徒buff",

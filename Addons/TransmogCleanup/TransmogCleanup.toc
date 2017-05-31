@@ -1,0 +1,12 @@
+## Interface: 70200
+## Title: TransmogCleanup
+## Notes: Cleanup your bag from items you already learned to transmog
+## Author: Elvador
+## SavedVariables: TransmogCleanupDB
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+TransmogCleanup.lua
+ignoredItems.lua

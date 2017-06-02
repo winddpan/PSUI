@@ -5,7 +5,7 @@ local Filger_Settings = {
 	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- P_BUFF_ICON
 	player_proc_icon = {"TOPRIGHT", UIParent, "CENTER", -200, -4},		-- P_PROC_ICON
 	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 0},	-- T_DEBUFF_ICON
-	trinket = {"TOPRIGHT", "oUF_monoPlayerFrame", "TOPLEFT", -3, 2},  	-- Trinket
+	trinket = {"TOPLEFT", "oUF_monoPlayerFrame", "TOPLEFT", -2, -55},  	-- Trinket
 	cooldown = {"BOTTOMLEFT", UIParent, "CENTER", -306, -247},   		-- Cooldown
 }
 
@@ -13,11 +13,12 @@ Filger_Spells = {
 	["ALL"] = {
 		{
 			Name = "Trinket",
-			Direction = "LEFT",
-			Mode = "ICON",
+			Direction = "DOWN",
+			Mode = "BAR",
+			BarWidth = 178,
 			Interval = 1,
 			Alpha = 1,
-			IconSize = 39,
+			IconSize = 26,
 			Position = {unpack(Filger_Settings.trinket)},
 			
 			{spellID = 7744, unitID = "7744", caster = "player", filter = "CD"},

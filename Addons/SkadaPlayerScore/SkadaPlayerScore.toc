@@ -1,0 +1,15 @@
+## Interface: 70100
+## Title: Skada |r[|caaedc99fPlayer Score|r]
+## Author: Twylyte@Aggramar(EU)
+## Version: 1.06
+## Notes: A score based on the ratio of damage/healing/mitigation done to damage taken
+## DefaultState: Enabled
+## Dependencies: Skada
+## SavedVariables: PScoresRaid, PSMultipliers
+## SavedVariablesPerCharacter: PScoresChar
+
+embeds.xml
+
+locale\enUS.lua
+
+SkadaPlayerScore.lua

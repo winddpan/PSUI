@@ -14,17 +14,19 @@ local function SetTemplate(Parent, Size)
 		edgeFile = Misc.border, 
 		insets = {left = 1 * Misc.mult, right = 1 * Misc.mult, top = 1 * Misc.mult, bottom = 1 * Misc.mult},
 		tile = false, tileSize = 0, 
-		edgeSize = 4 * Misc.mult,
+		edgeSize = 3 * Misc.mult,
 	})
-	F:SetBackdropColor(colorTable[Misc.modeback].r, colorTable[Misc.modeback].g, colorTable[Misc.modeback].b, .2)
-	F:SetBackdropBorderColor(colorTable[Misc.modeback].r, colorTable[Misc.modeback].g, colorTable[Misc.modeback].b, 1)
+	F:SetBackdropColor(0, 0, 0, 0)
+	F:SetBackdropBorderColor(colorTable[Misc.backdropColor].r, colorTable[Misc.backdropColor].g, colorTable[Misc.backdropColor].b, .75)
 	
 	F.Border = CreateFrame("Frame", nil, F)
     F.Border:SetPoint("TOPLEFT", 3, -3)
     F.Border:SetPoint("BOTTOMRIGHT", -3, 3)
     F.Border:SetBackdrop({ 
 		edgeFile = "Interface\\Buttons\\WHITE8x8" , edgeSize = 1,
-	 })
+	})
+	F.Border:SetBackdropColor(colorTable[Misc.backdropColor].r, colorTable[Misc.backdropColor].g, colorTable[Misc.backdropColor].b, 0.2)
+	F.Border:SetBackdropBorderColor(colorTable[Misc.backdropColor].r, colorTable[Misc.backdropColor].g, colorTable[Misc.backdropColor].b, 1)
     F.Border:SetFrameLevel(5)
 	Parent.Border = F.Border
 	
@@ -156,20 +158,21 @@ function Filger:DisplayActives()
 					bar.count = _G[bar.count:GetName()]
 				else
 					bar.count = bar:CreateFontString("$parentCount", "OVERLAY")
-					bar.count:SetFont(Misc.font, Misc.numsize, "THINOUTLINE")
+					bar.count:SetFont(Misc.font, Misc.numSize, "THINOUTLINE")
 					bar.count:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
 					bar.count:SetPoint("BOTTOMRIGHT", 0, 2)
 					bar.count:SetJustifyH("CENTER")
 				end
 			else
+				local barHeight = floor(self.IconSize *0.33)
 				if bar.statusbar then
 					bar.statusbar = _G[bar.statusbar:GetName()]
 				else
 					bar.statusbar = CreateFrame("StatusBar", "$parentStatusBar", bar)
 					bar.statusbar:SetWidth(self.BarWidth * Misc.mult)
-					bar.statusbar:SetHeight((self.IconSize - 21) * Misc.mult)
+					bar.statusbar:SetHeight(barHeight * Misc.mult)
 					bar.statusbar:SetStatusBarTexture(Misc.barfg)			-- bar_FG
-					bar.statusbar:SetStatusBarColor(colorTable[Misc.modefg].r, colorTable[Misc.modefg].g, colorTable[Misc.modefg].b, 1)
+					bar.statusbar:SetStatusBarColor(colorTable[Misc.barColor].r, colorTable[Misc.barColor].g, colorTable[Misc.barColor].b, 1)
 					if self.IconSide == "LEFT" then
 						bar.statusbar:SetPoint("BOTTOMLEFT", bar, "BOTTOMRIGHT", 3 * Misc.mult, 3 * Misc.mult)
 					elseif self.IconSide == "RIGHT" then
@@ -183,8 +186,8 @@ function Filger:DisplayActives()
 					bar.bg = _G[bar.bg:GetName()]
 				else
 					bar.bg = CreateFrame("Frame", "$parentBG", bar.statusbar)
-					bar.bg:SetPoint("TOPLEFT", -2 * Misc.mult, 2 * Misc.mult)
-					bar.bg:SetPoint("BOTTOMRIGHT", 2 * Misc.mult, -2 * Misc.mult)
+					bar.bg:SetPoint("TOPLEFT", -3 * Misc.mult, 3 * Misc.mult)
+					bar.bg:SetPoint("BOTTOMRIGHT", 3 * Misc.mult, -3 * Misc.mult)
 					bar.bg:SetFrameStrata("BACKGROUND")
 					SetTemplate(bar.bg, 0)
 				end
@@ -202,9 +205,9 @@ function Filger:DisplayActives()
 					bar.time = _G[bar.time:GetName()]
 				else
 					bar.time = bar.statusbar:CreateFontString("$parentTime", "OVERLAY")
-					bar.time:SetFont(Misc.font, Misc.numsize, "OUTLINE")
+					bar.time:SetFont(Misc.font, Misc.barNumSize, "OUTLINE")
 					bar.time:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
-					bar.time:SetPoint("RIGHT", bar.statusbar, 0, 5)
+					bar.time:SetPoint("BOTTOMRIGHT", bar.statusbar, 0, barHeight-1)
 					bar.time:SetJustifyH("RIGHT")
 				end
 
@@ -212,7 +215,7 @@ function Filger:DisplayActives()
 					bar.count = _G[bar.count:GetName()]
 				else
 					bar.count = bar:CreateFontString("$parentCount", "OVERLAY")
-					bar.count:SetFont(Misc.font, Misc.numsize, "THINOUTLINE")
+					bar.count:SetFont(Misc.font, Misc.barNumSize, "THINOUTLINE")
 					bar.count:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
 					bar.count:SetPoint("BOTTOMRIGHT", 1, 1)
 					bar.count:SetJustifyH("CENTER")
@@ -222,9 +225,9 @@ function Filger:DisplayActives()
 					bar.spellname = _G[bar.spellname:GetName()]
 				else
 					bar.spellname = bar.statusbar:CreateFontString("$parentSpellName", "OVERLAY")
-					bar.spellname:SetFont(GameTooltipText:GetFont(), Misc.namesize, "OUTLINE")
+					bar.spellname:SetFont(GameTooltipText:GetFont(), Misc.barNameSize, "OUTLINE")
 					bar.spellname:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
-					bar.spellname:SetPoint("LEFT", bar.statusbar, 2, 10)
+					bar.spellname:SetPoint("BOTTOMLEFT", bar.statusbar, 0, barHeight-1)
 					bar.spellname:SetPoint("RIGHT", bar.time, "LEFT")
 					bar.spellname:SetJustifyH("LEFT")
 				end
@@ -308,9 +311,9 @@ function Filger:DisplayActives()
 			bar:Show()
 		end
 		if value.data.filter == "DEBUFF" then
-			bar.Border:SetBackdropBorderColor(colorTable[Misc.modeDebuffBorder].r, colorTable[Misc.modeDebuffBorder].g, colorTable[Misc.modeDebuffBorder].b, 1)
+			bar.Border:SetBackdropBorderColor(colorTable[Misc.debuffBorderColor].r, colorTable[Misc.debuffBorderColor].g, colorTable[Misc.debuffBorderColor].b, 1)
 		else
-			bar.Border:SetBackdropBorderColor(colorTable[Misc.modeBuffBorder].r, colorTable[Misc.modeBuffBorder].g, colorTable[Misc.modeBuffBorder].b, 1)
+			bar.Border:SetBackdropBorderColor(colorTable[Misc.buffBorderColor].r, colorTable[Misc.buffBorderColor].g, colorTable[Misc.buffBorderColor].b, 1)
 		end
 
 		index = index + 1

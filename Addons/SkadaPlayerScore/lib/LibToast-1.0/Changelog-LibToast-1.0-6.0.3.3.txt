@@ -1,0 +1,8 @@
+2014-11-23  James D. Callahan III  <jcallahan@curse.com>
+
+[e387f4254fb9] [6.0.3.3]
+* LibToast-1.0.lua:
+
+Replaced usage of the UIFrameFade system with the Animation system. Toasts will also now flash on spawn and not fade while being moused over.
+
+

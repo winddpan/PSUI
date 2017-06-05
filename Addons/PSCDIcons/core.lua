@@ -216,12 +216,18 @@ function PSCD:UpdateCD(self)
 			bar.activeIndex = activeIndex
 			CooldownFrame_Set(bar.cooldown, start, duration, 1)
 			bar.cooldown:Show()
+			bar.icon:SetDesaturated(true)
+			
+			if maxCharges ~= nil and charges > 0 then
+				bar.icon:SetDesaturated(false)
+			end
 		else
 			if bar.cooling then
 				bar.cooling = nil
 				Activate:Run(bar.cooldown)
 			end
 			bar.cooldown:Hide()
+			bar.icon:SetDesaturated(false)
 		end
 		
 		bar.spellID = spid

@@ -9,7 +9,7 @@ cfg.combattext = {
 	frame1_pos = {"CENTER", "UIParent", "CENTER", -200, -70},	-- incoming damage frame position
 	frame2_pos = {"CENTER", "UIParent", "CENTER", -205, -70},	-- incoming healing frame position
 	--cfg.frame3_pos = {"LEFT", "UIParent", "CENTER", 320, 42}	-- outgoing damage/healing frame position
-	frame3_pos = {"LEFT", "UIParent", "CENTER", 220, 42},	-- outgoing damage/healing frame position
+	frame3_pos = {"LEFT", "UIParent", "CENTER", 430, 42},	-- outgoing damage/healing frame position
 	
 	show_damage = true,				-- enable outgoing damage combat text display
 	show_healing = true,			-- enable outgoing healing combat text display

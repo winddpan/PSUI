@@ -47,7 +47,7 @@ for i = 1, 3 do
 		f:SetJustifyH"LEFT"
 		f:SetPoint(unpack(cfg.combattext.frame2_pos))
 	elseif(i==3) then
-		f:SetJustifyH"RIGHT"
+		f:SetJustifyH"LEFT"
 		f:SetPoint(unpack(cfg.combattext.frame3_pos))
 		f:SetWidth(300)
 	end

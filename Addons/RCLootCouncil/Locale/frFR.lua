@@ -7,6 +7,14 @@ if not L then return end
 L[" is not active in this raid."] = "n'est pas activé pour ce raid."
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = "vous êtes le maître du butin et RCLootCouncil gère à présent le butin."
 L["&p was awarded with &i for &r!"] = "&p a reçu &i pour &r !"
+--Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
 L["A format to copy/paste to another player."] = "Format à copier/coller à un autre joueur."
 L["A new session has begun, type '/rc open' to open the voting frame."] = "Une nouvelle session a débuté, tapez '/rc open' pour ouvrir la fenêtre de vote."
 L["A tab delimited output for Excel. Might work with other spreadsheets."] = "Format pour Excel, délimité par des onglets. Peut également fonctionner avec d'autres tableurs."
@@ -56,6 +64,8 @@ L["Auto Award to"] = "Attribuer automatiquement à"
 L["Auto awarded 'item'"] = "%s a été attribué automatiquement"
 L["Auto Close"] = "Fermeture Auto"
 L["Auto Enable"] = "Activation automatique"
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 L["Auto Loot"] = "Fouille automatique"
 L["Auto Open"] = "Ouverture automatique"
 L["Auto Pass"] = "Passer automatiquement"
@@ -266,6 +276,8 @@ L["onlyUseInRaids_desc"] = "Cocher pour que RCLootCouncil soit automatiquement d
 L["open"] = "ouvrir"
 L["Open the Loot History"] = "Ouvrir l'historique du butin"
 L["open_the_loot_history_desc"] = "Cliquer pour ouvrir l'historique du butin."
+--Translation missing 
+-- L["Other piece"] = ""
 L["Party"] = "Groupe"
 L["Pass"] = "Passer"
 L["'player' has asked you to reroll"] = "%s a demandé que vous relanciez les dés"
@@ -326,6 +338,8 @@ L["Something went wrong :'("] = "Une erreur s'est produite :'("
 L["Standard .csv output."] = "Exporter en .csv standard."
 L["Start"] = "Débuter"
 L["Status texts"] = "Textes de statut"
+--Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
 L["Tank"] = true
 L["Test"] = true
 L["test"] = true
@@ -343,6 +357,10 @@ L["This item"] = "Cet objet"
 L["This item has been awarded"] = "Cet objet a été attribué"
 L["Tier 19"] = true
 L["Tier 20"] = true
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 L["Tier tokens received from here:"] = "Jetons d'armure obtenus dans cette instance :"
 L["tier_token_heroic"] = "Héroïque"
 L["tier_token_mythic"] = "Mythique"
@@ -364,6 +382,10 @@ L["Unknown"] = "Inconnu"
 L["Unknown date"] = "Date inconnue"
 L["Unknown/Chest"] = "Inconnu / Plastron"
 L["Unvote"] = "Annuler"
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "Seuil supérieur de qualité"
 L["upper_quality_limit_desc"] = [=[Déterminez le seuil supérieur de qualité des objets qui seront automatiquement attribués (cette qualité est comprise).
 Remarque : cette option prime le seuil de qualité par défaut. ]=]
@@ -404,6 +426,8 @@ L["You cannot use the menu when the session has ended."] = "Vous ne pouvez utili
 L["You cannot use this command without being the Master Looter"] = "Vous ne pouvez utiliser cette commande sans être le maître du butin"
 L["You can't start a loot session while in combat."] = "Impossible de débuter une session de butin en combat."
 L["You can't start a session before all items are loaded!"] = "Impossible de lancer une session tant que tous les objets n'ont pas été chargés !"
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 L["You haven't set a council! You can edit your council by typing '/rc council'"] = "Vous n'avez pas choisi de conseil ! Vous pouvez modifier votre conseil en tapant '/rc council'"
 L["Your note:"] = "Votre note :"
 L["You're already running a session."] = "Une session est déjà en cours"

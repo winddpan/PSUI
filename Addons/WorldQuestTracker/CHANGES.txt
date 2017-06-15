@@ -1,7 +1,13 @@
-changeset:   138:58a7f674b759
-tag:         v7.2.0.138-release
+changeset:   141:f148f1d1aa7e
+tag:         v7.2.5.141-release
 user:        Tercio
-date:        Tue May 30 15:38:23 2017 -0300
-summary:     - Ticket #432: fixed an issue with 10M+ artifact power quests.
+date:        Tue Jun 13 21:24:23 2017 -0300
+summary:     - 7.2.5 fix for invasion texture issue.
+
+
+changeset:   140:95d91310c2f8
+user:        Tercio
+date:        Tue Jun 13 21:23:53 2017 -0300
+summary:     - 7.2.5 fix for invasion texture issue.
 
 

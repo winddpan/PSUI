@@ -14,8 +14,9 @@ Cooldowns = {
 
 			-- 敏锐
 			{spellID = 185313},
-			{spellID = 121471},
+			{spellID = 212283},
 			{spellID = 209782},
+			{spellID = 121471},
 
 			-- 狂徒
 			{spellID = 13750},
@@ -23,6 +24,7 @@ Cooldowns = {
 
 			-- 刺杀
 			{spellID = 79140},
+			{spellID = 245388},
 			{spellID = 192759},
 			{spellID = 200806},
 

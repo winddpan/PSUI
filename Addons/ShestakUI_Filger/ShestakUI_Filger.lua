@@ -86,13 +86,12 @@ function Filger:UpdateCD()
 		else
 			self.time:SetFormattedText("%d:%.2d", time / 60, time % 60)
 		end
-	else
-		if time < 0 then
-			local frame = self:GetParent()
-			frame.actives[self.activeIndex] = nil
-			self:SetScript("OnUpdate", nil)
-			Filger.DisplayActives(frame)
-		end
+	end
+	if time < 0 then
+		local frame = self:GetParent()
+		frame.actives[self.activeIndex] = nil
+		self:SetScript("OnUpdate", nil)
+		Filger.DisplayActives(frame)
 	end
 end
 

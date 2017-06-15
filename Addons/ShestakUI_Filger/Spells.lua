@@ -134,6 +134,11 @@ Filger_Spells = {
 			-- 暗刃
 			{spellID = 121471, unitID = "player", caster = "player", filter = "BUFF"},
 			
+			-- 敏锐死亡标记
+			{spellID = 212283, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Master of Subtlety
+			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- 狂徒神器
 			{spellID = 202665, unitID = "player", caster = "player", filter = "DEBUFF"},
 			-- 敏锐神器
@@ -145,8 +150,6 @@ Filger_Spells = {
 			{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
 			-- 时间扭曲
 			{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
-			-- 敏锐死亡标记
-			{spellID = 212283, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			{spellID = 227151, unitID = "player", caster = "player", filter = "BUFF"},
 			--{spellID = 195627, unitID = "player", caster = "player", filter = "BUFF"},
@@ -176,8 +179,6 @@ Filger_Spells = {
 			-- Evasion
 			{spellID = 5277, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 199754, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Master of Subtlety
-			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Cloak of Shadows
 			{spellID = 31224, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Vanish

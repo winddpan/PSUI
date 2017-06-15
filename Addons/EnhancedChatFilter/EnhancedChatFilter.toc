@@ -3,7 +3,7 @@
 ## Notes: A chat filter based on blackwords and other triggers
 ## Notes-zhCN: 基于关键词的聊天过滤插件，包含了更多过滤器
 ## Author: Rubgrsch
-## Version: 7.2.0-2
+## Version: 7.2.0-3
 ## SavedVariables: ecfDB
 
 libs\LibStub\LibStub.lua
@@ -18,5 +18,6 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 init.lua
 locales.lua
-db.lua
+config.lua
 filters.lua
+textbox.lua

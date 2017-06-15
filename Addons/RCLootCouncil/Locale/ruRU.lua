@@ -9,6 +9,14 @@ L[" you are now the Master Looter and RCLootCouncil is now handling looting."] =
 --Translation missing 
 -- L["&p was awarded with &i for &r!"] = ""
 --Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
+--Translation missing 
 -- L["A format to copy/paste to another player."] = ""
 --Translation missing 
 -- L["A new session has begun, type '/rc open' to open the voting frame."] = ""
@@ -80,6 +88,8 @@ L["Auto Award to"] = "Автоматически Вручать"
 -- L["Auto Close"] = ""
 --Translation missing 
 -- L["Auto Enable"] = ""
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 --Translation missing 
 -- L["Auto Loot"] = ""
 --Translation missing 
@@ -416,6 +426,8 @@ L["open"] = "открыть"
 --Translation missing 
 -- L["open_the_loot_history_desc"] = ""
 --Translation missing 
+-- L["Other piece"] = ""
+--Translation missing 
 -- L["Party"] = ""
 L["Pass"] = "Пас"
 --Translation missing 
@@ -521,6 +533,8 @@ L["Something went wrong :'("] = "Что-то пошло не так :'("
 L["Start"] = "Начать"
 --Translation missing 
 -- L["Status texts"] = ""
+--Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
 L["Tank"] = "Танк"
 L["Test"] = "Тест"
 L["test"] = "тест"
@@ -546,6 +560,10 @@ L["This item has been awarded"] = "Этот предмет был вручен"
 -- L["Tier 19"] = ""
 --Translation missing 
 -- L["Tier 20"] = ""
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 --Translation missing 
 -- L["Tier tokens received from here:"] = ""
 --Translation missing 
@@ -585,6 +603,10 @@ L["Unguilded"] = "Не в гильдии"
 -- L["Unknown/Chest"] = ""
 --Translation missing 
 -- L["Unvote"] = ""
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "Лимит улучшения качества"
 --Translation missing 
 -- L["upper_quality_limit_desc"] = ""
@@ -630,6 +652,8 @@ L["You cannot use the menu when the session has ended."] = "Вы не может
 L["You cannot use this command without being the Master Looter"] = "Вы не можете использовать эту команду, не будучи ответственным за распределение добычи"
 L["You can't start a loot session while in combat."] = "Вы не можете запустить распределение добычи, находясь в бою."
 L["You can't start a session before all items are loaded!"] = "Вы не можете начать распределение добычи, прежде чем будут загружены все предметы!"
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 --Translation missing 
 -- L["You haven't set a council! You can edit your council by typing '/rc council'"] = ""
 L["Your note:"] = "Ваша заметка:"

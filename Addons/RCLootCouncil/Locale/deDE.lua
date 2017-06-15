@@ -7,6 +7,14 @@ if not L then return end
 L[" is not active in this raid."] = "ist in diesem Schlachtzug nicht aktiv."
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = "Du bist jetzt der Plündermeister und RCLootCouncil erledigt jetzt das Plündern."
 L["&p was awarded with &i for &r!"] = "&i wurde an &p wegen &r vergeben!"
+--Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
 L["A format to copy/paste to another player."] = "Ein Format zum Kopieren und Einfügen zu einem anderen Spieler."
 L["A new session has begun, type '/rc open' to open the voting frame."] = "Eine neue Sitzung hat begonnen, tippe '/rc open', um das Abstimmungsfenster zu öffnen."
 L["A tab delimited output for Excel. Might work with other spreadsheets."] = "Eine tabulatorgetrennte Ausgabe für Excel. Könnte auch mit anderen Tabellenkalkulationsprogrammen funktionieren."
@@ -60,6 +68,8 @@ L["Auto Award to"] = "Automatisch vergeben an"
 L["Auto awarded 'item'"] = "%s wurde automatisch vergeben."
 L["Auto Close"] = "Automatisch schließen"
 L["Auto Enable"] = "Automatisch aktivieren"
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 L["Auto Loot"] = "Automatisches Plündern"
 L["Auto Open"] = "Automatisch öffnen"
 L["Auto Pass"] = "Automatisches Passen"
@@ -278,6 +288,8 @@ L["onlyUseInRaids_desc"] = "Hake diese Option an, um RCLootCouncil in Gruppen au
 L["open"] = "Öffnen"
 L["Open the Loot History"] = "Beuteverlauf öffnen"
 L["open_the_loot_history_desc"] = "Klicken, um den Beuteverlauf zu öffnen."
+--Translation missing 
+-- L["Other piece"] = ""
 L["Party"] = "Gruppe"
 L["Pass"] = "Passen"
 L["'player' has asked you to reroll"] = "%s bittet dich erneut zu würfeln"
@@ -336,6 +348,8 @@ L["Something went wrong :'("] = "Irgendwas ist schief gelaufen :'("
 L["Standard .csv output."] = "Standard"
 L["Start"] = "Starten"
 L["Status texts"] = "Statustexte"
+--Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
 L["Tank"] = true
 L["Test"] = true
 L["test"] = "Test"
@@ -353,6 +367,10 @@ L["This item"] = "Dieser Gegenstand"
 L["This item has been awarded"] = "Dieser Gegenstand wurde vergeben."
 L["Tier 19"] = true
 L["Tier 20"] = true
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 L["Tier tokens received from here:"] = "Von hier erhaltene Tierset-Marken:"
 L["tier_token_heroic"] = "Heroisch"
 L["tier_token_mythic"] = "Mythisch"
@@ -374,6 +392,10 @@ L["Unknown"] = "Unbekannt"
 L["Unknown date"] = "Unbekanntes Datum"
 L["Unknown/Chest"] = "Unbekannt/Brust"
 L["Unvote"] = "Abwählen"
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "Obere Qualitätsgrenze"
 L["upper_quality_limit_desc"] = [=[Wähle die obere Qualitätsgrenze der Gegenstände, die automatisch vergeben werden (Diese Qualität inbegriffen!).
 Hinweis: Dies überschreibt die normale Plünderschwelle.]=]
@@ -414,6 +436,8 @@ L["You cannot use the menu when the session has ended."] = "Du kannst dieses Men
 L["You cannot use this command without being the Master Looter"] = "Du kannst diesen Befehl nicht benutzen, ohne der Plündermeister zu sein."
 L["You can't start a loot session while in combat."] = "Du kannst keine Plündersitzung starten, während du im Kampf bist."
 L["You can't start a session before all items are loaded!"] = "Du kannst keine Sitzung starten, wenn noch nicht alle Gegenstände geladen wurden!"
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 L["You haven't set a council! You can edit your council by typing '/rc council'"] = "Du hast keinen Rat eingestellt! Du kannst deinen Rat bearbeiten, indem du '/rc council' eintippst."
 L["Your note:"] = "Deine Notiz:"
 L["You're already running a session."] = "Du führst bereits eine Sitzung aus."

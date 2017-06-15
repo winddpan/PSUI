@@ -11,6 +11,14 @@ if not L then return end
 --Translation missing 
 -- L["&p was awarded with &i for &r!"] = ""
 --Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
+--Translation missing 
 -- L["A format to copy/paste to another player."] = ""
 --Translation missing 
 -- L["A new session has begun, type '/rc open' to open the voting frame."] = ""
@@ -100,6 +108,8 @@ if not L then return end
 -- L["Auto Close"] = ""
 --Translation missing 
 -- L["Auto Enable"] = ""
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 --Translation missing 
 -- L["Auto Loot"] = ""
 --Translation missing 
@@ -485,6 +495,8 @@ if not L then return end
 --Translation missing 
 -- L["open_the_loot_history_desc"] = ""
 --Translation missing 
+-- L["Other piece"] = ""
+--Translation missing 
 -- L["Party"] = ""
 --Translation missing 
 -- L["Pass"] = ""
@@ -597,6 +609,8 @@ if not L then return end
 --Translation missing 
 -- L["Status texts"] = ""
 --Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
+--Translation missing 
 -- L["Tank"] = ""
 --Translation missing 
 -- L["Test"] = ""
@@ -630,6 +644,10 @@ if not L then return end
 -- L["Tier 19"] = ""
 --Translation missing 
 -- L["Tier 20"] = ""
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 --Translation missing 
 -- L["Tier tokens received from here:"] = ""
 --Translation missing 
@@ -670,6 +688,10 @@ if not L then return end
 -- L["Unknown/Chest"] = ""
 --Translation missing 
 -- L["Unvote"] = ""
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 --Translation missing 
 -- L["Upper Quality Limit"] = ""
 --Translation missing 
@@ -742,6 +764,8 @@ if not L then return end
 -- L["You can't start a loot session while in combat."] = ""
 --Translation missing 
 -- L["You can't start a session before all items are loaded!"] = ""
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 --Translation missing 
 -- L["You haven't set a council! You can edit your council by typing '/rc council'"] = ""
 --Translation missing 

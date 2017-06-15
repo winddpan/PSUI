@@ -7,6 +7,14 @@ if not L then return end
 L[" is not active in this raid."] = "no está activo en esta banda."
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = "A partir de ahora eres el Maestro Despojador y RCLootCouncil maneja el reparto."
 L["&p was awarded with &i for &r!"] = "&p fue premiado con &i por &r!"
+--Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
 L["A format to copy/paste to another player."] = "Establece un formato para copiar/pegar a otro jugador."
 L["A new session has begun, type '/rc open' to open the voting frame."] = "Una nueva sesion ha comenzado, escriba '/rc open' para abrir ventana de votación"
 L["A tab delimited output for Excel. Might work with other spreadsheets."] = "Un tabulador delimita una salida de Excel. Es posible que funcione con otra hoja de cálculo."
@@ -57,6 +65,8 @@ L["Auto Award to"] = "Recompensar automáticamente a"
 L["Auto awarded 'item'"] = "Auto entregar %s"
 L["Auto Close"] = "Cerrar automaticamente"
 L["Auto Enable"] = "Habilitar automaticamente"
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 L["Auto Loot"] = "Auto botin"
 L["Auto Open"] = "Abrir automaticamente"
 L["Auto Pass"] = "Auto pasar"
@@ -269,6 +279,8 @@ L["onlyUseInRaids_desc"] = "Marcar para automáticamente desactivar RCLootCounci
 L["open"] = "Abrir"
 L["Open the Loot History"] = "Abrir Hitorial de botin"
 L["open_the_loot_history_desc"] = "Pulsar para abrir historial de botin"
+--Translation missing 
+-- L["Other piece"] = ""
 L["Party"] = "Grupo"
 L["Pass"] = "Pasar"
 L["'player' has asked you to reroll"] = "%s te ha pedido que vuelvas a tirar dados"
@@ -328,6 +340,8 @@ L["Something went wrong :'("] = "Algo salio mal :("
 L["Standard .csv output."] = "Exportar en .csv estándar."
 L["Start"] = "Empezar"
 L["Status texts"] = "Textos de estado"
+--Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
 L["Tank"] = "Tanque"
 L["Test"] = "Prueba"
 L["test"] = "Prueba"
@@ -345,6 +359,10 @@ L["This item"] = "Este articulo"
 L["This item has been awarded"] = "Este artículo ha sido premiado"
 L["Tier 19"] = true
 L["Tier 20"] = true
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 L["Tier tokens received from here:"] = "Fichas de conjunto recibidas de aquí:"
 L["tier_token_heroic"] = "Heroico"
 L["tier_token_mythic"] = "Mítico"
@@ -365,6 +383,10 @@ L["Unknown"] = "Desconocido"
 L["Unknown date"] = "Fecha desconocida"
 L["Unknown/Chest"] = "Desconocido "
 L["Unvote"] = true
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "Limite Superior de Calidad"
 L["upper_quality_limit_desc"] = [=[Seleccionar la calidad mas alta de los objetos a repartir automaticamente (calidad seleccionada incluida)
 Nota: Esto sobrescribe el umbral normal de saqueo.]=]
@@ -405,6 +427,8 @@ L["You cannot use the menu when the session has ended."] = "No puede utilizar el
 L["You cannot use this command without being the Master Looter"] = "No puede utilizar este comando sin ser el maestro despojador"
 L["You can't start a loot session while in combat."] = "No puede iniciar reparto de botin en combate"
 L["You can't start a session before all items are loaded!"] = "¡No puedes comenzar una sesion hasta que todos los objetos estén cargados!"
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 L["You haven't set a council! You can edit your council by typing '/rc council'"] = "No ha establecido un consejo! Puede editar su consejo escribiendo '/rc council'"
 L["Your note:"] = "Tu nota:"
 L["You're already running a session."] = "Usted ya esta ejecutando una sesion."

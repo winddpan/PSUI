@@ -8,6 +8,14 @@ L[" is not active in this raid."] = "在当前团队中未启用。"
 L[" you are now the Master Looter and RCLootCouncil is now handling looting."] = " 你现在是战利品分配者，RCLootCouncil正在管理分配。"
 L["&p was awarded with &i for &r!"] = "&p 获得了 &i 理由为 &r！"
 --Translation missing 
+-- L["2 Piece"] = ""
+--Translation missing 
+-- L["2nd Tier Piece"] = ""
+--Translation missing 
+-- L["4 Piece"] = ""
+--Translation missing 
+-- L["4th Tier Piece"] = ""
+--Translation missing 
 -- L["A format to copy/paste to another player."] = ""
 L["A new session has begun, type '/rc open' to open the voting frame."] = "新的分配已经开始，输入 /rc open 开启投票界面。"
 --Translation missing 
@@ -64,6 +72,8 @@ L["Auto Award to"] = "自动分配给"
 L["Auto awarded 'item'"] = "自动分配 %s"
 L["Auto Close"] = "自动关闭"
 L["Auto Enable"] = "自动开启"
+--Translation missing 
+-- L["Auto extracted from whisper"] = ""
 L["Auto Loot"] = "自动拾取"
 L["Auto Open"] = "自动打开"
 L["Auto Pass"] = "自动放弃"
@@ -296,6 +306,8 @@ L["Offspec/Greed"] = "副天赋/贪婪"
 L["open"] = "开启"
 L["Open the Loot History"] = "打开拾取历史"
 L["open_the_loot_history_desc"] = "点击打开拾取历史。"
+--Translation missing 
+-- L["Other piece"] = ""
 L["Party"] = "小队"
 L["Pass"] = "放弃"
 L["'player' has asked you to reroll"] = "%s 要求你重新选择"
@@ -358,6 +370,8 @@ L["Something went wrong :'("] = "出现了一些问题"
 -- L["Standard .csv output."] = ""
 L["Start"] = "开始"
 L["Status texts"] = "状态文字"
+--Translation missing 
+-- L["Successfully imported 'number' entries."] = ""
 L["Tank"] = "坦克"
 L["Test"] = "测试"
 L["test"] = "测试"
@@ -377,6 +391,10 @@ L["This item has been awarded"] = "这件物品已经被分配了"
 -- L["Tier 19"] = ""
 --Translation missing 
 -- L["Tier 20"] = ""
+--Translation missing 
+-- L["Tier Piece that doesn't complete a set"] = ""
+--Translation missing 
+-- L["Tier Tokens ..."] = ""
 --Translation missing 
 -- L["Tier tokens received from here:"] = ""
 --Translation missing 
@@ -405,6 +423,10 @@ L["Unknown"] = "未知"
 L["Unknown date"] = "未知日期"
 L["Unknown/Chest"] = "未知/箱子"
 L["Unvote"] = "未投票"
+--Translation missing 
+-- L["Upgrade"] = ""
+--Translation missing 
+-- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "最高品质限定"
 L["upper_quality_limit_desc"] = [=[选择自动分配时物品的最高品质限定 (含此品质！).
 注意: 这将会更改物品分配界限。]=]
@@ -447,6 +469,8 @@ L["You cannot use the menu when the session has ended."] = "你无法使用菜�
 L["You cannot use this command without being the Master Looter"] = "你无法使用此命令，因为你不是战利品分配者"
 L["You can't start a loot session while in combat."] = "战斗中无法开始物品分配。"
 L["You can't start a session before all items are loaded!"] = "在所有物品加载完成前，你不能开始物品分配！"
+--Translation missing 
+-- L["You haven't selected an award reason to use for disenchanting!"] = ""
 L["You haven't set a council! You can edit your council by typing '/rc council'"] = "你还没有设定议会！你可以输入 '/rc council' 来进行编辑。"
 L["Your note:"] = "你的备注："
 L["You're already running a session."] = "你已经在进行物品分配了。"

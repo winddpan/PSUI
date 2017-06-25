@@ -4,15 +4,6 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[ TODO:
-            Review these:
-      Adding or removing columns affects the sortnext flags from votingFrame.
-
-      % Pawn upgrade. We should be able to choose between showing the item's score and its percentage upgrade.
-      When calculating other players' score:
-         For percentage we can use % = (newItemScore/currentItemScore - 1) * 100
-      When calculating our own:
-         Check out PawnIsItemAnUpgrade(), has some nice stuff, although it relies on the player's current scores,
-         not the ones we've set in our options. We should probably look into auto importing the current scales into our storage.
 
 ]]
 
@@ -45,6 +36,9 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
+            ep =              { enabled = false, pos = 13, width = 40, func = self.SetCellEP, name = "EP"},
+            gp =              { enabled = false, pos = 14, width = 40, func = self.SetCellGP, name = "GP"},
+            pr =              { enabled = false, pos = 15, width = 40, func = self.SetCellPR, name = "PR"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
@@ -129,7 +123,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes"}
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","ep","gp","pr","guildNotes"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -159,6 +153,9 @@ function EU:OnEnable()
    -- Setup options
    self:OptionsTable()
 
+   -- Setup InspectHandler
+   self.InspectHandler:SetCallback("InspectReady")
+
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
@@ -174,6 +171,9 @@ function EU:OnEnable()
    -- for colName, v in pairs(self.db.normalColumns) do
    --    if not v.enabled then self:UpdateColumn(colName, false) end
    -- end
+
+   -- Make sure we handle external requirements
+   self:HandleExternalRequirements()
 
    -- Setup our columns
    self:SetupColumns()
@@ -216,7 +216,18 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
-            playerData[name] = data
+            playerData[name] = playerData[name] or {}
+            for k, v in pairs(data) do
+               playerData[name][k] = v
+            end
+            if lootTable and playerData[name].bonusReference then
+               if playerData[name].bonusReference ~= lootTable[1].link then
+                  -- The bonus data belongs to an earlier session
+                  playerData[name].bonusType = nil
+                  playerData[name].bonusLink = nil
+                  playerData[name].bonusReference = nil
+               end
+            end
             self.votingFrame:Update()
 
          elseif command == "extraUtilDataRequest" then
@@ -227,7 +238,11 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
+            playerData[name].bonusReference = lootTable and lootTable[1].link
             self.votingFrame:Update()
+
+         elseif command == "candidates" then
+            self:QueueInspects(unpack(data))
          end
       end
    end
@@ -253,6 +268,53 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
 
    ]]
+end
+
+function EU:InspectReady(unit, type, data)
+   if type == "spec" then
+      if data then
+         if data == 0 then -- We don't want this
+            addon:Debug("Got spec = 0 for ", unit)
+            --self.InspectHandler:InspectUnit(unit, type)
+            return
+         end
+         addon:Debug("Successfully received specID for ", unit, data)
+         if not playerData[unit] then playerData[unit] = {} end
+         playerData[unit].specID = data
+      else
+         -- REVIEW Queue again?
+         addon:Debug("Didn't receive specID for ", unit, "requeuing")
+         self.InspectHandler:InspectUnit(unit, type)
+      end
+   else
+      addon:Debug("EU:InspectReady() - unknown type", type)
+   end
+end
+
+function EU:QueueInspects(candidates)
+   for name in pairs(candidates) do
+      if not (playerData[name] and playerData[name].specID) then
+         -- We're missing at least the specID, so lets try to inspect the candidate
+         if self.InspectHandler:InspectUnit(name, "spec") then
+            addon:Debug("Inspect queued on: ", name)
+         else
+            addon:Debug("Inspect failed on: ", name)
+         end
+      end
+   end
+end
+
+function EU:HandleExternalRequirements()
+   -- Pawn
+   if self.db.columns.pawn.enabled and not PawnVersion then
+      self.db.columns.pawn.enabled = false
+   end
+   -- EPGP
+   if not EPGP and (self.db.columns.ep.enabled or self.db.columns.gp.enabled or self.db.columns.pr.enabled) then
+      self.db.columns.ep.enabled = false
+      self.db.columns.gp.enabled = false
+      self.db.columns.pr.enabled = false
+   end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
@@ -316,7 +378,7 @@ function EU:SetupColumns()
       --wipe(temp)
       if self.db.columns[v.name] then -- handle EU column
          temp = self.db.columns[v.name]
-         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext})
+         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext or self:GetScrollColIndexFromName("reponse")})
       else -- Handle default column
          local i = self:GetScrollColIndexFromName(v.name)
          temp = self.votingFrame.scrollCols[i]
@@ -542,8 +604,8 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
             if score then
                local item1 = EU.votingFrame:GetCandidateData(session, name, "gear1")
                local item2 = EU.votingFrame:GetCandidateData(session, name, "gear2")
-               local score1 = EU:GetPawnScore(item1, class, specID)
-               local score2 = EU:GetPawnScore(item2, class, specID)
+               local score1 = item1 and EU:GetPawnScore(item1, class, specID)
+               local score2 = item2 and EU:GetPawnScore(item2, class, specID)
                if score1 then
                   if not score2 or score1 < score2 then
                      score = (score / score1 - 1) * 100
@@ -555,11 +617,9 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
                end
             end
          end
-         if score then -- Did we actually get it?
-            EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-            if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
-            playerData[name].pawn[session] = {own = true}
-         end
+         EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+         if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
+         playerData[name].pawn[session] = {own = true}
       end
    end
    data[realrow].cols[column].value = score or 0
@@ -685,4 +745,29 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 		data[realrow].cols[column].value = 0
    end
    frame.noteBtn = f
+end
+
+function EU.SetCellEP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local ep = EPGP:GetEPGP(name)
+    frame.text:SetText(ep or 0)
+    data[realrow].cols[column].value = ep or 0
+end
+
+function EU.SetCellGP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local _, gp = EPGP:GetEPGP(name)
+    frame.text:SetText(gp or 0)
+    data[realrow].cols[column].value = gp or 0
+end
+
+function EU.SetCellPR(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local ep, gp = EPGP:GetEPGP(name)
+    local pr = 0
+    if ep and gp then
+        pr = ep / gp
+    end
+    frame.text:SetText(string.format("%.4f", pr))
+    data[realrow].cols[column].value = pr or 0
 end

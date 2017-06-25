@@ -141,10 +141,11 @@ L["Change Output"] = true
 L["Unlock the output options"] = true
 L["Output"] = true
 L["Select the default output"] = true
-L["Master"] = true
+L["Master"] = "-Master-"
 L["SFX"] = true
 L["Ambience"] = true
 L["Music"] = true
+L["Dialog"] = true
 
 L["DPSDispel"] = "Non-Magic Dispels"
 L["DPSDispel_Desc"] = "Generic alert for hybrid class dispels that do not remove Magic effects.|n|nRemove Corruption (|cffFF7D0ADruid|r)|nDetox (|cFF00FF96Monk|r)|nCleanse Toxins (|cffF58CBAPaladin|r)|nCleansing Light |cffF58CBAPaladin|r)|nPurify Disease (Priest)|nCleanse Spirit (|cff0070daShaman|r)"

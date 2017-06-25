@@ -684,6 +684,7 @@
 			[171140] = "spellLock",
 			[171138] = "spellLock",
 			[212619] = "spellLock",
+			[115781] = "spellLock",
 			[48020] = "demonicCircleTeleport",
 			[111859] = "grimoireOfService",
 			[111895] = "grimoireOfService",
@@ -720,6 +721,7 @@
 			[171138] = "lockout", -- Spell Lock
 			[212619] = "lockout", -- Spell Lock
 			[119910] = "lockout", -- Spell Lock
+			[115781] = "lockout", -- Spell Lock (Optical Blast)
 			[2139] = "lockout", -- Counterspell
 			[1766] = "lockout", -- Kick
 			[6552] = "lockout", -- Pummel
@@ -739,6 +741,7 @@
 			[171138] = "interrupted", -- Spell Lock
 			[212619] = "interrupted", -- Spell Lock
 			[119910] = "interrupted", -- Spell Lock
+			[115781] = "interrupted", -- Spell Lock (Optical Blast)
 			[2139] = "interrupted", -- Counterspell
 			[1766] = "interrupted", -- Kick
 			[6552] = "interrupted", -- Pummel

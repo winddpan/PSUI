@@ -1,0 +1,16 @@
+## Interface: 70100
+## Title: XentiTargetsDR
+## Version: 1.01
+## Author: thered87, Xentaria, xDee
+## SavedVariables: XentiTargetsDB
+## OptionalDeps: Ace3, LibStub
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+locales/XentiTargets-enUS.lua
+locales/XentiTargets-deDE.lua
+
+Main.lua
+Options.lua

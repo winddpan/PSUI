@@ -149,6 +149,7 @@ L["Master"] = "마스터"
 L["SFX"] = "음향 효과"
 L["Ambience"] = "환경 소리"
 L["Music"] = "배경음악"
+L["Dialog"] = true
 
 L["DPSDispel"] = true
 L["DPSDispel_Desc"] = true

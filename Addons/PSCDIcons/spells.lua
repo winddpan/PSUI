@@ -9,30 +9,35 @@ Cooldowns = {
 			Interval = 0,
 			IconSize = size,
 			Position = pos,
-			--SpecName = "敏锐",
 			--NumPerLine = 6,
 
 			-- 敏锐
-			{spellID = 185313},
-			{spellID = 212283},
-			{spellID = 209782},
-			{spellID = 121471},
+			{spellID = 185313, spec = "敏锐"},
+			{spellID = 212283, spec = "敏锐"},
+			{spellID = 209782, spec = "敏锐"},
+			{spellID = 121471, spec = "敏锐"},
 
-			-- 狂徒
-			{spellID = 13750},
-			{spellID = 202665},
+			-- 冲动
+			{spellID = 13750, spec = "狂徒"},
+			-- 恐惧之刃
+			{spellID = 202665, spec = "狂徒"},
 
-			-- 刺杀
-			{spellID = 79140},
-			{spellID = 245388},
-			{spellID = 192759},
-			{spellID = 200806},
+			-- 仇杀
+			{spellID = 79140, spec = "刺杀"},
+			-- 萃毒
+			{spellID = 245388, spec = "刺杀", talent = "6/1"},
+			-- 抽血
+			{spellID = 200806, spec = "刺杀", talent = "6/3"},
+			-- 君王
+			{spellID = 192759, spec = "刺杀"},
 
-			{spellID = 137619},
-			{spellID = 152150},
+			-- 死标
+			{spellID = 137619, talent = "7/2"},
+			-- 天降
+			{spellID = 152150, talent = "7/3"},
 
 			-- 正中眉心
-			{spellID = 199804},
+			{spellID = 199804, spec = "狂徒"},
 
 			-- 消失
 			{spellID = 1856},
@@ -44,13 +49,12 @@ Cooldowns = {
 			Interval = 0,
 			IconSize = size,
 			Position = pos,
-			SpecName = "邪恶",
 			
-			{spellID = 49206},
-			{spellID = 220143},
 			{spellID = 130736},
+			{spellID = 220143},
 			{spellID = 194918},
-
+			{spellID = 49206},
+			{spellID = 63560},
 		},
 	},
 	["DEMONHUNTER"] = {
@@ -59,7 +63,6 @@ Cooldowns = {
 			Interval = 0,
 			IconSize = size,
 			Position = pos,
-			SpecName = "浩劫",
 			
 			{spellID = 211048},
 			{spellID = 206491},
@@ -77,7 +80,6 @@ Cooldowns = {
 			Interval = 0,
 			IconSize = size,
 			Position = pos,
-			SpecName = "野兽控制",
 			
 			{spellID = 19574},
 			{spellID = 120679},

@@ -86,7 +86,7 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 			
 			-- 溃烂之伤
-			{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
+			--{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
 			
 			{spellID = 195181, unitID = "player", caster = "player", filter = "BUFF"},
 		},
@@ -95,23 +95,26 @@ Filger_Spells = {
 			Direction = "RIGHT",
 			Interval = 0,
 			Mode = "ICON",
-			IconSize = 35,
+			IconSize = 37,
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
-				{spellID = 196782, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
+			-- 溃烂之伤
+			{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 196782, unitID = "target", caster = "player", filter = "DEBUFF"},
 
-				--灵魂收割
-				{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 血之疫病
-				{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 冰霜疫病
-				{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
-				-- 冰链
-				{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
-				
-				{spellID = 206977, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 143375, unitID = "target", caster = "player", filter = "DEBUFF"},
-				{spellID = 206930, unitID = "target", caster = "player", filter = "DEBUFF"},
+			--灵魂收割
+			{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 血之疫病
+			{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 冰霜疫病
+			{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 冰链
+			{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
+			{spellID = 206977, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 143375, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 206930, unitID = "target", caster = "player", filter = "DEBUFF"},
 
 		},
 	},
@@ -127,8 +130,10 @@ Filger_Spells = {
 			
 			{spellID = 221630, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 193641, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 192425, unitID = "target", caster = "player", filter = "DEBUFF"},
-
+			--{spellID = 192425, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 萃毒之刃
+			{spellID = 245389, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
 			-- 影舞
 			{spellID = 185422, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 暗刃

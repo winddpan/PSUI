@@ -147,6 +147,7 @@ L["Master"] = "Principal"
 L["SFX"] = "Discussion"
 L["Ambience"] = "Ambiance"
 L["Music"] = "Musique"
+L["Dialog"] = true
 
 L["DPSDispel"] = true
 L["DPSDispel_Desc"] = true

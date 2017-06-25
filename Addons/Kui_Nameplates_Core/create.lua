@@ -11,10 +11,11 @@
 -- castbar spark = 7
 -- powerbar spark = 7
 -- raid icon (bar) = 6
--- target arrows = 3
--- spell shield = 2
--- health bar highlight = 1
--- spell icon = 1
+-- target arrows = 4
+-- spell shield = 3
+-- health bar highlight = 2
+-- spell icon = 2
+-- absorb bar = 1
 -- power bar = 0
 -- health bar = 0
 -- cast bar = 0
@@ -359,6 +360,12 @@ function core:SetBarAnimation()
     for i,f in addon:Frames() do
         f.handler:SetBarAnimation(f.HealthBar,BAR_ANIMATION)
         f.handler:SetBarAnimation(f.PowerBar,BAR_ANIMATION)
+
+        if BAR_ANIMATION == 'smooth' then
+            f.handler:SetBarAnimation(f.AbsorbBar,BAR_ANIMATION)
+        else
+            f.handler:SetBarAnimation(f.AbsorbBar,nil)
+        end
     end
 end
 -- #############################################################################
@@ -401,7 +408,7 @@ function core:CreateBackground(f)
 end
 -- highlight ###################################################################
 function core:CreateHighlight(f)
-    local highlight = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,1)
+    local highlight = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,2)
     highlight:SetTexture(BAR_TEXTURE)
     highlight:SetAllPoints(f.HealthBar)
     highlight:SetVertexColor(1,1,1,.4)
@@ -468,6 +475,38 @@ do
         f.handler:RegisterElement('PowerBar',powerbar)
 
         f.UpdatePowerBar = UpdatePowerBar
+    end
+end
+-- absorb bar ##################################################################
+do
+    function core:CreateAbsorbBar(f)
+        -- not using CreateStatusBar as we don't want a background
+        local bar = CreateFrame('StatusBar',nil,f.HealthBar)
+        bar:SetStatusBarTexture('interface/addons/kui_media/t/stippled-bar')
+        bar:SetAllPoints(f.HealthBar)
+        bar:SetFrameLevel(0)
+        bar:SetStatusBarColor(.3,.7,1)
+        bar:SetAlpha(.5)
+
+        local t = bar:GetStatusBarTexture()
+        t:SetDrawLayer('ARTWORK',1)
+        t:SetHorizTile(true)
+        t:SetVertTile(true)
+
+        -- spark for over-absorb highlighting
+        local spark = bar:CreateTexture(nil,'ARTWORK',nil,7)
+        spark:SetTexture('interface/addons/kui_media/t/spark')
+        spark:SetWidth(8)
+        spark:SetPoint('TOP',bar,'TOPRIGHT',-1,4)
+        spark:SetPoint('BOTTOM',bar,'BOTTOMRIGHT',-1,-4)
+        spark:SetVertexColor(.3,.7,1)
+        bar.spark = spark
+
+        if BAR_ANIMATION == 'smooth' then
+            f.handler:SetBarAnimation(bar,BAR_ANIMATION)
+        end
+
+        f.handler:RegisterElement('AbsorbBar',bar)
     end
 end
 -- name text ###################################################################
@@ -855,12 +894,12 @@ do
             self.r:SetPoint('LEFT',f.bg,'RIGHT', -3-(size*.12),-1)
         end
 
-        local left = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,3)
+        local left = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,4)
         left:SetTexture(MEDIA..'target-arrow')
         left:SetTexCoord(0,.72,0,1)
         arrows.l = left
 
-        local right = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,3)
+        local right = f.HealthBar:CreateTexture(nil,'ARTWORK',nil,4)
         right:SetTexture(MEDIA..'target-arrow')
         right:SetTexCoord(.72,0,0,1)
         arrows.r = right
@@ -982,7 +1021,7 @@ do
         spelliconbg:SetPoint('BOTTOMRIGHT', bg, 'BOTTOMLEFT', -1, 0)
         spelliconbg:SetPoint('TOPRIGHT', f.bg, 'TOPLEFT', -1, 0)
 
-        local spellicon = castbar:CreateTexture(nil, 'ARTWORK', nil, 1)
+        local spellicon = castbar:CreateTexture(nil, 'ARTWORK', nil, 2)
         spellicon:SetTexCoord(.1, .9, .2, .8)
         spellicon:SetPoint('TOPLEFT', spelliconbg, 1, -1)
         spellicon:SetPoint('BOTTOMRIGHT', spelliconbg, -1, 1)
@@ -992,7 +1031,7 @@ do
         end
 
         -- cast shield
-        local spellshield = f.HealthBar:CreateTexture(nil, 'ARTWORK', nil, 2)
+        local spellshield = f.HealthBar:CreateTexture(nil, 'ARTWORK', nil, 3)
         spellshield:SetTexture(MEDIA..'Shield')
         spellshield:SetTexCoord(0, .84375, 0, 1)
         spellshield:SetSize(13.5, 16) -- 16 * .84375
@@ -1641,6 +1680,7 @@ function core:InitialiseElements()
         bar_width = self.profile.classpowers_bar_width,
         bar_height = self.profile.classpowers_bar_height,
         icon_texture = MEDIA..'combopoint-round',
+        icon_sprite = MEDIA..'combopoint',
         icon_glow_texture = MEDIA..'combopoint-glow',
         cd_texture = 'interface/playerframe/classoverlay-runecooldown',
         bar_texture = BAR_TEXTURE,

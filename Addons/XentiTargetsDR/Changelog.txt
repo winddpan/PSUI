@@ -1,0 +1,46 @@
+-----------------------------------------------------------------------
+v0.6.1-release
+
+* increased version for new patch
+
+-----------------------------------------------------------------------
+v0.6-release
+
+* added configuration (/xt | /xentitargets)
+* added option to change the scaling
+* added option for locking xentitargets
+* added option for button width
+* added option for changing the font and the font size
+* added option for show/hide realm names
+
+------------------------------------------------------------------------
+v0.5-release
+
+* fixed issue with flag and orb tracking
+
+------------------------------------------------------------------------
+v0.4-release
+
+* prepared for settings
+* fixed issue with targets not getting cleared properly
+
+------------------------------------------------------------------------
+v0.3-release
+
+* fixed 2 issues related to combat
+* prepared application for scaling
+* hide targets in 40 man bgs
+
+------------------------------------------------------------------------
+v0.2-release
+
+* fixed an issue with orbs not getting tracked after entering a flag bg 
+
+------------------------------------------------------------------------
+v0.1-release
+
+* fixed issues with flags and orbs
+* added tracking of chat for orbs/flags
+* now saving the current position of the addon
+* fixed bug with the debuff system
+------------------------------------------------------------------------

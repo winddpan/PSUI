@@ -9,12 +9,10 @@ L[" you are now the Master Looter and RCLootCouncil is now handling looting."] =
 L["&p was awarded with &i for &r!"] = "&i wurde an &p wegen &r vergeben!"
 --Translation missing 
 -- L["2 Piece"] = ""
---Translation missing 
--- L["2nd Tier Piece"] = ""
+L["2nd Tier Piece"] = "2. Tierset-Teil"
 --Translation missing 
 -- L["4 Piece"] = ""
---Translation missing 
--- L["4th Tier Piece"] = ""
+L["4th Tier Piece"] = "4. Tierset-Teil"
 L["A format to copy/paste to another player."] = "Ein Format zum Kopieren und Einfügen zu einem anderen Spieler."
 L["A new session has begun, type '/rc open' to open the voting frame."] = "Eine neue Sitzung hat begonnen, tippe '/rc open', um das Abstimmungsfenster zu öffnen."
 L["A tab delimited output for Excel. Might work with other spreadsheets."] = "Eine tabulatorgetrennte Ausgabe für Excel. Könnte auch mit anderen Tabellenkalkulationsprogrammen funktionieren."
@@ -288,8 +286,7 @@ L["onlyUseInRaids_desc"] = "Hake diese Option an, um RCLootCouncil in Gruppen au
 L["open"] = "Öffnen"
 L["Open the Loot History"] = "Beuteverlauf öffnen"
 L["open_the_loot_history_desc"] = "Klicken, um den Beuteverlauf zu öffnen."
---Translation missing 
--- L["Other piece"] = ""
+L["Other piece"] = "Anderes Teil"
 L["Party"] = "Gruppe"
 L["Pass"] = "Passen"
 L["'player' has asked you to reroll"] = "%s bittet dich erneut zu würfeln"
@@ -348,8 +345,7 @@ L["Something went wrong :'("] = "Irgendwas ist schief gelaufen :'("
 L["Standard .csv output."] = "Standard"
 L["Start"] = "Starten"
 L["Status texts"] = "Statustexte"
---Translation missing 
--- L["Successfully imported 'number' entries."] = ""
+L["Successfully imported 'number' entries."] = "%d Einträge wurden erfolgreich importiert."
 L["Tank"] = true
 L["Test"] = true
 L["test"] = "Test"
@@ -367,10 +363,8 @@ L["This item"] = "Dieser Gegenstand"
 L["This item has been awarded"] = "Dieser Gegenstand wurde vergeben."
 L["Tier 19"] = true
 L["Tier 20"] = true
---Translation missing 
--- L["Tier Piece that doesn't complete a set"] = ""
---Translation missing 
--- L["Tier Tokens ..."] = ""
+L["Tier Piece that doesn't complete a set"] = "Tierset-Teil, das kein Set vervollständigt"
+L["Tier Tokens ..."] = "Tierset-Marken ..."
 L["Tier tokens received from here:"] = "Von hier erhaltene Tierset-Marken:"
 L["tier_token_heroic"] = "Heroisch"
 L["tier_token_mythic"] = "Mythisch"
@@ -392,8 +386,7 @@ L["Unknown"] = "Unbekannt"
 L["Unknown date"] = "Unbekanntes Datum"
 L["Unknown/Chest"] = "Unbekannt/Brust"
 L["Unvote"] = "Abwählen"
---Translation missing 
--- L["Upgrade"] = ""
+L["Upgrade"] = true
 --Translation missing 
 -- L["Upgrade to existing tier/random upgrade"] = ""
 L["Upper Quality Limit"] = "Obere Qualitätsgrenze"

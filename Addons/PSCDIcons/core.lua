@@ -11,6 +11,22 @@ Misc.mult = 1
 
 local class = select(2, UnitClass("player"))
 
+function lua_string_split(str, split_char)
+    local sub_str_tab = {};
+    while (true) do
+        local pos = string.find(str, split_char);
+        if (not pos) then
+            sub_str_tab[#sub_str_tab + 1] = str;
+            break;
+        end
+        local sub_str = string.sub(str, 1, pos - 1);
+        sub_str_tab[#sub_str_tab + 1] = sub_str;
+        str = string.sub(str, pos + 1, #str);
+    end
+
+    return sub_str_tab;
+end
+
 local function SetTemplate(Parent)
 	local F = CreateFrame("Frame", nil, Parent)
 	F:SetFrameLevel(Parent:GetFrameLevel())
@@ -42,10 +58,8 @@ end
 
 function PSCD:OnEvent(event, unit)
 	if event ~= "SPELL_UPDATE_COOLDOWN" then
-		--PSCD:CheckSpells(self)
+		PSCD:CheckSpells(self)
 	end
-	
-	PSCD:CheckSpells(self)
 	PSCD:UpdateCD(self)
 end
 
@@ -56,29 +70,23 @@ function PSCD:CheckSpells(self)
 
 	for i = 1, #Cooldowns[class][id], 1 do
 		local data = Cooldowns[class][id][i]
-		local confirmSpec = false
-		local name
+		local contians = true
 
-		if self.SpecName then
-			local inspect, pet = false, false
-			local talentGroup = GetActiveTalentGroup(inspect, pet)
-			local tabIndex = GetPrimaryTalentTree(inspect, pet, talentGroup)
-			local _, specName = GetTalentTabInfo(tabIndex, inspect, pet, talentGroup)
-			if specName == self.SpecName then
-				confirmSpec = true
-				break
-			end
+		if data.spec then
+			local spec = GetSpecialization()
+			local specName = select(2, GetSpecializationInfo(spec))
+			contians = specName == data.spec
 		end
-		if (not self.SpecName or confirmSpec) and data.spellID then
-			name, _, icon = GetSpellInfo(data.spellID)
+		if contians and data.talent then
+			local talentInfo = lua_string_split(data.talent, "/")
+			local tier, column = talentInfo[1], talentInfo[2]
+			local talentID, name, texture, selected, available, spellid, tier, column, selectedIndex = GetTalentInfo(tier, column, 1)
+			contians = selected 
 		end
 
-		if name then
-			local usable, nomana = IsUsableSpell(name)
-			if usable or nomana then
-				icons[index] = {data = data}
-				index = index + 1
-			end
+		if contians then
+			icons[index] = {data = data}
+			index = index + 1
 		end
 	end
 
@@ -171,6 +179,7 @@ function PSCD:LayoutIcons(self)
 end
 
 function PSCD:UpdateCD(self)
+	if self.icons == nil then return end
 	for i, n in pairs(self.icons) do
 		local value = self.icons[i]
 		local bar = self.bars[i]
@@ -302,7 +311,6 @@ function PSCD:Init()
 			frame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 			frame:RegisterEvent("PLAYER_TALENT_UPDATE")
 			frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-			frame:RegisterEvent("UNIT_PET")
 			frame:SetScript("OnEvent", PSCD.OnEvent)
 		end
 	end

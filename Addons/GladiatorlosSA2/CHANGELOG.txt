@@ -1,3 +1,18 @@
+- version 1.16
+
+General
+* Added "Dialog" sound channel option.
+
+Priest
+* Fixed the missing Greater Fade entry in Aura Removed. Whoops.
+
+Warlock
+* Added YET ANOTHER Spell Lock ID, and included it to count for Friendy/Enemy Successful Interrupts.
+
+Localization
+* New strings:
+* L["Dialog"]
+===============================================
 - version 1.15
 
 * NOTE: I am no longer recording text-to-speech files for this addon. While we work to get all existing voice files replaced by the new voice actor, a placeholder voice will record new additions. Because this voice DOES NOT match the existing one we're all familiar with, all abilities marked with (PH) below are disabled by default. Yes, I know it sucks not having consistency. Having crucial alerts is more important. If you don't like it, leave them off.

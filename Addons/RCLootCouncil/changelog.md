@@ -1,9 +1,56 @@
+### v2.4.3
+---
+###### Bugfixes
++ *Awarding a tier token for any non-editable response would trigger an error in the loot history (#269).*
++ *Editing a response in the loot history to a tier response wouldn't retain it's colors after a /reload.*
+
+### v2.4.2
+---
+###### Bugfixes
++ *Council was sometimes not sent out properly (#267).*
++ *Changing from a higher to a lower button count would require a /reload (#268).*
+
+
+### v2.4.1
+---
+* Added Fragment of the Guardian's Seal and Sticky Volatile Essence to the ignore list.
+
+###### Bugfixes
+ + *Tier Awards will now be announced properly (#264).*
+ + *The loot frame will now properly reset after a session.(#263)*
+ + *Huge amount of councilmembers should no longer slow down the addon. (#263)*
+
+### v2.4.0
+---
+**Note:**
+While this version is backwards compatible, the tier token buttons will not be showed on older clients,
+ and any tier rolls will show up as normal rolls for all intents and purposes.
+
+
+* **Tier tokens**
+ * By default, tier tokens now receive special roll options.
+ * A brand new set of buttons and responses have been added for tier tokens only.
+ * Check them out in the options menu, where it can also be disabled if need be.
+ * Prepared to handle tier 20 tokens.
+
+
+* **Loot History**
+ * You can now edit recipients and reasons in the loot history.
+ * Simply right click any entry and change it to what you want.
+ * Exports have been optimized.
+ * Time-Sort no longer memory leaks.
+ * A small error in the history will no longer break the entire addon.
+
+##### Fix
++ *The Master Looter wouldn't send all the correct buttons (#262).*
+
+
 ### v2.3.4
 ---
 ###### Bugfixes
  + *Items could be wrongly awarded by opening/closing the default loot frame in a specific sequence (#257).*
 
- 
+
 ### v2.3.3
 ---
 ###### Bugfixes

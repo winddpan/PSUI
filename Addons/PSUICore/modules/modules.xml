@@ -12,7 +12,5 @@
 	<Script file='Safequeue.lua' />
 	<Script file='SkadaPlus.lua' />
 	<Script file='ProgressBar.lua' />
-	<Script file='RogueKnockDoor.lua' />
-	<Script file='PoisonAlert.lua' />
 	<script file='ButtonRange.lua' />
 </Ui>

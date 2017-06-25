@@ -56,6 +56,25 @@ local micromenubar = {
 rActionBar:CreateMicroMenuBar(A, micromenubar)
 
 -----------------------------
+-- PetBar
+-----------------------------
+
+--petbar
+local petbar = {
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
+  frameScale      = 1,
+  framePadding    = 2,
+  buttonWidth     = 32,
+  buttonHeight    = 32,
+  buttonMargin    = 0,
+  numCols         = 12,
+  startPoint      = "BOTTOMLEFT",
+  fader           = nil,
+}
+--create
+rActionBar:CreatePetBar(A, petbar)
+
+-----------------------------
 -- Bar1
 -----------------------------
 
@@ -206,24 +225,6 @@ local stancebar = {
 --create
 rActionBar:CreateStanceBar(A, stancebar)
 
------------------------------
--- PetBar
------------------------------
-
---petbar
-local petbar = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
-  frameScale      = 1,
-  framePadding    = 2,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
-  buttonMargin    = 0,
-  numCols         = 12,
-  startPoint      = "BOTTOMLEFT",
-  fader           = nil,
-}
---create
-rActionBar:CreatePetBar(A, petbar)
 
 -----------------------------
 -- ExtraBar

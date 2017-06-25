@@ -144,6 +144,7 @@ L["Master"] = "Общий"
 L["SFX"] = "Спецэффекты"
 L["Ambience"] = "Окружение"
 L["Music"] = "Музыка"
+L["Dialog"] = true
 
 L["DPSDispel"] = true
 L["DPSDispel_Desc"] = true

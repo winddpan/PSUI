@@ -1,9 +1,10 @@
 ## Interface: 70200
-## Title: PSCDIcons
-## Notes: CooldownIcons
+## Title: |cff3399FFPSCooldownIcons|r
+## Notes: PSCDIcons
+## Notes-zhCN: P的大技能冷却图标
 ## Author: Winddpan
 ## Version: 1.2
 
 activation.lua
-trackers.lua
+spells.lua
 core.lua

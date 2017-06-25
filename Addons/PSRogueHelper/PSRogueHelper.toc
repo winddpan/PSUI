@@ -1,0 +1,10 @@
+## Interface: 72000
+## Author: Winddpan
+## Title: |cff3399FFPSRogueHelper|r
+## Notes: RogueHelper
+## Notes-zhCN: P的盗贼助手
+## Version: 1.0
+
+RogueKnockDoor.lua
+SubHelper.lua
+PoisonAlert.lua

@@ -64,7 +64,7 @@
         Called after icons are set to active or inactive.
 
     PostRuneUpdate(icon,rune_id)
-        Called after updating rune icon cooldown frames for death knights.
+        Called after updating rune icon cooldown data for death knights.
 
     PostPositionFrame(cpf,parent)
         Called after positioning the icon container frame.
@@ -73,33 +73,34 @@
 local addon = KuiNameplates
 local ele = addon:NewElement('ClassPowers')
 local _,class,power_type,power_type_tag,highlight_at,cpf,initialised
+local power_mod,power_display_partial
 local on_target
 local orig_SetVertexColor
 -- power types by class/spec
 local powers = {
-    DEATHKNIGHT = SPELL_POWER_RUNES,
-    DRUID       = { [2] = SPELL_POWER_COMBO_POINTS },
-    PALADIN     = { [3] = SPELL_POWER_HOLY_POWER },
-    ROGUE       = SPELL_POWER_COMBO_POINTS,
-    MAGE        = { [1] = SPELL_POWER_ARCANE_CHARGES },
-    MONK        = { [1] = 'stagger', [3] = SPELL_POWER_CHI },
-    WARLOCK     = SPELL_POWER_SOUL_SHARDS,
-    --PRIEST      = SPELL_POWER_MANA,
+    DEATHKNIGHT = Enum.PowerType.Runes,
+    DRUID       = { [2] = Enum.PowerType.ComboPoints },
+    PALADIN     = { [3] = Enum.PowerType.HolyPower },
+    ROGUE       = Enum.PowerType.ComboPoints,
+    MAGE        = { [1] = Enum.PowerType.ArcaneCharges },
+    MONK        = { [1] = 'stagger', [3] = Enum.PowerType.Chi },
+    WARLOCK     = Enum.PowerType.SoulShards,
+    --PRIEST      = Enum.PowerType.Mana,
 }
 -- tags returned by the UNIT_POWER and UNIT_MAXPOWER events
 local power_tags = {
-    [SPELL_POWER_RUNES]          = 'RUNES',
-    [SPELL_POWER_COMBO_POINTS]   = 'COMBO_POINTS',
-    [SPELL_POWER_HOLY_POWER]     = 'HOLY_POWER',
-    [SPELL_POWER_ARCANE_CHARGES] = 'ARCANE_CHARGES',
-    [SPELL_POWER_CHI]            = 'CHI',
-    [SPELL_POWER_SOUL_SHARDS]    = 'SOUL_SHARDS',
-    --[SPELL_POWER_MANA]           = 'MANA',
+    [Enum.PowerType.Runes]          = 'RUNES',
+    [Enum.PowerType.ComboPoints]   = 'COMBO_POINTS',
+    [Enum.PowerType.HolyPower]     = 'HOLY_POWER',
+    [Enum.PowerType.ArcaneCharges] = 'ARCANE_CHARGES',
+    [Enum.PowerType.Chi]            = 'CHI',
+    [Enum.PowerType.SoulShards]    = 'SOUL_SHARDS',
+    --[Enum.PowerType.Mana]           = 'MANA',
 }
 -- power types which render as a bar
 local bar_powers = {
     ['stagger'] = true,
-    --[SPELL_POWER_MANA] = true
+    --[Enum.PowerType.Mana] = true
 }
 -- icon config
 local colours = {
@@ -127,6 +128,7 @@ local GLOW_TEXTURE
 local CD_TEXTURE
 local BAR_TEXTURE,BAR_WIDTH,BAR_HEIGHT
 local FRAME_POINT
+local ICON_SPRITE
 
 local ANTICIPATION_TALENT_ID=19240
 local BALANCE_FERAL_AFFINITY_TALENT_ID=22155
@@ -169,19 +171,49 @@ local function Icon_SetVertexColor(self,...)
         self.glow:SetAlpha(.5)
     end
 end
+local function Icon_GraduateFill(self,val)
+    if not ICON_SPRITE or not val then return end
+    val = (val < 0 and 0) or (val > 1 and 1) or val
+
+    if val == 0 then
+        -- empty
+        self:SetTexCoord(.5,.75,.5,1)
+    elseif val == 1 then
+        -- full
+        self:SetTexCoord(0,.25,0,.5)
+    elseif val > .8 then
+        self:SetTexCoord(.25,.5,.5,1)
+    elseif val > .6 then
+        self:SetTexCoord(0,.25,.5,1)
+    elseif val > .4 then
+        self:SetTexCoord(.75,1,0,.5)
+    elseif val > .2 then
+        self:SetTexCoord(.5,.75,0,.5)
+    elseif val > 0 then
+        self:SetTexCoord(.25,.5,0,.5)
+    end
+end
 local function CreateIcon()
     -- create individual icon
     local icon = ele:RunCallback('CreateIcon')
 
     if not icon then
         icon = cpf:CreateTexture(nil,'ARTWORK',nil,1)
-        icon:SetTexture(ICON_TEXTURE)
-        icon:SetSize(ICON_SIZE,ICON_SIZE)
 
         if not orig_SetVertexColor then
             orig_SetVertexColor = icon.SetVertexColor
         end
         icon.SetVertexColor = Icon_SetVertexColor
+        icon.GraduateFill = Icon_GraduateFill
+
+        if ICON_SPRITE then
+            icon:SetTexture(ICON_SPRITE)
+            icon:GraduateFill(1)
+        else
+            icon:SetTexture(ICON_TEXTURE)
+        end
+
+        icon:SetSize(ICON_SIZE,ICON_SIZE)
 
         if GLOW_TEXTURE then
             -- create icon glow if a texture is set
@@ -194,17 +226,7 @@ local function CreateIcon()
             icon.glow = ig
         end
 
-        if class == 'DEATHKNIGHT' then
-            -- create a cooldown frame for runes
-            local cd = CreateFrame('Cooldown',nil,cpf,'CooldownFrameTemplate')
-            cd:SetSwipeTexture(CD_TEXTURE)
-            cd:SetAllPoints(icon)
-            cd:SetDrawEdge(false)
-            cd:SetDrawBling(false)
-            cd:SetHideCountdownNumbers(true)
-            cd.noCooldownCount = true
-            icon.cd = cd
-        else
+        if class ~= 'DEATHKNIGHT' then
             icon.Active = function(self)
                 self:SetVertexColor(unpack(colours[class]))
                 self:SetAlpha(1)
@@ -296,6 +318,13 @@ local function UpdateIcons()
                     cpf.icons[i] = CreateIcon()
                 end
             end
+
+            if ICON_SPRITE then
+                -- reset icons to filled
+                for i,icon in ipairs(cpf.icons) do
+                    icon:GraduateFill(1)
+                end
+            end
         else
             -- create initial icons
             cpf.icons = {}
@@ -311,7 +340,11 @@ local function UpdateIcons()
 end
 local function PowerUpdate()
     -- toggle icons based on current power
-    local cur = UnitPower('player',power_type)
+    local cur = UnitPower('player',power_type,true)
+
+    if power_mod and power_mod > 1 then
+        cur = cur / power_mod
+    end
 
     if cpf.bar then
         cpf.bar:SetValue(cur)
@@ -325,6 +358,8 @@ local function PowerUpdate()
                 icon:Active()
             end
 
+            icon:GraduateFill(1)
+
             if icon.glow then
                 icon.glow:Show()
             end
@@ -334,6 +369,7 @@ local function PowerUpdate()
         for i,icon in ipairs(cpf.icons) do
             if at_max then
                 icon:Active()
+                icon:GraduateFill(1)
 
                 if icon.glow then
                     icon.glow:Show()
@@ -341,8 +377,24 @@ local function PowerUpdate()
             else
                 if i <= cur then
                     icon:Active()
+                    icon:GraduateFill(1)
                 else
-                    icon:Inactive()
+                    if ICON_SPRITE and
+                       power_display_partial and
+                       (power_mod and power_mod > 1)
+                    then
+                        if i > ceil(cur) then
+                            -- empty
+                            icon:Inactive()
+                            icon:GraduateFill(0)
+                        else
+                            -- partially filled
+                            icon:Active()
+                            icon:GraduateFill(cur - floor(cur))
+                        end
+                    else
+                        icon:Inactive()
+                    end
                 end
 
                 if highlight_at and i <= highlight_at and cur >= highlight_at then
@@ -409,6 +461,24 @@ local function PositionFrame()
 
     ele:RunCallback('PostPositionFrame',cpf,frame)
 end
+local function RuneDaemon_OnUpdate(self,elap)
+    self.elap = (self.elap or 0) + elap
+    if self.elap > .1 then
+        self.active = nil
+        self.elap = 0
+
+        for k,icon in ipairs(cpf.icons) do
+            if icon.startTime and icon.duration then
+                self.active = true
+                icon:GraduateFill((GetTime() - icon.startTime) / icon.duration)
+            end
+        end
+
+        if not self.active then
+            self:Hide()
+        end
+    end
+end
 -- mod functions ###############################################################
 function ele:UpdateConfig()
     -- get config from layout
@@ -421,6 +491,7 @@ function ele:UpdateConfig()
     ICON_SIZE         = addon.layout.ClassPowers.icon_size or 10
     ICON_SPACING      = addon.layout.ClassPowers.icon_spacing or 1
     ICON_TEXTURE      = addon.layout.ClassPowers.icon_texture
+    ICON_SPRITE       = addon.layout.ClassPowers.icon_sprite
     GLOW_TEXTURE      = addon.layout.ClassPowers.icon_glow_texture
     CD_TEXTURE        = addon.layout.ClassPowers.cd_texture
     BAR_TEXTURE       = addon.layout.ClassPowers.bar_texture
@@ -458,7 +529,12 @@ function ele:UpdateConfig()
             -- update icons
             for k,i in ipairs(cpf.icons) do
                 i:SetSize(ICON_SIZE,ICON_SIZE)
-                i:SetTexture(ICON_TEXTURE)
+
+                if ICON_SPRITE then
+                    i:SetTexture(ICON_SPRITE)
+                else
+                    i:SetTexture(ICON_TEXTURE)
+                end
 
                 if i.glow then
                     i.glow:SetTexture(GLOW_TEXTURE)
@@ -495,6 +571,8 @@ function ele:PowerInit()
     -- get current power type, register events
     power_type_tag = nil
     highlight_at = nil
+    power_mod = nil
+    power_display_partial = nil
 
     if type(powers[class]) == 'table' then
         local spec = GetSpecialization()
@@ -521,7 +599,7 @@ function ele:PowerInit()
 
             local form = GetShapeshiftForm()
             if form and form == 2 then
-                power_type = SPELL_POWER_COMBO_POINTS
+                power_type = Enum.PowerType.ComboPoints
             end
         else
             self:UnregisterEvent('UPDATE_SHAPESHIFT_FORM')
@@ -538,11 +616,28 @@ function ele:PowerInit()
     if power_type then
         if class == 'DEATHKNIGHT' then
             self:RegisterEvent('RUNE_POWER_UPDATE','RuneUpdate')
+
+            if not cpf.RuneDaemon then
+                -- create rune time-keeper
+                local r = CreateFrame('Frame',nil,cpf)
+                r:SetScript('OnUpdate',RuneDaemon_OnUpdate)
+                r:Hide()
+                cpf.RuneDaemon = r
+            end
         elseif power_type == 'stagger' then
             self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED','StaggerUpdate')
             self:RegisterEvent('UNIT_MAXHEALTH','StaggerUpdate')
         else
+            power_mod = UnitPowerDisplayMod(power_type)
             power_type_tag = power_tags[power_type]
+
+            if  class == 'WARLOCK' and
+                GetSpecialization() == SPEC_WARLOCK_DESTRUCTION
+            then
+                power_display_partial = true
+            else
+                power_display_partial = nil
+            end
 
             self:RegisterEvent('PLAYER_ENTERING_WORLD')
             self:RegisterEvent('UNIT_MAXPOWER','PowerEvent')
@@ -584,13 +679,15 @@ function ele:RuneUpdate(event,rune_id,energise)
     -- set cooldown on rune icons
     local startTime, duration, charged = GetRuneCooldown(rune_id)
     local icon = cpf.icons[rune_id]
-    if not icon or not icon.cd then return end
+    if not icon then return end
 
     if charged or energise then
         icon:SetVertexColor(unpack(colours.DEATHKNIGHT))
         icon:SetAlpha(1)
+        icon:GraduateFill(1)
 
-        icon.cd:Hide()
+        icon.startTime = nil
+        icon.duration = nil
 
         if icon.glow then
             icon.glow:Show()
@@ -598,9 +695,11 @@ function ele:RuneUpdate(event,rune_id,energise)
     else
         icon:SetVertexColor(unpack(colours.inactive))
         icon:SetAlpha(1)
+        icon:GraduateFill((GetTime() - startTime) / duration)
 
-        icon.cd:SetCooldown(startTime, duration)
-        icon.cd:Show()
+        icon.startTime = startTime
+        icon.duration = duration
+        cpf.RuneDaemon:Show()
 
         if icon.glow then
             icon.glow:Hide()

@@ -1,13 +1,7 @@
-changeset:   141:f148f1d1aa7e
-tag:         v7.2.5.141-release
+changeset:   147:9507428afa05
+tag:         v7.2.5.147-release
 user:        Tercio
-date:        Tue Jun 13 21:24:23 2017 -0300
-summary:     - 7.2.5 fix for invasion texture issue.
-
-
-changeset:   140:95d91310c2f8
-user:        Tercio
-date:        Tue Jun 13 21:23:53 2017 -0300
-summary:     - 7.2.5 fix for invasion texture issue.
+date:        Tue Jun 20 09:39:10 2017 -0300
+summary:     - Fix for Ticket #449: error on opening the world map.
 
 

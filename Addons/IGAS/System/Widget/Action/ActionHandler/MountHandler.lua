@@ -56,6 +56,12 @@ function UNIT_AURA(self, unit)
 	end
 end
 
+local _ForceUpdated = false
+function ForceUpdate()
+	_ForceUpdated = false
+	return handler:Refresh(RefreshIcon)
+end
+
 -- Companion action type handler
 handler = ActionTypeHandler {
 	Name = "mount",
@@ -113,12 +119,14 @@ function handler:PickupAction(target)
 end
 
 function handler:GetActionTexture()
-	local target = self.ActionTarget
+	local target, icon = self.ActionTarget
 	if target == SUMMON_RANDOM_ID then
-		return GetSpellTexture(SUMMON_RANDOM_FAVORITE_MOUNT_SPELL)
+		icon = GetSpellTexture(SUMMON_RANDOM_FAVORITE_MOUNT_SPELL)
 	else
-		return (select(3, GetMountInfoByID(target)))
+		icon = (select(3, GetMountInfoByID(target)))
 	end
+	if not icon and not _ForceUpdated then _ForceUpdated = true Task.DelayCall(1, ForceUpdate) end
+	return icon
 end
 
 function handler:IsActivedAction()

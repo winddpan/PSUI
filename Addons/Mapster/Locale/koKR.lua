@@ -47,3 +47,4 @@ L["The transparency of the big map."] = "세계 지도의 투명도를 조절합
 L["The transparency of the map while you are moving and the map is faded."] = "이동시 세계지도의 투명도를 변경합니다."
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "이동이 편리하도록 지도를 연 상태로 주변을 볼 수 있도록 세계 지도의 투명도를 조절합니다."
 L["You can control the accuracy of the coordinates, e.g. if you need very exact coordinates you can set this to 2."] = "좌표 표시의 소숫점 자릿수를 변경합니다. 보다 정확한 좌표를 위해 소숫점 두자리까지 설정할 수 있습니다."
+

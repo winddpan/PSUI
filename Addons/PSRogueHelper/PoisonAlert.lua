@@ -1,7 +1,6 @@
 if select(2, UnitClass("player")) ~= "ROGUE" then return end
 
 local spn = select(1, GetSpellInfo(2823)) --ÖÂÃü
-local spn2 = select(1, GetSpellInfo(200802)) --¿àÍ´
 local spn3 = select(1, GetSpellInfo(8679)) --ÖÂÉË
 local _, _, icon_texture = GetSpellInfo(2823)
 						
@@ -40,7 +39,7 @@ SpecWatch:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4 ,arg
 		CheckerFrame:SetScript("OnUpdate", function(self, elapsed)
 			if timeDuration >= 0.33 then
 				timeDuration = 0
-				if UnitBuff("player", spn) ~= nil or UnitBuff("player", spn2) ~= nil or UnitBuff("player", spn3) ~= nil then
+				if UnitBuff("player", spn) ~= nil or UnitBuff("player", spn3) ~= nil then
 					bar:Hide()
 				else
 					bar:Show()

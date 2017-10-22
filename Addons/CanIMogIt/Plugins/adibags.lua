@@ -1,4 +1,14 @@
+-- Adds overlays to items in the addon AdiBags: https://mods.curse.com/addons/wow/adibags
+
+
 if IsAddOnLoaded("AdiBags") then
+
+
+    ----------------------------
+    -- UpdateIcon functions   --
+    ----------------------------
+
+
     function AdiBagsItemButton_CIMIUpdateIcon(self)
         if not self or not self:GetParent() then return end
         if not CIMI_CheckOverlayIconEnabled(self) then
@@ -13,7 +23,13 @@ if IsAddOnLoaded("AdiBags") then
         CIMI_SetIcon(self, AdiBagsItemButton_CIMIUpdateIcon, CanIMogIt:GetTooltipText(nil, bag, slot))
     end
 
-    function CIMI_AdiBagsAddFrame(self, event, addonName)
+
+    ----------------------------
+    -- Begin adding to frames --
+    ----------------------------
+
+
+    function CIMI_AdiBagsAddFrame(event, addonName)
         if event ~= "PLAYER_LOGIN" and event ~= "BANKFRAME_OPENED" and not CIMIEvents[event] then return end
         -- Add to frames
         for i=1,600 do
@@ -29,7 +45,13 @@ if IsAddOnLoaded("AdiBags") then
             end
         end
     end
-    hooksecurefunc(CanIMogIt.frame, "HookItemOverlay", CIMI_AdiBagsAddFrame)
+    CanIMogIt.frame:AddEventFunction(CIMI_AdiBagsAddFrame)
+
+
+    ------------------------
+    -- Event functions    --
+    ------------------------
+
 
     function CIMI_AdiBagsEvents(self, event, ...)
         if not CIMIEvents[event] then return end

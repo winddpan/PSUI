@@ -14,13 +14,33 @@ if addon.debug_messages then
     addon.MESSAGE_LISTENERS = listeners
 end
 
+local function PrintDebugForMessage(message,listener,...)
+    if addon.DEBUG_IGNORE and addon.DEBUG_IGNORE['m:'..message] then return end
+
+    local ac
+    if #{...} > 0 then
+        for k,v in pairs({...}) do
+            if type(v) == 'table' then
+                if v.state and v.state.name then
+                    v = 'frame:`'..v.state.name..'`'
+                elseif v.name then
+                    v = 'table:'..v.name
+                end
+            end
+            ac = (ac and ac..', '..k..':' or k..':')..tostring(v)
+        end
+    end
+
+    addon:print('p:'..(listener.priority or '?')..' |cff88ff88m:'..message..'|r > '..(listener.name or 'nil')..(' |cffaaaaaa'..ac or ''))
+end
+
 function addon:DispatchMessage(message, ...)
     if listeners[message] then
         for i,listener_tbl in ipairs(listeners[message]) do
             local listener,func = unpack(listener_tbl)
 
             if addon.debug_messages then
-                addon:print('dispatch m:'..message..' > '..(listener.name or 'nil'))
+                PrintDebugForMessage(message,listener,...)
             end
 
             if type(func) == 'string' and type(listener[func]) == 'function' then
@@ -82,7 +102,9 @@ local function event_frame_OnEvent(self,event,...)
                 end
 
                 if addon.debug_messages then
-                    addon:print('e:'..event..(unit and ' ['..unit..']' or '')..' > '..(table.name or 'nil'))
+                    if not addon.DEBUG_IGNORE or not addon.DEBUG_IGNORE['e:'..event] then
+                        addon:print('p:'..(table.priority or '?')..' |cffffff88e:'..event..(unit and ' |cff8888ff['..unit..']' or '')..'|r > '..(table.name or 'nil'))
+                    end
                 end
             else
                 addon:print('|cffff0000no listener for e:'..event..' in '..(table.name or 'nil'))

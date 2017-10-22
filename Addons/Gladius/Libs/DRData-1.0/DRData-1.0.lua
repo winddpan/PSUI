@@ -81,15 +81,15 @@ elseif locale == "frFR" then
 	L["Taunts"] = "Provocations"
 
 elseif locale == "itIT" then
-	
+
 elseif locale == "koKR" then
-	
+
 elseif locale == "ptBR" then
-	
+
 elseif locale == "ruRU" then
-	
+
 elseif locale == "zhCN" then
-	
+
 elseif locale == "zhTW" then
 	L["Cyclone"] = "颶風術"
 	L["Disarms"] = "繳械"
@@ -173,8 +173,6 @@ local spellsAndProvidersByCategory = {
 		-- Druid
 		[    99] = true, -- Incapacitating Roar (talent)
 		[203126] = true, -- Maim (with blood trauma pvp talent)
-		[236025] = true, -- Main (Honor talent)
-		[236026] = true, -- Main (Honor talent)
 		-- Hunter
 		[  3355] = 187650, -- Freezing Trap
 		[ 19386] = true, -- Wyvern Sting
@@ -260,6 +258,7 @@ local spellsAndProvidersByCategory = {
 		[209753] = true, -- Cyclone (Balance)
 		-- Hunter
 		[186387] = true, -- Bursting Shot
+		[224729] = true, -- Bursting Shot
 		-- Mage
 		[ 31661] = true, -- Dragon's Breath
 		-- Monk
@@ -300,6 +299,9 @@ local spellsAndProvidersByCategory = {
 		[211881] = true, -- Fel Eruption
 		-- Druid
 		[203123] = true, -- Maim
+		[236025] = true, -- Maim (Honor talent)
+		[236026] = true, -- Maim (Honor talent)
+		[22570] = true, -- Maim (Honor talent)
 		[  5211] = true, -- Mighty Bash
 		[163505] = 1822, -- Rake (Stun from Prowl)
 		-- Hunter
@@ -325,7 +327,7 @@ local spellsAndProvidersByCategory = {
 		-- Shaman
 		[118345] = true, -- Pulverize (Primal Earth Elemental)
 		[118905] = true, -- Static Charge (Capacitor Totem)
-		[204399] = true, -- Earthfury (pvp talent)
+		--[204399] = true, -- Earthfury (pvp talent)
 		-- Warlock
 		[ 89766] = true, -- Axe Toss (Felguard)
 		[ 30283] = true, -- Shadowfury
@@ -333,6 +335,7 @@ local spellsAndProvidersByCategory = {
 		-- Warrior
 		[132168] = true, -- Shockwave
 		[132169] = true, -- Storm Bolt
+		[237744] = true, -- Warbringer
 		-- Tauren
 		[ 20549] = true, -- War Stomp
 	},
@@ -379,7 +382,7 @@ local spellsAndProvidersByCategory = {
 		[  6360] = true, -- Whiplash
 		[115770] = true, -- Fellash
 	},
-} 
+}
 
 -- Map deprecatedCategories to the new ones
 local deprecatedCategories = {

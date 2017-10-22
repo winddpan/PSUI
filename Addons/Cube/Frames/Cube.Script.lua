@@ -187,6 +187,7 @@ function OnLoad(self)
 	end
 
 	self:RegisterEvent("PLAYER_LOGOUT") -- used to clear to keep safe
+	self:RegisterEvent("UI_SCALE_CHANGED")
 
 	_PlayerName = GetRealmName().."-"..GetUnitName("player")
 
@@ -359,11 +360,17 @@ function OnEnable(self)
 	end)
 
 	fileTree:GetNode(1):Select()
+
+	UI_SCALE_CHANGED()
 end
 
 function PLAYER_LOGOUT(self)
 	ValidateTable(CubeSave.AddonSaveDB)
 	ValidateTable(CubeSavePerCharacter.AddonSaveDB)
+end
+
+function UI_SCALE_CHANGED(self)
+	Cube_Main:SetScale(1/UIParent:GetScale())
 end
 
 function Cube_Main:OnSizeChanged()
@@ -1069,6 +1076,71 @@ function cboModify:OnTextChanged(text)
 	return RefreshCboKey(text)
 end
 
+----------------------------------------
+-- Command Line
+----------------------------------------
+local commandlineEnv = setmetatable( { print = function(...) commandline:InsertLine(strjoin("\t", tostringall(...)), 0, 1, 0) end }, { __index = _G } )
+function commandline:InsertLine(msg, r, g, b)
+	txtLog.Text = txtLog.Text .. ("\124cff%.2x%.2x%.2x"):format(r * 255, g * 255, b * 255) .. msg .. "|r\n"
+	txtLog:SetCursorPosition(#txtLog.Text)
+end
+
+function commandline:OnDirectionKey(args)
+	if not self.History then return end
+	local hisCnt = #self.History
+	local hisIdx = self.HistoryIndex
+	if args.Key == "UP" then
+		args.Handled = true
+		hisIdx = hisIdx - 1
+	elseif args.Key == "DOWN" then
+		args.Handled = true
+		hisIdx = hisIdx + 1
+	end
+	if hisIdx < 1 then
+		self.HistoryIndex = 1
+		self.Text = self.History[1] or ""
+	elseif hisIdx >= 1 and hisIdx <= hisCnt then
+		self.HistoryIndex = hisIdx
+		self.Text = self.History[hisIdx]
+	else
+		self.HistoryIndex = hisCnt
+		self.Text = self.History[hisCnt] or ""
+	end
+end
+
+function commandline:OnEnterPressed(args)
+	args.Handled = true
+	local str = strtrim(self.Text)
+	if str ~= "" then
+		self.History = self.History or {}
+		local hisCnt = #self.History
+
+		if self.History[hisCnt] ~= str then
+			self.History[hisCnt + 1] = str
+			self.HistoryIndex = hisCnt + 2
+		end
+
+		self:InsertLine("> " .. str, 1, 1, 1)
+
+		if str:match("^=") then
+			str = [[print(]] .. str:sub(2, -1) .. [[)]]
+		end
+
+		local func, err = loadstring(str)
+		if func then
+			setfenv(func, commandlineEnv)
+			local ok, err = pcall(func)
+			if not ok then
+				commandline:InsertLine(err, 1, 0, 0)
+			end
+		else
+			commandline:InsertLine(err, 1, 0, 0)
+		end
+
+		self.Text = ""
+	end
+end
+
 -----------------------------------
 -- Helper API
 -----------------------------------
@@ -1475,14 +1547,8 @@ end
 -----------------------------------
 -- Cube API
 -----------------------------------
-function Cube:Log(...)
-	local msg = strjoin(" ", tostringall(...))
-
-	if txtLog.Text and txtLog.Text ~= "" then
-		txtLog.Text = txtLog.Text..msg.."\n"
-	else
-		txtLog.Text = msg.."\n"
-	end
+function Cube.Log(msg, r, g, b)
+	commandline:InsertLine(msg, r, g, b)
 	frmLog.Visible = true
 end
 

@@ -1,17 +1,21 @@
-## Interface: 70200
+## Interface: 70300
 ## Author: Kesava
 ## Title: Kui |cff9966ffNameplates:|r |cffffffffCore Config|r
 ## Notes: Load-on-demand configuration interface for Kui Nameplates Core.
 ## Dependencies: Kui_Nameplates_Core
 ## SavedVariables: KuiNameplatesCoreSaved
 ## SavedVariablesPerCharacter: KuiNameplatesCoreCharacterSaved
-## LoadManagers: AddonLoader
-## X-LoadOn-Slash: /knp, /kuinameplates
-## X-LoadOn-InterfaceOptions: Kui |cff9966ffNameplates Core
+## LoadManagers: Kui_Nameplates_Core
 
 lib\embeds.xml
 
 main.lua
-l11n.lua
+
+locale\enGB.lua
+locale\zhCN.lua
+locale\zhTW.lua
+locale\koKR.lua
+locale\ruRU.lua
+
 helpers.lua
 create.lua

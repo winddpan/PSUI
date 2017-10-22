@@ -1,7 +1,9 @@
 --Elvis is the greatest!
-local ADDON_NAME, namespace = ... 	--localization
+--local ADDON_NAME, namespace = ... 	--localization
+local _, namespace = ... 	--localization
 local L = namespace.L 				--localization
-
+--local _, char_ctats_pane = ... --seems like shared upvaluing of tables isn't so easy
+local char_ctats_pane = CharacterStatsPane
 DCS_ClassSpecDB = {}
 
 local _, DCS_TableData = ...
@@ -47,31 +49,36 @@ local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight
 	StatFrame.AnchorFrame:SetPoint("TOPLEFT")
 	StatScrollFrame:SetScrollChild(StatFrame)
 
-	CharacterStatsPane.ItemLevelFrame:SetParent(StatFrame)
-	CharacterStatsPane.ItemLevelFrame.Value:SetFont(CharacterStatsPane.ItemLevelFrame.Value:GetFont(), 22, "THINOUTLINE")
-	CharacterStatsPane.ItemLevelFrame.Value:SetPoint("CENTER",CharacterStatsPane.ItemLevelFrame.Background, "CENTER", 0, 1)
+	char_ctats_pane.ItemLevelFrame:SetParent(StatFrame)
+	char_ctats_pane.ItemLevelFrame.Value:SetFont(char_ctats_pane.ItemLevelFrame.Value:GetFont(), 22, "THINOUTLINE")
+	char_ctats_pane.ItemLevelFrame.Value:SetPoint("CENTER",char_ctats_pane.ItemLevelFrame.Background, "CENTER", 0, 1)
 
-	CharacterStatsPane.AttributesCategory:SetParent(StatFrame)
-	CharacterStatsPane.AttributesCategory:SetHeight(28)
-	CharacterStatsPane.AttributesCategory.Background:SetHeight(28)
+	char_ctats_pane.AttributesCategory:SetParent(StatFrame)
+	char_ctats_pane.AttributesCategory:SetHeight(28)
+	char_ctats_pane.AttributesCategory.Background:SetHeight(28)
 
-	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
+	char_ctats_pane.ClassBackground:SetParent(StatScrollFrame)
 
-	CharacterStatsPane.EnhancementsCategory:SetParent(StatFrame)
-	CharacterStatsPane.EnhancementsCategory:SetHeight(28)
-	CharacterStatsPane.EnhancementsCategory.Background:SetHeight(28)
+	char_ctats_pane.EnhancementsCategory:SetParent(StatFrame)
+	char_ctats_pane.EnhancementsCategory:SetHeight(28)
+	char_ctats_pane.EnhancementsCategory.Background:SetHeight(28)
 
-local DefaultData = DCS_TableData:MergeTable({
+local DefaultTankData = DCS_TableData:MergeTable({
     { statKey = "ItemLevelFrame" },
-    { statKey = "AttributesCategory" },
+	{ statKey = "GeneralCategory" },
         { statKey = "HEALTH" },
         { statKey = "DCS_POWER" },
         { statKey = "DCS_ALTERNATEMANA" },
-        { statKey = "ARMOR" },
+        { statKey = "ITEMLEVEL", hidden = true },
+        { statKey = "MOVESPEED" },
+		{ statKey = "DURABILITY_STAT" },
+        { statKey = "REPAIR_COST" },
+	{ statKey = "AttributesCategory" },
         { statKey = "STRENGTH" },
         { statKey = "AGILITY" },
         { statKey = "INTELLECT" },
         { statKey = "STAMINA" },
+	{ statKey = "OffenseCategory" }, --Re-order before Enhancements to appear more logical.
         { statKey = "ATTACK_DAMAGE" },
         { statKey = "ATTACK_AP" },
         { statKey = "DCS_ATTACK_ATTACKSPEED" },
@@ -81,20 +88,20 @@ local DefaultData = DCS_TableData:MergeTable({
         { statKey = "ENERGY_REGEN" },
         { statKey = "DCS_RUNEREGEN" },
         { statKey = "FOCUS_REGEN" },		
-        { statKey = "MOVESPEED" },
         { statKey = "GCD" },
-		{ statKey = "DURABILITY_STAT" },
-        { statKey = "REPAIR_COST" },
-    { statKey = "EnhancementsCategory" },
+	{ statKey = "EnhancementsCategory" }, --Re-order after Offense to appear more logical.
         { statKey = "CRITCHANCE", hideAt = 0 },
 		{ statKey = "HASTE", hideAt = 0 },
         { statKey = "VERSATILITY", hideAt = 0 },
         { statKey = "MASTERY", hideAt = 0 },
         { statKey = "LIFESTEAL", hideAt = 0 },
         { statKey = "AVOIDANCE", hideAt = 0 },
+	{ statKey = "DefenseCategory" },
+        { statKey = "ARMOR" },
         { statKey = "DODGE", hideAt = 0 },
         { statKey = "PARRY", hideAt = 0 },
         { statKey = "BLOCK", hideAt = 0 },
+	{ statKey = "RatingCategory" },
 		{ statKey = "CRITCHANCE_RATING", hideAt = 0 },
 		{ statKey = "HASTE_RATING", hideAt = 0 },
 		{ statKey = "VERSATILITY_RATING", hideAt = 0 },
@@ -103,15 +110,76 @@ local DefaultData = DCS_TableData:MergeTable({
 		{ statKey = "AVOIDANCE_RATING", hideAt = 0 },
 		{ statKey = "DODGE_RATING", hideAt = 0 },
 		{ statKey = "PARRY_RATING", hideAt = 0 },
-        { statKey = "ITEMLEVEL", hidden = true },
 })
-
-local ShownData = DefaultData
+local DefaultNonTankData = DCS_TableData:MergeTable({
+    { statKey = "ItemLevelFrame" },
+	{ statKey = "GeneralCategory" },
+        { statKey = "HEALTH" },
+        { statKey = "DCS_POWER" },
+        { statKey = "DCS_ALTERNATEMANA" },
+        { statKey = "ITEMLEVEL", hidden = true },
+        { statKey = "MOVESPEED" },
+		{ statKey = "DURABILITY_STAT" },
+        { statKey = "REPAIR_COST" },
+	{ statKey = "AttributesCategory" },
+        { statKey = "STRENGTH" },
+        { statKey = "AGILITY" },
+        { statKey = "INTELLECT" },
+        { statKey = "STAMINA" },
+		{ statKey = "ARMOR" }, --Armor has always been an main attribute stat, except for tanks where it is a defense stat.
+	{ statKey = "OffenseCategory" }, --Re-order before Enhancements to appear more logical.
+        { statKey = "ATTACK_DAMAGE" },
+        { statKey = "ATTACK_AP" },
+        { statKey = "DCS_ATTACK_ATTACKSPEED" },
+		{ statKey = "WEAPON_DPS" },
+        { statKey = "SPELLPOWER" },
+        { statKey = "MANAREGEN" },
+        { statKey = "ENERGY_REGEN" },
+        { statKey = "DCS_RUNEREGEN" },
+        { statKey = "FOCUS_REGEN" },		
+        { statKey = "GCD" },
+	{ statKey = "EnhancementsCategory" }, --Re-order after Offense to appear more logical.
+        { statKey = "CRITCHANCE", hideAt = 0 },
+		{ statKey = "HASTE", hideAt = 0 },
+        { statKey = "VERSATILITY", hideAt = 0 },
+        { statKey = "MASTERY", hideAt = 0 },
+        { statKey = "LIFESTEAL", hideAt = 0 },
+        { statKey = "AVOIDANCE", hideAt = 0 },
+	{ statKey = "DefenseCategory" },
+        { statKey = "DODGE", hideAt = 0 },
+        { statKey = "PARRY", hideAt = 0 },
+        { statKey = "BLOCK", hideAt = 0 },
+	{ statKey = "RatingCategory" },
+		{ statKey = "CRITCHANCE_RATING", hideAt = 0 },
+		{ statKey = "HASTE_RATING", hideAt = 0 },
+		{ statKey = "VERSATILITY_RATING", hideAt = 0 },
+		{ statKey = "MASTERY_RATING", hideAt = 0 },
+		{ statKey = "LIFESTEAL_RATING", hideAt = 0 },
+		{ statKey = "AVOIDANCE_RATING", hideAt = 0 },
+		{ statKey = "DODGE_RATING", hideAt = 0 },
+		{ statKey = "PARRY_RATING", hideAt = 0 },
+})
+--local ShownData = DefaultData
+local ShownData = DefaultNonTankData --TODO: find a reason why error during login with "local ShownData". Most probably too early PaperDollFrame_UpdateStats() calls due to DCS_configButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 
 for k, v in pairs(DCS_TableData.StatData) do
 	if (not v.frame) then
 		if (v.category) then
 			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameCategoryTemplate")
+			v.frame:SetHeight(28)
+			v.frame.Background:SetHeight(28)
+			if k == "GeneralCategory" then
+				v.frame.Title:SetText(L["General"])
+			end
+			if k == "OffenseCategory" then
+				v.frame.Title:SetText(L["Offense"])
+			end
+			if k == "DefenseCategory" then
+				v.frame.Title:SetText(L["Defense"])
+			end
+			if k == "RatingCategory" then
+				v.frame.Title:SetText(L["Ratings"])
+			end
 		else
 			v.frame = CreateFrame("FRAME", nil, StatFrame, "CharacterStatFrameTemplate")
 		end
@@ -149,10 +217,6 @@ end
 		end
 	end
 
-
-
-
-
 -----------------------
 -- Config Mode Setup --
 -----------------------
@@ -188,14 +252,18 @@ local configMode = false
 local function ShowCharacterStats(unit)
     local stat
     local count, backgroundcount, height = 0, false, 4
-	local hideatzero = gdbprivate.gdb.gdbdefaults.dejacharacterstatsHideatZeroChecked.SetChecked --placeholder for the checkbox hideatzero
+	local hideatzero = gdbprivate.gdb.gdbdefaults.dejacharacterstatsHideAtZeroChecked.SetChecked --placeholder for the checkbox hideatzero
 	--print(hideatzero,"hide@zero")
     for _, v in ipairs(ShownData) do
         stat = DCS_TableData.StatData[v.statKey]
 		--print(v.statKey)
 		if stat then -- if some stat gets removed or if experimenting with adding stats
 			stat.updateFunc(stat.frame, unit)
-			--print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
+			--[[
+			if v.statKey == "CRITCHANCE" then
+				print(v.statKey,stat.frame.numericValue) -- to verify that recorded numeric value is the one intended - either rounded or with many decimal digits
+			end
+			--]]
 			if (configMode) then
 				stat.frame:Show()
 				stat.frame.checkButton:Show()
@@ -278,16 +346,14 @@ local function DCS_Table_Relevant()
 	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
 	--print(uniqueKey)
 	--print("Select only relevant stats")
-	--ShownData = DCS_TableData:CopyTable(DefaultData)
-
+	local spec = GetSpecialization();
+	--print(spec)
+	local role = GetSpecializationRole(spec)
+	--print(role)
 	for _, v in ipairs(ShownData) do
 		if v.hidden then v.hidden = false end
 	end 
 
-	local spec = GetSpecialization();
-		--print(spec)
-	local role = GetSpecializationRole(spec)
-		--print(role)
 	local primaryStat = select(6, GetSpecializationInfo(spec, nil, nil, nil, UnitSex("player")));
 		--print(primaryStat)
     for _, v in ipairs(ShownData) do
@@ -319,6 +385,8 @@ local function DCS_Table_Relevant()
 		end
 		if role ~= "TANK" then
 				--print("Not Tank")
+			if v.statKey == "DefenseCategory" then v.hidden = true end --If not a tank then Defense category and its relevant stats are hidden.
+			--if v.statKey == "ARMOR" then v.hidden = true end
 			if v.statKey == "DODGE" then v.hidden = true end
 			if v.statKey == "PARRY" then v.hidden = true end
 			if v.statKey == "BLOCK" then v.hidden = true end
@@ -333,6 +401,10 @@ local function DCS_Table_Relevant()
 		if v.statKey == "DODGE_RATING" then v.hidden = true end
 		if v.statKey == "PARRY_RATING" then v.hidden = true end
 		if v.statKey == "ITEMLEVEL" then v.hidden = true end
+		--if v.statKey == "GeneralCategory" then v.hidden = true end
+		--if v.statKey == "OffenseCategory" then v.hidden = true end
+		--if v.statKey == "DefenseCategory" then v.hidden = true end
+		if v.statKey == "RatingCategory" then v.hidden = true end --ratings are invisible, so the category is also hidden
 	end
 	--gdbprivate.gdb.gdbdefaults.DCS_TableRelevantStatsChecked.RelevantStatsSetChecked = false
 	ShownData.uniqueKey = uniqueKey
@@ -341,12 +413,19 @@ local function DCS_Table_Relevant()
 end
 
 local function DCS_Login_Initialization()
-	ShownData = DCS_TableData:CopyTable(DefaultData)
-	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
+	local spec = GetSpecialization();
+		--print(spec)
+	local role = GetSpecializationRole(spec)
+	if role == "TANK" then
+		ShownData = DCS_TableData:CopyTable(DefaultTankData)
+	else
+		ShownData = DCS_TableData:CopyTable(DefaultNonTankData)
+	end
+	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. spec
 	--print(uniqueKey)
 	if (DCS_ClassSpecDB[uniqueKey]) then
 		if (ShownData.uniqueKey ~= uniqueKey) then
-		ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey])
+		ShownData = DCS_TableData:MergeTable(DCS_ClassSpecDB[uniqueKey]) --not so easy to understand when gets here. is it during change of specialisation?
 		--print("Set saved variables.")
 		end
 		ShowCharacterStats("player")
@@ -358,11 +437,19 @@ local function DCS_Login_Initialization()
 end
 
 local function DCS_Table_Reset()
-	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. GetSpecialization()
+	local temp
+	local spec = GetSpecialization();
+		--print(spec)
+	local role = GetSpecializationRole(spec)
+	if role == "TANK" then
+		temp = DCS_TableData:CopyTable(DefaultTankData)
+	else
+		temp = DCS_TableData:CopyTable(DefaultNonTankData)
+	end
+	local uniqueKey = UnitName("player") .. ":" .. GetRealmName() .. ":" .. spec
 	--print(uniqueKey)
 	--print("reseting just order of stata")
 	--ShownData = DCS_TableData:CopyTable(DefaultData)
-	local temp = DCS_TableData:CopyTable(DefaultData)
 	for _, v1 in ipairs(temp) do
 		for _, v2 in ipairs(ShownData) do
 			if v1.statKey == v2.statKey then
@@ -433,6 +520,7 @@ end
 
 for k, v in pairs(DCS_TableData.StatData) do
 	v.frame:SetMovable(true)
+	v.frame:EnableMouse(true) --without this normal stats (but not categories) are draggable 
 	v.frame:RegisterForDrag("LeftButton")
 	v.frame:HookScript("OnDragStart", OnDragStart)
 	v.frame:HookScript("OnDragStop", OnDragStop)
@@ -473,7 +561,7 @@ end)
 ---------------------
 
 
-CharacterStatsPane:HookScript("OnShow", function(self)
+char_ctats_pane:HookScript("OnShow", function(self)
 	self:Hide()
 	StatScrollFrame:Show()
 end)
@@ -666,9 +754,9 @@ end
 
 local function DCS_ClassCrestBGCheck()
 	if DCS_ClassBackgroundCheck:GetChecked(true) then
-		CharacterStatsPane.ClassBackground:Show() 
+		char_ctats_pane.ClassBackground:Show() 
 	else
-		CharacterStatsPane.ClassBackground:Hide()
+		char_ctats_pane.ClassBackground:Hide()
 	end
 end
 	
@@ -690,9 +778,9 @@ local function DCS_DefaultStatsAnchors()
 	StatScrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", StatScrollFrame, "BOTTOMRIGHT", -16, 16)
 	StatScrollFrame.ScrollBar:Hide()
 
-	CharacterStatsPane.ClassBackground:ClearAllPoints()
-	CharacterStatsPane.ClassBackground:SetParent(StatScrollFrame)
-	CharacterStatsPane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
+	char_ctats_pane.ClassBackground:ClearAllPoints()
+	char_ctats_pane.ClassBackground:SetParent(StatScrollFrame)
+	char_ctats_pane.ClassBackground:SetPoint("TOP", StatScrollFrame, "TOP", -2.50, 3)
 	
 	configButtonOnClose()
 	DCS_ClassCrestBGCheck()
@@ -725,11 +813,11 @@ local function DCS_InterfaceOptionsStatsAnchors()
 		DCS_TableResetCheck:SetParent(StatScrollFrame)
 		DCS_TableResetCheck:SetPoint("BOTTOMRIGHT", 3, -42)
 
-		CharacterStatsPane.ClassBackground:ClearAllPoints()
-		CharacterStatsPane.ClassBackground:SetParent(DejaCharacterStatsPanel)
-		CharacterStatsPane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -80)
-		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -48, 126)
-		CharacterStatsPane.ClassBackground:Show()
+		char_ctats_pane.ClassBackground:ClearAllPoints()
+		char_ctats_pane.ClassBackground:SetParent(DejaCharacterStatsPanel)
+		char_ctats_pane.ClassBackground:SetPoint("TOPLEFT", DejaCharacterStatsPanel, "TOPLEFT", 377, -80)
+		char_ctats_pane.ClassBackground:SetPoint("BOTTOMRIGHT", DejaCharacterStatsPanel, "BOTTOMRIGHT", -48, 126)
+		char_ctats_pane.ClassBackground:Show()
 
 		DCS_ClassCrestBGCheck()
 		ShowCharacterStats("player")
@@ -760,10 +848,10 @@ CharacterFrameInsetRight:HookScript("OnHide", function(self)
 		DCS_TableRelevantStats:Hide() 	--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
 		DCS_TableResetCheck:Hide()		--For some reason these two have to be hidden again even tho they are hidden with configButtonOnClose() below.
 
-		CharacterStatsPane.ClassBackground:ClearAllPoints()
-		CharacterStatsPane.ClassBackground:SetParent(UIParent)
-		CharacterStatsPane.ClassBackground:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 0, 0)
-		CharacterStatsPane.ClassBackground:Show()
+		char_ctats_pane.ClassBackground:ClearAllPoints()
+		char_ctats_pane.ClassBackground:SetParent(UIParent)
+		char_ctats_pane.ClassBackground:SetPoint("BOTTOMRIGHT", UIParent, "TOPLEFT", 0, 0)
+		char_ctats_pane.ClassBackground:Show()
 
 		configButtonOnClose()
 	end
@@ -842,8 +930,9 @@ local function DCS_InterfaceOptConfigButton_OnLeave(self)
 local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ScrollbarCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ScrollbarCheck:ClearAllPoints()
-	DCS_ScrollbarCheck:SetPoint("LEFT", 25, -175)
-	DCS_ScrollbarCheck:SetScale(1.25)
+	--DCS_ScrollbarCheck:SetPoint("LEFT", 30, -225)
+	DCS_ScrollbarCheck:SetPoint("TOPLEFT", "dcsMiscPanelCategoryFS",7, -55)
+	DCS_ScrollbarCheck:SetScale(1)
 	DCS_ScrollbarCheck.tooltipText = L["Displays the DCS scrollbar."] --Creates a tooltip on mouseover.
 	_G[DCS_ScrollbarCheck:GetName() .. "Text"]:SetText(L["Scrollbar"])
 	
@@ -892,8 +981,10 @@ local DCS_ScrollbarCheck = CreateFrame("CheckButton", "DCS_ScrollbarCheck", Deja
 local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackgroundCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ClassBackgroundCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ClassBackgroundCheck:ClearAllPoints()
-	DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", 25, -120)
-	DCS_ClassBackgroundCheck:SetScale(1.25)
+	--DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", 25, -120)
+	--DCS_ClassBackgroundCheck:SetPoint("LEFT", 30, -185)
+	DCS_ClassBackgroundCheck:SetPoint("TOPLEFT", "dcsMiscPanelCategoryFS",7, -15)
+	DCS_ClassBackgroundCheck:SetScale(1)
 	DCS_ClassBackgroundCheck.tooltipText = L["Displays the class crest background."] --Creates a tooltip on mouseover.
 	_G[DCS_ClassBackgroundCheck:GetName() .. "Text"]:SetText(L["Class Crest Background"])
 	
@@ -915,9 +1006,9 @@ local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackground
 			local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsClassBackgroundChecked.ClassBackgroundChecked
 			self:SetChecked(checked)
 			if checked then
-				CharacterStatsPane.ClassBackground:Show() 
+				char_ctats_pane.ClassBackground:Show() 
 			else
-				CharacterStatsPane.ClassBackground:Hide() 
+				char_ctats_pane.ClassBackground:Hide() 
 			end
 			self:UnregisterEvent(event);
 		end
@@ -938,9 +1029,9 @@ local DCS_ClassBackgroundCheck = CreateFrame("CheckButton", "DCS_ClassBackground
 		local checked = self:GetChecked()
 		gdbprivate.gdb.gdbdefaults.dejacharacterstatsClassBackgroundChecked.ClassBackgroundChecked = checked
 		if checked then
-			CharacterStatsPane.ClassBackground:Show()
+			char_ctats_pane.ClassBackground:Show()
 		else
-			CharacterStatsPane.ClassBackground:Hide()
+			char_ctats_pane.ClassBackground:Hide()
 		end
         ShowCharacterStats("player") --does it need to be called?
 	end)

@@ -33,8 +33,7 @@ function core:Create(f)
     self:CreateBackground(f)
     self:CreateHealthBar(f)
     self:CreatePowerBar(f)
-    --XXX disabled for 7.2.5 fix
-    --self:CreateAbsorbBar(f)
+    self:CreateAbsorbBar(f)
     self:CreateFrameGlow(f)
     self:CreateTargetGlow(f)
     self:CreateTargetArrows(f)
@@ -91,10 +90,10 @@ function core:Show(f)
 
     if f.state.player then
         anchor:SetParent(f)
-        anchor:SetAllPoints()
+        anchor:SetAllPoints(f.bg)
         anchor:Show()
 
-        if addon.ClassPowersFrame then
+        if addon.ClassPowersFrame and plugin_classpowers.enabled then
             -- force class powers position update
             -- as our post function uses state.player
             plugin_classpowers:TargetUpdate()
@@ -195,11 +194,78 @@ function core:UNIT_NAME_UPDATE(event,f)
     -- update name text colour
     f:UpdateNameText()
 end
+-- #############################################################################
+local CreateLODHandler
+do
+    local opt,saved_command
+    local function LoadConfig()
+        if IsAddOnLoaded('Kui_Nameplates_Core_Config') then return end
+        if InCombatLockdown() then
+            print('|cff9966ffKui Nameplates|r: Delaying configuration load until after combat ends.')
+            opt:RegisterEvent('PLAYER_REGEN_ENABLED')
+            return
+        end
+
+        opt:SetScript('OnShow',nil)
+        opt:SetScript('OnEvent',nil)
+        opt:UnregisterEvent('PLAYER_REGEN_ENABLED')
+
+        SLASH_KUINAMEPLATES_LOD1 = nil
+        SLASH_KUINAMEPLATES_LOD2 = nil
+        SlashCmdList.KUINAMEPLATES_LOD = nil
+        hash_SlashCmdList["/kuinameplates"] = nil
+        hash_SlashCmdList["/knp"] = nil
+
+        return LoadAddOn('Kui_Nameplates_Core_Config')
+    end
+    local function lod_OnShow(self)
+        if LoadConfig() then
+            -- re-trigger OnShow of config elements as page is already open
+            self:Hide()
+            self:Show()
+        end
+    end
+    local function lod_OnEvent(self,event)
+        if event == 'PLAYER_REGEN_ENABLED' then
+            if LoadConfig() then
+                SlashCmdList.KUINAMEPLATESCORE(saved_command)
+                saved_command = nil
+            end
+        end
+    end
+    local function lod_Slash(msg)
+        if InCombatLockdown() then
+            -- save command to passthrough upon leaving combat
+            saved_command = msg
+        end
+        if LoadConfig() then
+            -- passthrough command
+            SlashCmdList.KUINAMEPLATESCORE(msg)
+        end
+    end
+
+    function CreateLODHandler()
+        -- create LOD slash commands
+        SLASH_KUINAMEPLATES_LOD1 = '/knp'
+        SLASH_KUINAMEPLATES_LOD2 = '/kuinameplates'
+        SlashCmdList.KUINAMEPLATES_LOD = lod_Slash
+
+        -- create options category
+        opt = CreateFrame('Frame','KuiNameplatesCoreConfig',InterfaceOptionsFramePanelContainer)
+        opt:Hide()
+        opt.name = 'Kui |cff9966ffNameplates Core'
+
+        opt:SetScript('OnShow',lod_OnShow)
+        opt:SetScript('OnEvent',lod_OnEvent)
+
+        InterfaceOptions_AddCategory(opt)
+    end
+end
 -- register ####################################################################
 function core:Initialise()
     self:InitialiseConfig()
 
-    -- we don't want the distance scaling
+    -- we don't want the distance scaling to affect the clickbox
     SetCVar('NameplateMinScale',1)
     SetCVar('NameplateMaxScale',1)
 
@@ -233,6 +299,8 @@ function core:Initialise()
 
     -- set element configuration tables
     self:InitialiseElements()
+
+    CreateLODHandler()
 
     plugin_fading = addon:GetPlugin('Fading')
     plugin_classpowers = addon:GetPlugin('ClassPowers')

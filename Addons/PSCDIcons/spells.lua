@@ -14,6 +14,12 @@ Cooldowns = {
 			-- 敏锐
 			{spellID = 185313, spec = "敏锐"},
 			{spellID = 212283, spec = "敏锐"},
+			
+			-- 死标
+			{spellID = 137619, talent = "7/2"},
+			-- 天降
+			{spellID = 152150, talent = "7/3"},
+			
 			{spellID = 209782, spec = "敏锐"},
 			{spellID = 121471, spec = "敏锐"},
 
@@ -31,10 +37,7 @@ Cooldowns = {
 			-- 君王
 			{spellID = 192759, spec = "刺杀"},
 
-			-- 死标
-			{spellID = 137619, talent = "7/2"},
-			-- 天降
-			{spellID = 152150, talent = "7/3"},
+
 
 			-- 正中眉心
 			{spellID = 199804, spec = "狂徒"},
@@ -50,11 +53,12 @@ Cooldowns = {
 			IconSize = size,
 			Position = pos,
 			
-			{spellID = 130736},
-			{spellID = 220143},
-			{spellID = 194918},
-			{spellID = 49206},
-			{spellID = 63560},
+			{spellID = 130736, spec = "邪恶", talent = "7/3"},
+			{spellID = 220143, spec = "邪恶"},
+			{spellID = 194918, spec = "邪恶", talent = "2/3"},
+			{spellID = 207317, spec = "邪恶", talent = "2/1"},
+			{spellID = 49206, spec = "邪恶"},
+			{spellID = 63560, spec = "邪恶"},
 		},
 	},
 	["DEMONHUNTER"] = {

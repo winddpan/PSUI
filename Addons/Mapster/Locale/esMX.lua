@@ -5,3 +5,4 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Mapster", "esMX")
 if not L then return end
 
+

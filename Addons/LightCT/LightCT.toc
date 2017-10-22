@@ -1,0 +1,8 @@
+## Interface: 70200
+## Title: |cffEE3A8CLight|rCT
+## Notes: 超轻量级的滚动战斗文字
+## Version: 17.08.21.2
+## X-Credits: Paopao001, Lightspark, Siweia
+## X-Vendor: 七曜·星の痕
+
+CombatText.lua

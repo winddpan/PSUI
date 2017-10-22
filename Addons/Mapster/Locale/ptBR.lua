@@ -42,3 +42,4 @@ L["The Group Icons module allows you to resize the raid and party icons on the w
 L["The transparency of the big map."] = "A transparência do mapa grande."
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "Você pode mudar a transparência do mapa para que possa continuar vendo o ambiente enquanto seu mapa está aberto para a navegação."
 L["You can control the accuracy of the coordinates, e.g. if you need very exact coordinates you can set this to 2."] = "Você pode controlar a precisão das coordenadas, por exemplo, se você precisar de coordenadas muito exatas você pode definir isso para 2."
+

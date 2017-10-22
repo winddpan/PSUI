@@ -47,3 +47,4 @@ L["The transparency of the big map."] = "Définit la transparence de la grande c
 L["The transparency of the map while you are moving and the map is faded."] = "La transparence de la carte quand vous vous déplacez et que la carte est estompée."
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "Vous pouvez modifier la transparence de la carte du monde afin de continuer à voir l'environnement du jeu quand vous consultez la carte."
 L["You can control the accuracy of the coordinates, e.g. if you need very exact coordinates you can set this to 2."] = "Vous pouvez ici déterminer la précision des coordonnées. Par exemple, si vous voulez des coordonnées très précises, mettez la valeur à 2."
+

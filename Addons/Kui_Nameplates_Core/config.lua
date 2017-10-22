@@ -14,16 +14,18 @@ local cc = CreateFrame('Frame')
 -- add media to LSM ############################################################
 LSM:Register(LSM.MediaType.FONT,'Yanone Kaffesatz Bold',kui.m.f.yanone)
 LSM:Register(LSM.MediaType.FONT,'FrancoisOne',kui.m.f.francois)
-LSM:Register(LSM.MediaType.FONT,'Roboto Condensed Bold',kui.m.f.roboto)
+LSM:Register(LSM.MediaType.FONT,'Roboto Condensed Bold',kui.m.f.roboto,
+    LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 
 LSM:Register(LSM.MediaType.STATUSBAR, 'Kui status bar', kui.m.t.bar)
 LSM:Register(LSM.MediaType.STATUSBAR, 'Kui status bar (brighter)', kui.m.t.brightbar)
 LSM:Register(LSM.MediaType.STATUSBAR, 'Kui shaded bar', kui.m.t.oldbar)
 
 local locale = GetLocale()
-local latin  = (locale ~= 'zhCN' and locale ~= 'zhTW' and locale ~= 'koKR' and locale ~= 'ruRU')
+local font_support = locale ~= 'zhCN' and locale ~= 'zhTW' and locale ~= 'koKR'
 
-local DEFAULT_FONT = latin and 'Roboto Condensed Bold' or LSM:GetDefault(LSM.MediaType.FONT)
+local DEFAULT_FONT = font_support and 'Roboto Condensed Bold' or
+                     LSM:GetDefault(LSM.MediaType.FONT)
 local DEFAULT_BAR = 'Kui status bar'
 -- default configuration #######################################################
 local default_config = {
@@ -74,7 +76,7 @@ local default_config = {
     font_style = 2,
     hide_names = true,
     font_size_normal = 11,
-    font_size_small = 9,
+    font_size_small = 10,
     name_text = true,
     level_text = false,
     health_text = false,
@@ -102,6 +104,10 @@ local default_config = {
     colour_enemy_player = {.7,.2,.1},
     colour_enemy_pet = {.7,.2,.1},
 
+    absorb_enable = true,
+    absorb_striped = true,
+    colour_absorb = {.3,.7,1,.5},
+
     execute_enabled = true,
     execute_auto = true,
     execute_percent = 20,
@@ -113,16 +119,16 @@ local default_config = {
     frame_height_minus = 9,
     frame_width_personal = 132,
     frame_height_personal = 13,
-    castbar_height = 5,
+    castbar_height = 6,
     powerbar_height = 3,
 
     auras_enabled = true,
     auras_on_personal = true,
-    auras_vanilla_filter = true,
-    auras_whitelist = false,
     auras_pulsate = true,
     auras_centre = true,
     auras_sort = 2,
+    auras_show_all_self = false,
+    auras_hide_all_other = false,
     auras_time_threshold = 60,
     auras_minimum_length = 0,
     auras_maximum_length = -1,
@@ -131,11 +137,12 @@ local default_config = {
     auras_icon_squareness = .7,
 
     castbar_enable = true,
-    castbar_colour = {.6,.6,.75},
+    castbar_colour = {.75,.75,.9},
     castbar_unin_colour = {.8,.3,.3},
     castbar_showpersonal = false,
     castbar_icon = true,
     castbar_name = true,
+    castbar_shield = true,
     castbar_showall = true,
     castbar_showfriend = true,
     castbar_showenemy = true,
@@ -209,14 +216,6 @@ end
 function configChanged.tankmode_force_offtank(v)
     local ele = addon:GetPlugin('TankMode')
     ele:SetForceOffTank(v)
-end
-
-function configChanged.castbar_enable(v)
-    if v then
-        addon:GetPlugin('CastBar'):Enable()
-    else
-        addon:GetPlugin('CastBar'):Disable()
-    end
 end
 
 function configChanged.level_text(v)
@@ -385,6 +384,19 @@ configChanged.colour_enemy_class = configChangedReactionColour
 configChanged.colour_enemy_player = configChangedReactionColour
 configChanged.colour_enemy_pet = configChangedReactionColour
 
+local function configChangedAbsorb()
+    if core.profile.absorb_enable then
+        addon:GetPlugin('AbsorbBar'):Enable()
+    else
+        addon:GetPlugin('AbsorbBar'):Disable()
+    end
+
+    core:configChangedAbsorb()
+end
+configChanged.absorb_enable = configChangedAbsorb
+configChanged.absorb_striped = configChangedAbsorb
+configChanged.colour_absorb = configChangedAbsorb
+
 local function configChangedTankColour()
     local ele = addon:GetPlugin('TankMode')
     ele.colours = {
@@ -405,7 +417,6 @@ configChanged.frame_width = configChangedFrameSize
 configChanged.frame_height = configChangedFrameSize
 configChanged.frame_width_minus = configChangedFrameSize
 configChanged.frame_height_minus = configChangedFrameSize
-configChanged.castbar_height = configChangedFrameSize
 
 local function configChangedFontOption()
     core:configChangedFontOption()
@@ -442,8 +453,6 @@ function configChanged.auras_enabled(v)
 
     configChangedAuras()
 end
-configChanged.auras_vanilla_filter = configChangedAuras
-configChanged.auras_whitelist = configChangedAuras
 configChanged.auras_pulsate = configChangedAuras
 configChanged.auras_centre = configChangedAuras
 configChanged.auras_sort = configChangedAuras
@@ -454,6 +463,27 @@ configChanged.auras_icon_normal_size = configChangedAuras
 configChanged.auras_icon_minus_size = configChangedAuras
 configChanged.auras_icon_squareness = configChangedAuras
 configChanged.auras_on_personal = configChangedAuras
+configChanged.auras_show_all_self = configChangedAuras
+configChanged.auras_hide_all_other = configChangedAuras
+
+local function configChangedCastBar()
+    core:SetCastBarConfig()
+end
+function configChanged.castbar_enable(v)
+    if v then
+        addon:GetPlugin('CastBar'):Enable()
+    else
+        addon:GetPlugin('CastBar'):Disable()
+    end
+
+    configChangedCastBar()
+end
+configChanged.castbar_height = configChangedCastBar
+configChanged.castbar_colour = configChangedCastBar
+configChanged.castbar_unin_colour = configChangedCastBar
+configChanged.castbar_icon = configChangedCastBar
+configChanged.castbar_name = configChangedCastBar
+configChanged.castbar_shield = configChangedCastBar
 
 function configChanged.classpowers_enable(v)
     if v then
@@ -548,14 +578,17 @@ function configChanged.use_blizzard_personal(v)
     addon.USE_BLIZZARD_PERSONAL = v
 end
 
-local function configChangedClickthrough()
+local function ClickthroughUpdate()
     C_NamePlate.SetNamePlateSelfClickThrough(core.profile.clickthrough_self)
     C_NamePlate.SetNamePlateFriendlyClickThrough(core.profile.clickthrough_friend)
     C_NamePlate.SetNamePlateEnemyClickThrough(core.profile.clickthrough_enemy)
 end
-configChanged.clickthrough_self = configChangedClickthrough
-configChanged.clickthrough_friend = configChangedClickthrough
-configChanged.clickthrough_enemy = configChangedClickthrough
+local function QueueClickthroughUpdate()
+    cc:QueueFunction(ClickthroughUpdate)
+end
+configChanged.clickthrough_self = QueueClickthroughUpdate
+configChanged.clickthrough_friend = QueueClickthroughUpdate
+configChanged.clickthrough_enemy = QueueClickthroughUpdate
 
 configChanged.bossmod_enable = function(v)
     if v then
@@ -589,6 +622,8 @@ configLoaded.nameonly = configChanged.nameonly
 
 configLoaded.colour_hated = configChangedReactionColour
 
+configLoaded.absorb_enable = configChanged.absorb_enable
+
 configLoaded.tank_mode = configChanged.tank_mode
 configLoaded.tankmode_force_enable = configChanged.tankmode_force_enable
 configLoaded.tankmode_force_offtank = configChanged.tankmode_force_offtank
@@ -598,9 +633,8 @@ configLoaded.castbar_enable = configChanged.castbar_enable
 configLoaded.level_text = configChanged.level_text
 
 configLoaded.auras_enabled = configChanged.auras_enabled
-configLoaded.auras_whitelist = configChangedAuras
 
-configLoaded.clickthrough_self = configChangedClickthrough
+configLoaded.clickthrough_self = QueueClickthroughUpdate
 
 function configLoaded.classpowers_enable(v)
     if v then

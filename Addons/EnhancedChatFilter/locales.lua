@@ -9,6 +9,8 @@ if (locale == "zhCN") then
 --Titles
 	L["MainFilter"] = "总开关"
 	L["MinimapIcon"] = "小地图图标"
+	L["OptimizeForCPU"] = "为CPU优化"
+	L["OptimizeForCPUTooltips"] = "启用后将使用稍多的内存而降低CPU的占用"
 --Minimap Tooltips
 	L["ClickToOpenConfig"] = "点击打开配置界面"
 --Common in tab
@@ -33,18 +35,17 @@ if (locale == "zhCN") then
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20。"
 	L["RepeatFilter"] = "重复过滤器"
 	L["RepeatFilterTooltips"] = "过滤内容相近的信息"
-	L["MultiLines"] = "多行喊话过滤"
-	L["MultiLinesTooltip"] = "重复过滤器现在也会过滤同一个人在短时间内的多行信息，这有助于减少各类宏的刷屏但同时也会过滤掉诸如dps统计的各插件通告"
-	L["AlsoFilterGroup"] = "同时过滤小队团队"
-	L["AlsoFilterGroupTooltips"] = "过滤器现在也会过滤小队团队中的发言，启用后你可能错过团队中有用的信息"
+	L["FilterGroup"] = "过滤小队团队"
+	L["FilterGroupTooltips"] = "启用后过滤器也会过滤小队团队中的消息，你可能因此错过有用的信息"
 	L["DisplayAdvancedConfig"] = "显示高级选项"
 	L["DisplayAdvancedConfigTooltips"] = "显示更多更复杂的选项。|n如果你是正常人请不要接受，不然你很有可能会把ECF玩坏！如果你同意你不是正常人的话请继续..."
 	L["WhisperWhitelistMode"] = "密语白名单模式"
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 	L["Aggressive"] = "额外过滤器"
 	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合"
---BlackwordList
-	L["BlackwordList"] = "黑名单关键词"
+--BlackwordFilter
+	L["BlackwordFilter"] = "关键词过滤"
+	L["BlackwordList"] = "黑名单关键词列表"
 	L["AddBlackWordTitle"] = "添加新黑名单关键词"
 	L["IncludeAutofilteredWord"] = "%s包含会被自动过滤的字符，将忽略该关键词！"
 	L["Regex"] = "正则"
@@ -56,15 +57,12 @@ if (locale == "zhCN") then
 	L["LesserBlackWordThresholdTooltips"] = "过滤包含至少阈值数目的次级关键词的信息"
 	L["BlackList"] = "关键词列表"
 	L["StringIO"] = "字符串导入导出"
-	L["Import"] = "导入"
 	L["StringHashMismatch"] = "字符串校验错误"
-	L["ImportSucceeded"] = "导入成功"
 	L["Export"] = "导出"
 --LootFilter
 	L["LootFilter"] = "拾取过滤器"
 	L["AddItemWithID"] = "添加ID"
 	L["BadID"] = "错误的ID"
-	L["AddedItem"] = "添加了物品%s"
 	L["ItemFilterList"] = "物品屏蔽列表"
 	L["CurrencyFilterList"] = "货币屏蔽列表"
 	L["LootQualityFilter"] = "拾取物品质量"
@@ -74,12 +72,14 @@ if (locale == "zhCN") then
 	L["And"] = "、"
 --Record
 	L["RecordWindow"] = "聊天记录"
-	L["ChatRecord"] = "聊天消息记录"
-	L["ChatRecordTooltips"] = "开启后聊天信息会被记录并可以查看哪些信息被过滤。|n这将占用一定内存。"
+	L["ChatRecord"] = "开启聊天记录"
+	L["ChatRecordTooltips"] = "开启后将记录系统信息以外的聊天信息，并可以查看哪些信息被过滤"
 	L["ClearRecord"] = "清除聊天记录"
 	L["ShowAll"] = "全部显示"
 	L["OnlyFiltered"] = "仅过滤"
 	L["OnlyUnfiltered"] = "仅未过滤"
+--Error
+	L["DBOutOfDate"] = "你的配置文件太旧了！你的配置文件版本:%d，插件最低兼容版本:%d"
 
 -----------------------------------------------------------------------
 -- zhTW -- NEED HELP
@@ -89,6 +89,8 @@ elseif (locale == "zhTW") then
 --Titles
 	L["MainFilter"] = "總開關"
 	L["MinimapIcon"] = "小地圖圖標"
+	L["OptimizeForCPU"] = "为CPU优化"
+	L["OptimizeForCPUTooltips"] = "启用后将使用稍多的内存而降低CPU的占用"
 --Minimap Tooltips
 	L["ClickToOpenConfig"] = "點擊打開配置介面"
 --Common in tab
@@ -113,18 +115,17 @@ elseif (locale == "zhTW") then
 	L["chatLinesLimitTooltips"] = "重复信息的行数设定。请根据聊天频道的聊天量调整数值。增加数值会提高内存占用。设为0以关闭重复过滤。默认值20"
 	L["RepeatFilter"] = "重复过滤器"
 	L["RepeatFilterTooltips"] = "过滤内容相近的信息"
-	L["MultiLines"] = "多行喊话过滤"
-	L["MultiLinesTooltip"] = "重复过滤器现在也会过滤同一个人在短时间内的多行信息，这有助于减少各类宏的刷屏但同时也会过滤掉诸如dps统计的各插件通告"
-	L["AlsoFilterGroup"] = "同时过滤小队团队"
-	L["AlsoFilterGroupTooltips"] = "过滤器现在也会过滤小队团队中的发言，启用后你可能错过团队中有用的信息"
+	L["FilterGroup"] = "过滤小队团队"
+	L["FilterGroupTooltips"] = "启用后过滤器也会过滤小队团队中的消息，你可能因此错过有用的信息"
 	L["DisplayAdvancedConfig"] = "显示高级选项"
 	L["DisplayAdvancedConfigTooltips"] = "显示更多更复杂的选项。|n如果你是正常人请不要接受，不然你很有可能会把ECF玩坏！如果你同意你不是正常人的话请继续..."
 	L["WhisperWhitelistMode"] = "密語白名單模式"
 	L["WhisperWhitelistModeTooltip"] = "除了工会、团队、小队、好友发送的密语外，只允许你发送过密语的对方才能对你发起密语|n|cffE2252D慎用！"
 	L["Aggressive"] = "额外过滤器"
 	L["AggressiveTooltip"] = "一些会极大提高过滤效果和|cffE2252D误伤机率|r的过滤器集合"
---BlackwordList
-	L["BlackwordList"] = "黑名单關鍵詞"
+--BlackwordFilter
+	L["BlackwordFilter"] = "关键词过滤"
+	L["BlackwordList"] = "黑名单关键词列表"
 	L["AddBlackWordTitle"] = "添加新黑名單關鍵詞"
 	L["IncludeAutofilteredWord"] = "%s包含會被自動過濾的字符，蔣忽略該關鍵詞！"
 	L["Regex"] = "正規"
@@ -136,15 +137,12 @@ elseif (locale == "zhTW") then
 	L["LesserBlackWordThresholdTooltips"] = "过滤包含至少阈值数目的次级关键词的信息"
 	L["BlackList"] = "关键词列表"
 	L["StringIO"] = "字符串導入導出"
-	L["Import"] = "導入"
 	L["StringHashMismatch"] = "字符串校驗錯誤"
-	L["ImportSucceeded"] = "導入成功"
 	L["Export"] = "導出"
 --LootFilter
 	L["LootFilter"] = "拾取过滤器"
 	L["AddItemWithID"] = "添加ID"
 	L["BadID"] = "错误的ID"
-	L["AddedItem"] = "添加了物品%s"
 	L["NotExists"] = "%s(ID=%d)不存在"
 	L["ItemFilterList"] = "物品屏蔽列表"
 	L["CurrencyFilterList"] = "货币屏蔽列表"
@@ -155,12 +153,14 @@ elseif (locale == "zhTW") then
 	L["And"] = "、"
 --Record
 	L["RecordWindow"] = "聊天记录"
-	L["ChatRecord"] = "聊天消息记录"
-	L["ChatRecordTooltips"] = "开启后聊天信息会被记录并可以查看哪些信息被过滤。|n这将占用一定内存。"
+	L["ChatRecord"] = "开启聊天记录"
+	L["ChatRecordTooltips"] = "开启后将记录系统信息以外的聊天信息，并可以查看哪些信息被过滤"
 	L["ClearRecord"] = "清除聊天记录"
 	L["ShowAll"] = "全部显示"
 	L["OnlyFiltered"] = "仅过滤"
 	L["OnlyUnfiltered"] = "仅未过滤"
+--Error
+	L["DBOutOfDate"] = "你的配置文件太旧了！你的配置文件版本:%d，插件最低兼容版本:%d"
 
 -----------------------------------------------------------------------
 -- Default -- NEED HELP
@@ -169,6 +169,8 @@ else
 --Titles
 	L["MainFilter"] = "Main Filter"
 	L["MinimapIcon"] = "Minimap Button"
+	L["OptimizeForCPU"] = "Optimize For CPU"
+	L["OptimizeForCPUTooltips"] = "When enabled ECF uses a bit more memory and less CPU"
 --Minimap Tooltips
 	L["ClickToOpenConfig"] = "Click To Open Config"
 --Common in tab
@@ -193,18 +195,17 @@ else
 	L["chatLinesLimitTooltips"] = "Repeat message lines. Please change it to suit your message amount. Increase it will consume more memory and CPU. Set 0 to disable Repeat Filter. Default 20."
 	L["RepeatFilter"] = "RepeatFilter"
 	L["RepeatFilterTooltips"] = "Filter similar messages."
-	L["MultiLines"] = "MultiLines"
-	L["MultiLinesTooltip"] = "Filtered msg that is sent from the same person and in less than 1 sec. This may reduce chat spam but also remove report from addons."
-	L["AlsoFilterGroup"] = "AlsoFilterGroup"
-	L["AlsoFilterGroupTooltips"] = "Filter will also work on group and raid. This may filter some useful messages."
+	L["FilterGroup"] = "FilterGroup"
+	L["FilterGroupTooltips"] = "Enable to filter group and raid. This may filter some useful messages."
 	L["DisplayAdvancedConfig"] = "Display Advanced Config"
 	L["DisplayAdvancedConfigTooltips"] = "Please do NOT change any options that you don't understand, or you may mess ECF up. If you DO know the risk, you may continue..."
 	L["WhisperWhitelistMode"] = "Whisper Whitelist Mode"
 	L["WhisperWhitelistModeTooltip"] = "Filter all whisper unless it's from guild/group/raid/friends or you have just whisper them|n|cffE2252DUse with care!"
 	L["Aggressive"] = "Aggressive Filters"
 	L["AggressiveTooltip"] = "Some aggressive but effective Filters."
---BlackwordList
-	L["BlackwordList"] = "BlackWordList"
+--BlackwordFilter
+	L["BlackwordFilter"] = "BlackwordFilter"
+	L["BlackwordList"] = "BlackwordList"
 	L["AddBlackWordTitle"] = "Add Blackword"
 	L["IncludeAutofilteredWord"] = "%s includes symbels to be filtered. It will be ignored."
 	L["Regex"] = "Regex"
@@ -216,15 +217,12 @@ else
 	L["LesserBlackWordThresholdTooltips"] = "Filter msgs contained many lesser blackwords"
 	L["BlackList"] = "BlackList"
 	L["StringIO"] = "Import/Export"
-	L["Import"] = "Import"
 	L["StringHashMismatch"] = "String Hash Mismatch"
-	L["ImportSucceeded"] = "Import Succeeded"
 	L["Export"] = "Export"
 --LootFilter
 	L["LootFilter"] = "LootFilter"
 	L["AddItemWithID"] = "Add With ID"
 	L["BadID"] = "Bad ID"
-	L["AddedItem"] = "Added item %s"
 	L["NotExists"] = "%s(ID = %d) doesn't exist"
 	L["ItemFilterList"] = "ItemFilterList"
 	L["CurrencyFilterList"] = "CurrencyFilterList"
@@ -235,14 +233,14 @@ else
 	L["And"] = ", "
 --Record
 	L["RecordWindow"] = "Chat Record"
-	L["ChatRecord"] = "Chat Record"
-	L["ChatRecordTooltips"] = "Enable chat record. This will record chat msg and you can check whether they are filtered by ECF. This will consume some memory."
+	L["ChatRecord"] = "Enable Chat Record"
+	L["ChatRecordTooltips"] = "Enable chat record. This will record non-system chat msg and you can check whether they are filtered by ECF."
 	L["ClearRecord"] = "ClearRecord"
 	L["ShowAll"] = "ShowAll"
 	L["OnlyFiltered"] = "OnlyFiltered"
 	L["OnlyUnfiltered"] = "OnlyUnfiltered"
+--Error
+	L["DBOutOfDate"] = "Your profile is too old! Your profile version: %d, addon compatibal version: %d."
 end
 
-setmetatable(ecf.L, {__index=function(self, key)
-	return key
-end})
+setmetatable(ecf.L, {__index=function(self, key) return key end})

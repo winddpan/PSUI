@@ -517,9 +517,15 @@ end
 
 local button_on_enter = function (self)
 	self.MyObject._icon:SetBlendMode ("ADD")
+	if (self.MyObject.onenter_func) then
+		pcall (self.MyObject.onenter_func, self.MyObject)
+	end
 end
 local button_on_leave = function (self)
 	self.MyObject._icon:SetBlendMode ("BLEND")
+	if (self.MyObject.onleave_func) then
+		pcall (self.MyObject.onleave_func, self.MyObject)
+	end
 end
 
 local add_row = function (self, t, need_update)
@@ -536,6 +542,9 @@ local add_row = function (self, t, need_update)
 	thisrow.iconalign = t.iconalign
 	
 	thisrow.hidden = t.hidden or false
+	
+	thisrow.onenter = t.onenter
+	thisrow.onleave = t.onleave
 	
 	local text = DF:NewLabel (thisrow, nil, self._name .. "$parentLabel" .. index, "text")
 	text:SetPoint ("left", thisrow, "left", 2, 0)
@@ -618,6 +627,16 @@ local align_rows = function (self)
 						entry:SetWidth (row.width)
 					end
 					entry.func = row.func
+					
+					entry.onenter_func = nil
+					entry.onleave_func = nil
+					
+					if (row.onenter) then
+						entry.onenter_func = row.onenter
+					end
+					if (row.onleave) then
+						entry.onleave_func = row.onleave
+					end
 				end
 			elseif (type == "button") then
 				for i = 1, #self.scrollframe.lines do
@@ -652,7 +671,17 @@ local align_rows = function (self)
 					if (row.name and not row.notext) then
 						button._text:SetPoint ("left", button._icon, "right", 2, 0)
 						button._text.text = row.name
-					end					
+					end
+					
+					button.onenter_func = nil
+					button.onleave_func = nil
+					
+					if (row.onenter) then
+						button.onenter_func = row.onenter
+					end
+					if (row.onleave) then
+						button.onleave_func = row.onleave
+					end
 					
 				end
 			elseif (type == "icon") then
@@ -667,6 +696,19 @@ local align_rows = function (self)
 					icon:SetPoint ("left", line, "left", self._anchors [#self._anchors] + ( ((row.width or 22) - 22) / 2), 0)
 					icon.func = row.func
 				end
+				
+			elseif (type == "texture") then
+				for i = 1, #self.scrollframe.lines do
+					local line = self.scrollframe.lines [i]
+					local texture = tremove (line.texture_available)
+					if (not texture) then
+						self:CreateRowTexture (line)
+						texture = tremove (line.texture_available)
+					end
+					tinsert (line.texture_inuse, texture)
+					texture:SetPoint ("left", line, "left", self._anchors [#self._anchors] + ( ((row.width or 22) - 22) / 2), 0)
+				end
+				
 			end
 			
 			sindex = sindex + 1
@@ -687,6 +729,7 @@ local align_rows = function (self)
 end
 
 local update_rows = function (self, updated_rows)
+
 	for i = 1, #updated_rows do
 		local t = updated_rows [i]
 		local raw = self._raw_rows [i]
@@ -704,6 +747,11 @@ local update_rows = function (self, updated_rows)
 			widget.textsize = t.textsize
 			widget.textalign = t.textalign
 			widget.hidden = t.hidden or false
+			
+			--
+			widget.onenter = t.onenter
+			widget.onleave = t.onleave
+			--
 			
 			widget.text:SetText (t.name)
 			DF:SetFontSize (widget.text, raw.textsize or 10)
@@ -747,6 +795,13 @@ local update_rows = function (self, updated_rows)
 		for i = 1, #row.icon_available do
 			row.icon_available[i]:Hide()
 		end
+		
+		for i = #row.texture_inuse, 1, -1 do
+			tinsert (row.texture_available, tremove (row.texture_inuse, i))
+		end
+		for i = 1, #row.texture_available do
+			row.texture_available[i]:Hide()
+		end
 	end
 	
 	self.current_header = updated_rows
@@ -771,7 +826,18 @@ local create_panel_entry = function (self, row)
 		editbox:ClearFocus()
 		editbox.func (editbox.index, editbox.text)
 		return true
-	end) 
+	end)
+	
+	editbox:SetHook ("OnEnter", function()
+		if (editbox.onenter_func) then
+			pcall (editbox.onenter_func, editbox)
+		end
+	end)
+	editbox:SetHook ("OnLeave", function()
+		if (editbox.onleave_func) then
+			pcall (editbox.onleave_func, editbox)
+		end
+	end)
 	
 	editbox:SetBackdrop ({bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]], edgeFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeSize = 1})
 	editbox:SetBackdropColor (1, 1, 1, 0.1)
@@ -784,8 +850,6 @@ end
 local create_panel_button = function (self, row)
 	row.button_total = row.button_total + 1
 	local button = DF:NewButton (row, nil, "$parentButton" .. row.button_total, "button" .. row.button_total, 120, 20)
-	--, nil, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE")
-	--button:InstallCustomTexture()
 
 	--> create icon and the text
 	local icon = DF:NewImage (button, nil, 20, 20)
@@ -824,6 +888,12 @@ local create_panel_icon = function (self, row)
 	icon:SetPoint ("center", iconbutton, "center", 0, 0)
 
 	tinsert (row.icon_available, iconbutton)
+end
+
+local create_panel_texture = function (self, row)
+	row.texture_total = row.texture_total + 1
+	local texture = DF:NewImage (row, nil, 20, 20, "artwork", nil, "_icon" .. row.texture_total, "$parentIcon" .. row.texture_total)
+	tinsert (row.texture_available, texture)
 end
 
 local set_fill_function = function (self, func)
@@ -872,6 +942,7 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 	panel.CreateRowEntry = create_panel_entry
 	panel.CreateRowButton = create_panel_button
 	panel.CreateRowIcon = create_panel_icon
+	panel.CreateRowTexture = create_panel_texture
 	panel.SetFillFunction = set_fill_function
 	panel.SetTotalFunction = set_total_function
 	panel.DropHeader = drop_header_function
@@ -906,10 +977,10 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 				local real_index = index + offset
 				local results = panel._fillfunc (real_index, panel)
 				
-				if (results [1]) then
+				if (results and results [1]) then
 					row:Show()
 
-					local text, entry, button, icon = 1, 1, 1, 1
+					local text, entry, button, icon, texture = 1, 1, 1, 1, 1
 					
 					for index, t in ipairs (panel.rows) do
 						if (not t.hidden) then
@@ -919,25 +990,30 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 								fontstring:SetText (results [index])
 								fontstring.index = real_index
 								fontstring:Show()
-								
-								if (true) then
-									--print (t.hello)
-								end
 
 							elseif (t.type == "entry") then
 								local entrywidget = row.entry_inuse [entry]
 								entry = entry + 1
-								entrywidget:SetText (results [index])
 								entrywidget.index = real_index
+								
+								if (type (results [index]) == "table") then
+									entrywidget:SetText (results [index].text)
+									entrywidget.id = results [index].id
+									entrywidget.data1 = results [index].data1
+									entrywidget.data2 = results [index].data2
+								else
+									entrywidget:SetText (results [index])
+								end
+								
+								entrywidget:SetCursorPosition(0)
+								
 								entrywidget:Show()
 								
 							elseif (t.type == "button") then
 								local buttonwidget = row.button_inuse [button]
 								button = button + 1
 								buttonwidget.index = real_index
-							
 
-							
 								if (type (results [index]) == "table") then
 									if (results [index].text) then
 										buttonwidget:SetText (results [index].text)
@@ -960,6 +1036,11 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 										end
 										buttonwidget:SetClickFunction (func)
 									end
+									
+									buttonwidget.id = results [index].id
+									buttonwidget.data1 = results [index].data1
+									buttonwidget.data2 = results [index].data2
+									
 								else
 									local func = function()
 										t.func (real_index, index)
@@ -987,6 +1068,22 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 								end
 								
 								iconwidget:Show()
+								
+							elseif (t.type == "texture") then
+								local texturewidget = row.texture_inuse [texture]
+								texture = texture + 1
+								
+								texturewidget.line = index
+								texturewidget.index = real_index
+
+								if (type (results [index]) == "string") then
+									local result = results [index]:gsub (".-%\\", "")
+									texturewidget.texture = results [index]
+								else
+									texturewidget:SetTexture (results [index])
+								end
+								
+								texturewidget:Show()
 							end
 						end
 					end
@@ -1010,6 +1107,7 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 		local line_height = options.rowheight
 		refresh_fillbox (panel.scrollframe)
 		FauxScrollFrame_Update (panel.scrollframe, filled_lines, scroll_total_lines, line_height)
+		panel.scrollframe:Show()
 	end
 	
 	local scrollframe = CreateFrame ("scrollframe", name .. "Scroll", panel.widget, "FauxScrollFrameTemplate")
@@ -1059,6 +1157,10 @@ function DF:NewFillPanel (parent, rows, name, member, w, h, total_lines, fill_ro
 			row.icon_available = {}
 			row.icon_inuse = {}
 			row.icon_total = 0
+
+			row.texture_available = {}
+			row.texture_inuse = {}
+			row.texture_total = 0
 		end
 	end
 	panel:UpdateRowAmount()
@@ -1121,12 +1223,26 @@ function DF:IconPick (callback, close_when_select, param1, param2)
 		DF.IconPickFrame:SetHeight (227)
 		DF.IconPickFrame:EnableMouse (true)
 		DF.IconPickFrame:SetMovable (true)
-		DF.IconPickFrame:SetBackdrop ({bgFile = DF.folder .. "background", edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", 
-		tile = true, tileSize = 32, edgeSize = 32, insets = {left = 5, right = 5, top = 5, bottom = 5}})
 		
-		DF.IconPickFrame:SetBackdropBorderColor (170/255, 170/255, 170/255)
+		DF.IconPickFrame:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+
+		DF.IconPickFrame:SetBackdropBorderColor (0, 0, 0)
 		DF.IconPickFrame:SetBackdropColor (24/255, 24/255, 24/255, .8)
 		DF.IconPickFrame:SetFrameLevel (1)
+		
+		DF.IconPickFrame:SetScript ("OnMouseDown", function (self)
+			if (not self.isMoving) then
+				DF.IconPickFrame:StartMoving()
+				self.isMoving = true
+			end
+		end)
+		
+		DF.IconPickFrame:SetScript ("OnMouseUp", function (self)
+			if (self.isMoving) then
+				DF.IconPickFrame:StopMovingOrSizing()
+				self.isMoving = nil
+			end
+		end)
 		
 		DF.IconPickFrame.emptyFunction = function() end
 		DF.IconPickFrame.callback = DF.IconPickFrame.emptyFunction
@@ -1165,37 +1281,37 @@ function DF:IconPick (callback, close_when_select, param1, param2)
 		close_button:SetFrameLevel (close_button:GetFrameLevel()+2)
 		
 		local MACRO_ICON_FILENAMES = {}
-		DF.IconPickFrame:SetScript ("OnShow", function()
+		local SPELLNAMES_CACHE = {}
 		
-			MACRO_ICON_FILENAMES = {};
-			MACRO_ICON_FILENAMES[1] = "INV_MISC_QUESTIONMARK";
+		DF.IconPickFrame:SetScript ("OnShow", function()
+			
+			MACRO_ICON_FILENAMES [1] = "INV_MISC_QUESTIONMARK";
 			local index = 2;
 		
 			for i = 1, GetNumSpellTabs() do
-				local tab, tabTex, offset, numSpells, _ = GetSpellTabInfo(i);
-				offset = offset + 1;
-				local tabEnd = offset + numSpells;
+				local tab, tabTex, offset, numSpells, _ = GetSpellTabInfo (i)
+				offset = offset + 1
+				local tabEnd = offset + numSpells
+				
 				for j = offset, tabEnd - 1 do
 					--to get spell info by slot, you have to pass in a pet argument
-					local spellType, ID = GetSpellBookItemInfo(j, "player"); 
+					local spellType, ID = GetSpellBookItemInfo (j, "player")
 					if (spellType ~= "FUTURESPELL") then
-						local spellTexture = strupper(GetSpellBookItemTexture(j, "player"));
-						if ( not string.match( spellTexture, "INTERFACE\\BUTTONS\\") ) then
-							MACRO_ICON_FILENAMES[index] = gsub( spellTexture, "INTERFACE\\ICONS\\", "");
-							index = index + 1;
-						end
-					end
-					if (spellType == "FLYOUT") then
-						local _, _, numSlots, isKnown = GetFlyoutInfo(ID);
+						MACRO_ICON_FILENAMES [index] = GetSpellBookItemTexture (j, "player") or 0
+						index = index + 1;
+						
+					elseif (spellType == "FLYOUT") then
+						local _, _, numSlots, isKnown = GetFlyoutInfo (ID)
 						if (isKnown and numSlots > 0) then
 							for k = 1, numSlots do 
-								local spellID, overrideSpellID, isKnown = GetFlyoutSlotInfo(ID, k)
+								local spellID, overrideSpellID, isKnown = GetFlyoutSlotInfo (ID, k)
 								if (isKnown) then
-									MACRO_ICON_FILENAMES[index] = gsub( strupper(GetSpellTexture(spellID)), "INTERFACE\\ICONS\\", ""); 
+									MACRO_ICON_FILENAMES [index] = GetSpellTexture (spellID) or 0
 									index = index + 1;
 								end
 							end
 						end
+						
 					end
 				end
 			end
@@ -1203,12 +1319,12 @@ function DF:IconPick (callback, close_when_select, param1, param2)
 			GetLooseMacroItemIcons (MACRO_ICON_FILENAMES)
 			GetLooseMacroIcons (MACRO_ICON_FILENAMES)
 			GetMacroIcons (MACRO_ICON_FILENAMES)
-			GetMacroItemIcons (MACRO_ICON_FILENAMES )
-			
+			GetMacroItemIcons (MACRO_ICON_FILENAMES)
+
 		end)
 		
 		DF.IconPickFrame:SetScript ("OnHide", function()
-			MACRO_ICON_FILENAMES = nil;
+			wipe (MACRO_ICON_FILENAMES)
 			collectgarbage()
 		end)
 		
@@ -1352,77 +1468,61 @@ function DF:IconPick (callback, close_when_select, param1, param2)
 			if (DF.IconPickFrame.searching) then
 				filter = string_lower (DF.IconPickFrame.searching)
 			end
+
+			local pool
+			local shown = 0
 			
 			if (filter and filter ~= "") then
-				
-				local ignored = 0
-				local tryed = 0
-				local found = 0
-				local type = type
-				local buttons = DF.IconPickFrame.buttons
-				index = 1
-				
-				for i = 1, 60 do
-					
-					macroPopupIcon = buttons[i].icon
-					macroPopupButton = buttons[i]
-
-					for o = index, numMacroIcons do
-					
-						tryed = tryed + 1
-					
-						texture = MACRO_ICON_FILENAMES [o]
-						if (type (texture) == "number") then
-							macroPopupIcon:SetToFileData (texture)
-							texture = macroPopupIcon:GetTexture()
-							macroPopupIcon:SetTexture (nil)
-						else
-							texture = "INTERFACE\\ICONS\\" .. texture
-						end
-						
-						if (texture and texture:find (filter)) then
-							macroPopupIcon:SetTexture (texture)
-							macroPopupButton:Show()
-							found = found + 1
-							DF.IconPickFrame.last_filter_index = o
-							index = o+1
-							break
-						else
-							ignored = ignored + 1
-						end
-						
+				if (#SPELLNAMES_CACHE == 0) then
+					--build name cache
+					local GetSpellInfo = GetSpellInfo
+					for i = 1, #MACRO_ICON_FILENAMES do
+						local spellName = GetSpellInfo (MACRO_ICON_FILENAMES [i])
+						SPELLNAMES_CACHE [i] = spellName or "NULL"
 					end
 				end
-			
-				for o = found+1, 60 do
-					macroPopupButton = _G ["DetailsFrameworkIconPickFrameButton"..o]
-					macroPopupButton:Hide()
+				
+				--do the filter
+				pool = {}
+				for i = 1, #SPELLNAMES_CACHE do
+					if (SPELLNAMES_CACHE [i]:find (filter)) then
+						pool [#pool+1] = MACRO_ICON_FILENAMES [i]
+						shown = shown + 1
+					end
 				end
 			else
-				for i = 1, 60 do
-					macroPopupIcon = _G ["DetailsFrameworkIconPickFrameButton"..i.."Icon"]
-					macroPopupButton = _G ["DetailsFrameworkIconPickFrameButton"..i]
-					index = (macroPopupOffset * 10) + i
-					texture = MACRO_ICON_FILENAMES [index]
-					if ( index <= numMacroIcons and texture ) then
-
-						if (type (texture) == "number") then
-							macroPopupIcon:SetToFileData (texture)
-						else
-							macroPopupIcon:SetTexture ("INTERFACE\\ICONS\\" .. texture)
-						end
-
-						macroPopupIcon:SetTexCoord (4/64, 60/64, 4/64, 60/64)
-						macroPopupButton.IconID = index
-						macroPopupButton:Show()
-					else
-						macroPopupButton:Hide()
-					end
-				end
+				shown = nil
 			end
 			
+			if (not pool) then
+				pool = MACRO_ICON_FILENAMES
+			end
+			
+			for i = 1, 60 do
+				macroPopupIcon = _G ["DetailsFrameworkIconPickFrameButton"..i.."Icon"]
+				macroPopupButton = _G ["DetailsFrameworkIconPickFrameButton"..i]
+				index = (macroPopupOffset * 10) + i
+				texture = pool [index]
+				if ( index <= numMacroIcons and texture ) then
+
+					if (type (texture) == "number") then
+						macroPopupIcon:SetTexture (texture)
+					else
+						macroPopupIcon:SetTexture ("INTERFACE\\ICONS\\" .. texture)
+					end
+
+					macroPopupIcon:SetTexCoord (4/64, 60/64, 4/64, 60/64)
+					macroPopupButton.IconID = index
+					macroPopupButton:Show()
+				else
+					macroPopupButton:Hide()
+				end
+			end
+
+			pool = nil
+			
 			-- Scrollbar stuff
-			FauxScrollFrame_Update (scroll, ceil (numMacroIcons / 10) , 5, 20 )
+			FauxScrollFrame_Update (scroll, ceil ((shown or numMacroIcons) / 10) , 5, 20 )
 		end
 
 		DF.IconPickFrame.updateFunc = ChecksFrame_Update
@@ -1526,7 +1626,7 @@ end
 
 local no_options = {}
 function DF:CreateSimplePanel (parent, w, h, title, name, panel_options, db)
-
+	
 	if (db and name and not db [name]) then
 		db [name] = {scale = 1}
 	end
@@ -1540,7 +1640,7 @@ function DF:CreateSimplePanel (parent, w, h, title, name, panel_options, db)
 	end
 	
 	panel_options = panel_options or no_options
-
+	
 	local f = CreateFrame ("frame", name, UIParent)
 	f:SetSize (w or 400, h or 250)
 	f:SetPoint ("center", UIParent, "center", 0, 0)
@@ -3022,6 +3122,16 @@ local gframe_create_line = function (self)
 	spellicon:SetSize (16, 16)
 	f.spellicon = spellicon
 	
+	local text = f:CreateFontString (nil, "overlay", "GameFontNormal")
+	local textBackground = f:CreateTexture (nil, "artwork")
+	textBackground:SetSize (30, 16)
+	textBackground:SetColorTexture (0, 0, 0, 0.5)
+	textBackground:SetPoint ("bottom", f.ball, "top", 0, -6)
+	text:SetPoint ("center", textBackground, "center")
+	DF:SetFontSize (text, 10)
+	f.text = text
+	f.textBackground = textBackground
+	
 	local timeline = f:CreateFontString (nil, "overlay", "GameFontNormal")
 	timeline:SetPoint ("bottomright", f, "bottomright", -2, 0)
 	DF:SetFontSize (timeline, 8)
@@ -3092,6 +3202,15 @@ local gframe_update = function (self, lines)
 		line.spellicon:SetTexture (nil)
 		line.timeline:SetText (data.text)
 		line.timeline:Show()
+		
+		if (data.utext) then
+			line.text:Show()
+			line.textBackground:Show()
+			line.text:SetText (data.utext)
+		else
+			line.text:Hide()
+			line.textBackground:Hide()
+		end
 		
 		line.data = data
 		
@@ -3499,13 +3618,6 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- ~scrollbox
 
-
--- preciso de uma fauxscroll que seja facil de lidar
--- ele cria scroll aqui, preciso falar a fun��o que cria a linha e a fun��o que atualiza
--- precisa passsar o tamanho em height width quantas barras vai mostrar
--- search box incluso opcionalmente
-
-
 DF.SortFunctions = {}
 
 local SortMember = ""
@@ -3540,7 +3652,7 @@ DF.ScrollBoxFunctions.Refresh = function (self)
 		offset = FauxScrollFrame_GetOffset (self)
 	end	
 	
-	local okay, totalLines = pcall (self.refresh_func, self, self.data, offset, #self.Frames)
+	local okay, totalLines = pcall (self.refresh_func, self, self.data, offset, self.LineAmount)
 	if (not okay) then
 		error ("Details! FrameWork: Refresh(): " .. totalLines)
 	end
@@ -3555,6 +3667,19 @@ DF.ScrollBoxFunctions.Refresh = function (self)
 	
 	self:Show()
 	
+	if (self.HideScrollBar) then
+		local frameName = self:GetName()
+		if (frameName) then
+			local scrollBar = _G [frameName .. "ScrollBar"]
+			if (scrollBar) then
+				scrollBar:Hide()
+			end
+		else
+		
+		end
+		
+	end
+	
 	return self.Frames
 end
 
@@ -3564,9 +3689,13 @@ DF.ScrollBoxFunctions.OnVerticalScroll = function (self, offset)
 end
 
 DF.ScrollBoxFunctions.CreateLine = function (self, func)
+	if (not func) then
+		func = self.CreateLineFunc
+	end
 	local okay, newLine = pcall (func, self, #self.Frames+1)
 	if (okay) then
 		tinsert (self.Frames, newLine)
+		newLine.Index = #self.Frames
 		return newLine
 	else
 		error ("Details! FrameWork: CreateLine(): " .. newLine)
@@ -3588,14 +3717,85 @@ DF.ScrollBoxFunctions.GetData = function (self)
 	return self.data
 end
 
-function DF:CreateScrollBox (parent, name, refresh_func, data, width, height, line_amount, line_height)
+DF.ScrollBoxFunctions.GetFrames = function (self)
+	return self.Frames
+end
+
+DF.ScrollBoxFunctions.GetNumFramesCreated = function (self)
+	return #self.Frames
+end
+
+DF.ScrollBoxFunctions.GetNumFramesShown = function (self)
+	return self.LineAmount
+end
+
+DF.ScrollBoxFunctions.SetNumFramesShown = function (self, new_amount)
+	--> hide frames which won't be used
+	if (new_amount < #self.Frames) then
+		for i = new_amount+1, #self.Frames do
+			self.Frames [i]:Hide()
+		end
+	end
+	
+	--> set the new amount
+	self.LineAmount = new_amount
+end
+
+DF.ScrollBoxFunctions.SetFramesHeight = function (self, new_height)
+	self.LineHeight = new_height
+	self:OnSizeChanged()
+	self:Refresh()
+end
+
+DF.ScrollBoxFunctions.OnSizeChanged = function (self)
+	if (self.ReajustNumFrames) then
+		--> how many lines the scroll can show
+		local amountOfFramesToShow = floor (self:GetHeight() / self.LineHeight)
+		
+		--> how many lines the scroll already have
+		local totalFramesCreated = self:GetNumFramesCreated()
+		
+		--> how many lines are current shown
+		local totalFramesShown = self:GetNumFramesShown()
+
+		--> the amount of frames increased
+		if (amountOfFramesToShow > totalFramesShown) then
+			for i = totalFramesShown+1, amountOfFramesToShow do
+				--> check if need to create a new line
+				if (i > totalFramesCreated) then
+					self:CreateLine (self.CreateLineFunc)
+				end
+			end
+			
+		--> the amount of frames decreased
+		elseif (amountOfFramesToShow < totalFramesShown) then
+			--> hide all frames above the new amount to show
+			for i = totalFramesCreated, amountOfFramesToShow, -1 do
+				if (self.Frames [i]) then
+					self.Frames [i]:Hide()
+				end
+			end
+		end
+
+		--> set the new amount of frames
+		self:SetNumFramesShown (amountOfFramesToShow)
+		
+		--> refresh lines
+		self:Refresh()
+	end
+end
+
+function DF:CreateScrollBox (parent, name, refresh_func, data, width, height, line_amount, line_height, create_line_func, auto_amount, no_scroll)
 	local scroll = CreateFrame ("scrollframe", name, parent, "FauxScrollFrameTemplate")
 	
 	scroll:SetSize (width, height)
 	scroll.LineAmount = line_amount
 	scroll.LineHeight = line_height
 	scroll.IsFauxScroll = true
+	scroll.HideScrollBar = no_scroll
 	scroll.Frames = {}
+	scroll.ReajustNumFrames = auto_amount
+	scroll.CreateLineFunc = create_line_func
 	
 	DF:Mixin (scroll, DF.SortFunctions)
 	DF:Mixin (scroll, DF.ScrollBoxFunctions)
@@ -3604,9 +3804,38 @@ function DF:CreateScrollBox (parent, name, refresh_func, data, width, height, li
 	scroll.data = data
 	
 	scroll:SetScript ("OnVerticalScroll", scroll.OnVerticalScroll)
+	scroll:SetScript ("OnSizeChanged", DF.ScrollBoxFunctions.OnSizeChanged)
 	
 	return scroll
 end
 
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- ~resizers
 
+function DF:CreateResizeGrips (parent)
+	if (parent) then
+		local parentName = parent:GetName()
+		
+		local leftResizer = CreateFrame ("button", parentName and parentName .. "LeftResizer" or nil, parent)
+		local rightResizer = CreateFrame ("button", parentName and parentName .. "RightResizer" or nil, parent)
+		
+		leftResizer:SetPoint ("bottomleft", parent, "bottomleft")
+		rightResizer:SetPoint ("bottomright", parent, "bottomright")
+		leftResizer:SetSize (16, 16)
+		rightResizer:SetSize (16, 16)
+		
+		rightResizer:SetNormalTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]])
+		rightResizer:SetHighlightTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]])
+		rightResizer:SetPushedTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]])
+		leftResizer:SetNormalTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]])
+		leftResizer:SetHighlightTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]])
+		leftResizer:SetPushedTexture ([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]])
+		
+		leftResizer:GetNormalTexture():SetTexCoord (1, 0, 0, 1)
+		leftResizer:GetHighlightTexture():SetTexCoord (1, 0, 0, 1)
+		leftResizer:GetPushedTexture():SetTexCoord (1, 0, 0, 1)
+		
+		return leftResizer, rightResizer
+	end
+end

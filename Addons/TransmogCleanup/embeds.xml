@@ -1,7 +1,0 @@
-<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<!--@no-lib-strip@-->
-	<Script file="libs\LibStub\LibStub.lua"/>
-
-	<Include file="libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml"/>
-	<!--@end-no-lib-strip@-->
-</Ui>

@@ -2,6 +2,9 @@ Check Voice_enUS for a full list of VO files.
 All files are .ogg unless specifically stated otherwise.
 Inactive files are still included. All VO new to GSA2 that ships with the addon are in this list.
 
+ADDED IN v1.17
+UltimateSacrifice
+
 ADDED IN v1.15
 _PHgreaterFade
 _PHgreaterFadeDown

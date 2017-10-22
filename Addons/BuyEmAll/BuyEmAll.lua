@@ -167,9 +167,9 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
 
         local name, texture, price, quantity, numAvailable =
         GetMerchantItemInfo(self.itemIndex);
-        self.preset = quantity;
-        self.price = price;
         self.itemName = name;
+        self.price = price;
+        self.preset = quantity;
         self.available = numAvailable;
 
         self.itemLink = GetMerchantItemLink(self.itemIndex);
@@ -182,24 +182,37 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
             return
         end
 
-        -- Buying a currency with a currency! At least what it should be. Don't know if there are any items that are used to purchase currency.
+        -- Buying a currency with a currency! Thanks to recent changes, this should cover all cases.
 
-        if ((strmatch(self.itemLink, "item")) == nil) then
-            self.fit = select(6, GetCurrencyInfo(self.itemLink));
-            if (self.fit == 0) then
-                self.fit = 10000000; -- 0 meaning no set maximum, so set how much one can fit super high.
+        if ((strmatch(self.itemLink, "currency")) and (self.price == 0)) then
+            local totalMax = select(6, GetCurrencyInfo(self.itemLink));
+            if (totalMax == 0) then -- 0 meaning no set maximum, so set how much one can fit super high.
+                self.fit = 10000000;
+            elseif (totalMax > 0) then -- Double check and make sure the total max of currency is above 0 then set the fit to that. Just in case.
+                self.fit = totalMax;
             end
-            self.stack = 1;
+            self.stack = self.preset;
             self:AltCurrencyHandling(self.itemIndex, frame);
             return
         end
+        
+        
+        if (strmatch(self.itemLink, "item")) then -- Check if purchase is an item and setup the needed variables.
+            self.itemID = tonumber(strmatch(self.itemLink, "item:(%d+):"));
+            local bagMax, stack = self:CogsFreeBagSpace(self.itemID);
+            self.stack = stack;
+            self.fit = bagMax;
+            self.partialFit = self.fit % stack;
+        elseif (strmatch(self.itemLink, "currency")) then -- Same for if the purchase is a currency.
+            self.stack = self.preset;
+            if (select(6, GetCurrencyInfo(self.itemLink)) == 0) then
+                self.fit = 10000000;
+                self.partialFit = 0;
+            end
+            self.partialFit = select(6, GetCurrencyInfo(self.itemLink)) - select(2, GetCurrencyInfo(self.itemLink));
+        end
 
-        self.itemID = tonumber(strmatch(self.itemLink, "item:(%d+):"));
-        local bagMax, stack = self:CogsFreeBagSpace(self.itemID);
-        self.stack = stack;
-        self.fit = bagMax;
-
-        if (select(8, GetMerchantItemInfo(self.itemIndex)) == true) then
+        if ((select(8, GetMerchantItemInfo(self.itemIndex)) == true) and (self.price == 0)) then -- Checks for alternate currency information then passes purchase to handler.
             self:AltCurrencyHandling(self.itemIndex, frame);
             return
         end
@@ -215,7 +228,7 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         if (self.price == 0) then
             self.afford = self.fit;
         else
-            self.afford = floor(GetMoney() / ceil(price / self.preset));
+            self.afford = floor(GetMoney() / ceil(self.price / self.preset));
         end
 
         self.max = min(self.fit, self.afford);
@@ -232,10 +245,7 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         self.defaultStack = quantity;
         self.split = 1;
 
-        self.partialFit = self.fit % stack;
         self:SetStackClick();
-
-
 
         self:Show(frame);
     else

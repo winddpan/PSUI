@@ -1,18 +1,24 @@
-tag afc631929d75e7595229304b42ac04ca15d664ea 1.7.5
+tag fa7267ce92e77849528d70396c0ca3ffd6aa5121 1.7.6
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Tue Mar 28 10:58:27 2017 +0200
+Date:	Wed Aug 30 08:50:34 2017 +0200
 
-Tag as 1.7.5
+Tag as 1.7.6
 
-commit c855b3dd7eaac98b21457f3d4ee17325164b533a
+commit dfbc5fe939a9e44a178fc3809d1bbe3932cb5a87
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Tue Mar 28 10:58:17 2017 +0200
+Date:   Wed Aug 30 08:50:21 2017 +0200
 
-    Update TOC for 7.2
+    Update TOC for 7.3
 
-commit 70fbdfa7595923530acc0f8cd5b1dd447ed82f02
+commit 2cf89455a858b49bc610cb3f52335e0fe597ffa4
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Thu Mar 16 11:26:49 2017 +0100
+Date:   Wed Aug 30 08:49:22 2017 +0200
 
-    Update FogClear for 7.2 Broken Shore changes
+    Update FogClear data for Argus
+
+commit 6975e72c7760af7304132580b058d4844851799b
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 12 14:16:38 2017 +0200
+
+    Switch to ignoring missing locale strings
 

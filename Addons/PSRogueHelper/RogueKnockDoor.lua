@@ -3,6 +3,7 @@ if select(2, UnitClass("player")) ~= "ROGUE" then return end
 local NPC = {
 	["96782"] = "鲁希安",
 	["93188"] = "墨戈",
+	["97004"] = "红发",
 }
 
 local function GetNPCGUID()

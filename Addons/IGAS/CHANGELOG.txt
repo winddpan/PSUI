@@ -1,3 +1,15 @@
+2017/09/02 v149
+    1. Add support for summon random pet spell.
+
+2017/08/29 v147
+    1. ADD UNIT_HEALTH for IFHealthFrequent.
+
+2017/08/24 v146
+    1. New property IFCooldownLabelMinDuration added for IFCooldownLabel.
+
+2017/08/14 v145
+    1. Re-design the grid updating logic in action bar system for better inheritance.
+
 2017/05/15 v144
     1. Fix the unexpected unitframe hidden for raid panels.
 

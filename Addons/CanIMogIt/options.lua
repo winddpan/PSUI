@@ -27,6 +27,7 @@ CanIMogItOptions_Defaults = {
         ["showUnknownOnly"] = false,
         ["showSetInfo"] = true,
         ["showItemIconOverlay"] = true,
+        -- ["showBoEColors"] = true,
         ["showVerboseText"] = false,
         ["showSourceLocationTooltip"] = false,
         ["printDatabaseScan"] = true,
@@ -59,6 +60,10 @@ CanIMogItOptions_DisplayData = {
         ["displayName"] = L["Show Bag Icons"],
         ["description"] = L["Shows the icon directly on the item in your bag."]
     },
+    -- ["showBoEColors"] = {
+    --     ["displayName"] = L["Show Bind on Equip Colors"],
+    --     ["description"] = L["Changes the color of icons and tooltips when an item is Bind on Equip or Bind on Account."]
+    -- },
     ["showVerboseText"] = {
         ["displayName"] = L["Verbose Text"],
         ["description"] = L["Shows a more detailed text for some of the tooltips."]
@@ -85,6 +90,8 @@ local EVENTS = {
     "PLAYER_LOGIN",
     -- "GET_ITEM_INFO_RECEIVED",
     "AUCTION_HOUSE_SHOW",
+    "AUCTION_ITEM_LIST_UPDATE",
+    "CHAT_MSG_LOOT",
     "GUILDBANKFRAME_OPENED",
     "VOID_STORAGE_OPEN",
     "UNIT_INVENTORY_CHANGED",
@@ -130,18 +137,30 @@ local function futureOverlay(event)
 end
 
 
-CanIMogIt.frame:HookScript("OnEvent", function(self, event, ...)
-    -- Add functions you want to catch events here
-    self:AddonLoaded(event, ...)
-    self:HookItemOverlay(event, ...)
-    self:OnEncounterJournalLoaded(event, ...)
-    self:TransmogCollectionUpdated(event, ...)
-    -- self:OnAuctionHouseShow(event, ...)
-    self:OnGuildBankOpened(event, ...)
-    self:OnVoidStorageOpened(event, ...)
-    self:GetAppearancesEvent(event, ...)
-    self:TradeSkillEvents(event, ...)
+CanIMogIt.frame.eventFunctions = {}
 
+
+function CanIMogIt.frame:AddEventFunction(func)
+    -- Adds the func to the list of functions that are called for all events.
+    table.insert(CanIMogIt.frame.eventFunctions, func)
+end
+
+
+CanIMogIt.frame:HookScript("OnEvent", function(self, event, ...)
+    --[[
+        To add functions you want to run with CIMI's "OnEvent", do:
+
+        local function MyOnEventFunc(event, ...)
+            Do stuff here
+        end
+        CanIMogIt.frame:AddEventFunction(MyOnEventFunc)
+        ]]
+
+    for i, func in ipairs(CanIMogIt.frame.eventFunctions) do
+        func(event, ...)
+    end
+
+    -- TODO: Move this to it's own event function.
     -- Prevent the ItemOverlayEvents handler from running more than is needed.
     -- If more than one occur in the same frame, we update the first time, then
     -- prepare a future update in a couple frames.
@@ -159,20 +178,21 @@ CanIMogIt.frame:HookScript("OnEvent", function(self, event, ...)
 end)
 
 
-function CanIMogIt.frame:AddonLoaded(event, addonName)
+function CanIMogIt.frame.AddonLoaded(event, addonName)
     if event == "ADDON_LOADED" and addonName == "CanIMogIt" then
         CanIMogIt.frame.Loaded()
     end
 end
+CanIMogIt.frame:AddEventFunction(CanIMogIt.frame.AddonLoaded)
 
 
 local function checkboxOnClick(self)
     local checked = self:GetChecked()
-    PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+    PlaySound(PlaySoundKitID and "igMainMenuOptionCheckBoxOn" or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
     self:SetValue(checked)
     -- Reset the cache when an option changes.
     CanIMogIt:ResetCache()
-    
+
     CanIMogIt:SendMessage("OptionUpdate")
 end
 
@@ -180,7 +200,7 @@ end
 local function newCheckbox(parent, variableName)
     -- Creates a new checkbox in the parent frame for the given variable name
     local displayData = CanIMogItOptions_DisplayData[variableName]
-    local checkbox = CreateFrame("CheckButton", "CanIMogItCheckbox" .. variableName, 
+    local checkbox = CreateFrame("CheckButton", "CanIMogItCheckbox" .. variableName,
             parent, "InterfaceOptionsCheckButtonTemplate")
 
     -- checkbox.value = CanIMogItOptions[variableName]
@@ -204,26 +224,28 @@ end
 
 local function createOptionsMenu()
     -- define the checkboxes
-    local debug = newCheckbox(CanIMogIt.frame, "debug")
-    local showEquippableOnly = newCheckbox(CanIMogIt.frame, "showEquippableOnly")
-    local showTransmoggableOnly = newCheckbox(CanIMogIt.frame, "showTransmoggableOnly")
-    local showUnknownOnly = newCheckbox(CanIMogIt.frame, "showUnknownOnly")
-    local showSetInfo = newCheckbox(CanIMogIt.frame, "showSetInfo")
-    local showItemIconOverlay = newCheckbox(CanIMogIt.frame, "showItemIconOverlay")
-    local showVerboseText = newCheckbox(CanIMogIt.frame, "showVerboseText")
-    local showSourceLocationTooltip = newCheckbox(CanIMogIt.frame, "showSourceLocationTooltip")
-    local printDatabaseScan = newCheckbox(CanIMogIt.frame, "printDatabaseScan")
+    CanIMogIt.frame.debug =  newCheckbox(CanIMogIt.frame, "debug")
+    CanIMogIt.frame.showEquippableOnly = newCheckbox(CanIMogIt.frame, "showEquippableOnly")
+    CanIMogIt.frame.showTransmoggableOnly = newCheckbox(CanIMogIt.frame, "showTransmoggableOnly")
+    CanIMogIt.frame.showUnknownOnly = newCheckbox(CanIMogIt.frame, "showUnknownOnly")
+    CanIMogIt.frame.showSetInfo = newCheckbox(CanIMogIt.frame, "showSetInfo")
+    CanIMogIt.frame.showItemIconOverlay = newCheckbox(CanIMogIt.frame, "showItemIconOverlay")
+    -- CanIMogIt.frame.showBoEColors = newCheckbox(CanIMogIt.frame, "showBoEColors")
+    CanIMogIt.frame.showVerboseText = newCheckbox(CanIMogIt.frame, "showVerboseText")
+    CanIMogIt.frame.showSourceLocationTooltip = newCheckbox(CanIMogIt.frame, "showSourceLocationTooltip")
+    CanIMogIt.frame.printDatabaseScan = newCheckbox(CanIMogIt.frame, "printDatabaseScan")
 
     -- position the checkboxes
-    debug:SetPoint("TOPLEFT", 16, -16)
-    showEquippableOnly:SetPoint("TOPLEFT", debug, "BOTTOMLEFT")
-    showTransmoggableOnly:SetPoint("TOPLEFT", showEquippableOnly, "BOTTOMLEFT")
-    showUnknownOnly:SetPoint("TOPLEFT", showTransmoggableOnly, "BOTTOMLEFT")
-    showSetInfo:SetPoint("TOPLEFT", showUnknownOnly, "BOTTOMLEFT")
-    showItemIconOverlay:SetPoint("TOPLEFT", showSetInfo, "BOTTOMLEFT")
-    showVerboseText:SetPoint("TOPLEFT", showItemIconOverlay, "BOTTOMLEFT")
-    showSourceLocationTooltip:SetPoint("TOPLEFT", showVerboseText, "BOTTOMLEFT")
-    printDatabaseScan:SetPoint("TOPLEFT", showSourceLocationTooltip, "BOTTOMLEFT")
+    CanIMogIt.frame.debug:SetPoint("TOPLEFT", 16, -16)
+    CanIMogIt.frame.showEquippableOnly:SetPoint("TOPLEFT", CanIMogIt.frame.debug, "BOTTOMLEFT")
+    CanIMogIt.frame.showTransmoggableOnly:SetPoint("TOPLEFT", CanIMogIt.frame.showEquippableOnly, "BOTTOMLEFT")
+    CanIMogIt.frame.showUnknownOnly:SetPoint("TOPLEFT", CanIMogIt.frame.showTransmoggableOnly, "BOTTOMLEFT")
+    CanIMogIt.frame.showSetInfo:SetPoint("TOPLEFT", CanIMogIt.frame.showUnknownOnly, "BOTTOMLEFT")
+    CanIMogIt.frame.showItemIconOverlay:SetPoint("TOPLEFT", CanIMogIt.frame.showSetInfo, "BOTTOMLEFT")
+    -- CanIMogIt.frame.showBoEColors:SetPoint("TOPLEFT", CanIMogIt.frame.showItemIconOverlay, "BOTTOMLEFT")
+    CanIMogIt.frame.showVerboseText:SetPoint("TOPLEFT", CanIMogIt.frame.showItemIconOverlay, "BOTTOMLEFT")
+    CanIMogIt.frame.showSourceLocationTooltip:SetPoint("TOPLEFT", CanIMogIt.frame.showVerboseText, "BOTTOMLEFT")
+    CanIMogIt.frame.printDatabaseScan:SetPoint("TOPLEFT", CanIMogIt.frame.showSourceLocationTooltip, "BOTTOMLEFT")
 end
 
 
@@ -254,6 +276,20 @@ function CanIMogIt:SlashCommands(input)
     -- Slash command router.
     if input == "" then
         self:OpenOptionsMenu()
+    elseif input == 'debug' then
+        CanIMogIt.frame.debug:Click()
+    elseif input == 'overlay' then
+        CanIMogIt.frame.showItemIconOverlay:Click()
+    -- elseif input == 'colors' then
+    --     CanIMogIt.frame.showBoEColors:Click()
+    elseif input == 'verbose' then
+        CanIMogIt.frame.showVerboseText:Click()
+    elseif input == 'equiponly' then
+        CanIMogIt.frame.showEquippableOnly:Click()
+    elseif input == 'transmogonly' then
+        CanIMogIt.frame.showTransmoggableOnly:Click()
+    elseif input == 'unknownonly' then
+        CanIMogIt.frame.showUnknownOnly:Click()
     elseif input == 'PleaseDeleteMyDB' then
         self:DBReset()
     elseif input == 'refresh' then

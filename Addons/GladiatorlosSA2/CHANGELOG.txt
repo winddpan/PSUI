@@ -1,3 +1,60 @@
+- version 1.17
+
+General
+* In effort to cut back on the "out-of-the-box" spam, a number of low-importance abilities are now OFF by default. Abilities such as just movement speed increases, tank cooldowns (they're already tanky!), and low-counterplay buffs are considered "low priority". If you wanted these abilities enabled, you will have to go through and re-enable them manually. Abilities that were already off by default should not need to be changed.
+* Alerts in the World is now default to off.
+* **Affected Abilities**
+* Aura Applied/Removed: Vampiric Blood, Tombstone (+down), Rune Tap, Dash, Cenarion Ward, Bristling Fur, Master's Call, Aspect of the Cheetah, Mending Bandage, Mana Tea, Zen Meditation (+down), Aegis of Light, Ardent Defender (+down), Guardian of Ancient Kings (+down), Archangel, Dark Archangel, Sprint, Spirit Link (+down) (not the totem), Dark Pact, Shield Wall (+down).
+* Spell Casting: Big Heals, Shackle Undead, Cataclysm.
+* Cast Success: PvP Battle Standards, Gorefiend's Grasp, Defile, Chill Streak, Sindragosa's Fury, Mana Break, Displacer Beast, Renewal, Wild Charge, Exhilaration, Murder of Crows, Snake Hunter, Presence of Mind, Comet Storm, Meteor, Ice Floes, Invoke Niuzao, Divine Steed, Shadowfiend, Desperate Prayer, Mindbender, Holy Word: Serenity, Cannonball Barrage, Exsanguinate, Storm Elemental, Fire Elemental, Earth Elemental, Wind Rush Totem, Liquid Magma Totem, Earthen Shield Totem, Commanding Shout, Dragon Roar, Ravager, Demoralizing Shout.
+
+A few high-priority abilities (major DPS increases, Crowd-Control, etc) have been enabled by default although current users may need to manually enable them.
+* Bloodlust, Void Form (+down), Cheat Death, Cauterize, Arcane Torrent, War Stomp, Quaking Palm, Gouge, Summon Water Elemental,
+
+* Abilities that are still using Placeholder sounds are still off by default regardless of importance. At this point in the expansion, we're unlikely to do a full round of recording until we see what the abilities in 8.0 look like, so deal with the different voice actors for the time being. Ideally, the first version of GSA2 tailored toward the new expansion will be fully converted.
+
+Death Knight
+* Removed Purgatory (doesn't appear to work, and isn't as valuable as the other Cheat Deaths).
+
+Demon Hunter
+* Fixed Sigil of Misery while talented into Concentrated Sigils.
+* Fixed Sigil of Silence while talented into Concentrated Sigils.
+
+Hunter
+* Removed Freezing Arrow (no longer exists).
+
+Mage
+* Removed duplicate Presence of Mind entry.
+
+Paladin
+* Changed Ultimate Sacrifice's alert to "Divine Sacrifice", rather than share an alert with the weaker Blessing of Sacrifice.
+
+Rogue
+* Fixed Smoke Bomb.
+* Shadowy Duel moved to Aura Applied in attempt to make its alerts more reliable.
+
+Shaman
+* Removed duplicate Storm Elemental entry.
+
+Warlock
+* Removed Soul Effigy (no longer exists).
+* Removed Grimoire of Sacrifice (for real this time).
+
+Warrior
+* Fixed Protection's Spell Reflect falloff.
+* Fixed Bladestorm for Arms.
+===============================================
+- version 1.16.2
+
+General
+* Compatibility fix for 7.3.
+===============================================
+- version 1.16.1
+
+General
+* Fixed the Drinking alert announcing in battlegrounds whenever any player regardless of faction that is in possession of a PvP objective (WSG flag, etc) begins drinking. Oddly specific bugs are fun to squash.
+* ToC bump for 7.3.
+===============================================
 - version 1.16
 
 General

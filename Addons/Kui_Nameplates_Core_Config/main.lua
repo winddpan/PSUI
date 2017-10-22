@@ -7,58 +7,102 @@
 --------------------------------------------------------------------------------
 local folder,ns = ...
 local knp = KuiNameplates
-local category = 'Kui |cff9966ffNameplates Core'
 local kui = LibStub('Kui-1.0')
 local kc = LibStub('KuiConfig-1.0')
 
--- category container
-local opt = CreateFrame('Frame','KuiNameplatesCoreConfig',InterfaceOptionsFramePanelContainer)
-opt:Hide()
-opt.name = category
+-- reuse container created by core:Initialise
+local opt = KuiNameplatesCoreConfig
+assert(opt)
 opt.pages = {}
 
-if AddonLoader and AddonLoader.RemoveInterfaceOptions then
-    -- remove AddonLoader's fake category
-    AddonLoader:RemoveInterfaceOptions(category)
-
-    -- and nil its slash commands
-    SLASH_KUINAMEPLATES1 = nil
-    SLASH_KNP1 = nil
-    SlashCmdList.KUINAMEPLATES = nil
-    SlashCmdList.KNP = nil
-    hash_SlashCmdList["/kuinameplates"] = nil
-    hash_SlashCmdList["/knp"] = nil
-end
-
--- add to interface
-InterfaceOptions_AddCategory(opt)
-
--- 6.2.2: workaround for the category not populating correctly OnClick
-if AddonLoader and AddonLoader.RemoveInterfaceOptions then
-    local lastFrame = InterfaceOptionsFrame.lastFrame
-    InterfaceOptionsFrame.lastFrame = nil
-    InterfaceOptionsFrame_Show()
-    InterfaceOptionsFrame_OpenToCategory(category)
-    InterfaceOptionsFrame_OpenToCategory(category)
-    InterfaceOptionsFrame.lastFrame = lastFrame
-    lastFrame = nil
-end
 -- slash command ###############################################################
 SLASH_KUINAMEPLATESCORE1 = '/knp'
 SLASH_KUINAMEPLATESCORE2 = '/kuinameplates'
 
 function SlashCmdList.KUINAMEPLATESCORE(msg)
-    if msg == 'dump-config' then
+    if msg == 'debug' then
+        knp.debug = true
+        knp.debug_messages = not knp.debug_messages
+        if knp.debug_messages and not knp.DEBUG_IGNORE then
+            knp.DEBUG_IGNORE = {
+                ['m:Create'] = true,
+                ['m:Show'] = true,
+                ['m:Hide'] = true,
+                ['e:UNIT_POWER_FREQUENT'] = true,
+                ['e:UNIT_HEALTH_FREQUENT'] = true,
+            }
+        end
+        return
+    elseif msg == 'debug-frames' then
+        knp.draw_frames = not knp.draw_frames
+        if knp.draw_frames then
+            KuiNameplatesPlayerAnchor:SetBackdrop({edgeFile=kui.m.t.solid,edgeSize=1})
+            KuiNameplatesPlayerAnchor:SetBackdropBorderColor(0,0,1)
+            for k,f in knp:Frames() do
+                f:SetBackdrop({edgeFile=kui.m.t.solid,edgeSize=1})
+                f:SetBackdropBorderColor(1,1,1)
+                f.parent:SetBackdrop({bgFile=kui.m.t.solid})
+                f.parent:SetBackdropColor(0,0,0)
+            end
+        else
+            KuiNameplatesPlayerAnchor:SetBackdrop(nil)
+            for k,f in knp:Frames() do
+                f:SetBackdrop(nil)
+                f.parent:SetBackdrop(nil)
+            end
+        end
+        return
+    elseif knp.debug_messages and strfind(msg,'^debug%-ignore') then
+        local to_ignore = strmatch(msg,'^debug%-ignore (.-)%s*$')
+        knp.DEBUG_IGNORE = knp.DEBUG_IGNORE or {}
+        knp.DEBUG_IGNORE[to_ignore] = not knp.DEBUG_IGNORE[to_ignore]
+        return
+    elseif msg == 'dump-config' then
         local d = kui:DebugPopup()
         d:AddText(KuiNameplatesCore.config.csv)
         d:AddText(KuiNameplatesCore.config:GetActiveProfile())
         d:Show()
         return
+    elseif msg and msg ~= '' then
+        -- interpret msg as config page shortcut
+        local L = opt:GetLocale()
+        msg = strlower(msg)
+
+        local found
+        for i,f in ipairs(opt.pages) do
+            local n = strlower(L.page_names[f.name] or f.name)
+            if n == msg then
+                -- exact match
+                found = f
+                break
+            elseif not found and n:match('^'..msg) then
+                -- starts-with match
+                -- (continue searching for exact, don't look for more fuzzies)
+                found = f
+            end
+        end
+
+        if found then
+            found:ShowPage()
+        end
     end
 
     -- 6.2.2: call twice to force it to open to the correct frame
-    InterfaceOptionsFrame_OpenToCategory(category)
-    InterfaceOptionsFrame_OpenToCategory(category)
+    InterfaceOptionsFrame_OpenToCategory(opt.name)
+    InterfaceOptionsFrame_OpenToCategory(opt.name)
+end
+-- locale ######################################################################
+do
+    local L = {}
+    function opt:Locale(region)
+        assert(type(region) == 'string')
+        if region == 'enGB' or region == GetLocale() then
+            return L
+        end
+    end
+    function opt:GetLocale()
+        return L
+    end
 end
 -- config handlers #############################################################
 function opt:ConfigChanged(config,k)

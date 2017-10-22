@@ -33,7 +33,7 @@
 			[206977] = "bloodmirror",
 			[207256] = "obliteration",
 			[207319] = "corpseShield",
-			[114556] = "purgatory",
+			--[114556] = "purgatory",
 			[207171] = "remorselessWinter",
 			[212332] = "smash",
 			[212337] = "smash",
@@ -76,7 +76,6 @@
 			[45438] = "iceBlock",
 			[12042] = "arcanePower",
 			[12472] = "icyVeins",
-			[12043] = "presenceOfMind",
 			[198111] = "temporalShield",
 			[198144] = "iceForm",
 			[86949] = "cauterize",
@@ -93,7 +92,6 @@
 			[116849] = "lifeCocoon",
 			--[122470] = "touchOfKarma",
 			--[125174] = "touchOfKarma", --Test
-			[152175] = "HurricaneStrike",
 			[152173] = "Serenity",
 			[216113] = "fistweaving", --Way of the Crane
 			[197908] = "manaTea",
@@ -152,6 +150,7 @@
 			[1833] = "cheapShot",
 			[1330] = "garrote",
 			[6770] = "sap",
+			[207736] = "shadowyDuel",
 			
 			-- Shaman (Aura Applied)
 			[204288] = "earthShield",
@@ -166,7 +165,6 @@
 			
 			-- Warlock (Aura Applied)
 			[108416] = "sacrificialPact",
-			[108503] = "grimoireOfSacrifice",
 			[104773] = "unendingResolve",
 			[196098] = "darkSoul", -- Soul Harvest (Legion's Version)
 			[212295] = "netherWard",
@@ -176,6 +174,7 @@
 			[871] = "shieldWall", 
 			[18499] = "berserkerRage",
 			[46924] = "bladestorm", 
+			[227847] = "bladestorm",
 			[1719] = "battleCry", 
 			[118038] = "dieByTheSword", 
 			[107574] = "avatar",
@@ -250,6 +249,7 @@
 			[236696] = "thornsDown",			--Thorns (Feral)
 			[209584] = "zenFocusTeaDown",		--Zen Focus Tea
 			[216890] = "SpellReflectionDown", 	-- Arms/Fury
+			[23920] = "SpellReflectionDown",	-- Protection
 			[152279] = "BreathOfSindragosaDown",--Breath of Sindragosa
 			[34709] = "shadowSightDown",		-- Shadow Sight Crystal in Arenas
 			[25771] = "forbearanceDown",		-- Forbearance
@@ -260,6 +260,7 @@
 			[196762] = "_PHinnerFocusDown",		-- Inner Focus 
 			},
 		castStart = {					-- cast start [spellid] = ".mp3 file name",
+		
 		--GENERAL
 			-- Big Heals
 			[2060] = "bigHeal", -- Heal (Holy Priest)
@@ -304,7 +305,6 @@
 			-- Hunter (Spell Casting)
 			[982] = "revivePet", 
 			[19386] = "wyvernSting",
-			[209789] = "freezingArrow",
 			
 			-- Mage (Spell Casting)
 			[118] = "polymorph", -- Sheep
@@ -394,7 +394,7 @@
 			[88423] = "dispel", 	-- Nature's Cure (Restoration Druid)
 			[527] = "dispel", 		-- Purify (Holy/Discipline Priest)
 			[115450] = "dispel", 	-- Detox (Mistweaver Monk)
-			-- Warlocks, because they're special snowflakes that think they need buffs.
+			-- Warlocks, because they're special snowflakes.
 			[89808] = "dispel", 	-- Singe Magic
 			[137178] = "dispel",	-- Singe Magic (Green)
 			[212623] = "dispel",	-- Singe Magic (PvP Talent)
@@ -421,18 +421,13 @@
 			[211004] = "success", -- Spider
 			[211015] = "success", -- Cockroach
 			[211010] = "success", -- Snake			
-				--Fear (Warlock)
-			[5782] = "success",
-				--Cyclone (Druid)
-			[33786] = "success",
-			[209753] = "success", -- SCREAMS LOUDLY AGAIN
-				--Wyvern Sting (Hunter)
-			[19386] = "success",
-			[209789] = "success",
-				--Repentence (Paladin)
-			[20066] = "success",
-				--Mind Control (Priest)
-			[605] = "success",
+				--
+			[5782] = "success", -- Fear (Warlock)
+			[33786] = "success", -- Cyclone (Druid)
+			[209753] = "success", -- Cyclone (Druid)
+			[19386] = "success", --Wyvern Sting (Hunter)
+			[20066] = "success", -- Repentence (Paladin)
+			[605] = "success", -- Mind Control (Priest)
 			
 			-- Purges
 			[528] = "purge",		-- Dispel Magic (Priest)
@@ -505,7 +500,9 @@
 			[205630] = "illidansGrasp",
 			[202138] = "gripSigil",
 			[207684] = "fearSigil",
+			[202140] = "fearSigil",
 			[202137] = "silenceSigil",
+			[207682] = "silenceSigil",
 			[211881] = "felEruption",
 			[203704] = "manaBreak",
 			[217832] = "imprison",		-- Demons Only (until 7.1.5 because lol holinka)
@@ -579,7 +576,6 @@
 			[205025] = "presenceOfMind",
 			[108839] = "iceFloes",
 			
-			
 			-- Monk (Cast Success)
 			[116841] = "tigersLust",
 			[119381] = "legSweep",
@@ -608,8 +604,8 @@
 			[210220] = "holyWrath",
 			[210256] = "sanctuary",
 			[633] = "layOnHands",
-			[6940] = "sacrifice",		-- Blessing of Sacrifice
-			[199448] = "sacrifice",		-- Blessing of Sacrifice (Ultimate Sacrifice PvP Talent)
+			[6940] = "sacrifice",				-- Blessing of Sacrifice
+			[199448] = "UltimateSacrifice",		-- Blessing of Sacrifice (Ultimate Sacrifice PvP Talent)
 			
 			-- Priest (Cast Success)
 			[8122] = "fear4", 		-- Psychic Scream
@@ -635,10 +631,10 @@
 			[2094] = "blind",
 			[1766] = "kick",
 			[1856] = "vanish",
-			[76577] = "smokeBomb",
+			--[76577] = "smokeBomb",
+			[212182] = "smokeBomb",
 			[79140] = "vendetta",
 			[207777] = "dismantle",
-			[207736] = "shadowyDuel",
 			[200806] = "exsanguinate",
 			[198529] = "plunderArmor",
 			[408] = "kidney",
@@ -651,30 +647,31 @@
 			[1784] = "stealth",
 			
 			-- Shaman (Cast Success)
+			[108281] = "ancestralGuidance",
+			[118345] = "pulverize",
+			[57994] = "windShear",
+			[198067] = "fireElemental", -- Updated for Legion
+			[198103] = "earthElemental", -- Updated for Legion
+			[192249] = "stormElemental", -- Updated for Legion
+			[204437] = "lightningLasso",
+			[51490] = "thunderstorm",
+			
+			-- Shaman (Totems)
 			[98008] = "spiritLinkTotem",
 			[51485] = "earthgrab",
 			[108280] = "healingTide",
-			[108281] = "ancestralGuidance",
-			[118345] = "pulverize",
-			[108269] = "capacitor",
-			[57994] = "windShear",
-			[152256] = "stormElemental",
+			[108269] = "capacitor",			
 			[152255] = "LiquidMagma",
-			[198067] = "fireElemental", -- Updated for Legion
-			[198103] = "earthElemental", -- Updated for Legion
-			[192058] = "capacitor", -- Updated for Legion
+			[192058] = "capacitor", -- Updated for Legion			
 			[192077] = "windRushTotem",
 			[196932] = "hexTotem",
-			[192249] = "stormElemental", -- Updated for Legion
 			[192222] = "LiquidMagma", -- Updated for Legion
 			[204330] = "skyfuryTotem",
 			[204331] = "counterstrikeTotem",
-			[204332] = "windfuryTotem",
-			[204437] = "lightningLasso",
+			[204332] = "windfuryTotem",	
 			[207399] = "reincarnationTotem",
 			[198838] = "protectionTotem",
-			[204336] = "grounding", -- Updated for Legion
-			[51490] = "thunderstorm",
+			[204336] = "grounding", -- Updated for Legion			
 			
 			-- Warlock (Cast Success)
 			[6789] = "mortalCoil",
@@ -692,7 +689,6 @@
 			[111897] = "grimoireOfService",
 			[111898] = "grimoireOfService",
 			[196277] = "implosion",
-			[205178] = "soulEffigy",
 			[115770] = "felLash",
 			[6360] = "felLash",
 			[1122] = "summonInfernal",

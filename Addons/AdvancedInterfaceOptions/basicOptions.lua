@@ -1,7 +1,12 @@
 local addonName, addon = ...
 local E = addon:Eve()
 local _G = _G
-local SetCVar = SetCVar -- Keep a local copy of SetCVar so we don't call the hooked version
+local _SetCVar = SetCVar -- Keep a local copy of SetCVar so we don't call the hooked version
+local SetCVar = function(...) -- Suppress errors trying to set read-only cvars
+	-- Not ideal, but the api doesn't give us this information
+	local status, err = pcall(function(...) return _SetCVar(...) end, ...)
+	return status
+end
 
 -- luacheck: globals GetSortBagsRightToLeft SetSortBagsRightToLeft GetInsertItemsLeftToRight SetInsertItemsLeftToRight
 -- luacheck: globals UIDropDownMenu_AddButton UIDropDownMenu_CreateInfo UIDropDownMenu_SetSelectedValue
@@ -74,8 +79,10 @@ function E:Init() -- Runs after our saved variables are loaded and cvars have be
 		for cvar, value in pairs(AdvancedInterfaceOptionsSaved.AccountVars) do
 			if addon.hiddenOptions[cvar] and addon:CVarExists(cvar) then -- confirm we still use this cvar
 				if GetCVar(cvar) ~= value then
-					SetCVar(cvar, value)
-					-- print('Loading cvar', cvar, value)
+					if not InCombatLockdown() or not addon.combatProtected[cvar] then
+						SetCVar(cvar, value)
+						-- print('Loading cvar', cvar, value)
+					end
 				end
 			else -- remove if cvar is no longer supported
 				AdvancedInterfaceOptionsSaved.AccountVars[cvar] = nil
@@ -126,8 +133,6 @@ function addon:SetCVar(cvar, value, ...) -- save our cvar to the db
 	end
 end
 
-
-
 local AIO = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)
 AIO:Hide()
 AIO:SetAllPoints()
@@ -144,7 +149,7 @@ local function checkboxSetChecked(self) self:SetChecked(self:GetValue()) end
 local function checkboxSetCVar(self, checked) addon:SetCVar(self.cvar, checked) end
 local function checkboxOnClick(self)
 	local checked = self:GetChecked()
-	PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+    PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
 	self:SetValue(checked)
 end
 
@@ -762,10 +767,12 @@ local nameplateAtBase = newCheckbox(AIO_NP, 'nameplateOtherAtBase')
 nameplateAtBase:SetPoint("TOPLEFT", nameplateDistance, "BOTTOMLEFT", 0, -16)
 nameplateAtBase:SetScript('OnClick', function(self)
 	local checked = self:GetChecked()
-	PlaySound(checked and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+	PlaySound(checked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
 	self:SetValue(checked and 2 or 0)
 end)
 
+local nameplateColorFriendly = newCheckbox(AIO_NP, 'ShowClassColorInFriendlyNameplate')
+nameplateColorFriendly:SetPoint("TOPLEFT", nameplateAtBase, "BOTTOMLEFT", 0, -8)
 
 -- Combat section
 local AIO_C = CreateFrame('Frame', nil, InterfaceOptionsFramePanelContainer)

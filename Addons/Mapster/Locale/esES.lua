@@ -26,3 +26,4 @@ L["Player"] = "Jugador"
 L["PlayerArrow Scale"] = "Tamaño de la Flecha del Jugador"
 L["Scale"] = "Tamaño"
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "Puedes cambiar la transparencia del mapa del mundo para poder seguir viendo el entorno aunque el mapa esté abierto."
+

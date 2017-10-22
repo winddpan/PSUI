@@ -44,14 +44,14 @@ class "ScrollBar"
         local slider = self:GetParent():GetChild("Slider")
 
 		slider:SetValue(slider:GetValue() - slider:GetValueStep())
-        PlaySound("UChatScrollButton")
+        PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
     end
 
     local function clickDownBtn(self)
         local slider = self:GetParent():GetChild("Slider")
 
         slider:SetValue(slider:GetValue() + slider:GetValueStep())
-        PlaySound("UChatScrollButton")
+        PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
     end
 
     local function OnMouseWheel(self, value)

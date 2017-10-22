@@ -1,3 +1,12 @@
+2017/09/30
+   The linked and final APIs in List no longer cause memory increasement.
+
+2017/09/30
+    Fix the List:Remove(obj) API.
+
+2017/09/28
+   New Final API - Any, All, First, FirstOrDefault for System.Collection.IList.
+
 2017/03/29
     Re-design the struct's validation, increase the performace about 10%-30%. `System.__Base__ attribtue` can be used on all struct types. See wiki for more details.
 

@@ -42,3 +42,4 @@ L["The Group Icons module allows you to resize the raid and party icons on the w
 L["The transparency of the big map."] = "Прозрачность большой карты."
 L["You can change the transparency of the world map to allow you to continue seeing the world environment while your map is open for navigation."] = "Вы можете изменить прозрачность карты, что позволит вам видеть окружающую обстановку в то время, как карта будет открыта."
 L["You can control the accuracy of the coordinates, e.g. if you need very exact coordinates you can set this to 2."] = "Вы можете управлять точностью координат, например, если вам нужные очень точные координаты - вы можете установить это значение как 2."
+

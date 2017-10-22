@@ -38,6 +38,7 @@ local folder,ns=...
 local addon = KuiNameplates
 local kui = LibStub('Kui-1.0')
 local LSM = LibStub('LibSharedMedia-3.0')
+local KSL = LibStub('KuiSpellList-2.0')
 local core = KuiNameplatesCore
 
 -- frame fading plugin - called by some update functions
@@ -55,12 +56,11 @@ local CLASS_COLOURS = {
 -- config locals
 local FRAME_WIDTH,FRAME_HEIGHT,FRAME_WIDTH_MINUS,FRAME_HEIGHT_MINUS
 local FRAME_WIDTH_PERSONAL,FRAME_HEIGHT_PERSONAL
-local POWER_BAR_HEIGHT,CASTBAR_HEIGHT,TARGET_GLOW_COLOUR
+local POWER_BAR_HEIGHT,TARGET_GLOW_COLOUR
 local FONT,FONT_STYLE,FONT_SHADOW,FONT_SIZE_NORMAL,FONT_SIZE_SMALL
 local TEXT_VERTICAL_OFFSET,NAME_VERTICAL_OFFSET,BOT_VERTICAL_OFFSET
 local BAR_TEXTURE,BAR_ANIMATION,SHOW_STATE_ICONS
 local FADE_AVOID_NAMEONLY,FADE_UNTRACKED,FADE_AVOID_TRACKED
-local CASTBAR_COLOUR,CASTBAR_UNIN_COLOUR,CASTBAR_SHOW_NAME,CASTBAR_SHOW_ICON
 local SHOW_HEALTH_TEXT,SHOW_NAME_TEXT
 local GUILD_TEXT_NPCS,GUILD_TEXT_PLAYERS,TITLE_TEXT_PLAYERS
 local CLASS_COLOUR_FRIENDLY_NAMES,CLASS_COLOUR_ENEMY_NAMES
@@ -98,7 +98,10 @@ do
 
     local function FilledBar_SetStatusBarColor(self,...)
         self:orig_SetStatusBarColor(...)
-        self.fill:SetVertexColor(...)
+
+        if self.fill then
+            self.fill:SetVertexColor(...)
+        end
 
         if self.spark then
             local col = {...}
@@ -118,26 +121,25 @@ do
         self.fill:Hide()
     end
 
-    function CreateStatusBar(parent,spark)
+    function CreateStatusBar(parent,spark,no_fill,no_fade_spark)
         local bar = CreateFrame('StatusBar',nil,parent)
         bar:SetStatusBarTexture(BAR_TEXTURE)
         bar:SetFrameLevel(0)
 
-        local fill = parent:CreateTexture(nil,'BACKGROUND',nil,2)
-        fill:SetTexture(BAR_TEXTURE)
-        fill:SetAllPoints(bar)
-        fill:SetAlpha(.2)
+        if not no_fill then
+            local fill = parent:CreateTexture(nil,'BACKGROUND',nil,2)
+            fill:SetTexture(BAR_TEXTURE)
+            fill:SetAllPoints(bar)
+            fill:SetAlpha(.2)
 
-        bar.fill = fill
+            bar.fill = fill
 
-        bar.orig_SetStatusBarColor = bar.SetStatusBarColor
-        bar.SetStatusBarColor = FilledBar_SetStatusBarColor
+            bar.orig_Show = bar.Show
+            bar.Show = FilledBar_Show
 
-        bar.orig_Show = bar.Show
-        bar.Show = FilledBar_Show
-
-        bar.orig_Hide = bar.Hide
-        bar.Hide = FilledBar_Hide
+            bar.orig_Hide = bar.Hide
+            bar.Hide = FilledBar_Hide
+        end
 
         if spark then
             local texture = bar:GetStatusBarTexture()
@@ -150,8 +152,15 @@ do
 
             bar.spark = spark
 
-            bar:HookScript('OnValueChanged',FadeSpark)
-            bar:HookScript('OnMinMaxChanged',FadeSpark)
+            if not no_fade_spark then
+                bar:HookScript('OnValueChanged',FadeSpark)
+                bar:HookScript('OnMinMaxChanged',FadeSpark)
+            end
+        end
+
+        if not no_fill or spark then
+            bar.orig_SetStatusBarColor = bar.SetStatusBarColor
+            bar.SetStatusBarColor = FilledBar_SetStatusBarColor
         end
 
         return bar
@@ -226,12 +235,6 @@ do
         FRAME_GLOW_TEXTURE_INSET = .01 * (FRAME_GLOW_SIZE / 4)
         FRAME_GLOW_THREAT = self.profile.frame_glow_threat
 
-        CASTBAR_HEIGHT = self.profile.castbar_height
-        CASTBAR_COLOUR = self.profile.castbar_colour
-        CASTBAR_UNIN_COLOUR = self.profile.castbar_unin_colour
-        CASTBAR_SHOW_ICON = self.profile.castbar_icon
-        CASTBAR_SHOW_NAME = self.profile.castbar_name
-
         TEXT_VERTICAL_OFFSET = self.profile.text_vertical_offset
         NAME_VERTICAL_OFFSET = TEXT_VERTICAL_OFFSET + self.profile.name_vertical_offset
         BOT_VERTICAL_OFFSET = TEXT_VERTICAL_OFFSET + self.profile.bot_vertical_offset
@@ -271,8 +274,6 @@ do
 end
 function core:configChangedFrameSize()
     for k,f in addon:Frames() do
-        f:UpdateCastbarSize()
-
         if f.Auras and f.Auras.frames and f.Auras.frames.core_dynamic then
             -- force auras frame size update
             f.Auras.frames.core_dynamic.__width = nil
@@ -348,6 +349,10 @@ do
             UpdateStatusBar(f.Highlight)
             UpdateStatusBar(f.HealthBar)
             UpdateStatusBar(f.PowerBar)
+
+            if f.UpdateAbsorbBar then
+                f:UpdateAbsorbBar()
+            end
         end
 
         if addon.ClassPowersFrame then
@@ -479,19 +484,49 @@ do
 end
 -- absorb bar ##################################################################
 do
-    function core:CreateAbsorbBar(f)
-        -- not using CreateStatusBar as we don't want a background
-        local bar = CreateFrame('StatusBar',nil,f.HealthBar)
-        bar:SetStatusBarTexture('interface/addons/kui_media/t/stippled-bar')
-        bar:SetAllPoints(f.HealthBar)
-        bar:SetFrameLevel(0)
-        bar:SetStatusBarColor(.3,.7,1)
-        bar:SetAlpha(.5)
+    local ABSORB_ENABLE,ABSORB_STRIPED,ABSORB_COLOUR
 
-        local t = bar:GetStatusBarTexture()
-        t:SetDrawLayer('ARTWORK',1)
-        t:SetHorizTile(true)
-        t:SetVertTile(true)
+    function core:configChangedAbsorb()
+        ABSORB_ENABLE = self.profile.absorb_enable
+        ABSORB_STRIPED = self.profile.absorb_striped
+        ABSORB_COLOUR = self.profile.colour_absorb
+
+        if ABSORB_ENABLE then
+            for k,f in addon:Frames() do
+                if not f.AbsorbBar then
+                    self:CreateAbsorbBar(f)
+                else
+                    f:UpdateAbsorbBar()
+                end
+            end
+        end
+    end
+
+    local function UpdateAbsorbBar(f)
+        if not ABSORB_ENABLE then return end
+        if ABSORB_STRIPED then
+            f.AbsorbBar.t:SetTexture(kui.m.t.stripebar,true,true)
+            f.AbsorbBar.t:SetHorizTile(true)
+            f.AbsorbBar.t:SetVertTile(true)
+        else
+            f.AbsorbBar.t:SetTexture(BAR_TEXTURE,false,false)
+            f.AbsorbBar.t:SetHorizTile(false)
+            f.AbsorbBar.t:SetVertTile(false)
+        end
+
+        f.AbsorbBar.t:SetDrawLayer('ARTWORK',1)
+        f.AbsorbBar:SetStatusBarColor(unpack(ABSORB_COLOUR))
+        f.AbsorbBar.spark:SetVertexColor(unpack(ABSORB_COLOUR))
+        f.AbsorbBar.spark:SetAlpha(1)
+    end
+    function core:CreateAbsorbBar(f)
+        if not ABSORB_ENABLE then return end
+
+        local bar = CreateStatusBar(f.HealthBar,nil,true)
+        bar:SetAllPoints(f.HealthBar)
+
+        bar.t = bar:CreateTexture(nil,'ARTWORK')
+        bar:SetStatusBarTexture(bar.t)
 
         -- spark for over-absorb highlighting
         local spark = bar:CreateTexture(nil,'ARTWORK',nil,7)
@@ -499,14 +534,16 @@ do
         spark:SetWidth(8)
         spark:SetPoint('TOP',bar,'TOPRIGHT',-1,4)
         spark:SetPoint('BOTTOM',bar,'BOTTOMRIGHT',-1,-4)
-        spark:SetVertexColor(.3,.7,1)
         bar.spark = spark
 
         if BAR_ANIMATION == 'smooth' then
+            -- updated by core.SetBarAnimation (XXX twice?)
             f.handler:SetBarAnimation(bar,BAR_ANIMATION)
         end
 
         f.handler:RegisterElement('AbsorbBar',bar)
+        f.UpdateAbsorbBar = UpdateAbsorbBar
+        f:UpdateAbsorbBar()
     end
 end
 -- name text ###################################################################
@@ -913,11 +950,15 @@ do
 end
 -- castbar #####################################################################
 do
+    local CASTBAR_HEIGHT,CASTBAR_COLOUR,CASTBAR_UNIN_COLOUR,CASTBAR_SHOW_ICON,
+          CASTBAR_SHOW_NAME,CASTBAR_SHOW_SHIELD
+
     local function SpellIconSetWidth(f)
-        -- set spell icon width (based on height)
-        -- this seems to convince it to calculate the actual height
-        f.SpellIcon.bg:SetHeight(1)
-        f.SpellIcon.bg:SetWidth(floor(f.SpellIcon.bg:GetHeight()*1.25))
+        -- set spell icon width (as it's based on height)
+        if not f.SpellIcon then return end
+        if f.SpellIcon.bg:IsShown() then
+            f.SpellIcon.bg:SetWidth(ceil(((f.CastBar.bg:GetHeight() + f.bg:GetHeight() + 1)*1.25)+.1))
+        end
     end
     local function ShowCastBar(f)
         if not f.elements.CastBar then
@@ -935,34 +976,34 @@ do
         -- also show attached elements
         f.CastBar.bg:Show()
 
-        if CASTBAR_SHOW_ICON then
+        if CASTBAR_SHOW_ICON and f.SpellIcon then
             f.SpellIcon.bg:Show()
+            f:SpellIconSetWidth()
         end
 
-        if CASTBAR_SHOW_NAME then
+        if CASTBAR_SHOW_NAME and f.SpellName then
             f.SpellName:Show()
         end
-
-        f:SpellIconSetWidth()
     end
     local function HideCastBar(f)
         -- also hide attached elements
         f.CastBar:Hide()
         f.CastBar.bg:Hide()
-        f.SpellIcon.bg:Hide()
-        f.SpellName:Hide()
-        f.SpellShield:Hide()
+
+        if f.SpellName then
+            f.SpellName:Hide()
+        end
+        if f.SpellIcon then
+            f.SpellIcon.bg:Hide()
+        end
+        if f.SpellShield then
+            f.SpellShield:Hide()
+        end
     end
     local function UpdateCastBar(f)
         if f.IN_NAMEONLY then
             f.handler:DisableElement('CastBar')
         else
-            if CASTBAR_SHOW_ICON then
-                f.SpellIcon:Show()
-            else
-                f.SpellIcon:Hide()
-            end
-
             if f.state.player then
                 if core.profile.castbar_showpersonal then
                     f.handler:EnableElement('CastBar')
@@ -991,75 +1032,87 @@ do
         end
     end
     local function UpdateSpellNamePosition(f)
+        if not f.SpellName then return end
         f.SpellName:SetPoint('TOP',f.CastBar,'BOTTOM',0,-2+TEXT_VERTICAL_OFFSET)
     end
     local function UpdateCastbarSize(f)
         f.CastBar.bg:SetHeight(CASTBAR_HEIGHT)
         f.CastBar:SetHeight(CASTBAR_HEIGHT-2)
-        f.CastBar.spark:SetHeight(CASTBAR_HEIGHT+4)
     end
+
+    local function CreateSpellIcon(f)
+        assert(not f.SpellIcon)
+
+        local bg = f:CreateTexture(nil, 'BACKGROUND', nil, 1)
+        bg:SetTexture(kui.m.t.solid)
+        bg:SetVertexColor(0,0,0,.8)
+        bg:SetPoint('BOTTOMRIGHT', f.CastBar.bg, 'BOTTOMLEFT', -1, 0)
+        bg:SetPoint('TOPRIGHT', f.bg, 'TOPLEFT', -1, 0)
+        bg:Hide()
+
+        local icon = f.CastBar:CreateTexture(nil, 'ARTWORK', nil, 2)
+        icon:SetTexCoord(.1, .9, .2, .8)
+        icon:SetPoint('TOPLEFT', bg, 1, -1)
+        icon:SetPoint('BOTTOMRIGHT', bg, -1, 1)
+
+        icon.bg = bg
+
+        f.handler:RegisterElement('SpellIcon', icon)
+        return icon
+    end
+    local function CreateSpellShield(f)
+        assert(not f.SpellShield)
+
+        -- cast shield
+        local shield = f.HealthBar:CreateTexture(nil, 'ARTWORK', nil, 3)
+        shield:SetTexture(MEDIA..'Shield')
+        shield:SetTexCoord(0, .84375, 0, 1)
+        shield:SetSize(13.5, 16) -- 16 * .84375
+        shield:SetPoint('LEFT', f.CastBar.bg, -7, 0)
+        shield:SetVertexColor(.5, .5, .7)
+        shield:Hide()
+
+        f.handler:RegisterElement('SpellShield', shield)
+        return shield
+    end
+    local function CreateSpellName(f)
+        assert(not f.SpellName)
+
+        local spellname = CreateFontString(f.HealthBar,FONT_SIZE_SMALL)
+        spellname:SetWordWrap()
+        spellname:Hide()
+
+        f.handler:RegisterElement('SpellName', spellname)
+        return spellname
+    end
+
     function core:CreateCastBar(f)
         local bg = f:CreateTexture(nil,'BACKGROUND',nil,1)
         bg:SetTexture(kui.m.t.solid)
         bg:SetVertexColor(0,0,0,.8)
         bg:SetPoint('TOPLEFT', f.bg, 'BOTTOMLEFT', 0, -1)
         bg:SetPoint('TOPRIGHT', f.bg, 'BOTTOMRIGHT')
+        bg:Hide()
 
-        local castbar = CreateFrame('StatusBar', nil, f)
-        castbar:SetFrameLevel(0)
-        castbar:SetStatusBarTexture(BAR_TEXTURE)
+        local castbar = CreateStatusBar(f,true,nil,true)
         castbar:SetPoint('TOPLEFT', bg, 1, -1)
         castbar:SetPoint('BOTTOMRIGHT', bg, -1, 1)
-
-        local spellname = CreateFontString(f.HealthBar,FONT_SIZE_SMALL)
-        spellname:SetWordWrap()
-
-        -- spell icon
-        local spelliconbg = f:CreateTexture(nil, 'BACKGROUND', nil, 1)
-        spelliconbg:SetTexture(kui.m.t.solid)
-        spelliconbg:SetVertexColor(0,0,0,.8)
-        spelliconbg:SetPoint('BOTTOMRIGHT', bg, 'BOTTOMLEFT', -1, 0)
-        spelliconbg:SetPoint('TOPRIGHT', f.bg, 'TOPLEFT', -1, 0)
-
-        local spellicon = castbar:CreateTexture(nil, 'ARTWORK', nil, 2)
-        spellicon:SetTexCoord(.1, .9, .2, .8)
-        spellicon:SetPoint('TOPLEFT', spelliconbg, 1, -1)
-        spellicon:SetPoint('BOTTOMRIGHT', spelliconbg, -1, 1)
-
-        if not CASTBAR_SHOW_ICON then
-            spellicon:Hide()
-        end
-
-        -- cast shield
-        local spellshield = f.HealthBar:CreateTexture(nil, 'ARTWORK', nil, 3)
-        spellshield:SetTexture(MEDIA..'Shield')
-        spellshield:SetTexCoord(0, .84375, 0, 1)
-        spellshield:SetSize(13.5, 16) -- 16 * .84375
-        spellshield:SetPoint('LEFT', bg, -7, 0)
-        spellshield:SetVertexColor(.5, .5, .7)
-
-        -- spark
-        local spark = castbar:CreateTexture(nil, 'ARTWORK', nil, 7)
-        spark:SetVertexColor(1,1,.8)
-        spark:SetTexture('Interface\\AddOns\\Kui_Media\\t\\spark')
-        spark:SetPoint('CENTER', castbar:GetRegions(), 'RIGHT', 1, 0)
-        spark:SetWidth(6)
-
-        -- hide elements by default
-        bg:Hide()
         castbar:Hide()
-        spelliconbg:Hide()
-        spellshield:Hide()
-        spellname:Hide()
-
         castbar.bg = bg
-        castbar.spark = spark
-        spellicon.bg = spelliconbg
 
+        -- register base elements
         f.handler:RegisterElement('CastBar', castbar)
-        f.handler:RegisterElement('SpellName', spellname)
-        f.handler:RegisterElement('SpellIcon', spellicon)
-        f.handler:RegisterElement('SpellShield', spellshield)
+
+        -- create optional elements
+        if CASTBAR_SHOW_NAME then
+            CreateSpellName(f)
+        end
+        if CASTBAR_SHOW_ICON then
+            CreateSpellIcon(f)
+        end
+        if CASTBAR_SHOW_SHIELD then
+            CreateSpellShield(f)
+        end
 
         f.ShowCastBar = ShowCastBar
         f.HideCastBar = HideCastBar
@@ -1070,6 +1123,46 @@ do
 
         f:UpdateSpellNamePosition()
         f:UpdateCastbarSize()
+    end
+
+    function core:SetCastBarConfig()
+        CASTBAR_HEIGHT = self.profile.castbar_height
+        CASTBAR_COLOUR = self.profile.castbar_colour
+        CASTBAR_UNIN_COLOUR = self.profile.castbar_unin_colour
+        CASTBAR_SHOW_ICON = self.profile.castbar_icon
+        CASTBAR_SHOW_NAME = self.profile.castbar_name
+        CASTBAR_SHOW_SHIELD = self.profile.castbar_shield
+
+        for k,f in addon:Frames() do
+            if CASTBAR_SHOW_ICON and not f.SpellIcon then
+                CreateSpellIcon(f)
+            end
+            if CASTBAR_SHOW_NAME and not f.SpellName then
+                CreateSpellName(f)
+            end
+            if CASTBAR_SHOW_SHIELD and not f.SpellShield then
+                CreateSpellShield(f)
+            end
+
+            if f.SpellShield then
+                if CASTBAR_SHOW_SHIELD then
+                    f.handler:EnableElement('SpellShield')
+                else
+                    f.handler:DisableElement('SpellShield')
+                end
+            end
+
+            if f.SpellIcon then
+                if CASTBAR_SHOW_ICON then
+                    f.SpellIcon:Show()
+                else
+                    f.SpellIcon:Hide()
+                end
+            end
+
+            f:UpdateCastbarSize()
+            f:UpdateSpellNamePosition()
+        end
     end
 end
 -- state icons #################################################################
@@ -1141,6 +1234,7 @@ do
     local AURAS_MAX_LENGTH
     local AURAS_ON_PERSONAL
     local AURAS_ENABLED
+    local AURAS_SHOW_ALL_SELF,AURAS_HIDE_ALL_OTHER
 
     local function AuraFrame_SetFrameWidth(self)
         self:SetWidth(self.__width)
@@ -1194,8 +1288,6 @@ do
             y_spacing = 1,
             rows = 2,
 
-            vanilla_filter = self.profile.auras_vanilla_filter,
-            kui_whitelist = self.profile.auras_whitelist,
             pulsate = self.profile.auras_pulsate,
             timer_threshold = self.profile.auras_time_threshold > 0 and self.profile.auras_time_threshold or nil,
             squareness = self.profile.auras_icon_squareness,
@@ -1226,22 +1318,50 @@ do
 
         core.AurasButton_SetFont(button)
     end
-    function core.Auras_DisplayAura(frame,name,spellid,duration)
+    function core.Auras_DisplayAura(frame,name,spellid,duration,caster)
         if frame.id ~= 'core_dynamic' then return end
 
         if  AURAS_MIN_LENGTH and
             duration ~= 0 and duration <= AURAS_MIN_LENGTH
         then
-            return false
+            return 1
         end
 
         if  AURAS_MAX_LENGTH and
             (duration == 0 or duration > AURAS_MAX_LENGTH)
         then
-            return false
+            return 1
         end
 
-        return true
+        -- force show if included by spell list (all casters or self)
+        if  (KSL:SpellIncludedAll(spellid) or KSL:SpellIncludedAll(name)) or
+            ((caster == 'player' or caster == 'pet' or caster == 'vehcile') and
+            (KSL:SpellIncludedOwn(spellid) or KSL:SpellIncludedOwn(name)))
+        then
+            return 2
+        end
+
+        -- force hide if excluded by spell list
+        if KSL:SpellExcluded(spellid) or KSL:SpellExcluded(name) then
+            return 1
+        end
+
+        if AURAS_SHOW_ALL_SELF or AURAS_HIDE_ALL_OTHER then
+            if caster == 'player' or caster == 'pet' or caster == 'vehicle' then
+                if AURAS_SHOW_ALL_SELF then
+                    -- show all casts from the player
+                    return 2
+                end
+            else
+                if AURAS_HIDE_ALL_OTHER then
+                    -- hide all other players' casts (CC, etc.)
+                    return 1
+                end
+            end
+        end
+
+        -- process as normal
+        return
     end
 
     -- config changed
@@ -1262,6 +1382,9 @@ do
         AURAS_ENABLED = self.profile.auras_enabled
         AURAS_ON_PERSONAL = self.profile.auras_on_personal
 
+        AURAS_SHOW_ALL_SELF = self.profile.auras_show_all_self
+        AURAS_HIDE_ALL_OTHER = self.profile.auras_hide_all_other
+
         local timer_threshold = self.profile.auras_time_threshold
         if timer_threshold < 0 then
             timer_threshold = nil
@@ -1275,11 +1398,9 @@ do
                     af.pulsate = self.profile.auras_pulsate
                     af.timer_threshold = timer_threshold
                     af.squareness = self.profile.auras_icon_squareness
-                    af.vanilla_filter = self.profile.auras_vanilla_filter
                     af.centred = self.profile.auras_centre
 
                     af:SetSort(self.profile.auras_sort)
-                    af:SetWhitelist(nil,self.profile.auras_whitelist)
 
                     -- force size update
                     af.__width = nil
@@ -1496,8 +1617,8 @@ do
             f:UpdateTargetArrows()
         end
 
-        if f.NameOnlyGlow and addon.ClassPowersFrame then
-            -- force-update classpowers position
+        if f.NameOnlyGlow and addon.ClassPowersFrame and plugin_classpowers.enabled then
+            -- force-update classpowers position (to run our post)
             plugin_classpowers:TargetUpdate()
         end
     end

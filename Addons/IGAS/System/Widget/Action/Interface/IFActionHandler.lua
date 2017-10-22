@@ -1060,26 +1060,22 @@ do
 	_IFActionHandler_PetGridCounter = 0
 
 	function UpdateGrid(self)
-		if self.BlockGridUpdating then return end
-
 		local kind = self.ActionType
-
-		if _IFActionHandler_GridCounter > 0 or self.ShowGrid or _IFActionTypeHandler[kind].HasAction(self) then
-			self.Alpha = 1
+		local force = _IFActionHandler_GridCounter > 0
+		if force or self.ShowGrid or _IFActionTypeHandler[kind].HasAction(self) then
+			self:ShowButtonGrid(force)
 		else
-			self.Alpha = 0
+			self:HideButtonGrid()
 		end
 	end
 
 	function UpdatePetGrid(self)
-		if self.BlockGridUpdating then return end
-
 		local kind = self.ActionType
-
-		if _IFActionHandler_PetGridCounter > 0 or self.ShowGrid or _IFActionTypeHandler[kind].HasAction(self) then
-			self.Alpha = 1
+		local force = _IFActionHandler_PetGridCounter > 0
+		if force or self.ShowGrid or _IFActionTypeHandler[kind].HasAction(self) then
+			self:ShowButtonGrid(force)
 		else
-			self.Alpha = 0
+			self:HideButtonGrid()
 		end
 	end
 
@@ -1218,6 +1214,10 @@ do
 		self.AutoCasting = _IFActionTypeHandler[self.ActionType].IsAutoCasting(self)
 	end
 
+	function UpdateIcon(self)
+		self.Icon = _IFActionTypeHandler[self.ActionType].GetActionTexture(self)
+	end
+
 	function UpdateActionButton(self)
 		local kind = self.ActionType
 		local handler = _IFActionTypeHandler[kind]
@@ -1304,6 +1304,7 @@ do
 		RefreshCount = UpdateCount
 		RefreshOverlayGlow = UpdateOverlayGlow
 		RefreshTooltip = RefreshTooltip
+		RefreshIcon = UpdateIcon
 	endinterface "ActionRefreshMode"
 
 	------------------------------------------------------
@@ -1577,6 +1578,16 @@ interface "IFActionHandler"
 	__Doc__[[Refresh the button manually]]
 	Refresh = UpdateActionButton
 
+	__Doc__[[Show the button grid]]
+	function ShowButtonGrid(self, force)
+		self:SetAlpha(1)
+	end
+
+	__Doc__[[Hide the button grid]]
+	function HideButtonGrid(self)
+		self:SetAlpha(0)
+	end
+
 	------------------------------------------------------
 	-- Interface Method
 	------------------------------------------------------
@@ -1743,10 +1754,6 @@ interface "IFActionHandler"
 
 	__Doc__[[The anchor point of the gametooltip]]
 	property "GameTooltipAnchor" { Type = AnchorType }
-
-	__Doc__[[Whether the button is block grid updating, should handle it by itself.]]
-	__Handler__( OnShow )
-	property "BlockGridUpdating" { Type = Boolean }
 
 	------------------------------------------------------
 	-- Dispose

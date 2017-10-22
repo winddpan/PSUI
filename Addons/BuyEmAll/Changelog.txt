@@ -1,4 +1,14 @@
-﻿v3.4.1
+﻿v3.4.4
+Quick TOC bump.
+
+v3.4.3
+Tiny fix for purchasing currencies with a set maximum, missed that detail.
+
+v3.4.2
+Fixed buying currencies and some other non-item things with gold.
+Added some checks to ensure things are handled in the right function.
+
+v3.4.1
 Fixed purchases with gold because I missed a function return change.
 
 v3.4.0

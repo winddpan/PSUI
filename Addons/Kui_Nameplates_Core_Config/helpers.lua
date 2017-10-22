@@ -1,7 +1,14 @@
 local folder,ns = ...
 local opt = KuiNameplatesCoreConfig
 local frame_name = 'KuiNameplatesCoreConfig'
-local pcdd = LibStub('PhanxConfig-Dropdown')
+local pcdd = LibStub('SomeoneElsesConfig-Dropdown')
+local L = opt:GetLocale()
+
+local S_CHECKBOX_ON = 856
+local S_CHECKBOX_OFF = 857
+local S_MENU_OPEN = 850
+local S_MENU_CLOSE = 851
+
 -- generic scripts #############################################################
 local function EditBoxOnEscapePressed(self)
     self:ClearFocus()
@@ -10,12 +17,12 @@ local function OnEnter(self)
     GameTooltip:SetOwner(self,'ANCHOR_TOPLEFT')
     GameTooltip:SetWidth(200)
     GameTooltip:AddLine(
-        self.env and (opt.titles[self.env] or self.env) or
+        self.env and (L.titles[self.env] or self.env) or
         self.label and self.label:GetText()
     )
 
-    if self.env and opt.tooltips[self.env] then
-        GameTooltip:AddLine(opt.tooltips[self.env], 1,1,1,true)
+    if self.env and L.tooltips[self.env] then
+        GameTooltip:AddLine(L.tooltips[self.env], 1,1,1,true)
     end
 
     GameTooltip:Show()
@@ -57,9 +64,9 @@ do
 
     local function CheckBoxOnClick(self)
         if self:GetChecked() then
-            PlaySound("igMainMenuOptionCheckBoxOn")
+            PlaySound(S_CHECKBOX_ON)
         else
-            PlaySound("igMainMenuOptionCheckBoxOff")
+            PlaySound(S_CHECKBOX_OFF)
         end
 
         self:Set()
@@ -88,7 +95,7 @@ do
             check.label = parent:CreateFontString(nil,'ARTWORK','GameFontHighlight')
         end
 
-        check.label:SetText(opt.titles[name] or name or 'Checkbox')
+        check.label:SetText(L.titles[name] or name or 'Checkbox')
         check.label:SetPoint('LEFT', check, 'RIGHT')
 
         check.Get = Get
@@ -136,12 +143,6 @@ do
         self:Get()
         GenericOnShow(self)
     end
-    local function DropDownOnClick(self)
-        -- fix dropdown list frame strata
-        if self:GetParent() and self:GetParent().list then
-            self:GetParent().list:SetFrameStrata('TOOLTIP')
-        end
-    end
 
     local function DropDownEnable(self)
         self.labelText:SetFontObject('GameFontNormalSmall')
@@ -157,7 +158,7 @@ do
     function opt.CreateDropDown(parent, name, width)
         local dd = pcdd:New(
             parent,
-            opt.titles[name] or name or 'DropDown'
+            L.titles[name] or name or 'DropDown'
         )
         dd.labelText:SetFontObject('GameFontNormalSmall')
         dd:SetWidth(width or 200)
@@ -165,7 +166,6 @@ do
         dd.env = name
 
         dd:HookScript('OnShow',DropDownOnShow)
-        dd.button:HookScript('OnClick',DropDownOnClick)
 
         dd.OnEnter = OnEnter
         dd.OnLeave = OnLeave
@@ -285,7 +285,7 @@ do
         -- TODO inc/dec buttons
 
         local label = slider:CreateFontString(slider:GetName()..'Label','ARTWORK','GameFontNormal')
-        label:SetText(opt.titles[name] or name or 'Slider')
+        label:SetText(L.titles[name] or name or 'Slider')
         label:SetPoint('BOTTOM',slider,'TOP')
 
         local display = CreateFrame('EditBox',nil,slider)
@@ -374,7 +374,7 @@ do
         block:SetPoint('LEFT')
 
         local label = container:CreateFontString(nil,'ARTWORK','GameFontHighlight')
-        label:SetText(opt.titles[name] or name or 'Colour picker')
+        label:SetText(L.titles[name] or name or 'Colour picker')
         label:SetPoint('LEFT',block,'RIGHT',5,0)
 
         container.block = block
@@ -397,44 +397,17 @@ do
     end
 end
 do
-    function opt.CreateEditBox(parent,name,multiline,width,height)
+    function opt.CreateEditBox(parent,name,width,height)
         local e_name = name and frame_name..name..'EditBox' or nil
-        width,height = width or 150,height or 20
+        width,height = width or 150, height or 30
 
-        local box = CreateFrame('EditBox',e_name,parent)
-        box:SetMultiLine(multiline==true)
+        local box = CreateFrame('EditBox',e_name,parent,'InputBoxTemplate')
+        box:SetMultiLine(false)
         box:SetAutoFocus(false)
+        box:EnableMouse(true)
         box:SetFontObject('ChatFontNormal')
         box:SetSize(width,height)
         box.env = name
-
-        local bg = CreateFrame('Frame',nil,parent)
-        bg:SetBackdrop({
-            bgFile = 'Interface\\ChatFrame\\ChatFrameBackground',
-            edgeFile = 'Interface\\Tooltips\\UI-Tooltip-border',
-            edgeSize = 16,
-            insets = { left = 4, right = 4, top = 4, bottom = 4 }
-        })
-        bg:SetBackdropColor(.1, .1 , .1, .3)
-        bg:SetBackdropBorderColor(.5, .5, .5)
-        box.bg = bg
-
-        if multiline then
-            local scroll = CreateFrame('ScrollFrame',nil,parent,'UIPanelScrollFrameTemplate')
-            scroll:SetSize(width,height)
-            scroll:SetScrollChild(box)
-            box.scroll = scroll
-
-            scroll:SetScript('OnMouseDown', function(self)
-                self:GetScrollChild():SetFocus()
-            end)
-
-            bg:SetPoint('TOPLEFT', scroll, -10, 10)
-            bg:SetPoint('BOTTOMRIGHT', scroll, 30, -10)
-        else
-            bg:SetPoint('TOPLEFT', box, -10, 10)
-            bg:SetPoint('BOTTOMRIGHT', box, 30, -10)
-        end
 
         box:SetScript('OnShow',GenericOnShow)
         box:SetScript('OnEnable',OnEnable)
@@ -460,7 +433,7 @@ function opt.CreateSeperator(parent,name)
     shadow:SetPoint('BOTTOM',line,'TOP')
 
     local label = parent:CreateFontString(nil,'ARTWORK','GameFontNormal')
-    label:SetText(opt.titles[name] or name or 'Seperator')
+    label:SetText(L.titles[name] or name or 'Seperator')
     label:SetPoint('CENTER',line,0,10)
 
     line.label = label
@@ -489,6 +462,16 @@ do
         self.scroll:Hide()
         self:Hide()
     end
+    local function PageOnShow(self)
+        if type(self.Initialise) == 'function' then
+            self:Initialise()
+            self.Initialise = nil
+
+            -- trigger initial OnShow of created elements
+            self:Hide()
+            self:Show()
+        end
+    end
 
     local page_proto = {
         CreateCheckBox = opt.CreateCheckBox,
@@ -502,7 +485,12 @@ do
         ShowPage = ShowPage
     }
     function opt:CreateConfigPage(name)
+        assert(name)
+
         local f = CreateFrame('Frame',frame_name..name..'Page',self)
+        f:SetWidth(420)
+        f:SetHeight(1)
+        f:Hide()
         f.name = name
         f.elements = {}
 
@@ -516,9 +504,6 @@ do
             f.scroll.ScrollBar:SetBackdropColor(0,0,0,.2)
         end
 
-        f:SetWidth(420)
-        f:SetHeight(1)
-
         -- mixin page functions
         for k,v in pairs(page_proto) do
             f[k]=v
@@ -527,6 +512,8 @@ do
         self:CreatePageTab(f)
         f:HidePage()
 
+        f:SetScript('OnShow',PageOnShow)
+
         tinsert(self.pages,f)
         return f
     end
@@ -534,14 +521,14 @@ end
 -- tab functions ###############################################################
 do
     local function OnClick(self)
-        PlaySound("igMainMenuOptionCheckBoxOn");
+        PlaySound(S_CHECKBOX_ON);
         self.child:ShowPage()
     end
     function opt:CreatePageTab(page)
         local tab = CreateFrame('Button',frame_name..page.name..'PageTab',self.TabList,'OptionsListButtonTemplate')
         tab:SetScript('OnClick',OnClick)
-        tab:SetText(self.page_names[page.name] or page.name or 'Tab')
-        tab:SetWidth(120)
+        tab:SetText(L.page_names[page.name] or page.name or 'Tab')
+        tab:SetWidth(130)
 
         tab.child = page
         page.tab = tab
@@ -549,19 +536,19 @@ do
         local pt = #self.pages > 0 and self.pages[#self.pages].tab
 
         if pt then
-            tab:SetPoint('TOPLEFT',pt,'BOTTOMLEFT')
+            tab:SetPoint('TOPLEFT',pt,'BOTTOMLEFT',0,-1)
         else
-            tab:SetPoint('TOPLEFT',self.TabList,3,-3)
+            tab:SetPoint('TOPLEFT',self.TabList,6,-6)
         end
     end
 end
 -- popup functions #############################################################
 do
     local function PopupOnShow(self)
-        PlaySound("igMainMenuOpen")
+        PlaySound(S_MENU_OPEN)
     end
     local function PopupOnHide(self)
-        PlaySound("igMainMenuClose")
+        PlaySound(S_MENU_CLOSE)
     end
     local function PopupOnKeyUp(self,kc)
         if kc == 'ENTER' then
@@ -866,7 +853,7 @@ do
         if value and value == 'new_profile' then
             opt.Popup:ShowPage(
                 'text_entry',
-                opt.titles['new_profile_label'],
+                L.titles['new_profile_label'],
                 nil,
                 self.new_profile_callback
             )
@@ -875,19 +862,27 @@ do
         end
     end
     local function initialize(self)
-        local list = {}
+        -- sort profiles alphabetically
+        local profiles_indexed = {}
+        for name in pairs(opt.config.gsv.profiles) do
+            tinsert(profiles_indexed,name)
+        end
+        table.sort(profiles_indexed,function(a,b)
+            return strlower(a) < strlower(b)
+        end)
 
-        -- create new profile button
+        -- create new profile button at top
+        local list = {}
         tinsert(list,{
-            text = opt.titles['new_profile'],
+            text = L.titles['new_profile'],
             value = 'new_profile'
         })
 
         -- create profile buttons
-        for k,p in pairs(opt.config.gsv.profiles) do
+        for _,name in ipairs(profiles_indexed) do
             tinsert(list,{
-                text = k,
-                selected = k == opt.config.csv.profile
+                text = name,
+                selected = name == opt.config.csv.profile
             })
         end
 
@@ -895,7 +890,7 @@ do
         self:SetValue(opt.config.csv.profile)
     end
     function CreateProfileDropDown()
-        p_dd = pcdd:New(opt,opt.titles['profile'])
+        p_dd = pcdd:New(opt,L.titles['profile'])
         p_dd.labelText:SetFontObject('GameFontNormalSmall')
         p_dd:SetWidth(152)
         p_dd:SetHeight(40)
@@ -932,7 +927,7 @@ function opt:Initialise()
 
     local p_delete = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
     p_delete:SetPoint('TOPRIGHT',-10,-26)
-    p_delete:SetText(opt.titles['delete_profile_title'])
+    p_delete:SetText(L.titles['delete_profile_title'])
     p_delete:SetSize(109,22)
     p_delete.callback = function(page,accept)
         if accept then
@@ -943,14 +938,14 @@ function opt:Initialise()
     p_delete:SetScript('OnClick',function(self)
         opt.Popup:ShowPage(
             'confirm_dialog',
-            string.format(opt.titles.delete_profile_label,opt.config.csv.profile),
+            string.format(L.titles.delete_profile_label,opt.config.csv.profile),
             self.callback
         )
     end)
 
     local p_rename = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
     p_rename:SetPoint('RIGHT',p_delete,'LEFT',-5,0)
-    p_rename:SetText(opt.titles['rename_profile_title'])
+    p_rename:SetText(L.titles['rename_profile_title'])
     p_rename:SetSize(109,22)
     p_rename.callback = function(page,accept)
         if accept then
@@ -962,7 +957,7 @@ function opt:Initialise()
         opt.Popup:ShowPage(
             'text_entry',
             string.format(
-                opt.titles['rename_profile_label'],
+                L.titles['rename_profile_label'],
                 opt.config.csv.profile
             ),
             opt.config.csv.profile,
@@ -972,7 +967,7 @@ function opt:Initialise()
 
     local p_reset = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
     p_reset:SetPoint('RIGHT',p_rename,'LEFT',-5,0)
-    p_reset:SetText(opt.titles['reset_profile_title'])
+    p_reset:SetText(L.titles['reset_profile_title'])
     p_reset:SetSize(109,22)
     p_reset.callback = function(page,accept)
         if accept then
@@ -982,14 +977,14 @@ function opt:Initialise()
     p_reset:SetScript('OnClick',function(self)
         opt.Popup:ShowPage(
             'confirm_dialog',
-            string.format(opt.titles.reset_profile_label,opt.config.csv.profile),
+            string.format(L.titles.reset_profile_label,opt.config.csv.profile),
             self.callback
         )
     end)
 
     local p_copy = CreateFrame('Button',nil,opt,'UIPanelButtonTemplate')
     p_copy:SetPoint('RIGHT',p_reset,'LEFT',-5,0)
-    p_copy:SetText(opt.titles['copy_profile_title'])
+    p_copy:SetText(L.titles['copy_profile_title'])
     p_copy:SetSize(109,22)
     p_copy.callback = function(page,accept)
         if accept then
@@ -999,7 +994,7 @@ function opt:Initialise()
     p_copy:SetScript('OnClick',function(self)
         opt.Popup:ShowPage(
             'text_entry',
-            opt.titles['copy_profile_label'],
+            L.titles['copy_profile_label'],
             nil,
             self.callback
         )
@@ -1033,15 +1028,8 @@ function opt:Initialise()
 
     -- create tab container
     local tablist = CreateFrame('Frame',frame_name..'TabList',self)
-    tablist:SetWidth(1)
-    tablist:SetHeight(1)
-
-    local scroll = CreateFrame('ScrollFrame',frame_name..'TabListScrollFrame',self,'UIPanelScrollFrameTemplate')
-    scroll:SetPoint('TOPLEFT',tl_bg,4,-4)
-    scroll:SetPoint('BOTTOMRIGHT',tl_bg,-26,4)
-    scroll:SetScrollChild(tablist)
-
-    tablist.Scroll = scroll
+    tablist:SetPoint('TOPLEFT',tl_bg,4,-4)
+    tablist:SetPoint('BOTTOMRIGHT',tl_bg,-4,4)
 
     self.TabList = tablist
     self.TabListBG = tl_bg

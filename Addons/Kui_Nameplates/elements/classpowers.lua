@@ -574,6 +574,12 @@ function ele:PowerInit()
     power_mod = nil
     power_display_partial = nil
 
+    self:UnregisterEvent('PLAYER_ENTERING_WORLD')
+    self:UnregisterEvent('UPDATE_SHAPESHIFT_FORM')
+    self:UnregisterEvent('RUNE_POWER_UPDATE')
+    cpf:UnregisterAllEvents()
+    self.UNIT_AURA_func = nil
+
     if type(powers[class]) == 'table' then
         local spec = GetSpecialization()
         power_type = powers[class][spec]
@@ -582,10 +588,10 @@ function ele:PowerInit()
             if power_type then
                 -- ret paladin; watch for fires of justice procs
                 FIRES_OF_JUSTICE_NAME = GetSpellInfo(FIRES_OF_JUSTICE_SPELL_ID)
-                self:RegisterEvent('UNIT_AURA','Paladin_WatchFiresOfJustice')
                 highlight_at = 3
-            else
-                self:UnregisterEvent('UNIT_AURA')
+
+                cpf:RegisterUnitEvent('UNIT_AURA','player')
+                self.UNIT_AURA_func = self.Paladin_WatchFiresOfJustice
             end
         elseif class == 'DRUID' and (
            (spec == 1 and IsTalentKnown(BALANCE_FERAL_AFFINITY_TALENT_ID)) or
@@ -601,16 +607,9 @@ function ele:PowerInit()
             if form and form == 2 then
                 power_type = Enum.PowerType.ComboPoints
             end
-        else
-            self:UnregisterEvent('UPDATE_SHAPESHIFT_FORM')
         end
     else
         power_type = powers[class]
-    end
-
-    if class == 'MONK' and (not power_type or power_type ~= 'stagger') then
-        self:UnregisterEvent('UNIT_ABSORB_AMOUNT_CHANGED')
-        self:UnregisterEvent('UNIT_MAXHEALTH')
     end
 
     if power_type then
@@ -625,8 +624,8 @@ function ele:PowerInit()
                 cpf.RuneDaemon = r
             end
         elseif power_type == 'stagger' then
-            self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED','StaggerUpdate')
-            self:RegisterEvent('UNIT_MAXHEALTH','StaggerUpdate')
+            cpf:RegisterUnitEvent('UNIT_ABSORB_AMOUNT_CHANGED','player')
+            cpf:RegisterUnitEvent('UNIT_MAXHEALTH','player')
         else
             power_mod = UnitPowerDisplayMod(power_type)
             power_type_tag = power_tags[power_type]
@@ -640,8 +639,8 @@ function ele:PowerInit()
             end
 
             self:RegisterEvent('PLAYER_ENTERING_WORLD')
-            self:RegisterEvent('UNIT_MAXPOWER','PowerEvent')
-            self:RegisterEvent('UNIT_POWER','PowerEvent')
+            cpf:RegisterUnitEvent('UNIT_MAXPOWER','player')
+            cpf:RegisterUnitEvent('UNIT_POWER_FREQUENT','player')
         end
 
         self:RegisterMessage('Show','TargetUpdate')
@@ -664,14 +663,8 @@ function ele:PowerInit()
         -- set initial position
         PositionFrame()
     else
-        self:UnregisterEvent('PLAYER_ENTERING_WORLD')
-        self:UnregisterEvent('UNIT_MAXPOWER')
-        self:UnregisterEvent('UNIT_POWER')
-        self:UnregisterEvent('RUNE_POWER_UPDATE')
-
         self:UnregisterMessage('Show')
         self:UnregisterMessage('HealthColourChange')
-
         cpf:Hide()
     end
 end
@@ -734,7 +727,6 @@ function ele:StaggerUpdate()
 end
 function ele:PowerEvent(event,unit,power_type_rcv)
     -- validate power events + passthrough to PowerUpdate
-    if unit ~= 'player' then return end
     if power_type_rcv ~= power_type_tag then return end
 
     if event == 'UNIT_MAXPOWER' then
@@ -747,7 +739,6 @@ function ele:UPDATE_SHAPESHIFT_FORM()
     self:PowerInit()
 end
 function ele:Paladin_WatchFiresOfJustice(_,unit)
-    if unit ~= 'player' then return end
     if UnitBuff(unit,FIRES_OF_JUSTICE_NAME) then
         highlight_at = 2
     else
@@ -755,6 +746,23 @@ function ele:Paladin_WatchFiresOfJustice(_,unit)
     end
 
     PowerUpdate()
+end
+-- cpf event wrappers ##########################################################
+-- wrap cpf unit events to mod functions
+function ele:UNIT_AURA(...)
+    self:UNIT_AURA_func(...)
+end
+function ele:UNIT_MAXPOWER(...)
+    self:PowerEvent(...)
+end
+function ele:UNIT_POWER_FREQUENT(...)
+    self:PowerEvent(...)
+end
+function ele:UNIT_ABSORB_AMOUNT_CHANGED()
+    self:StaggerUpdate()
+end
+function ele:UNIT_MAXHEALTH()
+    self:StaggerUpdate()
 end
 -- register ####################################################################
 function ele:OnEnable()
@@ -776,6 +784,7 @@ end
 function ele:OnDisable()
     if cpf then
         cpf:Hide()
+        cpf:UnregisterAllEvents()
     end
 end
 function ele:Initialised()
@@ -795,6 +804,9 @@ function ele:Initialised()
     cpf:SetSize(2,2)
     cpf:SetPoint('CENTER')
     cpf:Hide()
+    cpf:SetScript('OnEvent',function(self,event,...)
+        ele[event](ele,event,...)
+    end)
 
     addon.ClassPowersFrame = cpf
 

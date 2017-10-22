@@ -10,6 +10,82 @@ L["S_ERROR_NOTLOADEDYET"] = "Cette quête n'est pas encore chargée, merci de pa
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Suivi seulement"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Afficher seulement les quêtes suivies"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Affiche les Expéditions"
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CANCELING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CREATE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNLIST"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ACTIONS_WAITING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_ENABLED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_INVASION_ENABLED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_ASKX"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_DONTLEAVE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_NOPVP"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_OT_ENABLED"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_QUEUEBUSY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_QUEUEBUSY2"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_APPLYING"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_APPLYING1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_FOUND"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_FOUND1"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RESULTS_UNAPPLY"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_SECONDS"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_GROUPFINDER_TUTORIAL1"] = ""
 L["S_MAPBAR_AUTOWORLDMAP"] = "Carte du monde (mode auto)"
 L["S_MAPBAR_AUTOWORLDMAP_DESC"] = "Quand vous êtes à Dalaran ou au Hall de classe, presser la touche 'M' affiche directement les îles brisées"
 L["S_MAPBAR_FILTER"] = "Filtre"
@@ -69,6 +145,30 @@ L["S_QUESTTYPE_PROFESSION"] = "Profession"
 L["S_QUESTTYPE_PVP"] = "JcJ"
 L["S_QUESTTYPE_RESOURCE"] = "Ressources"
 L["S_QUESTTYPE_TRADESKILL"] = "Artisanat"
+--Translation missing 
+-- L["S_RAREFINDER_ADDFROMPREMADE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_SOUND_ENABLED"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_SOUNDWARNING"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TITLE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_REMOVE"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""
+--Translation missing 
+-- L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""
 L["S_SHAREPANEL_THANKS"] = [=[Merci de partager World Quest Tracker !
 Envoyez notre lien à vos amis sur Facebook, Twitter, à l'Élysée...]=]
 L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"
@@ -89,5 +189,7 @@ L["S_TUTORIAL_REWARD"] = "indique la récompense (équipement, or, pouvoir d'art
 L["S_TUTORIAL_TIMELEFT"] = "Indique le temps restant (+4 heures, +90 minutes, +30 minutes, moins de 30 minutes)"
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Ce bouton vous apporte la carte des îles brisées."
 L["S_UNKNOWNQUEST"] = "Quête inconnue"
+--Translation missing 
+-- L["S_WORLDMAP_TOOGLEQUESTS"] = ""
 L["S_WORLDQUESTS"] = "Expéditions"
 

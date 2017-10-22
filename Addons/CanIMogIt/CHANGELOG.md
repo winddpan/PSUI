@@ -1,3 +1,77 @@
+7.3.0.04 Release - 2017/10/08
+
+Prevent Auctioneer from loading icons.
+
+* [#127](https://gitlab.com/toreltwiddler/CanIMogIt/issues/127) Prevent the icon overlays from showing up in the Auction House when Auctioneer is enabled (it is not yet supported).
+
+*****
+
+7.3.0.03 Release - 2017/10/08
+
+Bug fixes for overlay.
+
+* [#119](https://gitlab.com/toreltwiddler/CanIMogIt/issues/119) Overlay now uses Blizzard constants in more places, which means addons like Extended Vendor UI will work more often (although they may still have [issues](https://gitlab.com/toreltwiddler/CanIMogIt/issues/53)).
+* [#116](https://gitlab.com/toreltwiddler/CanIMogIt/issues/116) & [#117](https://gitlab.com/toreltwiddler/CanIMogIt/issues/117) Auction House overlay now updates when options are changed and is included in the Show Bag Icons option.
+
+*****
+
+7.3.0.02 Release - 2017/09/10
+
+Bug fixes.
+
+* [#95](https://gitlab.com/toreltwiddler/CanIMogIt/issues/95) Tooltips and bags overlay will now properly display Cannot Learn: Soulbound instead of Cannot Learn: Reason if you moused over an item before looting.
+* [#98](https://gitlab.com/toreltwiddler/CanIMogIt/issues/98) Encounter Journal overlay will update if you have it open and then loot and learn an item.
+
+*****
+
+7.3.0.01 Release - 2017/08/29
+
+Bump TOC for 7.3.
+
+*****
+
+7.2.5.04 Release - 2017/08/26
+
+ElvUI bags and bank now have the overlay!
+
+![ElvUI bags & bank overlay!](http://i.imgur.com/5ZJMZGb.png "ElvUI bags & bank overlay!")
+
+* [#18](https://gitlab.com/toreltwiddler/CanIMogIt/issues/18) Added some more slash commands.
+* [#44](https://gitlab.com/toreltwiddler/CanIMogIt/issues/44) Added support for ElvUI bags and bank.  Also Tradeskills windows now update correctly.
+* [#106](https://gitlab.com/toreltwiddler/CanIMogIt/issues/106) Updated options menu checkbox sound to use 7.3 API.
+* [#112](https://gitlab.com/toreltwiddler/CanIMogIt/issues/112) Cleaned up Locales in TOC.
+
+*****
+
+7.2.5.03 Release - 2017/08/20
+
+Prevents errors with addons that overwrite the default Auction House.
+
+*****
+
+7.2.5.02 Release - 2017/08/20
+
+Auction House now has the overlay!
+
+![Auction House overlay!](http://i.imgur.com/5jrKJxs.png "Auction House overlay!")
+
+* [#24](https://gitlab.com/toreltwiddler/CanIMogIt/issues/24) Added the overlay to the default Auction House (code from crappyusername).
+* [#97](https://gitlab.com/toreltwiddler/CanIMogIt/issues/97) Separated the overlay code into different files and their own subfolder.
+
+*****
+
+7.2.5.01 Release - 2017/07/16
+
+Release of database change.  You cannot downgrade from this version to older versions!  If you do you will have to delete your CanIMogIt.lua save variables file!
+
+*****
+
+7.2.5.01 Beta - 2017/07/09
+
+Changed how the database stores items so that items of different types that share appearances are not stored together.
+
+*****
+
 7.2.0.04 Release - 2017/06/10
 
 Fixed log-in and loading screen lag. ([#58](https://gitlab.com/toreltwiddler/CanIMogIt/issues/58) & [#89](https://gitlab.com/toreltwiddler/CanIMogIt/issues/89))

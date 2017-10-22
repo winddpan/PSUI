@@ -1,5 +1,5 @@
 local ADDON_NAME = ...
---local _G = getfenv(0)
+local _G = _G
 local knownTable = {} -- Save known items for later use
 local db
 local questItems = { -- Quest items and matching quests
@@ -26,6 +26,7 @@ local function _checkIfKnown(itemLink)
 	local itemID = tonumber(itemLink:match("item:(%d+)"))
 	if itemID and questItems[itemID] then -- Check if item is a quest item.
 		if IsQuestFlaggedCompleted(questItems[itemID]) then -- Check if the quest for item is already done.
+			if db.debug and not knownTable[itemLink] then print(format("%d - QuestItem", itemID)) end
 			knownTable[itemLink] = true -- Mark as known for later use
 			return true -- This quest item is already known
 		end
@@ -35,6 +36,7 @@ local function _checkIfKnown(itemLink)
 	if itemLink:match("|H(.-):") == "battlepet" then -- Check if item is Caged Battlepet (dummy item 82800)
 		local _, battlepetID = strsplit(":", itemLink)
 		if C_PetJournal.GetNumCollectedInfo(battlepetID) > 0 then
+			if db.debug and not knownTable[itemLink] then print(format("%d - BattlePet: %s %d", itemID, battlepetID, C_PetJournal.GetNumCollectedInfo(battlepetID))) end
 			knownTable[itemLink] = true -- Mark as known for later use
 			return true -- Battlepet is collected
 		end
@@ -49,6 +51,7 @@ local function _checkIfKnown(itemLink)
 	for i = 2, lines do -- Line 1 is always the name so you can skip it.
 		local text = _G["AKScanningTooltipTextLeft"..i]:GetText()
 		if text == _G.ITEM_SPELL_KNOWN or strmatch(text, S_PET_KNOWN) then
+			if db.debug and not knownTable[itemLink] then print(format("%d - Tip %d: %s (%s / %s)", itemID, i, tostring(text), text == _G.ITEM_SPELL_KNOWN and "true" or "false", strmatch(text, S_PET_KNOWN) and "true" or "false")) end
 			--knownTable[itemLink] = true -- Mark as known for later use
 			--return true -- Item is known and collected
 			if lines - i <= 3 then -- Mounts have Riding skill and Reputation requirements under Already Known -line
@@ -56,6 +59,7 @@ local function _checkIfKnown(itemLink)
 			end
 		elseif text == _G.TOY and _G["AKScanningTooltipTextLeft"..i + 2] and _G["AKScanningTooltipTextLeft"..i + 2]:GetText() == _G.ITEM_SPELL_KNOWN then
 			-- Check if items is Toy already known
+			if db.debug and not knownTable[itemLink] then print(format("%d - Toy %d", itemID, i)) end
 			knownTable[itemLink] = true
 		end
 	end
@@ -67,23 +71,42 @@ local function _hookAH() -- Most of this found from AddOns/Blizzard_AuctionUI/Bl
 	local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame)
 
 	for i=1, _G.NUM_BROWSE_TO_DISPLAY do
-		if _G["BrowseButton"..i.."Item"] and _G["BrowseButton"..i.."ItemIconTexture"] then -- Something to do with ARL?
-			local itemLink = GetAuctionItemLink('list', offset + i)
+		if (_G["BrowseButton"..i.."Item"] and _G["BrowseButton"..i.."ItemIconTexture"]) or _G["BrowseButton"..i].id then -- Something to do with ARL?
+			local itemLink
+			if _G["BrowseButton"..i].id then
+				itemLink = GetAuctionItemLink('list', _G["BrowseButton"..i].id)
+			else
+				itemLink = GetAuctionItemLink('list', offset + i)
+			end
 
 			if itemLink and _checkIfKnown(itemLink) then
-				_G["BrowseButton"..i.."ItemIconTexture"]:SetVertexColor(db.r, db.g, db.b)
+				if _G["BrowseButton"..i].id then
+					_G["BrowseButton"..i].Icon:SetVertexColor(db.r, db.g, db.b)
+				else
+					_G["BrowseButton"..i.."ItemIconTexture"]:SetVertexColor(db.r, db.g, db.b)
+				end
+
 				if db.monochrome then
-					_G["BrowseButton"..i.."ItemIconTexture"]:SetDesaturated(true)
+					if _G["BrowseButton"..i].id then
+						_G["BrowseButton"..i].Icon:SetDesaturated(true)
+					else
+						_G["BrowseButton"..i.."ItemIconTexture"]:SetDesaturated(true)
+					end
 				end
 			else
-				_G["BrowseButton"..i.."ItemIconTexture"]:SetVertexColor(1, 1, 1)
-				_G["BrowseButton"..i.."ItemIconTexture"]:SetDesaturated(false)
+				if _G["BrowseButton"..i].id then
+					_G["BrowseButton"..i].Icon:SetVertexColor(1, 1, 1)
+					_G["BrowseButton"..i].Icon:SetDesaturated(false)
+				else
+					_G["BrowseButton"..i.."ItemIconTexture"]:SetVertexColor(1, 1, 1)
+					_G["BrowseButton"..i.."ItemIconTexture"]:SetDesaturated(false)
+				end
 			end
 		end
 	end
 end
 
-local function _hookMechant() -- Most of this found from FrameXML/MerchantFrame.lua
+local function _hookMerchant() -- Most of this found from FrameXML/MerchantFrame.lua
 	for i = 1, _G.MERCHANT_ITEMS_PER_PAGE do
 		local index = (((MerchantFrame.page - 1) * _G.MERCHANT_ITEMS_PER_PAGE) + i)
 		local itemButton = _G["MerchantItem"..i.."ItemButton"]
@@ -111,7 +134,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if event == "ADDON_LOADED" and (...) == ADDON_NAME then
 		if IsAddOnLoaded("Blizzard_AuctionUI") then
 			self:UnregisterEvent(event)
-			hooksecurefunc("AuctionFrameBrowse_Update", _hookAH)
+
+			if IsAddOnLoaded("Auc-Advanced") and _G.AucAdvanced.Settings.GetSetting("util.compactui.activated") then
+				hooksecurefunc("GetNumAuctionItems", _hookAH)
+			else
+				hooksecurefunc("AuctionFrameBrowse_Update", _hookAH)
+			end
 		end
 
 		if type(AlreadyKnownSettings) ~= "table" then
@@ -119,10 +147,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		db = AlreadyKnownSettings
 
-		hooksecurefunc("MerchantFrame_UpdateMerchantInfo", _hookMechant)
+		hooksecurefunc("MerchantFrame_UpdateMerchantInfo", _hookMerchant)
 	elseif event == "ADDON_LOADED" and (...) == "Blizzard_AuctionUI" then
 		self:UnregisterEvent(event)
-		hooksecurefunc("AuctionFrameBrowse_Update", _hookAH)
+
+		if IsAddOnLoaded("Auc-Advanced") and _G.AucAdvanced.Settings.GetSetting("util.compactui.activated") then
+			hooksecurefunc("GetNumAuctionItems", _hookAH)
+		else
+			hooksecurefunc("AuctionFrameBrowse_Update", _hookAH)
+		end
 	end
 end)
 
@@ -130,7 +163,7 @@ local function _RGBToHex(r, g, b)
 	r = r <= 255 and r >= 0 and r or 0
 	g = g <= 255 and g >= 0 and g or 0
 	b = b <= 255 and b >= 0 and b or 0
-	return string.format("%02x%02x%02x", r, g, b)
+	return format("%02x%02x%02x", r, g, b)
 end
 
 local function _changedCallback(restore)
@@ -174,14 +207,18 @@ SlashCmdList.ALREADYKNOWN = function(...)
 		_ShowColorPicker(db.r, db.g, db.b, false, _changedCallback)
 	elseif (...) == "monochrome" then
 		db.monochrome = not db.monochrome
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r Monochrome: ".. (db.monochrome and "|cff00ff00true|r" or "|cffff0000false|r"))
+	elseif (...) == "debug" then
+		db.debug = not db.debug
+		if db.debug then wipe(knownTable) end
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r Debug: ".. (db.debug and "|cff00ff00true|r" or "|cffff0000false|r"))
 	else
-		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r /alreadyknown (green|blue|yellow|cyan|purple|gray|custom|monochrome)")
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r /alreadyknown ( green | blue | yellow | cyan | purple | gray | custom | monochrome )")
 	end
 
-	if (...) == "monochrome" then
-		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r monochrome ".. (db.monochrome and "|cff00ff00true|r" or "|cffff0000false|r"))
-	elseif (...) ~= "" and (...) ~= "custom" then
-		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r |cff".._RGBToHex(db.r*255, db.g*255, db.b*255)..(...).."|r monochrome ".. (db.monochrome and "|cff00ff00true|r" or "|cffff0000false|r"))
+	if (...) ~= "" and (...) ~= "custom" and (...) ~= "monochrome" and (...) ~= "debug" then
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r |cff".._RGBToHex(db.r*255, db.g*255, db.b*255)..(...).."|r, Monochrome: ".. (db.monochrome and "|cff00ff00true|r" or "|cffff0000false|r"))
+		if db.debug then DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00".. ADDON_NAME ..":|r Debug: |cff00ff00true|r") end
 	end
 
 	if ColorPickerFrame:IsShown() and (...) ~= "custom" then

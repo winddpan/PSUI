@@ -12,6 +12,7 @@ _IFHealthFrequentUnitList = _IFHealthFrequentUnitList or UnitList(_Name)
 
 function _IFHealthFrequentUnitList:OnUnitListChanged()
 	self:RegisterEvent("UNIT_HEALTH_FREQUENT")
+	self:RegisterEvent("UNIT_HEALTH")
 	self:RegisterEvent("UNIT_MAXHEALTH")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE")

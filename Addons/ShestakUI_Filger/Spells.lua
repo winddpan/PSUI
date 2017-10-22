@@ -37,6 +37,9 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 				--冰霜之柱
 				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
+				{ spellID = 53365, unitID = "player", caster = "player", filter = "BUFF"},
+				{ spellID = 242583, unitID = "player", caster = "player", filter = "BUFF"},
+
 				-- 收割急速buff
 				{spellID = 215711, unitID = "player", caster = "player", filter = "BUFF" },
 				{spellID = 207319, unitID = "player",caster = "all", filter = "BUFF"}, 
@@ -85,8 +88,11 @@ Filger_Spells = {
 			IconSize = 36,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 			
+			{ spellID = 101568, unitID = "player", caster = "player", filter = "BUFF"},
+			{ spellID = 196770, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- 溃烂之伤
-			--{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
 			
 			{spellID = 195181, unitID = "player", caster = "player", filter = "BUFF"},
 		},
@@ -99,16 +105,18 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
 			
 			-- 溃烂之伤
-			{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
+			--{spellID = 194310, unitID = "target", caster = "player", filter = "DEBUFF"},
 			{spellID = 196782, unitID = "target", caster = "player", filter = "DEBUFF"},
-
-			--灵魂收割
-			{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- 恶性瘟疫
+			{spellID = 191587, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- 血之疫病
 			{spellID = 55078, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- 冰霜疫病
 			{spellID = 55095, unitID = "target", caster = "player", filter = "DEBUFF"},
+			
+			--灵魂收割
+			{spellID = 130736, unitID = "target", caster = "player", filter = "DEBUFF"},
+
 			-- 冰链
 			{spellID = 45524, unitID = "target", caster = "player", filter = "DEBUFF"},
 			
@@ -210,10 +218,12 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = 38,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
-							
+						
+						
 			-- 必爆肩膀
 			{spellID = 235027, unitID = "player", caster = "player", filter = "BUFF"},
-				
+			{spellID = 245640, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- 灌铅骰子
 			{spellID = 240837, unitID = "player", caster = "player", filter = "BUFF"},
 			

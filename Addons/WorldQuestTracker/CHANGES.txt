@@ -1,7 +1,7 @@
-changeset:   147:9507428afa05
-tag:         v7.2.5.147-release
+changeset:   257:5f650be8d10f
+tag:         v7.3.0.257-release
 user:        Tercio
-date:        Tue Jun 20 09:39:10 2017 -0300
-summary:     - Fix for Ticket #449: error on opening the world map.
+date:        Sun Oct 15 09:23:43 2017 -0200
+summary:     - Ticket #556: attempt to fix an issue started on latest update for portuguese localization.
 
 

@@ -1,0 +1,10 @@
+## Interface: 80000
+## Title: TinyCharacterStats
+## Notes: TinyCharacterStats
+## Author: M
+## SavedVariables: TinyCharacterStatsDB
+
+CharacterStats.Data.lua
+CharacterStats.View.lua
+CharacterExpand.lua
+CharacterDurability.lua

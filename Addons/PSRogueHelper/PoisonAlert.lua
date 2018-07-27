@@ -1,7 +1,7 @@
 if select(2, UnitClass("player")) ~= "ROGUE" then return end
 
-local spn = select(1, GetSpellInfo(2823)) --ÖÂÃü
-local spn3 = select(1, GetSpellInfo(8679)) --ÖÂÉË
+local spn1 = 2823 --ÖÂÃü
+local spn2 = 8679 --ÖÂÉË
 local _, _, icon_texture = GetSpellInfo(2823)
 						
 local bar = CreateFrame("Frame", "PoisonAlert", UIParent)
@@ -39,11 +39,14 @@ SpecWatch:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4 ,arg
 		CheckerFrame:SetScript("OnUpdate", function(self, elapsed)
 			if timeDuration >= 0.33 then
 				timeDuration = 0
-				if UnitBuff("player", spn) ~= nil or UnitBuff("player", spn3) ~= nil then
-					bar:Hide()
-				else
-					bar:Show()
+				for i=1,40 do 
+					local buffId = select(10, UnitBuff("player",i))
+					if buffId ~= nil and (buffId == spn1 or buffId == spn2) then
+						bar:Hide()
+						return
+					end
 				end
+				bar:Show()
 			else
 				timeDuration = timeDuration + elapsed
 			end

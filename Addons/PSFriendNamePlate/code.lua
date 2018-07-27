@@ -13,6 +13,7 @@ DFS:RegisterEvent("CVAR_UPDATE")
 DFS:RegisterEvent("DISPLAY_SIZE_CHANGED") 
 DFS:RegisterEvent("PLAYER_ENTERING_WORLD") 
 DFS:RegisterEvent("PLAYER_LOGIN") 
+
 local function eventHandler(self, event, ...) 
    defaultsetting() 
 end 

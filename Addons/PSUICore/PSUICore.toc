@@ -1,9 +1,9 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: |cff3399FFPSPSUICore|r
 ## Notes: PSUI Core
 ## Notes-zhCN: PSUI核心，包含面板美化、小地图、背包等
 ## Author: WINDDPAN
-## Version: 2.5
+## Version: 2.6
 ## OptionalDeps:Skada, DBM-Core, BigWigs, Aurora
 ## X-DBM-Timer-Skin: 1
 ## X-DBM-Timer-Skin-Name: PSUICore
@@ -17,9 +17,9 @@ slashcmd.lua
 panel\lib.lua
 panel\core.lua
 
+modules\modules.xml
 automation\automation.xml
 info\info.xml
 lib\libs.xml
 cc\cc.xml
-modules\modules.xml
 skin\skin.xml

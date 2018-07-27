@@ -1,9 +1,8 @@
-## Interface: 70200
+## Interface: 80000
 ## Author: winddpan
 ## Title: rActionBar_PSUI
 ## Notes: rActionBar layout
 ## RequiredDeps: rActionBar
-## OptionalDeps: rActionButtonStyler
 
 layout_mine.lua
 layout.lua

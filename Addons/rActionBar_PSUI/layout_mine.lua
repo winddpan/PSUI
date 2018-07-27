@@ -14,6 +14,23 @@ for _, name in pairs(L.MyNames) do
 end
 if not L.isMine then return end
 
+local commonMargin = 3
+
+
+-----------------------------
+------ Combine bar4&5
+-----------------------------
+
+function GetButtonList(buttonName)
+  local buttonList = {}
+  for i=1, NUM_ACTIONBAR_BUTTONS do
+    local button = _G[buttonName..i]
+    if not button then break end
+    table.insert(buttonList, button)
+  end
+  return buttonList
+end
+
 -----------------------------
 -- Fader
 -----------------------------
@@ -52,11 +69,11 @@ rActionBar:CreateBagBar(A, bagbar)
 
 local micromenubar = {
   framePoint      = { "TOP", UIParent, "TOP", 0, 0 },
-  frameScale      = .9,
+  frameScale      = 1,
   framePadding    = 2,
   buttonWidth     = 28,
-  buttonHeight    = 58,
-  buttonMargin    = 0,
+  buttonHeight    = 36,
+  buttonMargin    = -2,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   fader           = fader,
@@ -74,9 +91,8 @@ local bar1 = {
   framePadding    = 1,
   buttonWidth     = 36,
   buttonHeight    = 36,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 12,
-  numButtons	  = 12,
   startPoint      = "BOTTOMLEFT",
   fader           = fader,
 }
@@ -93,14 +109,17 @@ local bar2 = {
   framePadding    = 2,
   buttonWidth     = 44,
   buttonHeight    = 44,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 10,
-  numButtons	  = 10,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
 --create
 rActionBar:CreateActionBar2(A, bar2)
+
+local bar2List = GetButtonList("MultiBarBottomLeftButton")
+bar2List[11]:ClearAllPoints()
+bar2List[12]:ClearAllPoints()
 
 -----------------------------
 -- Bar3
@@ -111,7 +130,7 @@ local bar3 = {
   framePadding    = 2,
   buttonWidth     = 34,
   buttonHeight    = 34,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = {
@@ -136,7 +155,7 @@ local bar4 = {
   framePadding    = 2,
   buttonWidth     = 36,
   buttonHeight    = 36,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 1,
   startPoint      = "TOPRIGHT",
   fader           = nil,
@@ -154,7 +173,7 @@ local bar5 = {
   framePadding    = 2,
   buttonWidth     = 36,
   buttonHeight    = 36,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 1,
   startPoint      = "TOPRIGHT",
   fader           = nil,
@@ -162,19 +181,6 @@ local bar5 = {
 --create
 rActionBar:CreateActionBar5(A, bar5)
 
------------------------------
------- Combine bar4&5
------------------------------
-
-function GetButtonList(buttonName)
-  local buttonList = {}
-  for i=1, NUM_ACTIONBAR_BUTTONS do
-    local button = _G[buttonName..i]
-    if not button then break end
-    table.insert(buttonList, button)
-  end
-  return buttonList
-end
 
 function combineBar4And5() 
   local numRows = NUM_ACTIONBAR_BUTTONS
@@ -195,6 +201,7 @@ function combineBar4And5()
   end
   rLib:CreateButtonFrameFader(frame, buttonList, fader)
 end
+
 combineBar4And5()
 
 -----------------------------
@@ -207,7 +214,7 @@ local stancebar = {
   framePadding    = 2,
   buttonWidth     = 32,
   buttonHeight    = 32,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   fader           = fader,
@@ -226,7 +233,7 @@ local petbar = {
   framePadding    = 2,
   buttonWidth     = 32,
   buttonHeight    = 32,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
@@ -244,7 +251,7 @@ local extrabar = {
   framePadding    = 2,
   buttonWidth     = 40,
   buttonHeight    = 40,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 1,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
@@ -262,7 +269,7 @@ local vehicleexitbar = {
   framePadding    = 2,
   buttonWidth     = 36,
   buttonHeight    = 36,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 1,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
@@ -280,7 +287,7 @@ local possessexitbar = {
   framePadding    = 2,
   buttonWidth     = 32,
   buttonHeight    = 32,
-  buttonMargin    = 0,
+  buttonMargin    = commonMargin,
   numCols         = 1,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,

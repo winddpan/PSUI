@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: Simple Interrupt Announce Config
 ## Notes: Configuration panel for SIA
 ## Author: BeathsCurse (Saphod - Draenor EU)

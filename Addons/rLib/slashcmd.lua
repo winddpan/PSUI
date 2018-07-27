@@ -16,6 +16,7 @@ local defaultColor = "00FFFFFF"
 
 --rLib:CreateSlashCmd
 function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
+  --[[
   if not addonName or not shortcut or not frames then return end
   SlashCmdList[shortcut] = function(cmd)
     if (cmd:match"unlock") then
@@ -33,5 +34,5 @@ function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
   end
   _G["SLASH_"..shortcut.."1"] = "/"..shortcut
   print("|c"..(color or defaultColor)..addonName.." loaded.|r")
-  print("|c"..(color or defaultColor).."\/"..shortcut.."|r to display the command list")
+  print("|c"..(color or defaultColor).."\/"..shortcut.."|r to display the command list")]]
 end

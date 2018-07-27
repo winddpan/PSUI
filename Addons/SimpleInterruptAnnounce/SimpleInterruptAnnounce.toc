@@ -1,4 +1,4 @@
-﻿## Interface: 70200
+## Interface: 80000
 ## Title: Simple Interrupt Announce
 ## Notes: A simple interrupt announcer
 ## Author: BeathsCurse (Saphod - Draenor EU)

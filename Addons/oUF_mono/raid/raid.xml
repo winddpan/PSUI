@@ -20,7 +20,6 @@
 	</Button>
 
 	<Script file='indicators.lua' />
-	<Script file='debuffs.lua' />
 	<Script file="lib_raid.lua"/>
 	<Script file="core_raid.lua"/>
 </Ui>

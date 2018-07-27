@@ -9,7 +9,7 @@ local kc = LibStub('KuiConfig-1.0')
 local LSM = LibStub('LibSharedMedia-3.0')
 local addon = KuiNameplates
 local core = KuiNameplatesCore
--- combat checking frame
+-- local event frame
 local cc = CreateFrame('Frame')
 -- add media to LSM ############################################################
 LSM:Register(LSM.MediaType.FONT,'Yanone Kaffesatz Bold',kui.m.f.yanone)
@@ -61,7 +61,8 @@ local default_config = {
     title_text_players = false,
 
     fade_all = false,
-    fade_alpha = .5,
+    fade_non_target_alpha = .5,
+    fade_conditional_alpha = .3,
     fade_speed = .5,
     fade_friendly_npc = false,
     fade_neutral_enemy = false,
@@ -71,6 +72,11 @@ local default_config = {
     fade_avoid_execute_friend = false,
     fade_avoid_execute_hostile = false,
     fade_avoid_tracked = false,
+    fade_avoid_combat = false,
+    fade_avoid_casting_friendly = false,
+    fade_avoid_casting_hostile = false,
+    fade_avoid_casting_interruptible = false,
+    fade_avoid_casting_uninterruptible = true,
 
     font_face = DEFAULT_FONT,
     font_style = 2,
@@ -83,13 +89,21 @@ local default_config = {
     text_vertical_offset = -.5,
     name_vertical_offset = -2,
     bot_vertical_offset = -3,
+
+    name_colour_white_in_bar_mode = true,
     class_colour_friendly_names = true,
     class_colour_enemy_names = false,
+    name_colour_brighten_class = .2,
+    name_colour_player_friendly = {.6,.7,1},
+    name_colour_player_hostile  = {1,.7,.7},
+    name_colour_npc_friendly = {.7,1,.7},
+    name_colour_npc_neutral = {1,.97,.7},
+    name_colour_npc_hostile = {1,.7,.7},
 
-    health_text_friend_max = 5,
-    health_text_friend_dmg = 4,
-    health_text_hostile_max = 5,
-    health_text_hostile_dmg = 3,
+    health_text_friend_max = 1,
+    health_text_friend_dmg = 5,
+    health_text_hostile_max = 1,
+    health_text_hostile_dmg = 4,
 
     colour_hated = {.7,.2,.1},
     colour_neutral = {1,.8,0},
@@ -146,6 +160,7 @@ local default_config = {
     castbar_showall = true,
     castbar_showfriend = true,
     castbar_showenemy = true,
+    castbar_name_vertical_offset = -1,
 
     tank_mode = true,
     tankmode_force_enable = false,
@@ -158,7 +173,7 @@ local default_config = {
 
     classpowers_enable = true,
     classpowers_on_target = true,
-    classpowers_size = 11,
+    classpowers_size = 12,
     classpowers_bar_width = 50,
     classpowers_bar_height = 3,
 
@@ -178,6 +193,17 @@ local default_config = {
     bossmod_x_offset = 0,
     bossmod_y_offset = 30,
     bossmod_clickthrough = false,
+
+    cvar_enable = false,
+    cvar_show_friendly_npcs = GetCVarDefault('nameplateShowFriendlyNPCs')=="1",
+    cvar_name_only = GetCVarDefault('nameplateShowOnlyNames')=="1",
+    cvar_personal_show_always = GetCVarDefault('nameplatePersonalShowAlways')=="1",
+    cvar_personal_show_combat = GetCVarDefault('nameplatePersonalShowInCombat')=="1",
+    cvar_personal_show_target = GetCVarDefault('nameplatePersonalShowWithTarget')=="1",
+    cvar_max_distance = GetCVarDefault('nameplateMaxDistance'),
+    cvar_clamp_top = GetCVarDefault('nameplateOtherTopInset'),
+    cvar_clamp_bottom = GetCVarDefault('nameplateOtherBottomInset'),
+    cvar_overlap_v = GetCVarDefault('nameplateOverlapV')
 }
 -- local functions #############################################################
 local function UpdateClickboxSize()
@@ -234,8 +260,11 @@ function configChanged.bar_animation()
     core:SetBarAnimation()
 end
 
-function configChanged.fade_alpha(v)
-    addon:GetPlugin('Fading').faded_alpha = v
+function configChanged.fade_non_target_alpha(v)
+    addon:GetPlugin('Fading').non_target_alpha = v
+end
+function configChanged.fade_conditional_alpha(v)
+    addon:GetPlugin('Fading').conditional_alpha = v
 end
 function configChanged.fade_speed(v)
     addon:GetPlugin('Fading').fade_speed = v
@@ -306,6 +335,43 @@ local function configChangedFadeRule(v,on_load)
         end,22)
     end
 
+    if core.profile.fade_avoid_combat then
+        plugin:AddFadeRule(function(f)
+            return UnitAffectingCombat(f.unit) and 1
+        end,23)
+    end
+
+    if core.profile.fade_avoid_casting_interruptible or
+       core.profile.fade_avoid_casting_uninterruptible
+    then
+        local ff,fh,fi,fu =
+            core.profile.fade_avoid_casting_friendly,
+            core.profile.fade_avoid_casting_hostile,
+            core.profile.fade_avoid_casting_interruptible,
+            core.profile.fade_avoid_casting_uninterruptible
+
+        local function FadeRule_Casting_Interruptible(f)
+            if f.cast_state.interruptible then
+                return fi and 1 or nil
+            else
+                return fu and 1 or nil
+            end
+        end
+        local function FadeRule_Casting_CanAttack(f)
+            if UnitCanAttack('player',f.unit) then
+                return fh and FadeRule_Casting_Interruptible(f) or nil
+            else
+                return ff and FadeRule_Casting_Interruptible(f) or nil
+            end
+        end
+
+        plugin:AddFadeRule(function(f)
+            if f.state.casting then
+                return FadeRule_Casting_CanAttack(f)
+            end
+        end,24)
+    end
+
     if core.profile.fade_neutral_enemy then
         plugin:AddFadeRule(function(f)
             return f.state.reaction == 4 and
@@ -336,6 +402,11 @@ configChanged.fade_avoid_raidicon = configChangedFadeRule
 configChanged.fade_avoid_execute_friend = configChangedFadeRule
 configChanged.fade_avoid_execute_hostile = configChangedFadeRule
 configChanged.fade_avoid_tracked = configChangedFadeRule
+configChanged.fade_avoid_combat = configChangedFadeRule
+configChanged.fade_avoid_casting_friendly = configChangedFadeRule
+configChanged.fade_avoid_casting_hostile = configChangedFadeRule
+configChanged.fade_avoid_casting_interruptible = configChangedFadeRule
+configChanged.fade_avoid_casting_uninterruptible = configChangedFadeRule
 
 local function configChangedTextOffset()
     core:configChangedTextOffset()
@@ -426,6 +497,19 @@ configChanged.font_size_normal = configChangedFontOption
 configChanged.font_size_small = configChangedFontOption
 configChanged.font_style = configChangedFontOption
 
+local function configChangedNameColour()
+    core:configChangedNameColour()
+end
+configChanged.name_colour_white_in_bar_mode = configChangedNameColour
+configChanged.class_colour_friendly_names = configChangedNameColour
+configChanged.class_colour_enemy_names = configChangedNameColour
+configChanged.name_colour_brighten_class = configChangedNameColour
+configChanged.name_colour_player_friendly = configChangedNameColour
+configChanged.name_colour_player_hostile = configChangedNameColour
+configChanged.name_colour_npc_friendly = configChangedNameColour
+configChanged.name_colour_npc_neutral = configChangedNameColour
+configChanged.name_colour_npc_hostile = configChangedNameColour
+
 function configChanged.nameonly()
     core:configChangedNameOnly()
 end
@@ -484,6 +568,7 @@ configChanged.castbar_unin_colour = configChangedCastBar
 configChanged.castbar_icon = configChangedCastBar
 configChanged.castbar_name = configChangedCastBar
 configChanged.castbar_shield = configChangedCastBar
+configChanged.castbar_name_vertical_offset = configChangedCastBar
 
 function configChanged.classpowers_enable(v)
     if v then
@@ -613,10 +698,49 @@ configChanged.bossmod_icon_size = configChangedBossMod
 configChanged.bossmod_x_offset = configChangedBossMod
 configChanged.bossmod_y_offset = configChangedBossMod
 
+local function UpdateCVars()
+    SetCVar('nameplateShowFriendlyNPCs',core.profile.cvar_show_friendly_npcs)
+    SetCVar('nameplateShowOnlyNames',core.profile.cvar_name_only)
+    SetCVar('nameplatePersonalShowAlways',core.profile.cvar_personal_show_always)
+    SetCVar('nameplatePersonalShowInCombat',core.profile.cvar_personal_show_combat)
+    SetCVar('nameplatePersonalShowWithTarget',core.profile.cvar_personal_show_target)
+    SetCVar('nameplateMaxDistance',core.profile.cvar_max_distance)
+    SetCVar('nameplateOtherTopInset',core.profile.cvar_clamp_top)
+    SetCVar('nameplateLargeTopInset',core.profile.cvar_clamp_top)
+    SetCVar('nameplateOtherBottomInset',core.profile.cvar_clamp_bottom)
+    SetCVar('nameplateLargeBottomInset',core.profile.cvar_clamp_bottom)
+    SetCVar('nameplateOverlapV',core.profile.cvar_overlap_v)
+end
+local function configChangedCVar()
+    if InCombatLockdown() then
+        return cc:QueueConfigChanged('cvar_enable')
+    end
+    if core.profile.cvar_enable then
+        -- register related events & update cvars immediately
+        cc:EnableCVarUpdate()
+        UpdateCVars()
+    else
+        -- leave cvars alone entirely if not enabled
+        cc:DisableCVarUpdate()
+    end
+end
+configChanged.cvar_enable = configChangedCVar
+configChanged.cvar_show_friendly_npcs = configChangedCVar
+configChanged.cvar_personal_show_always = configChangedCVar
+configChanged.cvar_personal_show_combat = configChangedCVar
+configChanged.cvar_personal_show_target = configChangedCVar
+configChanged.cvar_max_distance = configChangedCVar
+configChanged.cvar_clamp_top = configChangedCVar
+configChanged.cvar_clamp_bottom = configChangedCVar
+configChanged.cvar_overlap_v = configChangedCVar
+
 -- config loaded functions #####################################################
 local configLoaded = {}
-configLoaded.fade_alpha = configChanged.fade_alpha
+configLoaded.fade_non_target_alpha = configChanged.fade_non_target_alpha
+configLoaded.fade_conditional_alpha = configChanged.fade_conditional_alpha
 configLoaded.fade_speed = configChanged.fade_speed
+
+configLoaded.class_colour_friendly_names = configChangedNameColour
 
 configLoaded.nameonly = configChanged.nameonly
 
@@ -635,6 +759,8 @@ configLoaded.level_text = configChanged.level_text
 configLoaded.auras_enabled = configChanged.auras_enabled
 
 configLoaded.clickthrough_self = QueueClickthroughUpdate
+
+configLoaded.cvar_enable = configChangedCVar
 
 function configLoaded.classpowers_enable(v)
     if v then
@@ -664,6 +790,27 @@ configLoaded.bossmod_enable = configChanged.bossmod_enable
 
 -- init config #################################################################
 function core:InitialiseConfig()
+    -- XXX 2.15>2.16 health display transition
+    if KuiNameplatesCoreSaved and not KuiNameplatesCoreSaved['216_HEALTH_TRANSITION'] then
+        KuiNameplatesCoreSaved['216_HEALTH_TRANSITION'] = true
+        -- re-jigger health display patterns on all profiles (where set)
+        local upd = function(n,k)
+            local v = KuiNameplatesCoreSaved.profiles[n][k]
+            if not v then return end
+            KuiNameplatesCoreSaved.profiles[n][k] = v == 5 and 1 or v + 1
+        end
+        for n,p in pairs(KuiNameplatesCoreSaved.profiles) do
+            for _,k in next,{
+                'health_text_friend_max',
+                'health_text_friend_dmg',
+                'health_text_hostile_max',
+                'health_text_hostile_dmg'
+            } do
+                upd(n,k)
+            end
+        end
+    end
+
     self.config = kc:Initialise('KuiNameplatesCore',default_config)
     self.profile = self.config:GetConfig()
 
@@ -716,8 +863,8 @@ function core:InitialiseConfig()
     -- listen for LSM media updates
     LSM.RegisterCallback(self, 'LibSharedMedia_Registered', 'LSMMediaRegistered')
 end
-
--- combat checking frame #######################################################
+-- local event frame ###########################################################
+-- combat function queue #######################################################
 cc.queue = {}
 function cc:QueueFunction(func,...)
     if InCombatLockdown() then
@@ -731,13 +878,30 @@ function cc:QueueConfigChanged(name)
         self:QueueFunction(configChanged[name],core.profile[name])
     end
 end
-cc:SetScript('OnEvent',function(self,event,...)
+function cc:PLAYER_REGEN_ENABLED()
     for i,f_tbl in ipairs(self.queue) do
         if type(f_tbl[1]) == 'function' then
             f_tbl[1](unpack(f_tbl[2]))
         end
     end
-
     wipe(self.queue)
-end)
+end
+function cc:PLAYER_ENTERING_WORLD()
+    self:PLAYER_REGEN_ENABLED()
+end
+-- cvar update #################################################################
+function cc:EnableCVarUpdate()
+    cc:RegisterEvent('CVAR_UPDATE')
+    cc:RegisterEvent('PLAYER_ENTERING_WORLD')
+end
+function cc:DisableCVarUpdate()
+    cc:UnregisterEvent('CVAR_UPDATE')
+    cc:UnregisterEvent('PLAYER_ENTERING_WORLD')
+end
+function cc:CVAR_UPDATE()
+    -- reapply our CVar changes
+    UpdateCVars()
+end
+
+cc:SetScript('OnEvent',function(self,event,...) self[event](self,...) end)
 cc:RegisterEvent('PLAYER_REGEN_ENABLED')

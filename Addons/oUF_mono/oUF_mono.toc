@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 80000
 ## Version: 2.0
 ## Title: oUF |cffffffffmono|r
 ## Notes: oUF layout
@@ -18,13 +18,12 @@ embeds\TotemBar.lua
 embeds\Combat.lua
 
 cfg.lua
-..\!mCFG\mCFG_layer.lua
+#..\!mCFG\mCFG_layer.lua
 
 tags.lua
 embeds\Castbar.lua
 lib.lua
 core.lua
 
-raid_tags.lua
-raid_debuffs.lua
+# raid_tags.lua
 raid\raid.xml

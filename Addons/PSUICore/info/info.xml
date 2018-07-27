@@ -8,7 +8,6 @@
 	
 	<Script file="modules\Bags.lua"/>
 	<Script file="modules\Durability.lua"/>
-	<Script file="modules\Friends.lua"/>
 	<Script file="modules\Guild.lua"/>
 	<Script file="modules\Memory.lua"/>
 	<Script file="modules\Positions.lua"/>

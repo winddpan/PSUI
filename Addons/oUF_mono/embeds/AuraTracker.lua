@@ -94,7 +94,7 @@ local function Update(object, event, unit)
 
 	--Buffs
 	while ( true ) do
-		local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HELPFUL")
+		local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HELPFUL")
 		if ( not name ) then break end
 		
 		if ( auraList[name] and auraList[name] >= priority ) then
@@ -111,7 +111,7 @@ local function Update(object, event, unit)
 	
 	--Debuffs 
 	while ( true ) do
-		local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HARMFUL")
+		local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HARMFUL")
 		if ( not name ) then break end
 		
 		if ( auraList[name] and auraList[name] >= priority ) then
@@ -156,4 +156,4 @@ local function Disable(object)
 	end
 end
 
-oUF:AddElement('AuraTracker', Update, Enable, Disable)
+--oUF:AddElement('AuraTracker', Update, Enable, Disable)

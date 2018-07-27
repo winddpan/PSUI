@@ -1,19 +1,17 @@
 local _G = _G
-_G.RETabBinderNamespace = {["Settings"] = {}}
-local RE = RETabBinderNamespace
+local _, RE = ...
+_G.RETabBinder = RE
 
-local print = print
-local InCombatLockdown = InCombatLockdown
-local IsInInstance = IsInInstance
-local GetCurrentBindingSet = GetCurrentBindingSet
-local GetZonePVPInfo = GetZonePVPInfo
-local GetBindingKey = GetBindingKey
-local GetBindingAction = GetBindingAction
-local SetBinding = SetBinding
-local SaveBindings = SaveBindings
-local ERR_DUEL_REQUESTED = ERR_DUEL_REQUESTED
-
--- GLOBALS: RETabBinder_OnLoad, RETabBinder_OnEvent, RETabBinder_ConfigReload
+local print = _G.print
+local InCombatLockdown = _G.InCombatLockdown
+local IsInInstance = _G.IsInInstance
+local GetCurrentBindingSet = _G.GetCurrentBindingSet
+local GetZonePVPInfo = _G.GetZonePVPInfo
+local GetBindingKey = _G.GetBindingKey
+local GetBindingAction = _G.GetBindingAction
+local SetBinding = _G.SetBinding
+local SaveBindings = _G.SaveBindings
+local ElvUI = _G.ElvUI
 
 RE.AceConfig = {
 	type = "group",
@@ -24,7 +22,7 @@ RE.AceConfig = {
 			type = "toggle",
 			width = "full",
 			order = 1,
-			set = function(_, val) RE.Settings.DefaultKey = val; _G.RETabBinder_ConfigReload() end,
+			set = function(_, val) RE.Settings.DefaultKey = val; RE:OnEvent(nil, "ZONE_CHANGED_NEW_AREA") end,
 			get = function(_) return RE.Settings.DefaultKey end
 		},
 	}
@@ -34,7 +32,14 @@ RE.DefaultConfig = {
 }
 RE.Fail = false
 
-function RETabBinder_OnLoad(self)
+local function ElvUISwag(sender)
+  if sender == "Livarax-BurningLegion" then
+    return [[|TInterface\PvPRankBadges\PvPRank09:0|t ]]
+  end
+  return nil
+end
+
+function RE:OnLoad(self)
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("DUEL_REQUESTED")
@@ -43,24 +48,32 @@ function RETabBinder_OnLoad(self)
 	self:RegisterEvent("ADDON_LOADED")
 end
 
-function RETabBinder_OnEvent(event, ...)
+function RE:OnEvent(self, event, ...)
 	if event == "ADDON_LOADED" and ... == "RETabBinder" then
 		if not _G.RETabBinderSettings then
 			_G.RETabBinderSettings = RE.DefaultConfig
 		end
+		if ElvUI then
+			_G.ElvUI[1]:GetModule("Chat"):AddPluginIcons(ElvUISwag)
+		end
 		RE.Settings = _G.RETabBinderSettings
 		_G.LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("RETabBinder", RE.AceConfig)
 		_G.LibStub("AceConfigDialog-3.0"):AddToBlizOptions("RETabBinder", "RETabBinder")
-		_G.RETabBinder_ConfigReload()
+		RE:OnEvent(self, "ZONE_CHANGED_NEW_AREA")
+		self:UnregisterEvent("ADDON_LOADED")
 	elseif event == "ZONE_CHANGED_NEW_AREA" or (event == "PLAYER_REGEN_ENABLED" and RE.Fail) or event == "DUEL_REQUESTED" or event == "DUEL_FINISHED" or event == "CHAT_MSG_SYSTEM" then
-		if event == "CHAT_MSG_SYSTEM" and ... == ERR_DUEL_REQUESTED then
+		if event == "CHAT_MSG_SYSTEM" and ... == _G.ERR_DUEL_REQUESTED then
 			event = "DUEL_REQUESTED"
 		elseif event == "CHAT_MSG_SYSTEM" then
 			return
 		end
 
 		local BindSet = GetCurrentBindingSet()
-		if InCombatLockdown() or (BindSet ~= 1 and BindSet ~= 2) then
+		if BindSet ~= 1 and BindSet ~= 2 then
+			return
+		end
+		if InCombatLockdown() then
+			RE.Fail = true
 			return
 		end
 		local PVPType = GetZonePVPInfo()
@@ -127,8 +140,4 @@ function RETabBinder_OnEvent(event, ...)
 			end
 		end
 	end
-end
-
-function RETabBinder_ConfigReload()
-	_G.RETabBinder_OnEvent("ZONE_CHANGED_NEW_AREA", nil)
 end

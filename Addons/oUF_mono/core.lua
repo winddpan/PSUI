@@ -13,7 +13,7 @@
   local function genStyle(self, unit)
 	self.menu = lib.menu
 	self:RegisterForClicks("AnyUp")
-    self:SetAttribute("*type2", "menu")
+	self:SetAttribute("*type2", "togglemenu")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     lib.gen_hpbar(self)

@@ -25,7 +25,7 @@ SlashCmdList["AutoSet"] = function() SetScreen() end
 SLASH_AutoSet1 = "/autoset"
 SLASH_AutoSet2 = "/as"
 
-
+--[[
 StaticPopupDialogs["CONFIGURE_PSUI"] = {
 text = "初始化设置PS UI吗？",
 button1 = YES,
@@ -42,6 +42,7 @@ hideOnEscape = 1
 }
 SlashCmdList["CONFIG"] = function() StaticPopup_Show("CONFIGURE_PSUI") end
 SLASH_CONFIG1 = "/config"
+]]
 
 SlashCmdList['RELOADUI'] = function() ReloadUI() end
 SLASH_RELOADUI1 = '/rl'
@@ -49,8 +50,10 @@ SLASH_RELOADUI1 = '/rl'
 SlashCmdList["READYCHECK"] = function() DoReadyCheck() end
 SLASH_READYCHECK1 = '/rc'
 
+--[[
 SlashCmdList["CmdHelp"] = function() ShowHelp() end
 SLASH_CmdHelp1 = "/psui"
 SLASH_CmdHelp2 = "/ps"
+]]
 
 --SetScreen()

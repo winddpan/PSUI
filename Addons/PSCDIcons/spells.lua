@@ -16,27 +16,21 @@ Cooldowns = {
 			{spellID = 212283, spec = "敏锐"},
 			
 			-- 死标
-			{spellID = 137619, talent = "7/2"},
-			-- 天降
-			{spellID = 152150, talent = "7/3"},
+			{spellID = 137619, talent = "3/3"},
+			-- 影分身
+			{spellID = 280719, talent = "7/2", spec = "敏锐"},
 			
-			{spellID = 209782, spec = "敏锐"},
 			{spellID = 121471, spec = "敏锐"},
 
 			-- 冲动
 			{spellID = 13750, spec = "狂徒"},
-			-- 恐惧之刃
-			{spellID = 202665, spec = "狂徒"},
 
 			-- 仇杀
-			{spellID = 79140, spec = "刺杀"},
+			{spellID = 79140, spec = "奇袭"},
 			-- 萃毒
-			{spellID = 245388, spec = "刺杀", talent = "6/1"},
+			{spellID = 245388, spec = "奇袭", talent = "6/2"},
 			-- 抽血
-			{spellID = 200806, spec = "刺杀", talent = "6/3"},
-			-- 君王
-			{spellID = 192759, spec = "刺杀"},
-
+			{spellID = 200806, spec = "奇袭", talent = "6/3"},
 
 
 			-- 正中眉心
@@ -59,6 +53,20 @@ Cooldowns = {
 			{spellID = 207317, spec = "邪恶", talent = "2/1"},
 			{spellID = 49206, spec = "邪恶"},
 			{spellID = 63560, spec = "邪恶"},
+			
+			{spellID = 196770, spec = "冰霜"},
+			{spellID = 51271, spec = "冰霜"},
+			{spellID = 152279, spec = "冰霜", talent = "7/2"},
+			{spellID = 47568, spec = "冰霜"},
+			{spellID = 190778, spec = "冰霜"},
+			
+			{spellID = 43265, spec = "鲜血"},
+			{spellID = 205223, spec = "鲜血"},
+			{spellID = 55233, spec = "鲜血"},
+			{spellID = 49028, spec = "鲜血"},
+			{spellID = 206977, spec = "鲜血", talent = "7/2"},
+			{spellID = 194844, spec = "鲜血", talent = "7/1"},
+
 		},
 	},
 	["DEMONHUNTER"] = {

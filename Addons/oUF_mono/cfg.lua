@@ -71,7 +71,7 @@
 			--["target_position"] = {"TOPLEFT", "oUF_monoTargetFrame", "BOTTOMLEFT", 0, -42},
 			["position"] = {"RIGHT", "oUF_monoTargetFrame", "RIGHT", 0, 400},	
 			["width"] = 150,
-			["height"] = 28,
+			["height"] = 24,
 			["scale"] = 1,
 		},
 		party = {
@@ -151,14 +151,14 @@
 			["undock"] = false,								-- detach cast bar from frame
 			["position"] = {"CENTER",UIParent,"BOTTOM",10,320}, -- custom castbar position if undocked
 			["width"] = 210,								-- cast bar width if undocked
-			["height"] = 18, 								-- cast bar height if undocked
+			["height"] = 20, 								-- cast bar height if undocked
 		},
 		target = {
 			["enable"] = true,
 			["undock"] = false,
 			["position"] = {"CENTER",UIParent,"BOTTOM",10,360},	
 			["width"] = 210,
-			["height"] = 18,
+			["height"] = 20,
 		},
 		focus = {
 			["enable"] = true,
@@ -166,7 +166,7 @@
 			["position"] = {"TOPRIGHT","oUF_monoFocusFrame","BOTTOMRIGHT",0,-2},
 
 			["width"] = 150,
-			["height"] = 24,
+			["height"] = 20,
 		},
 	},
 	-- MEDIA

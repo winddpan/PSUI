@@ -15,17 +15,27 @@ local SpellFlyout = SpellFlyout
 -----------------------------
 
 local function FaderOnFinished(self)
+  --print("FaderOnFinished",self.__owner:GetName(),self.finAlpha)
   self.__owner:SetAlpha(self.finAlpha)
+end
+
+local function FaderOnUpdate(self)
+  --print("FaderOnUpdate",self.__owner:GetName(),self.__animFrame:GetAlpha())
+  self.__owner:SetAlpha(self.__animFrame:GetAlpha())
 end
 
 local function CreateFaderAnimation(frame)
   if frame.fader then return end
-  frame.fader = frame:CreateAnimationGroup()
+  local animFrame = CreateFrame("Frame",nil,frame)
+  animFrame.__owner = frame
+  frame.fader = animFrame:CreateAnimationGroup()
   frame.fader.__owner = frame
+  frame.fader.__animFrame = animFrame
   frame.fader.direction = nil
-  frame.fader.setToFinalAlpha = false --test if this will NOT apply the alpha to all regions
+  frame.fader.setToFinalAlpha = false
   frame.fader.anim = frame.fader:CreateAnimation("Alpha")
   frame.fader:HookScript("OnFinished", FaderOnFinished)
+  frame.fader:HookScript("OnUpdate", FaderOnUpdate)
 end
 
 function L:StartFadeIn(frame)
@@ -110,32 +120,13 @@ function rLib:CreateFrameFader(frame, faderConfig)
   FrameHandler(frame)
 end
 
-local function OnEnterFrameHandler(self)
-  if not self.__faderParent then return end
-  
-  local frame = self.__faderParent
-  local mouseoverHandler = frame.mouseoverHandler
-  if not mouseoverHandler then
-	mouseoverHandler = CreateFrame("Frame", "mouseoverHandler", frame)
-	frame.mouseoverHandler = mouseoverHandler
-  end
-  
-  mouseoverHandler:SetScript("OnUpdate", function(s, e) 
-	OffFrameHandler(self)
-	if not IsMouseOverFrame(frame) then
-	  mouseoverHandler:SetScript("OnUpdate", nil)
-	end
-  end)
-end
-
 function rLib:CreateButtonFrameFader(frame, buttonList, faderConfig)
   rLib:CreateFrameFader(frame, faderConfig)
   for i, button in next, buttonList do
     if not button.__faderParent then
       button.__faderParent = frame
-      --button:HookScript("OnEnter", OffFrameHandler)
-      --button:HookScript("OnLeave", OffFrameHandler)
-	  button:HookScript("OnEnter", OnEnterFrameHandler)
+      button:HookScript("OnEnter", OffFrameHandler)
+      button:HookScript("OnLeave", OffFrameHandler)
     end
   end
 end

@@ -14,7 +14,17 @@ addon.debug = true
 --addon.debug_config = true
 --addon.debug_units = true
 --addon.debug_messages = true
+--addon.debug_events = true
+--addon.debug_callbacks = true
 --addon.draw_frames = true
+addon.DEBUG_IGNORE = {
+    ['m:Create'] = true,
+    ['m:Show'] = true,
+    ['m:Hide'] = true,
+    ['e:UNIT_POWER_FREQUENT'] = true,
+    ['e:UNIT_HEALTH_FREQUENT'] = true,
+    ['c:Auras:DisplayAura'] = true,
+}
 --@end-debug@]===]
 
 -- updated by UI_SCALE_CHANGED:
@@ -113,6 +123,14 @@ local function OnEvent(self,event,...)
     --[===[@alpha@
     print('|cff9966ffKui Nameplates|r: You are using an alpha release and may see debug messages in chat.')
     --@end-alpha@]===]
+
+    -- TODO 80 temporary
+    local toc = select(4,GetBuildInfo())
+    if toc < 80000 then
+        print('|cff9966ffKui Nameplates|r: This version of KNP is for the BFA prepatch. For 7.x support, download version 2.15.6.')
+        self:UnregisterAllEvents()
+        return
+    end
 
     if not self.layout then
         -- throw missing layout

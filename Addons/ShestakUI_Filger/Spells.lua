@@ -35,6 +35,7 @@ Filger_Spells = {
 			Mode = "ICON",
 			IconSize = 37,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
+				{ spellID = 207127, unitID = "player", caster = "player", filter = "BUFF"},
 				--冰霜之柱
 				{ spellID = 51271, unitID = "player", caster = "player", filter = "BUFF"},
 				{ spellID = 53365, unitID = "player", caster = "player", filter = "BUFF"},
@@ -1238,8 +1239,6 @@ Filger_Spells = {
 			{spellID = 10060, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Spirit Shell
 			{spellID = 109964, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Archangel 大天使
-			{spellID = 81700, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Vampiric Embrace
 			{spellID = 15286, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Power Word: Shield
@@ -1261,24 +1260,14 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
 			-- Buffs
-			--暗影寶珠
-			{spellID = 77487, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Divine Insight
 			{spellID = 124430, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Surge of Light
 			{spellID = 114255, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Surge of Darkness
 			{spellID = 87160, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Serendipity
-			{spellID = 63735, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Glyph of Mind Spike
-			{spellID = 81292, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Borrowed Time
-			{spellID = 59889, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Twist of Fate
 			{spellID = 123254, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Evangelism
-			{spellID = 81661, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
 			-- General
@@ -1358,6 +1347,10 @@ Filger_Spells = {
 			Alpha = 1,
 			IconSize = IconSize,
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
+
+			{spellID = 17, unitID = "target", caster = "player", filter = "BUFF"},
+			{spellID = 34914, unitID = "target", caster = "player", filter = "DEBUFF"},
+			{spellID = 589, unitID = "target", caster = "player", filter = "DEBUFF"},
 
 			-- Void Tendril's Grasp
 			{spellID = 114404, unitID = "target", caster = "player", filter = "DEBUFF"},

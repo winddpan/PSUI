@@ -22,9 +22,9 @@ Minimap:SetSize(Size*Scale, Size*Scale)
 Minimap:SetMaskTexture[[Interface\AddOns\PSUICore\media\rectangle]]
 Minimap:SetHitRectInsets(0, 0, 34*Scale, 34*Scale)
 Minimap:SetClampedToScreen(false)
+Minimap:SetFrameStrata("BACKGROUND")
 Minimap:ClearAllPoints()
 Minimap:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", 25, min(0, -25 + floor(Size/7.5)))
-
 
 Minimap.mnMap = CreateFrame("Frame", nil, Minimap)
 Minimap.mnMap:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 0, -(floor(Size/7.5)*Scale))
@@ -87,10 +87,10 @@ local frames = {
     "MinimapBorderTop",
     "MinimapNorthTag",
     "MinimapBorder",
-    "MinimapZoneTextButton",
+    --"MinimapZoneTextButton",
     "MinimapZoomOut",
     "MinimapZoomIn",
-    "MiniMapVoiceChatFrame",
+    --"MiniMapVoiceChatFrame",
     "MiniMapWorldMapButton",
 	
     "MiniMapMailBorder",

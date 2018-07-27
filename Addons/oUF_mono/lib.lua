@@ -195,21 +195,62 @@
 	f.Health.bd = b
 	s.PostUpdate = lib.PostUpdateHealth  
 	
-	local mhpb = CreateFrame('StatusBar', nil, f.Health)
-	mhpb:SetPoint('TOPLEFT', f.Health:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
-	mhpb:SetPoint('BOTTOMLEFT', f.Health:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
-	mhpb:SetWidth(f.Health:GetWidth())
-	mhpb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	mhpb:SetStatusBarColor(0, 1, 0.5, 0.35)
+		
+	local barWidth = f.Health:GetWidth()
 
-	local ohpb = CreateFrame('StatusBar', nil, f.Health)
-	ohpb:SetPoint('TOPLEFT', mhpb:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
-	ohpb:SetPoint('BOTTOMLEFT', mhpb:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
-	ohpb:SetWidth(f.Health:GetWidth())
-	ohpb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	ohpb:SetStatusBarColor(0, 1, 0, 0.35)
+	-- Position and size
+    local myBar = CreateFrame('StatusBar', nil, f.Health)
+    myBar:SetPoint('TOP')
+    myBar:SetPoint('BOTTOM')
+    myBar:SetPoint('LEFT', f.Health:GetStatusBarTexture(), 'RIGHT')
+    myBar:SetWidth(barWidth)
+    myBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
 
-	f.HealPrediction = { myBar = mhpb, otherBar = ohpb, maxOverflow = 1 }
+    local otherBar = CreateFrame('StatusBar', nil, f.Health)
+    otherBar:SetPoint('TOP')
+    otherBar:SetPoint('BOTTOM')
+    otherBar:SetPoint('LEFT', myBar:GetStatusBarTexture(), 'RIGHT')
+    otherBar:SetWidth(barWidth)
+    otherBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+
+    local absorbBar = CreateFrame('StatusBar', nil, f.Health)
+    absorbBar:SetPoint('TOP')
+    absorbBar:SetPoint('BOTTOM')
+    absorbBar:SetPoint('LEFT', otherBar:GetStatusBarTexture(), 'RIGHT')
+    absorbBar:SetWidth(barWidth)
+    absorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+
+    local healAbsorbBar = CreateFrame('StatusBar', nil, f.Health)
+    healAbsorbBar:SetPoint('TOP')
+    healAbsorbBar:SetPoint('BOTTOM')
+    healAbsorbBar:SetPoint('RIGHT', f.Health:GetStatusBarTexture())
+    healAbsorbBar:SetWidth(barWidth)
+    healAbsorbBar:SetReverseFill(true)
+    healAbsorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+
+    local overAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
+    overAbsorb:SetPoint('TOP')
+    overAbsorb:SetPoint('BOTTOM')
+    overAbsorb:SetPoint('LEFT', f.Health, 'RIGHT')
+    overAbsorb:SetWidth(10)
+
+	local overHealAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
+    overHealAbsorb:SetPoint('TOP')
+    overHealAbsorb:SetPoint('BOTTOM')
+    overHealAbsorb:SetPoint('RIGHT', f.Health, 'LEFT')
+    overHealAbsorb:SetWidth(10)
+
+    -- Register with oUF
+    f.HealthPrediction = {
+        myBar = myBar,
+        otherBar = otherBar,
+        absorbBar = absorbBar,
+        healAbsorbBar = healAbsorbBar,
+        overAbsorb = overAbsorb,
+        overHealAbsorb = overHealAbsorb,
+        maxOverflow = 1.05,
+        frequentUpdates = true,
+    }
   end
   --3d portrait behind hp bar
   lib.gen_portrait = function(f)
@@ -292,9 +333,7 @@
     if f.mystyle =="player" or f.mystyle =="target" then
 		s:SetHeight(cfg.oUF.frames.PPHeight)
 	end
-    if f.mystyle == "partypet" or f.mystyle == "arenatarget" or f.mystyle == "tot" or f.mystyle == "focus" then
-      s:Hide()
-    end
+
     s:SetWidth(f.width)
     s:SetPoint("TOP",f,"BOTTOM",0,-3)
     --helper
@@ -311,6 +350,10 @@
     if f.mystyle=="tot" or f.mystyle=="pet" then
       s:SetHeight(f.height/3)
     end
+	if f.mystyle == "partypet" or f.mystyle == "arenatarget" or f.mystyle == "tot" or f.mystyle == "focus" then
+      s:Hide()
+	  s:SetHeight(0)
+    end
     f.Power = s
     f.Power.bg = b
 	if cfg.oUF.settings.class_color_power then s.PreUpdate = lib.PreUpdatePower end
@@ -326,11 +369,9 @@
     local info = lib.gen_fontstring(h, cfg.oUF.media.font, fh, "THINOUTLINE")
     if f.mystyle == "target" or f.mystyle == "tot" then
         info:SetPoint("RIGHT", f.Power, "RIGHT",-3,0)
-        --pp:SetPoint("LEFT", f.Power, "LEFT",3,0)
         info:SetJustifyH("RIGHT")
     else
         info:SetPoint("LEFT", f.Power, "LEFT",3,0)
-        --pp:SetPoint("RIGHT", f.Power, "RIGHT",-5,0)
         info:SetJustifyH("LEFT")
     end
 	pp:SetPoint("CENTER", f.Power, "CENTER",0,0)
@@ -440,7 +481,7 @@
 	  else
 		s:SetPoint("TOPRIGHT",f.Power,"BOTTOMRIGHT",0,-2)
 	  end
-      f:RegisterEvent("UNIT_SPELLCAST_SENT", cast.OnCastSent)
+      --f:RegisterEvent("UNIT_SPELLCAST_SENT", cast.OnCastSent)
 	elseif f.mystyle == "target" and cfg.oUF.castbar.target.undock then
 	  s:SetSize(cfg.oUF.castbar.target.width,cfg.oUF.castbar.target.height)
 	  s:SetPoint(unpack(cfg.oUF.castbar.target.position))
@@ -556,7 +597,7 @@
 	overlay:GetParent().border:SetVertexColor(0, 0, 0, 1)
   end
   lib.PostUpdateIcon = function(self, unit, icon, index, offset)
-  local _, _, _, _, dtype, duration, expirationTime, unitCaster, _ = UnitAura(unit, index, icon.filter)
+  local _, _, _, dtype, duration, expirationTime, unitCaster, _ = UnitAura(unit, index, icon.filter)
   local color = DebuffTypeColor[dtype] or DebuffTypeColor.none
 
 --[[	if unitCaster ~= 'player' and unitCaster ~= 'vehicle' and not UnitIsFriend('player', unit) and icon.debuff then
@@ -942,13 +983,6 @@
 	if f.mystyle == "party" or f.mystyle == "player" then
 		local es = lib.gen_fontstring(h, cfg.oUF.media.font, 14, "THINOUTLINE")
 		es:SetPoint("CENTER", f.Power, "BOTTOMRIGHT",0,0)	
-		if class == "SHAMAN" then
-			f:Tag(es, '[raid:earth]')
-		elseif class == "DRUID" then
-			f:Tag(es, '[raid:lb]')
-		elseif class == "PRIEST" then
-			f:Tag(es, '[raid:pom]')
-		end
 	end
 	if f.mystyle == "player" then
 		local sp = lib.gen_fontstring(h, cfg.oUF.media.font, 30, "MONOCHROMEOUTLINE")
@@ -1185,7 +1219,7 @@
   lib.gen_alt_powerbar = function(f)
 	local apb = CreateFrame("StatusBar", nil, f)
 	apb:SetFrameLevel(f.Health:GetFrameLevel() + 2)
-	apb:SetSize(f.width/2, f.height/3-1)
+	apb:SetSize(f.width, f.height/3-1)
 	--apb:SetPoint("BOTTOM", f, "TOP", 0, 3)
 	apb:SetPoint("TOP", f.Power, "BOTTOM", 0, -3)
 	apb:SetStatusBarTexture(cfg.oUF.media.statusbar)
@@ -1193,7 +1227,7 @@
 	apb:SetStatusBarColor(1, 0, 0)
 	
 	if (f.mystyle == "player" or f.mystyle == "pet") and cfg.oUF.settings.AltPowerBar.undock then
-		apb:SetSize(227, 14)
+		apb:SetSize(f.width, 14)
 		apb:SetPoint(unpack(cfg.oUF.settings.AltPowerBar.position))
 	end
 
@@ -1215,8 +1249,8 @@
 	apb.v:SetPoint("CENTER", apb, "CENTER", 0, 0)
 	f:Tag(apb.v, '[mono:altpower]')
 	
-	f.AltPowerBar = apb
-	f.AltPowerBar.PostUpdate = AltPowerPostUpdate
+	f.AlternativePower = apb
+	f.AlternativePower.PostUpdate = AltPowerPostUpdate
   end
   --hand the lib to the namespace for further usage
   ns.lib = lib

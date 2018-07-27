@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 80000
 ## Notes: Simple Map Mod
 ## Notes-zhCN: 简单实用的地图模块
 ## Notes-frFR: Simples modifications de la carte.
@@ -6,7 +6,7 @@
 ## Author: Nevcairiel
 ## SavedVariables: MapsterDB
 ## X-Category: Map
-## Version: 1.7.6
+## Version: 1.8.0
 ## X-License: All rights reserved.
 
 ## OptionalDeps: Ace3
@@ -33,7 +33,7 @@ Mapster.lua
 Config.lua
 
 Coords.lua
-GroupIcons.lua
-BattleMap.lua
+# GroupIcons.lua
+# BattleMap.lua
 FogClear.lua
 Scaling.lua

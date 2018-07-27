@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 80000
 ## Author: Winddpan
 ## Title: |cff3399FFPSRogueHelper|r
 ## Notes: RogueHelper
@@ -7,5 +7,5 @@
 ## SavedVariables: SubHelperFontSize
 
 RogueKnockDoor.lua
-SubHelper.lua
+# SubHelper.lua
 PoisonAlert.lua

@@ -321,6 +321,7 @@ end
 local function AuraFrame_Update(self)
     if self.__DISABLED then return end
 
+    self:FactionUpdate() -- XXX workaround for #1
     self:GetAuras()
 
     for _,button in ipairs(self.buttons) do
@@ -359,10 +360,11 @@ end
 local function AuraFrame_GetAuras(self)
     for i=1,40 do
         -- nps_ = NamePlateShow...
-        local name,_,icon,count,_,duration,expiration,caster,_,
+        local name,icon,count,_,duration,expiration,caster,_,
               nps_own,spellid,_,_,_,nps_all =
               UnitAura(self.parent.unit,i,self.filter)
 
+        if not name then break end
         if name and spellid and
            self:ShouldShowAura(spellid,strlower(name),duration,caster,nps_own,nps_all)
         then
@@ -594,6 +596,7 @@ local function AuraFrame_SetSort(self,sort_f)
 end
 local function AuraFrame_OnHide(self)
     -- hide all buttons
+    if self.parent.IGNORE_VISIBILITY_BUBBLE then return end
     self:HideAllButtons()
 end
 -- external aura frame functions ###############################################

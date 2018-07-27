@@ -24,9 +24,6 @@ cfg.MaxAddOns = 30
 cfg.Positions = false
 cfg.PositionsPoint = {"top", ParentBar, "topright", -22 +ajustX, -ajustY}
 
-cfg.Friends = true
-cfg.FriendsPoint = {"bottomleft", ParentBar, 310 +ajustX, ajustY}
-
 cfg.Spec = false
 cfg.SpecPoint = {"bottomleft", ParentBar, 325 +ajustX, ajustY}
 

@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 80000
 ## Version: 7.0
 ## Title: Blink's RogueHelper
 ## Author: Blink / Darthn / fixed by WINDDPAN

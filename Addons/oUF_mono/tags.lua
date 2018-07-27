@@ -98,7 +98,7 @@ oUF.Tags.Methods['mono:color'] = function(u, r)
 		return hex(1, 1, 1)
 	end
 end
-oUF.Tags.Events['mono:color'] = 'UNIT_REACTION UNIT_HEALTH UNIT_POWER'
+oUF.Tags.Events['mono:color'] = 'UNIT_HEALTH UNIT_POWER_UPDATE'
 
 oUF.Tags.Methods['mono:gridcolor'] = function(u, r)
 	local _, class = UnitClass(u)
@@ -310,7 +310,7 @@ oUF.Tags.Methods['mono:altpower'] = function(unit)
 		return ("%s%%"):format(math.floor(cur/max*100+.5))
 	end
 end
-oUF.Tags.Events['mono:altpower'] = 'UNIT_POWER'
+oUF.Tags.Events['mono:altpower'] = 'UNIT_POWER_UPDATE'
 
 
 -------------[[ class specific tags ]]-------------
@@ -342,7 +342,7 @@ oUF.Tags.Methods['mono:cp'] = function(u)
 	return cpstr
 
 end
-oUF.Tags.Events['mono:cp'] = 'UNIT_POWER_FREQUENT'
+oUF.Tags.Events['mono:cp'] = 'UNIT_POWER_UPDATE'
 -- special powers
 -- water shield
 oUF.Tags.Methods['mono:ws'] = function(u)
@@ -387,43 +387,7 @@ oUF.Tags.Methods['mono:ls'] = function(u)
 	end
 end
 oUF.Tags.Events['mono:ls'] = 'UNIT_AURA'
--- earth shield
---oUF.earthCount = {1,2,3,4,5,6,7,8,9,10}
-oUF.Tags.Methods['raid:earth'] = function(u) 
-	local name, _,_, c, _,_,_, source = UnitAura(u, GetSpellInfo(974)) 
-	if source == "player" then
-		if(c) and name and (c ~= 0) then return '|cff79DB79'..c..'|r' end 
-	else
-		if(c) and (c ~= 0) then return '|cffFFCF7F'..c..'|r' end 
-	end
-end
-oUF.Tags.Events['raid:earth'] = 'UNIT_AURA'
--- Prayer of Mending
---oUF.pomCount = {1,2,3,4,5,6}
-oUF.Tags.Methods['raid:pom'] = function(u) 
-	local _, _,_, c, _,_,_, source = UnitAura(u, GetSpellInfo(41635)) 
-	if source == "player" then
-		if(c) and (c ~= 0) then return "|cff79DB79"..c.."|r" end 
-	else
-		if(c) and (c ~= 0) then return "|cffFFCF7F"..c.."|r" end 
-	end
-end
-oUF.Tags.Events['raid:pom'] = "UNIT_AURA"
--- Lifebloom
---oUF.lbCount = { 1, 2, 3 }
-oUF.Tags.Methods['raid:lb'] = function(u) 
-	local _, _,_, c,_,_, expirationTime, source,_ = UnitAura(u, GetSpellInfo(33763))
-	if not (source == "player") or (c == 0) then return end
-	local spellTimer = GetTime()-expirationTime
-	if spellTimer > -2 then
-		return "|cffFF0000"..c.."|r"
-	elseif spellTimer > -4 then
-		return "|cffFF9900"..c.."|r"
-	else
-		return "|cffA7FD0A"..c.."|r"
-	end
-end
-oUF.Tags.Events['raid:lb'] = "UNIT_AURA"
+
 -- shrooooooooooooms (Wild Mushroom)
 if select(2, UnitClass("player")) == "DRUID" then
 	for i=1,3 do

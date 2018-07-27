@@ -1,0 +1,8 @@
+## Interface: 80000
+## Author: zork
+## Title: rButtonTemplate_PSUI
+## Notes: button theme for rButtonTemplate
+## RequiredDeps: rButtonTemplate
+
+theme.lua
+extra.lua

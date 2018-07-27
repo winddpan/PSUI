@@ -1,9 +1,19 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/"> 
-	<Script file='buystack.lua' />
-	<Script file='durability.lua' />
-	<Script file='autoRepair_sell.lua' />
-	<Script file='error_frame.lua' />
-	<Script file='bg_hide_quest.lua' />
+	<Script file='Buystack.lua' />
+	<Script file='Durability.lua' />
+	<Script file='AutoRepairSell.lua' />
+	<Script file='ErrorFrame.lua' />
+	<Script file='AutoHideQuest.lua' />
 	<Script file='Invite.lua' />
-	<Script file='convenient.lua' />
+	<Script file='AutoDelete.lua' />
+	<Script file='CombatNotification.lua' />
+	<Script file='BlizzardTweak.lua' />
+	<Script file='ObjectiveTrackerMover.lua' />
+	<Script file='ChannelMenu.lua' />
+	<Script file='EasyChannel.lua' />
+	<Script file='HideOrderHallBar.lua' />
+	<Script file='Safequeue.lua' />
+	<Script file='SkadaPlus.lua' />
+	<script file='ButtonRange.lua' />
+	<script file='ProgressBar.lua' />	
 </Ui>

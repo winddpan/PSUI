@@ -34,15 +34,10 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
   for idx, buttonName in next, MICRO_BUTTONS do
     local button = _G[buttonName]
     if button and button:IsShown() then
-      if buttonName == "StoreMicroButton" then
-         table.insert(buttonList, #buttonList, button) --storemicrobutton fix
-      else
-         table.insert(buttonList, button)
-      end
+      table.insert(buttonList, button)
     end
   end
-  --achievement micro button has wrong alpha on first login when buttons are reparented to early, delay bar setup
-  local frame = L:CreateButtonFrame(cfg,buttonList,true)
+  local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
   PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
   OverrideActionBar:SetScript("OnShow", nil)
@@ -57,9 +52,9 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.actionPage = cfg.actionPage or "[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
+  cfg.actionPage = cfg.actionPage or "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
   local buttonName = "ActionButton"
-  local numButtons = cfg.numButtons or NUM_ACTIONBAR_BUTTONS
+  local numButtons = NUM_ACTIONBAR_BUTTONS
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --fix the button grid for actionbar1
@@ -102,7 +97,7 @@ function rActionBar:CreateActionBar2(addonName,cfg)
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   local buttonName = "MultiBarBottomLeftButton"
-  local numButtons = cfg.numButtons or NUM_ACTIONBAR_BUTTONS
+  local numButtons = NUM_ACTIONBAR_BUTTONS
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -145,7 +140,6 @@ function rActionBar:CreateActionBar5(addonName,cfg)
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
-
 
 --StanceBar
 function rActionBar:CreateStanceBar(addonName,cfg)

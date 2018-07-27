@@ -179,9 +179,9 @@ if cfg.oUF.frames.raid.enable then
 	end
   end
   if cfg.oUF.frames.raid.DisableRaidManager then 
-	hooksecurefunc("CompactRaidFrameManager_UpdateShown",function() kill_raid() end)
-	CompactRaidFrameManager:HookScript('OnShow', kill_raid)
-	CompactRaidFrameManager:SetScale(0.000001)
+	--hooksecurefunc("CompactRaidFrameManager_UpdateShown",function() kill_raid() end)
+	--CompactRaidFrameManager:HookScript('OnShow', kill_raid)
+	--CompactRaidFrameManager:SetScale(0.000001)
 	
 	-- CompactUnitFrame_UpdateVisible = function() end
 	-- CompactUnitFrame_UpdateAll = function() end

@@ -12,14 +12,14 @@ local showAA = false	-- 显示自动攻击
 local showHD = true	-- 显示HOT和DOT
 local showPET = true	-- 显示宠物伤害/治疗
 
-local hdSize = {90, 150}	-- 承受/输出框架大小
+local hdSize = {120, 150}	-- 承受/输出框架大小
 local ifSize = {300, 150}	-- 信息框架大小
 
 local infoP = {"BOTTOM", UIParent, "CENTER", 0, 300}		-- 信息框架位置
-local inputDP = {"RIGHT", UIParent, "CENTER", -200, 0}		-- 承受伤害位置
-local inputHP = {"RIGHT", UIParent, "CENTER", -300, 0}		-- 承受治疗位置
-local outputDP = {"LEFT", UIParent, "CENTER", 200, 0}		-- 输出伤害位置
-local outputHP = {"LEFT", UIParent, "CENTER", 300, 0}		-- 输出治疗位置
+local inputDP = {"RIGHT", UIParent, "CENTER", -200, -100}		-- 承受伤害位置
+local inputHP = {"RIGHT", UIParent, "CENTER", -300, -100}		-- 承受治疗位置
+local outputDP = {"LEFT", UIParent, "CENTER", 400, -100}		-- 输出伤害位置
+local outputHP = {"LEFT", UIParent, "CENTER", 500, -100}		-- 输出治疗位置
 
 local frames = {}
 

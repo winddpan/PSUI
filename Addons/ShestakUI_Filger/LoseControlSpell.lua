@@ -11,7 +11,6 @@ local spellIds = {
 	[218826] = "Immune",		-- Desecrated Ground
         [48707]  = "ImmuneSpell",	-- Anti-Magic Shell
 	[48792]  = "Other",			-- Icebound Fortitude
-	[49039]  = "Other",			-- Lichborne
 	
 	-- NEW
         [205630] = "CC",			-- “¡¿˚µ§÷ÆŒ’
@@ -240,7 +239,6 @@ local spellIds = {
 		[50433]  = "Snare",		-- Ankle Crack (Crocolisk)
 		[54644]  = "Snare",		-- Frost Breath (Chimaera)
 		[54216]  = "Other",		-- Master's Call (root and snare immune only)
-		[137798] = "Other",		-- Reflective Armor Plating
 
 	----------------
 	-- Mage
@@ -387,15 +385,12 @@ local spellIds = {
 	[132168] = "CC",			-- Shockwave
 	[107570] = "CC",			-- Storm Bolt
 	[132169] = "CC",			-- Storm Bolt
-	[107566] = "Root",			-- Staggering Shout
 	[105771] = "Root",			-- Warbringer
-	[147531] = "Snare",			-- Bloodbath
 	[1715]   = "Snare",			-- Hamstring
 	[12323]  = "Snare",			-- Piercing Howl
 	[46924]  = "Immune",		-- Bladestorm
         [227847] = "Immune",		-- Bladestorm
 	[23920]  = "ImmuneSpell",	-- Spell Reflection
-	[114028] = "ImmuneSpell",	-- Mass Spell Reflection
 	[18499]  = "Other",			-- Berserker Rage
 
 	----------------

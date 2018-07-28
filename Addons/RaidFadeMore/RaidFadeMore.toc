@@ -1,0 +1,9 @@
+## Interface: 80000
+## Version: v1.1.0
+## Title: RaidFadeMore
+## Notes: Fade Blizzard Raid Frames
+## Author: Ketho
+## SavedVariables: RaidFadeMoreDB
+## Dependencies: Blizzard_CUFProfiles
+
+RaidFadeMore.lua

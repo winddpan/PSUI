@@ -45,10 +45,10 @@ rActionBar:CreateBagBar(A, bagbar)
 
 local micromenubar = {
   framePoint      = { "TOP", UIParent, "TOP", 0, 0 },
-  frameScale      = .9,
+  frameScale      = 1,
   framePadding    = 2,
   buttonWidth     = 28,
-  buttonHeight    = 58,
+  buttonHeight    = 36,
   buttonMargin    = -2,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",

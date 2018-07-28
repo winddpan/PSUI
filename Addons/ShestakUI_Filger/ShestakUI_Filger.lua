@@ -1,7 +1,7 @@
 ﻿local _, ns = ...
 local Misc = ns.Misc
 
-local debugPrint = false
+local debugPrint = true
 local class = select(2, UnitClass("player"))
 local colorTable = Misc.Colors
 

@@ -60,7 +60,7 @@
 		},
 		pet = {
 			["enable"] = true,			-- Player's pet
-			["position"] = {"TOPRIGHT", "oUF_monoPlayerFrame", "TOPLEFT", -28, 0},
+			["position"] = {"TOPRIGHT", "oUF_monoPlayerFrame", "TOPLEFT", -20, 0},
 			["width"] = 60,
 			["height"] = 24,
 			["scale"] = 1,
@@ -111,7 +111,7 @@
 			["font_size"] = 12, 							-- font size for names / hp values
 			["orientation"] = "HORIZONTAL", 				-- hp/mp bar direction
 			["focus_color"] = {.8, .8, .2, .66}, 			-- focus border color
-			["DisableRaidManager"] = true, 					-- disable default compact Raid Manager button
+			["DisableRaidManager"] = false, 					-- disable default compact Raid Manager button
 			["update_time"] = .25, 							-- Enhances update rate for indicators (can be cpu intensive with lower values)
 			debuff = {	
 				["size"] = 15, 								-- debuff icon size

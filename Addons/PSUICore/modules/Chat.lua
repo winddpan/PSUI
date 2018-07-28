@@ -78,6 +78,9 @@ local function SkinChat(self)
   _G[name.."TabHighlightLeft"]:SetTexture(nil)
   _G[name.."TabHighlightMiddle"]:SetTexture(nil)
   _G[name.."TabHighlightRight"]:SetTexture(nil)
+  
+  _G["ChatFrameToggleVoiceDeafenButton"]:Hide()
+	_G["ChatFrameToggleVoiceMuteButton"]:Hide()
 end
 
 local function UpdateBackgroundAnchors(self)

@@ -195,62 +195,64 @@
 	f.Health.bd = b
 	s.PostUpdate = lib.PostUpdateHealth  
 	
-		
-	local barWidth = f.Health:GetWidth()
+	if f.mystyle == "player" or f.mystyle == "target" then
+		local barWidth = f.Health:GetWidth()
 
-	-- Position and size
-    local myBar = CreateFrame('StatusBar', nil, f.Health)
-    myBar:SetPoint('TOP')
-    myBar:SetPoint('BOTTOM')
-    myBar:SetPoint('LEFT', f.Health:GetStatusBarTexture(), 'RIGHT')
-    myBar:SetWidth(barWidth)
-    myBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+		-- Position and size
+		local myBar = CreateFrame('StatusBar', nil, f.Health)
+		myBar:SetPoint('TOP')
+		myBar:SetPoint('BOTTOM')
+		myBar:SetPoint('LEFT', f.Health:GetStatusBarTexture(), 'RIGHT')
+		myBar:SetWidth(barWidth)
+		myBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
 
-    local otherBar = CreateFrame('StatusBar', nil, f.Health)
-    otherBar:SetPoint('TOP')
-    otherBar:SetPoint('BOTTOM')
-    otherBar:SetPoint('LEFT', myBar:GetStatusBarTexture(), 'RIGHT')
-    otherBar:SetWidth(barWidth)
-    otherBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+		local otherBar = CreateFrame('StatusBar', nil, f.Health)
+		otherBar:SetPoint('TOP')
+		otherBar:SetPoint('BOTTOM')
+		otherBar:SetPoint('LEFT', myBar:GetStatusBarTexture(), 'RIGHT')
+		otherBar:SetWidth(barWidth)
+		otherBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
 
-    local absorbBar = CreateFrame('StatusBar', nil, f.Health)
-    absorbBar:SetPoint('TOP')
-    absorbBar:SetPoint('BOTTOM')
-    absorbBar:SetPoint('LEFT', otherBar:GetStatusBarTexture(), 'RIGHT')
-    absorbBar:SetWidth(barWidth)
-    absorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+		local absorbBar = CreateFrame('StatusBar', nil, f.Health)
+		absorbBar:SetPoint('TOP')
+		absorbBar:SetPoint('BOTTOM')
+		absorbBar:SetPoint('LEFT', otherBar:GetStatusBarTexture(), 'RIGHT')
+		absorbBar:SetWidth(barWidth)
+		absorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
 
-    local healAbsorbBar = CreateFrame('StatusBar', nil, f.Health)
-    healAbsorbBar:SetPoint('TOP')
-    healAbsorbBar:SetPoint('BOTTOM')
-    healAbsorbBar:SetPoint('RIGHT', f.Health:GetStatusBarTexture())
-    healAbsorbBar:SetWidth(barWidth)
-    healAbsorbBar:SetReverseFill(true)
-    healAbsorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
+		local healAbsorbBar = CreateFrame('StatusBar', nil, f.Health)
+		healAbsorbBar:SetPoint('TOP')
+		healAbsorbBar:SetPoint('BOTTOM')
+		healAbsorbBar:SetPoint('RIGHT', f.Health:GetStatusBarTexture())
+		healAbsorbBar:SetWidth(barWidth)
+		healAbsorbBar:SetReverseFill(true)
+		healAbsorbBar:SetStatusBarTexture(cfg.oUF.media.statusbar)
 
-    local overAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
-    overAbsorb:SetPoint('TOP')
-    overAbsorb:SetPoint('BOTTOM')
-    overAbsorb:SetPoint('LEFT', f.Health, 'RIGHT')
-    overAbsorb:SetWidth(10)
+		local overAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
+		overAbsorb:SetPoint('TOP')
+		overAbsorb:SetPoint('BOTTOM')
+		overAbsorb:SetPoint('LEFT', f.Health, 'RIGHT')
+		overAbsorb:SetWidth(10)
 
-	local overHealAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
-    overHealAbsorb:SetPoint('TOP')
-    overHealAbsorb:SetPoint('BOTTOM')
-    overHealAbsorb:SetPoint('RIGHT', f.Health, 'LEFT')
-    overHealAbsorb:SetWidth(10)
+		local overHealAbsorb = f.Health:CreateTexture(nil, "OVERLAY")
+		overHealAbsorb:SetPoint('TOP')
+		overHealAbsorb:SetPoint('BOTTOM')
+		overHealAbsorb:SetPoint('RIGHT', f.Health, 'LEFT')
+		overHealAbsorb:SetWidth(10)
 
-    -- Register with oUF
-    f.HealthPrediction = {
-        myBar = myBar,
-        otherBar = otherBar,
-        absorbBar = absorbBar,
-        healAbsorbBar = healAbsorbBar,
-        overAbsorb = overAbsorb,
-        overHealAbsorb = overHealAbsorb,
-        maxOverflow = 1.05,
-        frequentUpdates = true,
-    }
+		-- Register with oUF
+		f.HealthPrediction = {
+			myBar = myBar,
+			otherBar = otherBar,
+			absorbBar = absorbBar,
+			healAbsorbBar = healAbsorbBar,
+			overAbsorb = overAbsorb,
+			overHealAbsorb = overHealAbsorb,
+			maxOverflow = 1.05,
+			frequentUpdates = true,
+		}
+	end
+
   end
   --3d portrait behind hp bar
   lib.gen_portrait = function(f)

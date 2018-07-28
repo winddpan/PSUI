@@ -61,8 +61,6 @@ Filger_Spells = {
 				{spellID = 32182, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 时间扭曲
 				{spellID = 80353, unitID = "player",caster = "all", filter = "BUFF"},
-				-- 巫妖之躯
-				{spellID = 49039, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 杀戮机器
 				--{spellID = 51124, unitID = "player",caster = "all", filter = "BUFF"},
 				-- 吸血鬼之血
@@ -1588,50 +1586,6 @@ Filger_Spells = {
 			-- Ember Master (T16)
 			{spellID = 145164, unitID = "player", caster = "player", filter = "BUFF"},
 
-			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 雷神的精准之视
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- Enchants
-			-- General
-			-- Caster General
 			-- Jade Spirit (Intellect + Spirit)
 			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Lightweave (Intellect)

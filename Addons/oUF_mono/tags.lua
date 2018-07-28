@@ -291,7 +291,7 @@ oUF.Tags.Methods['mono:LFD'] = function(u)
 		return "|cffFF6161D|r"
 	end
 end
-oUF.Tags.Events['mono:LFD'] = 'PLAYER_ROLES_ASSIGNED PARTY_MEMBERS_CHANGED'
+oUF.Tags.Events['mono:LFD'] = 'PLAYER_ROLES_ASSIGNED GROUP_ROSTER_UPDATE'
 
 -- heal prediction value tag
 oUF.Tags.Methods['mono:heal'] = function(u)

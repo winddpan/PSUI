@@ -307,27 +307,6 @@
       f.Indicators = true
     end
 	
-	-- Healing prediction
-	if cfg.oUF.frames.raid.healbar.enable then
-	  local ohpb = CreateFrame('StatusBar', nil, f.Health)
-	  ohpb:SetPoint('TOPLEFT', f.Health:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
-	  ohpb:SetPoint('BOTTOMLEFT', f.Health:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
-	  ohpb:SetWidth(cfg.oUF.frames.raid.width)
-	  ohpb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	  ohpb:SetStatusBarColor(1, 0.5, 0, cfg.oUF.frames.raid.healbar.healalpha)
-	  f.ohpb = ohpb
-        
-	  local mhpb = CreateFrame('StatusBar', nil, f.Health)
-	  mhpb:SetPoint('TOPLEFT', ohpb:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
-	  mhpb:SetPoint('BOTTOMLEFT', ohpb:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
-	  mhpb:SetWidth(cfg.oUF.frames.raid.width)
-	  mhpb:SetStatusBarTexture(cfg.oUF.media.statusbar)
-	  mhpb:SetStatusBarColor(0, 1, 0.5, cfg.oUF.frames.raid.healbar.healalpha)
-	  f.mhpb = mhpb
-
-	  f.HealPrediction = { myBar = mhpb, otherBar = ohpb, maxOverflow = cfg.oUF.frames.raid.healbar.healoverflow }
-	end
-	
 	local h = CreateFrame"Frame" h:SetParent(f.Health) h:SetAllPoints(f.Health) h:SetFrameLevel(20)
 	if cfg.oUF.frames.raid.healbar.healtext then
 	  local ht = lib.gen_fontstring(h, cfg.oUF.media.font, cfg.oUF.frames.raid.font_size-2)

@@ -910,8 +910,8 @@
 			end
 			--ci[i]:SetPoint('TOPLEFT', ci, 'TOPLEFT', i * (ci[i]:GetWidth()+2), 0)
 		end
-	f.ClassIcons = ci
-	f.ClassIcons.PostUpdate = PostUpdateClassPowerIcons
+	f.ClassPower = ci
+	f.ClassPower.PostUpdate = PostUpdateClassPowerIcons
   end
   
   --gen TotemBar for shamans
@@ -974,7 +974,7 @@
 		tb[i] = t
 		--t.StatusBar = t
 	end
-	f.TotemBar = tb
+	f.Totems = tb
   end
   
   --gen class specific power display

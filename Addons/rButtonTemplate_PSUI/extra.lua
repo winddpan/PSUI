@@ -1,9 +1,6 @@
   function UpdateHotkeyText(button)
-  	print(button)
-
 	local hotkey = _G[button:GetName() .. "HotKey"]
 	local text = hotkey:GetText()
-	print(text)
 	if not text then return end
 
 	text = string.gsub(text, "Capslock", "CAP")

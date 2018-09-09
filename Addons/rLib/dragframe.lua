@@ -57,6 +57,7 @@ end
 
 --rLib:CreateDragFrame
 function rLib:CreateDragFrame(frame, frames, inset, clamp)
+	--[[
   if not frame or not frames then return end
   --save the default position for later
   frame.defaultPoint = L:GetPoint(frame)
@@ -86,7 +87,7 @@ function rLib:CreateDragFrame(frame, frames, inset, clamp)
   frame.dragFrame = df
   frame:SetClampedToScreen(clamp or false)
   frame:SetMovable(true)
-  frame:SetUserPlaced(true)
+  frame:SetUserPlaced(true)]]
 end
 
 --rLib:CreateDragResizeFrame

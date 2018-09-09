@@ -39,6 +39,8 @@ cfg.backdrop.borderColor = {0,0,0,.95}
 
 --pos can be either a point table or a anchor string
 cfg.pos = {"TOPLEFT", UIParent, "BOTTOM", 390, 294}
+cfg.pos = {"BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -8, 200}
+
 --cfg.pos = "ANCHOR_CURSOR"
 
 -----------------------------

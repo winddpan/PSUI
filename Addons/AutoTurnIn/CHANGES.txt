@@ -1,0 +1,16 @@
+lightweight tag 9ff0af8ecaf37e0d8ed8a0e5c1e7248ec3a97d26 7.4.0
+Author:	GitHub <noreply@github.com>
+Date:	Sun Jul 15 21:06:50 2018 -0400
+
+commit c81aa4ae9de864ecde0c4ecef20bdca5396e2816
+Author: Nikolas Xexenis (Home) <nikolasx@gmail.com>
+Date:   Sun Jul 15 13:18:01 2018 +1000
+
+    Updated quest button loop to reflect 8.0 API changes
+
+commit c81aa4ae9de864ecde0c4ecef20bdca5396e2816
+Author: Nikolas Xexenis (Home) <nikolasx@gmail.com>
+Date:   Sun Jul 15 13:18:01 2018 +1000
+
+    Updated quest button loop to reflect 8.0 API changes
+

@@ -22,11 +22,11 @@
 ## Title: AdiBags
 ## Notes: Adirelle's bag addon.
 ## Author: Adirelle
-## Version: v1.9.9
+## Version: v1.9.11
 ## SavedVariables: AdiBagsDB
-## X-Date: 2018-07-18T3:38:45Z
+## X-Date: 2018-08-17T15:33:16Z
 ## X-License: GPL v3
-## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibSharedMedia-3.0, LibItemUpgradeInfo-1.0, Scrap, BrainDead, !BugGrabber, SyLevel
+## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibSharedMedia-3.0, Scrap, BrainDead, !BugGrabber, SyLevel
 #@alpha@
 # ## OptionalDeps: AdiDebug, BugSack, Swatter
 #@end-alpha@
@@ -40,7 +40,6 @@ libs\AceDB-3.0\AceDB-3.0.xml
 libs\AceHook-3.0\AceHook-3.0.xml
 libs\AceConsole-3.0\AceConsole-3.0.xml
 libs\LibSharedMedia-3.0\lib.xml
-libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
 #@end-no-lib-strip@
 
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua

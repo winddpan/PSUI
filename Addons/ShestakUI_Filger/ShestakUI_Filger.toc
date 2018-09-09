@@ -5,7 +5,8 @@
 ## Version: 5.1
 ## Credits: Affli, Ildyria, SinaC, Winddpan
 ## Thanks: Erratic, Wetxius
-## OptionalDeps:OmniCC
+## OptionalDeps: OmniCC
+## SavedVariables: FilgerDB
 
 Settings.lua
 Spells.lua

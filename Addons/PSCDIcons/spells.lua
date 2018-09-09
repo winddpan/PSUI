@@ -13,15 +13,20 @@ Cooldowns = {
 
 			-- 敏锐
 			{spellID = 185313, spec = "敏锐"},
-			{spellID = 212283, spec = "敏锐"},
-			
-			-- 死标
-			{spellID = 137619, talent = "3/3"},
 			-- 影分身
 			{spellID = 280719, talent = "7/2", spec = "敏锐"},
+			{spellID = 212283, spec = "敏锐"},
+
+			-- 死标
+			{spellID = 137619, talent = "3/3"},
 			
 			{spellID = 121471, spec = "敏锐"},
 
+			-- 正中眉心
+			{spellID = 199804, spec = "狂徒"},
+			{spellID = 51690, talent = "7/3", spec = "狂徒"},
+			{spellID = 271877, talent = "7/2", spec = "狂徒"},
+			
 			-- 冲动
 			{spellID = 13750, spec = "狂徒"},
 
@@ -32,9 +37,6 @@ Cooldowns = {
 			-- 抽血
 			{spellID = 200806, spec = "奇袭", talent = "6/3"},
 
-
-			-- 正中眉心
-			{spellID = 199804, spec = "狂徒"},
 
 			-- 消失
 			{spellID = 1856},

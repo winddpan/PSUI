@@ -3,8 +3,8 @@ local WIDTH 		= Minimap.mnMap:GetWidth()
 local HEIGHT 		= 5
 local _, CLASS 		= UnitClass("player")
 local COLOR			= CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[CLASS] or RAID_CLASS_COLORS[CLASS]
-local POSITION		= {"TOP", Minimap.mnMap, "BOTTOM", 0, 0}
-local OFFSET		= -HEIGHT-1
+local POSITION		= {"TOP", Minimap.mnMap, "BOTTOM", 0, -3}
+local OFFSET		= 6
 local TEXTURE 		= "Interface\\AddOns\\\PSUICore\\media\\statusbar.tga"
 
 -- LOCALE
@@ -53,9 +53,13 @@ f:SetWidth(WIDTH)
 f:SetHeight(HEIGHT)
 f:SetScale(SCALE)
 f:SetFrameStrata(Minimap:GetFrameStrata())
-
-
-
+f.shadow = CreateFrame("Frame", nil, f)
+f.shadow:SetPoint("TOPLEFT", f, "TOPLEFT", -3, 3)
+f.shadow:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 3, -3)
+f.shadow:SetBackdrop({edgeFile = [[Interface\AddOns\PSUICore\media\glow]], edgeSize = 3})
+f.shadow:SetBackdropColor(0, 0, 0, 0)
+f.shadow:SetBackdropBorderColor(0, 0, 0, 0.67)
+	
 -- SETUP BARS
 local setBar = function(frame)
 	frame:SetStatusBarTexture(TEXTURE)
@@ -75,13 +79,6 @@ local setBackdrop = function(frame)
 	frame.bg:SetPoint("BOTTOMRIGHT", frame, 1, -1)
 	frame.bg:SetFrameLevel(1)
 	frame.bg:SetBackdropColor(0, 0, 0, .35)
-	
-	frame.Shadow = CreateFrame("Frame", nil, frame)
-	frame.Shadow:SetPoint("TOPLEFT", frame, "TOPLEFT", -3, 3)
-	frame.Shadow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 3, -3)
-	frame.Shadow:SetBackdrop({edgeFile = [[Interface\AddOns\PSUICore\media\glow]], edgeSize = 3})
-	frame.Shadow:SetBackdropColor(0, 0, 0, 0)
-	frame.Shadow:SetBackdropBorderColor(0, 0, 0, 0.67)
 end
 
 local Experience = CreateFrame("StatusBar", nil, f, 'AnimatedStatusBarTemplate')
@@ -103,25 +100,36 @@ setBar(Reputation)
 Reputation:SetFrameLevel(4)
 setBackdrop(Reputation)
 
-local Honor = CreateFrame("StatusBar", nil, f, 'AnimatedStatusBarTemplate')
-setBar(Honor)
-Honor:SetFrameLevel(4)
-Honor:SetStatusBarColor(205/255, 6/255, 0/255)
-setBackdrop(Honor)
+local Artifact = CreateFrame("StatusBar", nil, f, 'AnimatedStatusBarTemplate')
+setBar(Artifact)
+Artifact:SetFrameLevel(4)
+Artifact:SetStatusBarColor(229/255, 205/255, 157/255)
+setBackdrop(Artifact)
 
-local updateShadowBorder = function()
-	if Experience:IsShown() or Reputation:IsShown()then
-		f.shadow:ClearAllPoints()
-		f.shadow:SetPoint("TOPLEFT", f, "TOPLEFT", -3, 3)
-		
-		if Reputation:IsShown() then
-			f.shadow:SetPoint("BOTTOMRIGHT", Reputation, "BOTTOMRIGHT", 3, -3)
-		elseif Experience:IsShown() then
-			f.shadow:SetPoint("BOTTOMRIGHT", Experience, "BOTTOMRIGHT", 3, -3)
-		end
-		f.shadow:Show()
+local update = function() 
+	local height = 0
+	local y = 0
+	if Artifact:IsShown() then
+		Artifact:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		y = y + OFFSET
+		height = height + OFFSET
+	end
+	if Reputation:IsShown() then
+		Reputation:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		y = y + OFFSET
+		height = height + OFFSET
+	end
+	if Experience:IsShown() then
+		Experience:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		Rest:SetAllPoints(Experience)
+	end
+	f:SetHeight(height - (OFFSET - HEIGHT))
+	f:SetPoint(POSITION[1], POSITION[2], POSITION[3], POSITION[4], POSITION[5])
+
+	if height == 0 then
+		f:Hide()
 	else
-		f.shadow:Hide()
+		f:Show()
 	end
 end
 
@@ -145,10 +153,14 @@ local experience_update = function()
 		Experience:SetValue(c)
 		Rest:SetMinMaxValues(min(0, c), m)
 		Rest:SetValue(r and (c + r) or 0)
+		
+		Experience:Show() 
+		Rest:Show()
 	else
 		Experience:Hide() 
 		Rest:Hide()
 	end
+	update()
 end
 
 local showExperienceTooltip = function(self)
@@ -193,16 +205,11 @@ local reputation_update = function()
 		Reputation:SetMinMaxValues(min, max)
 		Reputation:SetValue(value)
 		Reputation:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b)
-
-		local y = POSITION[5]
-		if Experience:IsShown() then
-			y = y + OFFSET
-		end
-		Reputation:SetPoint(POSITION[1], POSITION[2], POSITION[3], POSITION[4], y)
 		Reputation:Show()
 	else
 		Reputation:Hide()
 	end
+	update()
 end
 
 local showReputationTooltip = function(self)
@@ -247,76 +254,57 @@ local showReputationTooltip = function(self)
 	end
 end
 
-local honor_update = function(self, event)
-	local level = UnitHonorLevel("player")
-	local levelmax = GetMaxPlayerHonorLevel()
-	if UnitLevel("player") < MAX_PLAYER_LEVEL or level == levelmax then
-		Honor:Hide()
-	else
-		Honor:ClearAllPoints()
-		local current = UnitHonor("player")
-		local max = UnitHonorMax("player")
-
-		if (level == levelmax) then
-			Honor:SetAnimatedValues(1, 0, 1, level)
-		else
-			Honor:SetAnimatedValues(current, 0, max, level)
-		end
-
-		local exhaustionStateID = GetHonorRestState()
-		if (exhaustionStateID == 1) then
-			Honor:SetStatusBarColor(1.0, 0.71, 0)
-			Honor:SetAnimatedTextureColors(1.0, 0.71, 0)
-		else
-			Honor:SetStatusBarColor(1.0, 0.24, 0)
-			Honor:SetAnimatedTextureColors(1.0, 0.24, 0)
-		end
-
-		local y = POSITION[5]
-		if Experience:IsShown() then
-			y = y + OFFSET
-		end
-		if Reputation:IsShown() then
-			y = y + OFFSET
-		end
-		if Artifact:IsShown() then
-			y = y + OFFSET
-		end
-		Honor:SetPoint(POSITION[1], POSITION[2], POSITION[3], POSITION[4], y)
-		Honor:Show()
+local artifact_update = function(self, event)
+	local data    = {};
+	local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+	if(C_AzeriteItem.HasActiveAzeriteItem() and azeriteItemLocation) then
+		local currentXP, totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
+		local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation); 
+		data.id       = 1;
+		data.level    = currentLevel;
+		data.current  = currentXP;
+		data.max  	  = totalLevelXP;
 	end
+	
+	if data.id ~= nil then
+		Artifact:ClearAllPoints()
+		Artifact:SetMinMaxValues(0, data.max)
+		Artifact:SetValue(data.current)
+
+		Artifact:Show()
+	else
+		Artifact:Hide()
+	end
+	update()
 end
 
-local showHonorTooltip = function(self)
-	if UnitLevel("player") == MAX_PLAYER_LEVEL then
-		local current, max = UnitHonor("player"), UnitHonorMax("player")
-		local level, levelmax = UnitHonorLevel("player"), GetMaxPlayerHonorLevel()
-		local text
+function GetArtifactName()
+	return "艾泽拉斯之心"
+end
 
+local showArtifactTooltip = function(self) 
+	local data    = {};
+	local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+	if(C_AzeriteItem.HasActiveAzeriteItem() and azeriteItemLocation) then
+		local currentXP, totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
+		local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation); 
+		data.id       = 1;
+		data.level    = currentLevel;
+		data.current  = currentXP;
+		data.max  	  = totalLevelXP;
+	end
+	
+	if data.id ~= nil then
+		local remaining         = data.max - data.current;
+		local progress          = data.current / data.max;
+	
 		GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
-		--GameTooltip:SetPoint(TIP[1], TIP[2], TIP[3], TIP[4], TIP[5])
-
-		GameTooltip:AddLine(HONOR)
-
-		if CanPrestige() then
-			text = PVP_HONOR_PRESTIGE_AVAILABLE
-		elseif level == levelmax then
-			text = MAX_HONOR_LEVEL
-		else
-			text = current.."/"..max
-		end
-
-		if UnitPrestige("player") > 0 then
-			GameTooltip:AddLine(select(2, GetPrestigeInfo(UnitPrestige("player"))), .0,.6,1)
-		else
-			GameTooltip:AddLine(PVP_PRESTIGE_RANK_UP_TITLE..LEVEL.."0", .0,.6,1)
-		end
-		GameTooltip:AddDoubleLine(HONOR_POINTS..LEVEL..level, text, .6,.8,1, 1,1,1)
+		GameTooltip:AddLine(name, COLOR.r, COLOR.g, COLOR.b)
+		GameTooltip:AddDoubleLine(GetArtifactName(), data.current.."/"..data.max.." ("..floor(progress*100).."%)", .6,.8,1, 1,1,1)
 
 		GameTooltip:Show()
 	end
 end
-
 
 -- events
 Experience:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -336,18 +324,8 @@ Reputation:SetScript("OnEvent", reputation_update)
 Reputation:SetScript("OnEnter", function() showReputationTooltip(Reputation) end)
 Reputation:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
---[[
-Honor:RegisterEvent("UPDATE_FACTION")
-Honor:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
-Honor:RegisterEvent("HONOR_XP_UPDATE")
-Honor:RegisterEvent("HONOR_PRESTIGE_UPDATE")
-Honor:RegisterEvent("PLAYER_ENTERING_WORLD")
-Honor:RegisterEvent("ARTIFACT_XP_UPDATE")
-Honor:RegisterEvent("ARTIFACT_UPDATE")
-Honor:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-Honor:SetScript("OnEvent", honor_update)
-Honor:SetScript("OnEnter", function() showHonorTooltip(Honor) end)
-Honor:SetScript("OnLeave", function() GameTooltip:Hide() end)
-]]
-Honor:Hide()
-
+Artifact:RegisterEvent("PLAYER_ENTERING_WORLD")
+Artifact:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
+Artifact:SetScript("OnEvent", artifact_update)
+Artifact:SetScript("OnEnter", function() showArtifactTooltip(Artifact) end)
+Artifact:SetScript("OnLeave", function() GameTooltip:Hide() end)

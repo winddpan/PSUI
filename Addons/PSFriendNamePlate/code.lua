@@ -5,12 +5,13 @@ local function defaultsetting()
 end 
 
 local DFS = CreateFrame("FRAME", "defaultsetting") 
+--[[
 DFS:RegisterEvent("VARIABLES_LOADED") 
 DFS:RegisterEvent("NAME_PLATE_CREATED") 
 DFS:RegisterEvent("NAME_PLATE_UNIT_ADDED") 
 DFS:RegisterEvent("NAME_PLATE_UNIT_REMOVED") 
 DFS:RegisterEvent("CVAR_UPDATE") 
-DFS:RegisterEvent("DISPLAY_SIZE_CHANGED") 
+DFS:RegisterEvent("DISPLAY_SIZE_CHANGED") ]]
 DFS:RegisterEvent("PLAYER_ENTERING_WORLD") 
 DFS:RegisterEvent("PLAYER_LOGIN") 
 

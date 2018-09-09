@@ -1,0 +1,42 @@
+## Interface: 80000
+## Title: World Quest Tracker
+## Notes: Make more easy to see world quests
+## SavedVariables: WQTrackerDB
+## SavedVariablesPerCharacter: WQTrackerDBChr
+
+
+#@no-lib-strip@
+libs\libs.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+WorldQuestTracker.xml
+
+WorldQuestTracker_Initialize.lua
+WorldQuestTracker_IDs.lua
+
+WorldQuestTracker.lua
+
+WorldQuestTracker_Core.lua
+
+WorldQuestTracker_FrameAPI.lua
+WorldQuestTracker_MapAPI.lua
+WorldQuestTracker_GroupFinder.lua
+WorldQuestTracker_RareFinder.lua
+WorldQuestTracker_ZoneMap.lua
+WorldQuestTracker_WorldMap.lua
+WorldQuestTracker_Tracker.lua
+WorldQuestTracker_Taxi.lua
+
+WorldQuestTrackerMixin.xml

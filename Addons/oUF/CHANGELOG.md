@@ -1,3 +1,15 @@
+**Changes in 8.0.2:**
+
+- _Val Voronov (1):_
+    1. phaseindicator: Fix logic ([#446](https://github.com/oUF-wow/oUF/issues/446))
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+
+**Changes in 8.0.1:**
+
+- _Val Voronov (1):_
+    1. phaseindicator: Add war mode support
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+
 **Changes in 8.0.0:**
 
 - _Adrian L Lange (5):_
@@ -58,17 +70,4 @@
     2. Update LICENSE ([#428](https://github.com/oUF-wow/oUF/issues/428))
     3. core: Add frame:IsEnabled() method ([#427](https://github.com/oUF-wow/oUF/issues/427))
 - 3 files changed, 11 insertions(+), 5 deletions(-)
-
-**Changes in 7.0.14:**
-
-- _Adrian L Lange (1):_
-    1. changelog: Fix link markup ([#416](https://github.com/oUF-wow/oUF/issues/416))
-- _Rainrider (4):_
-    1. changelog: show newest commits on top
-    2. auras: use oUF's colors table for debuff types
-    3. colors: add debuff to the colors table
-    4. auras: Add more arguments to PostUpdateIcon ([#418](https://github.com/oUF-wow/oUF/issues/418))
-- _Val Voronov (1):_
-    1. core: Update raid vehicle handling hack ([#424](https://github.com/oUF-wow/oUF/issues/424))
-- 4 files changed, 38 insertions(+), 23 deletions(-)
 

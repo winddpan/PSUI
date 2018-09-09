@@ -42,22 +42,36 @@ local Filger = {}
 local MyUnits = {player = true, vehicle = true, pet = true}
 
 function Filger:UnitBuff(unitID, inSpellID, spn, absID, stack)
-	for i = 1, 40, 1 do
-		local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitBuff(unitID, i)
-		if not name then break end
-		if inSpellID == spellID and (not stack or count >= stack) then
-			return name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
+	if absID then
+		for i = 1, 40 do
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitBuff(unitID, i)
+			if not name then break end
+			if spellID == inSpellID and (not stack or count >= stack) then
+				return name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
+			end
+		end
+	else
+		local name, icon, count, _, duration, expirationTime, unitCaster, _, _, spellID = AuraUtil.FindAuraByName(spn, unitID, "HELPFUL")
+		if spellID == inSpellID and name and (not stack or count >= stack) then
+			return name, icon, count, debuffType, duration, expirationTime, unitCaster, _, _, spellID
 		end
 	end
 	return nil
 end
 
 function Filger:UnitDebuff(unitID, inSpellID, spn, absID, stack)
-	for i = 1, 40, 1 do
-		local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitDebuff(unitID, i)
-		if not name then break end
-		if inSpellID == spellID and (not stack or count >= stack) then
-			return name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
+	if absID then
+		for i = 1, 40 do
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitDebuff(unitID, i)
+			if not name then break end
+			if spellID == inSpellID and (not stack or count >= stack) then
+				return name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
+			end
+		end
+	else
+		local name, icon, count, _, duration, expirationTime, unitCaster, _, _, spellID = AuraUtil.FindAuraByName(spn, unitID, "HARMFUL")
+		if spellID == inSpellID and name and (not stack or count >= stack) then
+			return name, icon, count, debuffType, duration, expirationTime, unitCaster, _, _, spellID
 		end
 	end
 	return nil
@@ -312,10 +326,14 @@ function Filger:DisplayActives()
 end
 
 function Filger:OnEvent(event, unit)
-	if event == "SPELL_UPDATE_COOLDOWN" or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED" or event == "PLAYER_ENTERING_WORLD" or event == "UNIT_AURA" and (unit == "target" or unit == "player" or unit == "pet" or unit == "focus") then
+	if event == "PLAYER_ENTERING_WORLD" or event == "SPELL_UPDATE_COOLDOWN"
+	or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED"
+	or event == "UNIT_AURA" and (unit == "player" or unit == "target" or unit == "pet" or unit == "focus")
+	or (event == "UNIT_SPELLCAST_SUCCEEDED" and unit == "player") then
+		local ptt = GetSpecialization()
 		local needUpdate = false
 		local id = self.Id
-
+	
 		for i = 1, #Filger_Spells[class][id], 1 do
 			local data = Filger_Spells[class][id][i]
 			local found = false
@@ -364,25 +382,6 @@ function Filger:OnEvent(event, unit)
 				if name and (duration or 0) > 1.5 then
 					found = true
 				end
-			elseif data.filter == "ICD" then
-				if data.trigger == "BUFF" then
-					local spn
-					spn, _, icon = GetSpellInfo(data.spellID)
-					name, _, _, _, _, _, _, _, _, spid = Filger:UnitBuff("player", data.spellID, spn, data.absID, data.stack)
-				elseif data.trigger == "DEBUFF" then
-					local spn
-					spn, _, icon = GetSpellInfo(data.spellID)
-					name, _, _, _, _, _, _, _, _, spid = Filger:UnitDebuff("player", data.spellID, spn, data.absID, data.stack)
-				end
-				if name then
-					if data.slotID then
-						local slotLink = GetInventoryItemLink("player", data.slotID)
-						_, _, _, _, _, _, _, _, _, icon = GetItemInfo(slotLink)
-					end
-					duration = data.duration
-					start = GetTime()
-					found = true
-				end
 			end
 
 			if found then
@@ -391,7 +390,7 @@ function Filger:OnEvent(event, unit)
 					self.actives[i] = {data = data, name = name, icon = icon, count = count, start = start, duration = duration, spid = spid}
 					needUpdate = true
 				else
-					if data.filter ~= "ICD" and (self.actives[i].count ~= count or self.actives[i].start ~= start or self.actives[i].duration ~= duration) then
+					if (self.actives[i].count ~= count or self.actives[i].start ~= start or self.actives[i].duration ~= duration) then
 						self.actives[i].count = count
 						self.actives[i].start = start
 						self.actives[i].duration = duration
@@ -399,7 +398,7 @@ function Filger:OnEvent(event, unit)
 					end
 				end
 			else
-				if data.filter ~= "ICD" and self.actives and self.actives[i] then
+				if self.actives and self.actives[i] then
 					self.actives[i] = nil
 					needUpdate = true
 				end
@@ -439,6 +438,8 @@ if Filger_Spells and Filger_Spells["ALL"] then
 		end
 	end
 end
+
+FilgerDB = FilgerDB or {}
 
 function Filger:Init()
 	if Filger_Spells and Filger_Spells[class] then
@@ -499,14 +500,19 @@ function Filger:Init()
 			movebar:SetScript("OnDragStart", function(self) self:StartMoving() end)
 			movebar:SetScript("OnDragStop", function(self)
 				self:StopMovingOrSizing()
-				--local AnchorF, _, AnchorT, ax, ay = self:GetPoint()
-				--ShestakUI_FilgerDB[data.Name] = {AnchorF, "UIParent", AnchorT, ax, ay}
+				local AnchorF, _, AnchorT, ax, ay = self:GetPoint()
+				FilgerDB[data.Name] = {AnchorF, "UIParent", AnchorT, ax, ay}
 			end)
 			movebar:SetBackdrop({  bgFile = "Interface\\Buttons\\WHITE8x8" , })
 			movebar:SetBackdropColor(0, 1, 0, 0.5)
 			movebar:SetSize(data.IconSize or 37, data.IconSize or 37)
 			movebar.Position = data.Position or "CENTER"
-			movebar:SetPoint(unpack(data.Position))
+			
+			if FilgerDB[data.Name] ~= nil then
+				movebar:SetPoint(unpack(FilgerDB[data.Name]))
+			else
+				movebar:SetPoint(unpack(data.Position))
+			end
 			
 			movebar.text = movebar:CreateFontString(nil, "OVERLAY")
 			movebar.text:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
@@ -583,7 +589,7 @@ SlashCmdList["FilgerTest"] = function(msg)
 			Filger.DisplayActives(frame)
 		end
 	elseif msg:lower() == "reset" then
-		--wipe(ShestakUI_FilgerDB)
+		wipe(FilgerDB)
 		for i = 1, #Filger_Spells[class], 1 do	
 			local data = Filger_Spells[class][i]
 			local frame = _G["FilgerFrame"..i.."_"..data.Name]

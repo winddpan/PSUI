@@ -5,7 +5,7 @@ local Filger_Settings = {
 	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 0},	-- P_BUFF_ICON
 	player_proc_icon = {"TOPRIGHT", UIParent, "CENTER", -200, -4},		-- P_PROC_ICON
 	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 0},	-- T_DEBUFF_ICON
-	trinket = {"TOPLEFT", "oUF_monoPlayerFrame", "TOPLEFT", -2, -55},  	-- Trinket
+	trinket = {"TOPRIGHT", UIParent, "BOTTOM", -350, 265},  	-- Trinket
 	cooldown = {"BOTTOMLEFT", UIParent, "CENTER", -306, -247},   		-- Cooldown
 }
 
@@ -151,10 +151,8 @@ Filger_Spells = {
 			-- Master of Subtlety
 			{spellID = 31665, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- 狂徒神器
-			{spellID = 202665, unitID = "player", caster = "player", filter = "DEBUFF"},
-			-- 敏锐神器
-			{spellID = 220901, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 神枪手
+			{spellID = 272940, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- 嗜血
 			{spellID =  2825, unitID = "player",caster = "all", filter = "BUFF"},

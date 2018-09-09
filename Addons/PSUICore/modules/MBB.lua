@@ -65,10 +65,10 @@ Collect:SetAllPoints(Minimap)
 Collect:SetFrameStrata(Minimap:GetFrameStrata())
 
 local delay = 0
-Collect.icon = CreateFrame("Button", "Icon_Collect", UIParent)
+Collect.icon = CreateFrame("Button", "Icon_Collect", Minimap)
 Collect.icon:SetSize(32, 32)
 Collect.icon:SetPoint("BOTTOMRIGHT", Minimap.mnMap, "BOTTOMRIGHT", 6, -6)
-Collect.icon:SetFrameLevel(Minimap:GetFrameLevel()+1)
+Collect.icon:SetFrameLevel(Minimap:GetFrameLevel() + 1)
 Collect.icon:SetScript("OnMouseDown", function(self, button)
 	if button == "LeftButton" or button == "RightButton" then
 		if Collect:IsVisible() then

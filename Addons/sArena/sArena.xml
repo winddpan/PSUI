@@ -1,0 +1,93 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<!-- Spec Icon Template -->
+	<Frame name="sArenaSpecIconTemplate" movable="true" clampedToScreen="true" virtual="true">
+		<Size x="22" y="22"/>
+		<Scripts>
+			<OnLoad>
+				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 2)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<!-- Cast Bar Template -->
+	<StatusBar name="sArenaCastBarTemplate" hidden="true" virtual="true">
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentIcon" parentKey="Icon" file="Interface\Icons\Spell_Nature_Polymorph"/>
+			</Layer>
+		</Layers>
+		<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+		<BarColor r="1.0" g="0.7" b="0.0"/>
+		<Scripts>
+			<OnLoad>
+				self:SetMinMaxValues(0, 100)
+				self:SetValue(100)
+			</OnLoad>
+		</Scripts>
+	</StatusBar>
+	
+	<!-- DR Tracker Template -->
+	<Frame name="sArenaDRTrackerTemplate" movable="true" clampedToScreen="true" virtual="true">
+		<Layers>
+			<Layer level="BORDER">
+				<Texture parentKey="Icon" file="Interface\Icons\Spell_Nature_Polymorph"/>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate">
+				<Scripts>
+					<OnLoad>
+						self:ClearAllPoints()
+						self:SetPoint("TOPLEFT", self:GetParent(), 1, -1)
+						self:SetPoint("BOTTOMRIGHT", self:GetParent(), -1, 1)
+						self:SetDrawBling(false)
+						--self:SetSwipeColor(0,0,0,0.5)
+						--self:SetReverse(true)
+					</OnLoad>
+				</Scripts>
+			</Cooldown>
+			<Frame>
+				<Anchors>
+					<Anchor point="CENTER"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Border" file="Interface\BUTTONS\UI-Quickslot-Depress"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					 <OnLoad>
+						self:SetFrameLevel(self:GetParent().Cooldown:GetFrameLevel() + 1)
+						self:SetAllPoints(self:GetParent())
+						self:GetParent().Border = self.Border
+					 </OnLoad>
+				</Scripts>
+			</Frame>
+		</Frames>
+	</Frame>
+	
+	<!-- Racial Template -->
+	<Frame name="sArenaRacialTemplate" movable="true" clampedToScreen="true" virtual="true">
+		<Layers>
+			<Layer level="BORDER">
+				<Texture parentKey="Icon" file="Interface\Icons\Spell_Shadow_Charm"/>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate">
+				<Scripts>
+					<OnLoad>
+						self:ClearAllPoints()
+						self:SetPoint("TOPLEFT", self:GetParent(), 1, -1)
+						self:SetPoint("BOTTOMRIGHT", self:GetParent(), -1, 1)
+					</OnLoad>
+				</Scripts>
+			</Cooldown>
+		</Frames>
+	</Frame>
+
+	<Script file="main.lua"/>
+	<Script file="drtracker.lua"/>
+	<Script file="racials.lua"/>
+	<Script file="aurawatch.lua"/>
+</Ui>

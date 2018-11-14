@@ -1,0 +1,7 @@
+changeset:   178:2db26e93a0ba
+tag:         v1.12.4
+user:        Caleb Atherton <atcaleb@twitch.tv>
+date:        Fri Sep 21 02:37:40 2018 -0400
+summary:     Fourth update of breed data for Battle for Azeroth pets. Also added base stats for Cap'n Crackers.
+
+

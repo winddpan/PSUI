@@ -14,13 +14,13 @@ local A, L = ...
 
 L.C.raid = {
   enabled = true,
-  size = {120,19},
+  size = {110,19},
   points = { --list of 8 points, one for each raid group
     {"TOPLEFT",25, -220},
     {"TOP", "oUF_SimpleRaidHeader1", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader2", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader3", "BOTTOM", 0, -10},
-    {"LEFT", "oUF_SimpleRaidHeader1", "RIGHT", 10, 0},
+    {"LEFT", "oUF_SimpleRaidHeader1", "RIGHT", 85, 0},
     {"TOP", "oUF_SimpleRaidHeader5", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader6", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader7", "BOTTOM", 0, -10},

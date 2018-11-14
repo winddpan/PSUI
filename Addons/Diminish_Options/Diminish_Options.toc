@@ -1,0 +1,23 @@
+## Interface: 80000
+## Title: Diminish Options
+## Notes: Configuration for Diminish.
+## Notes-deDE: Konfiguration für Diminish.
+## Dependencies: Diminish
+
+libs\LibStub\LibStub.lua
+libs\PhanxConfig-Dropdown\PhanxConfig-Dropdown.lua
+
+locales\localization.lua
+
+widgets\widgets.lua
+widgets\button.lua
+widgets\checkbox.lua
+widgets\editbox.lua
+widgets\slider.lua
+widgets\header.lua
+widgets\panel.lua
+
+testmode.lua
+main.lua
+frames.lua
+profiles.lua

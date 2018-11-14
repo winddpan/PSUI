@@ -37,7 +37,7 @@ SpecWatch:RegisterEvent("PLAYER_ENTERING_WORLD")
 SpecWatch:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4 ,arg5, ...)
 	if GetSpecialization() == 1 then
 		CheckerFrame:SetScript("OnUpdate", function(self, elapsed)
-			if timeDuration >= 0.33 then
+			if timeDuration >= 0.5 then
 				timeDuration = 0
 				for i=1,40 do 
 					local buffId = select(10, UnitBuff("player",i))

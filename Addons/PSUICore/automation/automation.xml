@@ -16,4 +16,5 @@
 	<Script file='SkadaPlus.lua' />
 	<script file='ButtonRange.lua' />
 	<script file='ProgressBar.lua' />	
+	<script file='SpellActivationOverlay.lua' />	
 </Ui>

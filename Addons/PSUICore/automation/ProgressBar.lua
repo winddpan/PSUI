@@ -107,26 +107,26 @@ Artifact:SetStatusBarColor(229/255, 205/255, 157/255)
 setBackdrop(Artifact)
 
 local update = function() 
-	local height = 0
+	local h = 0
 	local y = 0
 	if Artifact:IsShown() then
-		Artifact:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		Artifact:SetPoint("TOP", f, "TOP", 0, y)
 		y = y + OFFSET
-		height = height + OFFSET
+		h = h + OFFSET
 	end
 	if Reputation:IsShown() then
-		Reputation:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		Reputation:SetPoint("TOP", f, "TOP", 0, -y)
 		y = y + OFFSET
-		height = height + OFFSET
+		h = h + OFFSET
 	end
 	if Experience:IsShown() then
-		Experience:SetPoint("BOTTOM", f, "BOTTOM", 0, y)
+		Experience:SetPoint("TOP", f, "TOP", 0, -y)
 		Rest:SetAllPoints(Experience)
 	end
-	f:SetHeight(height - (OFFSET - HEIGHT))
+	f:SetHeight(h)
 	f:SetPoint(POSITION[1], POSITION[2], POSITION[3], POSITION[4], POSITION[5])
 
-	if height == 0 then
+	if h == 0 then
 		f:Hide()
 	else
 		f:Show()

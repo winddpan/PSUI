@@ -152,8 +152,8 @@ if cfg.Memory == true then
 			GameTooltip:AddLine(" ")
 			GameTooltip:AddDoubleLine(infoL["Default UI Memory Usage:"],formatMem(gcinfo() - Total),.6,.8,1,1,1,1)
 			GameTooltip:AddDoubleLine(infoL["Total Memory Usage:"],formatMem(collectgarbage'count'),.6,.8,1,1,1,1)
-			GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
-			GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
+			--GameTooltip:AddDoubleLine(" ","--------------",1,1,1,0.5,0.5,0.5)
+			--GameTooltip:AddDoubleLine(" ",infoL["AutoCollect"]..": "..(diminfo.AutoCollect and "|cff55ff55"..infoL["ON"] or "|cffff5555"..strupper(OFF)),1,1,1,.4,.78,1)
 			GameTooltip:Show()
 	end)
 
@@ -161,6 +161,7 @@ if cfg.Memory == true then
 	Stat:SetScript("OnUpdate", Update)
 	Update(Stat, 20)
 	
+	--[[
 	--自动回收内存
 	local eventcount = 0
 	local a = CreateFrame("Frame")
@@ -174,5 +175,5 @@ if cfg.Memory == true then
 				eventcount = 0
 			end
 		end
-	end)
+	end)]]
 end

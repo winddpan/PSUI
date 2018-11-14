@@ -30,16 +30,24 @@ Cooldowns = {
 			-- 冲动
 			{spellID = 13750, spec = "狂徒"},
 
-			-- 仇杀
-			{spellID = 79140, spec = "奇袭"},
 			-- 萃毒
 			{spellID = 245388, spec = "奇袭", talent = "6/2"},
 			-- 抽血
 			{spellID = 200806, spec = "奇袭", talent = "6/3"},
 
+			-- 仇杀
+			{spellID = 79140, spec = "奇袭"},
 
 			-- 消失
 			{spellID = 1856},
+			-- 烟雾弹
+			{spellID = 212182, pvp = true},
+			{spellID = 207736, pvp = true},
+			{spellID = 269513, pvp = true},
+			{spellID = 206328, pvp = true},
+			{spellID = 207777, pvp = true},
+			{spellID = 198529, pvp = true},
+
 		},
 	},
 	["DEATHKNIGHT"] = {
@@ -49,25 +57,20 @@ Cooldowns = {
 			IconSize = size,
 			Position = pos,
 			
-			{spellID = 130736, spec = "邪恶", talent = "7/3"},
-			{spellID = 220143, spec = "邪恶"},
-			{spellID = 194918, spec = "邪恶", talent = "2/3"},
-			{spellID = 207317, spec = "邪恶", talent = "2/1"},
-			{spellID = 49206, spec = "邪恶"},
+			{spellID = 275699, spec = "邪恶"},
+			{spellID = 49206, spec = "邪恶", talent = "7/3"},
 			{spellID = 63560, spec = "邪恶"},
 			
 			{spellID = 196770, spec = "冰霜"},
 			{spellID = 51271, spec = "冰霜"},
-			{spellID = 152279, spec = "冰霜", talent = "7/2"},
 			{spellID = 47568, spec = "冰霜"},
-			{spellID = 190778, spec = "冰霜"},
+			{spellID = 279302, spec = "冰霜", talent = "6/3"},
 			
 			{spellID = 43265, spec = "鲜血"},
-			{spellID = 205223, spec = "鲜血"},
 			{spellID = 55233, spec = "鲜血"},
 			{spellID = 49028, spec = "鲜血"},
 			{spellID = 206977, spec = "鲜血", talent = "7/2"},
-			{spellID = 194844, spec = "鲜血", talent = "7/1"},
+			{spellID = 194844, spec = "鲜血", talent = "7/3"},
 
 		},
 	},

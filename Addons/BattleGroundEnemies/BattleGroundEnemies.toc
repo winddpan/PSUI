@@ -1,0 +1,38 @@
+## Interface: 80000
+## Title: BattleGroundEnemies
+## Version: v3.1.9.6
+## Author: Bullsei
+## SavedVariables: BattleGroundEnemiesDB
+## OptionalDeps: Ace3, LibStub, LibRaces-1.0, UTF8, DRData-1.0, LibSharedMedia-3.0, LibPlayerSpells-1.0
+
+## X-Curse-Project-ID: 274066
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+Locales\deDE.lua
+Locales\enUS.lua
+Locales\esES.lua
+Locales\esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Data.lua
+Main.lua
+
+Objects\Auras.lua
+Objects\Buffs.lua
+Objects\Debuffs.lua
+Objects\DR.lua
+Objects\ObjectiveAndRespawn.lua
+Objects\Racial.lua
+Objects\Trinket.lua
+
+Testmode.lua
+Options.lua

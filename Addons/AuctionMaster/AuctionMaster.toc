@@ -6,7 +6,7 @@
 ## SavedVariables: VendorDb, AuctionMasterMiscDb
 ## DefaultState: enabled
 ## Dependancies:
-## Version: 8.0.0
+## Version: 8.1.0
 ## X-Category: Auction
 ## X-Feedback: http://www.curse.com/addons/wow/vendor
 

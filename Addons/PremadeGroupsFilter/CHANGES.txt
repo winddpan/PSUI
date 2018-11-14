@@ -1,0 +1,28 @@
+lightweight tag a08a0671b67004d9613e83427bde05b658a95aa7 1.22
+Author:	Bernhard Saumweber <b.saumweber@gmail.com>
+Date:	Wed Oct 17 16:42:08 2018 +0200
+
+commit a08a0671b67004d9613e83427bde05b658a95aa7
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Wed Oct 17 16:42:08 2018 +0200
+
+    Advanced expression is now put in braces to avoid operator precedence mistakes when using the or-operator
+
+commit fe3b9fc3eb6a0bc8ac05c92828d9aeac6b91978f
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Wed Oct 17 16:40:29 2018 +0200
+
+    Added raider.io aliases ml, undr and siege
+
+commit a303af7b1544341be13eb4183c4cf81f21cc79bd
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Sun Sep 16 22:52:40 2018 +0200
+
+    Set version to next release version: 1.22
+
+commit 87ec4a5cd00dd683f088610456c9798ef9d3551c
+Author: Ahmed Snoussi <ahmed@roadoo-network.com>
+Date:   Sun Sep 16 22:48:52 2018 +0200
+
+    Added 2v2 and 3v3 filtering (#13)
+

@@ -83,6 +83,19 @@ function PSCD:CheckSpells(self)
 			local talentID, name, texture, selected, available, spellid, tier, column, selectedIndex = GetTalentInfo(tier, column, 1)
 			contians = selected 
 		end
+		if data.pvp then
+			contians = false
+			local inInstance, instanceType = IsInInstance()
+			if inInstance == false or (instanceType == "none" or instanceType == "arena" or instanceType == "pvp") then
+				for _, id in pairs(C_SpecializationInfo.GetAllSelectedPvpTalentIDs()) do
+					local spellId = select(6, GetPvpTalentInfoByID(id))
+					if spellId == data.spellID then
+						contians = true
+						break
+					end
+				end
+			end
+		end
 
 		if contians then
 			icons[index] = {data = data}

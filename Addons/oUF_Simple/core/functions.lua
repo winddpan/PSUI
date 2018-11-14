@@ -194,6 +194,25 @@ L.F.CreateAbsorbBar = CreateAbsorbBar
 --CreateClassBar
 local function CreateClassBar(self)
   if not self.cfg.classbar or not self.cfg.classbar.enabled then return end
+    
+  if select(2, UnitClass('player')) == 'DEATHKNIGHT' then
+    local Runes = {}
+	local barWidth = self.Health:GetWidth()
+	local width = (barWidth + 1) / 6 - 1
+	for index = 1, 6 do
+		-- Position and size of the rune bar indicators
+		local Rune = CreateFrame('StatusBar', nil, self)
+		Rune:SetStatusBarTexture(L.C.textures.statusbar)
+		Rune:SetStatusBarColor(1, 0.15, 0.15)
+		Rune:SetSize(width, 7)
+		Rune:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', (index - 1) * width + index - 1, 2)
+		CreateBackdrop(Rune)
+		Runes[index] = Rune
+	end
+	self.Runes = Runes
+	return
+  end
+  
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(L.C.textures.statusbar)

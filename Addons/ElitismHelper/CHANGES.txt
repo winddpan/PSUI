@@ -1,0 +1,230 @@
+tag 285d09edb01f474958570c5e3a48964c746fea00 0.10.0release
+Author:	amki <amki@amki.eu>
+Date:	Sun Sep 9 18:46:20 2018 +0200
+
+0.10 release for WoW BfA
+
+commit 7e9ef13e9996ca332db8f60713bc93005b99959c
+Author: amki <amki@amki.eu>
+Date:   Sun Sep 9 18:45:57 2018 +0200
+
+    0.10.0 release!
+
+commit da4470bf5993ab2dd6e577b6bbb19dd43d244193
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 9 10:54:22 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit da4470bf5993ab2dd6e577b6bbb19dd43d244193
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 9 10:54:22 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit da4470bf5993ab2dd6e577b6bbb19dd43d244193
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 9 10:54:22 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit d8a78ee4565a53e14e1d312aa9738a8ad1f24602
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sat Sep 8 20:03:28 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 2ef1e4b880d892f9122099136d2819523933eace
+Author: amki <amki@amki.eu>
+Date:   Sat Sep 8 01:10:58 2018 +0200
+
+    Move Darkshot to spells since it's a void zone and damage taken needs to be tracked
+
+commit 55c568fdca537f1e805bc9352bd7836f653b9b3d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Sep 7 17:41:17 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit e5db20ae53a90d3ee437342f25d36fb9c39a904d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Sep 7 13:39:53 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 60ea9a2076152b58cf512b910e88353b7167e013
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Thu Sep 6 23:19:19 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 60ea9a2076152b58cf512b910e88353b7167e013
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Thu Sep 6 23:19:19 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 78aba53bcf211f8b2b4d9f34b38542b751a33e0d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Thu Sep 6 19:59:17 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit dd97eb9a848a3e1de656a3d2dc0f4618f828bf48
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Sep 5 15:43:28 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit d060c7c7363567ef47f3a7aa8c0de08dd845f2c7
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Sep 5 14:40:51 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 7ad03653ce857e2f5fb117bf3317bc27f146b232
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Sep 5 10:44:44 2018 +0800
+
+    More spells.
+
+commit bdd02b099fd362c86ed32722c9c46e7e72685d2a
+Author: amki <amki@amki.eu>
+Date:   Tue Sep 4 18:26:07 2018 +0200
+
+    add hindering cleave
+
+commit bdd02b099fd362c86ed32722c9c46e7e72685d2a
+Author: amki <amki@amki.eu>
+Date:   Tue Sep 4 18:26:07 2018 +0200
+
+    add hindering cleave
+
+commit ece4b58bba7301df078242025490c9b0736b8ffd
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 2 21:29:03 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit a30c69ae922c31b97d6e4afa810ba726b41df51d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 2 21:28:27 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 6b654eb2febd5e773ef38c80839b347d5797ad00
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 2 16:26:50 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 821e1a57bfbd52d322927f1b6e9121100fd025cf
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Sun Sep 2 11:25:43 2018 +0800
+
+    Update ElitismHelper.lua
+    
+    Added new spells, removed undodgable spell from Waycrest
+
+commit 3801fff1df4ffb93b5112f6163c4c9339d62a27a
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 22:17:03 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 5cec4417abcd385eee5cea968b09cdad6c5ab7f7
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 21:38:10 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 2b94eca10ef058278a9f447df0d770952da48c55
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 20:10:25 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit bfc56b1cfcda37f76f7d459f1880861cc830f116
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 20:04:03 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit b308599d5a92b9d4a479f1fab90502509931b01d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 19:59:17 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit ee7656d9b75553bb8fd701b2b029ef89dc4579d4
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 18:48:55 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 92376c1465b531b56e0835c09ce410ab0650eb0e
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 18:20:35 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit fb5d305b70f4b61d0ea5e80941ddb06b0aed8430
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 17:55:45 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 3e02476eaa32d17c199dab214539f12b3eb5dd81
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Fri Aug 31 17:51:00 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 481e4f6e5a683de9f29324aed7c22867fb8495ba
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Aug 29 23:22:48 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 6473a6607ca24bf8c2ae5784d7e28b2d5c47e357
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Aug 29 22:28:49 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 1af5206637a68a7b3ea87dbfe2b76b6ca3d7b9e9
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Wed Aug 29 18:50:41 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit bcdd017e7657f6808529f2cafd4a9bcc40fad15a
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Mon Aug 27 22:16:56 2018 +0800
+
+    More spells, renamed start command.
+
+commit bcdd017e7657f6808529f2cafd4a9bcc40fad15a
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Mon Aug 27 22:16:56 2018 +0800
+
+    More spells, renamed start command.
+
+commit c17e79bb25920d780390fa20ee8a9d4ef5c0e1d6
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Mon Aug 27 15:45:19 2018 +0800
+
+    Added manual start option.
+
+commit 1e6957643f2c27f770bbde4fd0a745b9e7736f5d
+Author: Nostalgiac <Nostalgiac@users.noreply.github.com>
+Date:   Mon Aug 27 12:00:18 2018 +0800
+
+    Update ElitismHelper.lua
+
+commit 6b704db84df22717466e75248613756a96bcd298
+Author: roionsteroids <roionsteroids@gmail.com>
+Date:   Sun Aug 26 12:35:30 2018 +0200
+
+    First BFA release, remove Legion dungeons, add BFA dungeons, starting with easily avoidable stuns/fears/disorients.
+

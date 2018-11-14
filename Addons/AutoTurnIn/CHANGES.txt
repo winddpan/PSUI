@@ -1,16 +1,22 @@
-lightweight tag 9ff0af8ecaf37e0d8ed8a0e5c1e7248ec3a97d26 7.4.0
+lightweight tag 7c49c02adfb5343cb355badf2bf0677d97e6d5b1 7.4.1
 Author:	GitHub <noreply@github.com>
-Date:	Sun Jul 15 21:06:50 2018 -0400
+Date:	Thu Nov 1 16:24:24 2018 -0400
 
-commit c81aa4ae9de864ecde0c4ecef20bdca5396e2816
+commit e2d3f8436225516b5205983a8ab507473549d2c4
+Author: Alex Shubert <lure@users.noreply.github.com>
+Date:   Thu Nov 1 16:21:24 2018 -0400
+
+    Update IgnoredNPC.lua
+
+commit e2d3f8436225516b5205983a8ab507473549d2c4
+Author: Alex Shubert <lure@users.noreply.github.com>
+Date:   Thu Nov 1 16:21:24 2018 -0400
+
+    Update IgnoredNPC.lua
+
+commit 318772d3945e3c88e38e7640ffea7bdc28cb32f1
 Author: Nikolas Xexenis (Home) <nikolasx@gmail.com>
-Date:   Sun Jul 15 13:18:01 2018 +1000
+Date:   Tue Jul 17 19:14:56 2018 +1000
 
-    Updated quest button loop to reflect 8.0 API changes
-
-commit c81aa4ae9de864ecde0c4ecef20bdca5396e2816
-Author: Nikolas Xexenis (Home) <nikolasx@gmail.com>
-Date:   Sun Jul 15 13:18:01 2018 +1000
-
-    Updated quest button loop to reflect 8.0 API changes
+    Updated for 8.0
 

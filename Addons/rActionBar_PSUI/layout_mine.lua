@@ -117,9 +117,11 @@ local bar2 = {
 --create
 rActionBar:CreateActionBar2(A, bar2)
 
-local bar2List = GetButtonList("MultiBarBottomLeftButton")
-bar2List[11]:ClearAllPoints()
-bar2List[12]:ClearAllPoints()
+if bar2.numCols == 10 then
+	local bar2List = GetButtonList("MultiBarBottomLeftButton")
+	bar2List[11]:ClearAllPoints()
+	bar2List[12]:ClearAllPoints()
+end
 
 -----------------------------
 -- Bar3
@@ -228,15 +230,15 @@ rActionBar:CreateStanceBar(A, stancebar)
 
 --petbar
 local petbar = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
-  frameScale      = 1,
+  framePoint      = { "BOTTOMRIGHT", UIParent, "BOTTOM", -350, 10 },
+  frameScale      = 0.8,
   framePadding    = 2,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = commonMargin,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
+  fader           = fader,
 }
 --create
 rActionBar:CreatePetBar(A, petbar)

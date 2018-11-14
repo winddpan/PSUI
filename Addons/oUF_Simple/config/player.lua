@@ -12,12 +12,22 @@ local A, L = ...
 -- Player Config
 -----------------------------
 
+oUF.colors.power['RUNES'] = {108 / 255, 205 / 255, 205 / 255}
+	
 local fWidht = 190
-local _, PlayerClass = UnitClass'player'
+local _, playerClass = UnitClass'player'
+
 local classBarEnable = true
-if PlayerClass == 'ROGUE' then
+local castbarOffsetY = 0
+if playerClass == 'ROGUE' then
 	classBarEnable = false
 end
+if playerClass == 'DEATHKNIGHT' then
+	castbarOffsetY = 10
+end
+
+local castbarCfg = rLib.CopyTable(L.C.mods.castbar)
+castbarCfg.point = {"BOTTOM","TOP",0,2+castbarOffsetY}
 
 L.C.player = {
   enabled = true,
@@ -72,7 +82,7 @@ L.C.player = {
     point = {"CENTER","TOP",0,0},
   },
   --castbar
-  castbar = L.C.mods.castbar,
+  castbar = castbarCfg,
   --classbar
   classbar = {
     enabled = classBarEnable,

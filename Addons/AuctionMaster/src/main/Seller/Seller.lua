@@ -110,7 +110,7 @@ local function _Sell(itemLink, minBid, buyout, runTime, stackSize, stackCount)
         else
             vendor.AuctionHouse:AddAction(vendor.AuctionHouse.ACTION_SELL, itemLink)
             self.sellItemInfo = { minBid = minBid * stackSize, buyout = buyout * stackSize, runTime = runTime, stackSize = stackSize, stackCount = stackCount, itemLink = itemLink, timeLeft = runTime }
-            StartAuction(minBid * stackSize, buyout * stackSize, runTime, stackSize, stackCount)
+            PostAuction(minBid * stackSize, buyout * stackSize, runTime, stackSize, stackCount)
             vendor.clickAuctionSellItemButton()
         end
         ClearCursor()
@@ -865,6 +865,16 @@ local function _HandleWoWToken(self, itemLink)
     ClearCursor()
 end
 
+local function GetPrices()
+    local startPrice = MoneyInputFrame_GetCopper(StartPrice);
+    local buyoutPrice = MoneyInputFrame_GetCopper(BuyoutPrice);
+    if ( AuctionFrameAuctions.priceType == PRICE_TYPE_UNIT) then
+        startPrice =  startPrice * AuctionsStackSizeEntry:GetNumber();
+        buyoutPrice = buyoutPrice * AuctionsStackSizeEntry:GetNumber();
+    end
+    return startPrice,buyoutPrice;
+end
+
 --[[
 	Picks the given item for selling.
 --]]
@@ -880,8 +890,13 @@ local function _PickItem(self, itemLink)
             vendor.clickAuctionSellItemButton()
             local _, _, count, _, _, price = GetAuctionSellItemInfo();
             self.deposits = {};
+            local startPrice, buyoutPrice = GetPrices()
             for _, duration in ipairs(DURATIONS) do
-                self.deposits[duration] = CalculateAuctionDeposit(duration) / count;
+                local deposit = GetAuctionDeposit(duration, startPrice, buyoutPrice);
+                if (deposit) then
+                    deposit = deposit / count
+                end
+                self.deposits[duration] = deposit or 1
             end;
             self.startPrize = math.max(1, price / count)
             log:Debug("_PickItem stratPrize [%s]", self.startPrize)
@@ -1296,7 +1311,7 @@ function vendor.Seller:InitTab()
     --	self:RegisterMessage("AUCTION_STATISTIC_UPDATE")
     self:RegisterMessage("ITEM_SETTINGS_UPDATED")
     self:RegisterMessage("AUCTION_ACTION")
-    self:Hook("StartAuction", true);
+    self:Hook("PostAuction", true);
     -- register for new ScanResults
     self.frame = vendor.AuctionHouse:CreateTabFrame("AuctionFrameVendor", "AuctionMaster", L["Sell"], self);
     self.frame.obj = self
@@ -1405,12 +1420,12 @@ function vendor.Seller:AUCTION_HOUSE_CLOSED()
 end
 
 --[[
-	Hooks the StartAuction function to remember the prizes.
+	Hooks the PostAuction function to remember the prizes.
 --]]
-function vendor.Seller:StartAuction(minBid, buyoutPrize, runTime, stackSize, numStacks)
+function vendor.Seller:PostAuction(minBid, buyoutPrize, runTime, stackSize, numStacks)
     -- we want to remember the "minBid" and "buyoutPrice" for the next time
     local name, texture, count, quality, canUse, price, pricePerUnit, stackCount, totalCount = GetAuctionSellItemInfo()
-    log:Debug("StartAuction stackSize [%s] numStacks [%s] minBid [%s]", stackSize, numStacks, minBid)
+    log:Debug("PostAuction stackSize [%s] numStacks [%s] minBid [%s]", stackSize, numStacks, minBid)
     if (name) then
         -- unfortunately we need the itemLink, we have to scan the inventory
         local itemLink = _FindInventoryItemLink(name);

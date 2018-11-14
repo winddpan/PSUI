@@ -15,7 +15,7 @@ local A, L = ...
 L.C.boss = {
   enabled = true,
   size = {130,26},
-  point = {"TOPRIGHT",UIParent,"TOPRIGHT",-35,-300}, --point of first boss frame
+  point = {"TOPRIGHT",UIParent,"TOPRIGHT",-135,-300}, --point of first boss frame
   scale = 1*L.C.globalscale,
   --healthbar
   healthbar = {
@@ -67,7 +67,7 @@ L.C.boss = {
   },
   --debuffs
   debuffs = {
-    enabled = true,
+    enabled = false,
     point = {"TOPLEFT","BOTTOMLEFT",0,-14},
     num = 5,
     cols = 5,

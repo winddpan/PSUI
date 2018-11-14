@@ -1,0 +1,18 @@
+## Interface: 80000
+## Title: Diminish
+## Notes: Lightweight diminishing returns tracker for hostile and friendly units.
+## Notes-deDE: DR-Tracker für Einheitenfenster.
+## SavedVariables: DiminishDB
+## Version: 2.0.9
+## X-Curse-Project-ID: 92871
+## X-WoWI-ID: 23628
+
+helpers.lua
+localization.lua
+
+core\anchors.lua
+core\config.lua
+core\spells.lua
+core\icons.lua
+core\timers.lua
+Diminish.lua

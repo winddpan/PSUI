@@ -36,5 +36,5 @@ local function HookFormatNumber()
 end
 
 Event("PLAYER_ENTERING_WORLD", function()
-    HookFormatNumber()
+    --HookFormatNumber()
 end)

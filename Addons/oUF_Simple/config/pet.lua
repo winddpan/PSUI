@@ -14,10 +14,10 @@ local A, L = ...
 
 L.C.pet = {
   enabled = true,
-  size = {130,26},
-  point = {"TOPLEFT","oUF_SimplePlayer","BOTTOMLEFT",0,-14},
+  size = {60,26},
+  point = {"TOPRIGHT","oUF_SimplePlayer","TOPLEFT", -10,0},
   scale = 1*L.C.globalscale,
-  frameVisibility = "[nocombat,nomod,@target,noexists][@pet,noexists] hide; show",
+  frameVisibility = "[@pet,noexists] hide; show",  --"[nocombat,nomod,@target,noexists][@pet,noexists] hide; show",
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -25,18 +25,25 @@ L.C.pet = {
     colorClass = true,
     colorHealth = true,
     colorThreat = true,
-    name = L.C.mods.healthbar.name,
+    name = {
+      enabled = true,
+      point = {"CENTER"},
+      size = 12,
+      outline = "NONE",
+      noshadow = false,
+      tag = "[PSUI:color][difficulty][PSUI:shortname]|r",
+    },
     debuffHighlight = true,
   },
   --raidmark
   raidmark = {
-    enabled = true,
+    enabled = false,
     size = {18,18},
     point = {"CENTER","TOP",0,0},
   },
   --castbar
   castbar = {
-    enabled = true,
+    enabled = false,
     size = {130,26},
     point = {"TOP","BOTTOM",0,-5},
     name = {
@@ -61,7 +68,7 @@ L.C.pet = {
   },
   --debuffs
   debuffs = {
-    enabled = true,
+    enabled = false,
     point = {"TOPLEFT","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,
